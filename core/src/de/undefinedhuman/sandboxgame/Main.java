@@ -2,6 +2,7 @@ package de.undefinedhuman.sandboxgame;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL30;
 import de.undefinedhuman.sandboxgame.engine.config.ConfigManager;
 import de.undefinedhuman.sandboxgame.engine.config.SettingsManager;
 import de.undefinedhuman.sandboxgame.engine.language.LanguageManager;
@@ -40,6 +41,7 @@ public class Main extends Game {
     public void render() {
         delta = Gdx.graphics.getDeltaTime() * Variables.deltaMultiplier;
         managerList.update(delta);
+        clear();
         super.render();
     }
 
@@ -70,6 +72,11 @@ public class Main extends Game {
 
     private void initScreens() {
         TestScreen.instance = new TestScreen();
+    }
+
+    private void clear() {
+        Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
+        Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
     }
 
 }

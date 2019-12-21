@@ -35,10 +35,10 @@ public class ConfigManager extends Manager {
             }
 
             reader.close();
-            Log.info("Loaded config successfully.");
+            Log.info("Config file successfully loaded.");
 
         } catch(Exception ex) {
-            Log.error("Error while loading config.");
+            Log.error("Error while loading the config file.");
             Log.error(ex.getMessage());
         }
 
@@ -57,10 +57,10 @@ public class ConfigManager extends Manager {
             }
 
             writer.close();
-            Log.info("Saved config successfully!");
+            Log.info("Config file successfully saved!");
 
         } catch(Exception ex) {
-            Log.error("Error while saving config!");
+            Log.error("Error while saving the config file!");
             Log.error(ex.getMessage());
         }
 

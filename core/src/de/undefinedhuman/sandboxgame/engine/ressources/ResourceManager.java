@@ -27,6 +27,20 @@ public class ResourceManager {
 
     }
 
+    public static Texture loadTextures(String path) {
+
+        Texture texture = null;
+
+        try {
+            texture = new Texture(Gdx.files.internal(path));
+        } catch(Exception ex) {
+            Log.error("Error while loading texture: " + path + "\n" + ex.getMessage());
+        }
+
+        return texture != null ? texture : loadTexture("Unknown.png");
+
+    }
+
     public static Music loadMusic(String path) {
 
         Music music = null;

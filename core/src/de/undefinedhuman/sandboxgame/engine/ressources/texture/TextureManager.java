@@ -8,6 +8,8 @@ import java.util.HashMap;
 
 public class TextureManager extends Manager {
 
+    // TODO Wenn auf eine Instant einer Texture verwiesen wird also z.b. für irgendeine Klasse nur Texture = TextureManager.getTexture(name) gemacht wird bekommt diese Texture keinen Index wie bei add. (Falls sie schon existiert)
+
     public static TextureManager instance;
 
     private HashMap<String, TextureValue> textures;
@@ -29,20 +31,12 @@ public class TextureManager extends Manager {
         return hasTexture(name);
     }
     public void addTexture(String... names) { for (String s : names) addTexture(s); }
-    public void addTexture(String[]... names) {
-        for (String[] s : names) addTexture(s);
-    }
 
     public void removeTexture(String name) {
         if(hasTexture(name)) textures.get(name).remove();
         if(textures.get(name).remove) textures.remove(name);
     }
-    public void removeTexture(String[]... names) {
-        for (String[] s : names) removeTexture(s);
-    }
-    public void removeTexture(String... names) {
-        for (String s : names) removeTexture(s);
-    }
+    public void removeTexture(String... names) { for (String s : names) removeTexture(s); }
 
     public TextureRegion getTexture(String name) {
         TextureValue value = textures.get(name);

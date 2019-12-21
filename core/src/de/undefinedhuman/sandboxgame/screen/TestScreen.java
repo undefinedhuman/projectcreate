@@ -2,11 +2,15 @@ package de.undefinedhuman.sandboxgame.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import de.undefinedhuman.sandboxgame.gui.Gui;
+import de.undefinedhuman.sandboxgame.gui.GuiManager;
+import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
+import de.undefinedhuman.sandboxgame.gui.texture.GuiTexture;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.ConstraintFactory;
 
 public class TestScreen implements Screen {
 
@@ -25,16 +29,10 @@ public class TestScreen implements Screen {
 
         Gdx.graphics.setResizable(true);
 
-    }
+        GuiManager.instance = new GuiManager();
+        GuiManager.instance.init();
 
-    @Override
-    public void render(float delta) {
-
-        clear();
-
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-        batch.end();
+        GuiManager.instance.addGui(new Gui(new GuiTexture(GuiTemplate.SMALL_PANEL), ConstraintFactory.setRelativeConstraints(0.1f,0.1f,0.1f,0.1f)).setGuiScale(0.5f));
 
     }
 
@@ -44,6 +42,20 @@ public class TestScreen implements Screen {
         camera.setToOrtho(false, width, height);
         viewport.update(width, height);
         camera.update();
+
+        GuiManager.instance.resize(width, height);
+
+    }
+
+    @Override
+    public void render(float delta) {
+
+        GuiManager.instance.update(delta);
+
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+        GuiManager.instance.render(batch, camera);
+        batch.end();
 
     }
 
@@ -58,12 +70,5 @@ public class TestScreen implements Screen {
 
     @Override
     public void dispose() {}
-
-    private void clear() {
-
-        Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
-        Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
-
-    }
 
 }

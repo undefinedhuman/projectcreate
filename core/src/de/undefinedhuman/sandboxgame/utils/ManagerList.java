@@ -1,5 +1,6 @@
 package de.undefinedhuman.sandboxgame.utils;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
@@ -24,8 +25,8 @@ public class ManagerList {
     public void update(float delta) {
         for(Manager manager : managers) manager.update(delta);
     }
-    public void render(SpriteBatch batch) {
-        for(Manager manager : managers) manager.render(batch);
+    public void render(SpriteBatch batch, OrthographicCamera camera) {
+        for(Manager manager : managers) manager.render(batch, camera);
     }
     public void delete() {
         for(int i = managers.size()-1; i >= 0; i--) managers.get(i).delete();
