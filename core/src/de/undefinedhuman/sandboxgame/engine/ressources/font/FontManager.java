@@ -15,8 +15,8 @@ public class FontManager extends Manager {
     private HashMap<Font, ArrayList<BitmapFont>> fonts;
 
     public FontManager() {
-        this.fonts = new HashMap<>();
         if(instance == null) instance = this;
+        this.fonts = new HashMap<>();
     }
 
     @Override
@@ -31,10 +31,9 @@ public class FontManager extends Manager {
     public void loadFont(Font font) {
 
         ArrayList<BitmapFont> fontList = new ArrayList<>();
-        BitmapFont tempFont = ResourceManager.loadFont(font.name());
 
         for(int i = 0; i < 10; i++) {
-            BitmapFont bitmapFont = new BitmapFont(tempFont.getData(), tempFont.getRegion(), tempFont.usesIntegerPositions());
+            BitmapFont bitmapFont = ResourceManager.loadFont(font.name());
             bitmapFont.getData().markupEnabled = true;
             bitmapFont.getData().setScale(i + 1);
             bitmapFont.getData().spaceXadvance = i + 1;
@@ -42,7 +41,6 @@ public class FontManager extends Manager {
         }
 
         fonts.put(font, fontList);
-        tempFont.dispose();
     }
 
     public BitmapFont getFont(Font font) {
@@ -56,7 +54,7 @@ public class FontManager extends Manager {
     @Override
     public void delete() {
         for (ArrayList<BitmapFont> list : fonts.values()) {
-            for(BitmapFont font : list)  font.dispose();
+            for(BitmapFont font : list) font.dispose();
             list.clear();
         }
         fonts.clear();

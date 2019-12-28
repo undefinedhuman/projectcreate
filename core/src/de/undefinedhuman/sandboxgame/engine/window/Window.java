@@ -19,13 +19,13 @@ public class Window {
         config.vSyncEnabled = false;
         config.width = 1280;
         config.height = 720;
-        config.backgroundFPS = 60;
+        config.backgroundFPS = 0;
         config.foregroundFPS = 0;
         return config;
     }
 
     public void update() {
-        Gdx.graphics.setTitle("2D - SandboxGame FPS: " + Gdx.graphics.getFramesPerSecond());
+        Gdx.graphics.setTitle("SandboxGame FPS: " + Gdx.graphics.getFramesPerSecond());
     }
 
     public void delete() {

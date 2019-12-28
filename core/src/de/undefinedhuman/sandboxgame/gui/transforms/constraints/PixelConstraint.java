@@ -1,16 +1,14 @@
 package de.undefinedhuman.sandboxgame.gui.transforms.constraints;
 
-import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
-
 public class PixelConstraint extends Constraint {
 
-    public PixelConstraint(Axis axis, float value) {
-        super(axis, value);
+    public PixelConstraint(float value) {
+        super(value);
     }
 
     @Override
-    public int getValue() {
-        return (int) (value + (isPosition() ? axis == Axis.X ? gui.parent.getBound(Axis.X) : gui.parent.getBound(Axis.Y) : 0));
+    public int getValue(float scale) {
+        return (int) ((int) (value + (isPosition() ? gui.getParentBounds().getValue(axis) : 0)) * scale);
     }
 
 }

@@ -1,29 +1,32 @@
 package de.undefinedhuman.sandboxgame.gui.transforms.offset;
 
-import de.undefinedhuman.sandboxgame.gui.Gui;
+import de.undefinedhuman.sandboxgame.gui.GuiComponent;
 import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
 
 public abstract class Offset {
 
-    protected Gui current;
     protected float value;
-
+    protected GuiComponent gui;
     private Axis axis;
 
-    public Offset(Gui current, Axis axis, float value) {
-        this.current = current;
+    public Offset(float value) {
+        this.value = value;
+    }
+
+    public Offset setAxis(Axis axis) {
         this.axis = axis;
-        this.value = value;
+        return this;
     }
 
-    public boolean isX() {
-        return axis == Axis.X;
+    public Offset setGui(GuiComponent gui) {
+        this.gui = gui;
+        return this;
     }
 
-    public void setValue(float value) {
-        this.value = value;
-    }
+    public Axis getAxis() { return axis; }
+    public boolean isX() { return axis == Axis.X; }
+    public void setValue(float value) { this.value = value; }
 
-    public abstract int getValue(float scale);
+    public abstract int getValue(float guiScale);
 
 }

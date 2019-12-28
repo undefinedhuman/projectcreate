@@ -13,6 +13,7 @@ import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.engine.window.Window;
 import de.undefinedhuman.sandboxgame.screen.TestScreen;
 import de.undefinedhuman.sandboxgame.utils.ManagerList;
+import de.undefinedhuman.sandboxgame.utils.Timer;
 import de.undefinedhuman.sandboxgame.utils.Variables;
 
 public class Main extends Game {
@@ -24,10 +25,18 @@ public class Main extends Game {
 
     private ManagerList managerList;
 
+    private Timer timer;
+
     public Main() {
         instance = this;
         managerList = new ManagerList();
         managerList.addManager(new Log(), new SettingsManager(), new ConfigManager(), new LanguageManager(), new TextureManager(), new SoundManager(), new FontManager());
+        timer = new Timer(1,true) {
+            @Override
+            public void action() {
+                Window.instance.update();
+            }
+        };
     }
 
     @Override
@@ -41,6 +50,7 @@ public class Main extends Game {
     public void render() {
         delta = Gdx.graphics.getDeltaTime() * Variables.deltaMultiplier;
         managerList.update(delta);
+        timer.update(delta);
         clear();
         super.render();
     }
@@ -75,7 +85,7 @@ public class Main extends Game {
     }
 
     private void clear() {
-        Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
+        Gdx.gl.glClearColor(1,1,1,1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
     }
 

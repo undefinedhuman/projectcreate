@@ -7,7 +7,7 @@ public abstract class Timer {
     private boolean loop, finished;
 
     public Timer(float delay, boolean loop) {
-        this.time = 0;
+        this.time = delay;
         this.delay = delay;
         this.loop = loop;
     }

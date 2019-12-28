@@ -30,6 +30,7 @@ public class GuiTexture {
     }
 
     public void resize(float localScale) {
+        if(template == null) return;
         this.cornerSize = (int) (template.cornerSize * localScale);
     }
 
@@ -61,6 +62,9 @@ public class GuiTexture {
             textures.add(TextureManager.instance.getTexture(s));
         }
     }
+
+    public int getCornerSize() { return cornerSize; }
+    public ArrayList<TextureRegion> getTextures() { return textures; }
 
     public void delete() {
         for(String s : textureNames) TextureManager.instance.removeTexture(s);

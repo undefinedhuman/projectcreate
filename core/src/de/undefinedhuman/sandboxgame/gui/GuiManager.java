@@ -4,8 +4,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
-import de.undefinedhuman.sandboxgame.gui.texture.GuiTexture;
-import de.undefinedhuman.sandboxgame.gui.transforms.constraints.Constraints;
 import de.undefinedhuman.sandboxgame.utils.Manager;
 
 import java.util.ArrayList;
@@ -13,7 +11,7 @@ import java.util.ArrayList;
 public class GuiManager extends Manager {
 
     public static GuiManager instance;
-    public Gui screen = null;
+    public GuiComponent screen = null;
 
     private ArrayList<Gui> guis = new ArrayList<>();
 
@@ -25,7 +23,7 @@ public class GuiManager extends Manager {
     public void init() {
         for(GuiTemplate template : GuiTemplate.values()) template.load();
         TextureManager.instance.addTexture("gui/Chains/Chain-Top-Right.png", "gui/Chains/Chain-Top-Left.png", "gui/Chains/Chain-Mid-Right.png", "gui/Chains/Chain-Mid-Left.png", "gui/Chains/Chain-Bottom-Right.png", "gui/Chains/Chain-Bottom-Left.png");
-        screen = new Gui(new GuiTexture(), new Constraints()).initScreen(1280,720);
+        screen = new GuiComponent().initScreen(1280,720);
     }
 
     @Override
@@ -51,7 +49,12 @@ public class GuiManager extends Manager {
         guis.clear();
     }
 
-    public void addGui(Gui... guis) { for(Gui gui : guis) if(!hasGui(gui)) this.guis.add(gui); }
+    public void addGui(Gui... guis) {
+        for(Gui gui : guis) if(!hasGui(gui)) {
+            this.guis.add(gui);
+            gui.init();
+        }
+    }
     public void removeGui(Gui gui) { if(hasGui(gui)) this.guis.remove(gui); }
     public boolean hasGui(Gui gui) { return guis.contains(gui); }
 
