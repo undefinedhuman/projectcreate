@@ -1,5 +1,4 @@
 buildscript {
-    
 
     repositories {
         mavenLocal()
@@ -9,10 +8,7 @@ buildscript {
         jcenter()
         google()
     }
-    dependencies {
-        
-
-    }
+    dependencies {}
 }
 
 allprojects {
@@ -41,7 +37,6 @@ allprojects {
 project(":desktop") {
     apply plugin: "java"
 
-
     dependencies {
         compile project(":core")
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
@@ -54,11 +49,19 @@ project(":desktop") {
 project(":core") {
     apply plugin: "java"
 
-
     dependencies {
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        compile group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
+    }
+}
+
+project(":server") {
+    apply plugin: "java"
+
+    dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
     }

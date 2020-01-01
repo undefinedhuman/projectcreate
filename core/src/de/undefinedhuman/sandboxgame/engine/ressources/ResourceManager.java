@@ -7,53 +7,40 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.sandboxgame.engine.file.FileReader;
+import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.file.Paths;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
+import de.undefinedhuman.sandboxgame.entity.EntityType;
+import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
+import de.undefinedhuman.sandboxgame.entity.ecs.blueprint.Blueprint;
+import de.undefinedhuman.sandboxgame.items.Item;
+import de.undefinedhuman.sandboxgame.items.ItemType;
+
+import java.util.HashMap;
 
 public class ResourceManager {
 
     public static Texture loadTexture(String path) {
-
         Texture texture = null;
-
-        try {
-            texture = new Texture(Gdx.files.internal(path));
-            Log.info("Texture loaded successfully: " + path);
-        } catch(Exception ex) {
-            Log.error("Error while loading texture: " + path + "\n" + ex.getMessage());
-        }
-
-        return texture != null ? texture : loadTexture("Unknown.png");
-
-    }
-
-    public static Texture loadTextures(String path) {
-
-        Texture texture = null;
-
         try {
             texture = new Texture(Gdx.files.internal(path));
         } catch(Exception ex) {
             Log.error("Error while loading texture: " + path + "\n" + ex.getMessage());
         }
-
         return texture != null ? texture : loadTexture("Unknown.png");
-
     }
 
     public static Music loadMusic(String path) {
-
         Music music = null;
-
         try {
             music = Gdx.audio.newMusic(Gdx.files.internal(path));
             Log.info("Music loaded successfully: " + path);
         } catch(Exception ex) {
             Log.error("Error while loading music: " + path + "\n" + ex.getMessage());
         }
-
         return music;
-
     }
 
 
@@ -62,19 +49,13 @@ public class ResourceManager {
     }
 
     public static BitmapFont loadBitmapFont(String path) {
-
         BitmapFont bitmapFont = null;
-
         try {
             bitmapFont = new BitmapFont(Gdx.files.internal(path), false);
-            Log.info("BitmapFont loaded successfully: " + path);
         } catch(Exception ex) {
             Log.error("Error while loading BitmapFont: " + path + "\n" + ex.getMessage());
-
         }
-
         return bitmapFont;
-
     }
 
     public static Sound loadSound(String name) {
@@ -103,6 +84,46 @@ public class ResourceManager {
         return shaderProgram;
 
     }
+
+    public static Blueprint loadBlueprint(int id) {
+
+        FileHandle file = loadFile(Paths.ENTITY_FOLDER, id + "/settings.txt");
+        FileReader reader = new FileReader(file, true);
+        reader.nextLine();
+        EntityType type = EntityType.valueOf(reader.getNextString());
+        reader.getNextString();
+        Vector2 size = reader.getNextVector2();
+        int componentSize = reader.getNextInt();
+        Blueprint blueprint = new Blueprint(id, type, size);
+        for(int i = 0; i < componentSize; i++) {
+            reader.nextLine();
+            blueprint.addComponentBlueprint(ComponentType.load(reader.getNextString(), reader, id));
+        }
+        reader.close();
+        return blueprint;
+
+    }
+
+    public static Item loadItem(int id) {
+
+        FileHandle file = loadFile(Paths.ITEM_PATH, id + "/settings.txt");
+        FileReader reader = new FileReader(file, true);
+        reader.nextLine();
+        ItemType type = ItemType.valueOf(reader.getNextString());
+        reader.nextLine();
+        int size = reader.getNextInt();
+        HashMap<String, LineSplitter> settings = new HashMap<>();
+        for(int i = 0; i < size; i++) {
+            reader.nextLine();
+            settings.put(reader.getNextString(), new LineSplitter(reader.nextLine(),true,";"));
+        }
+        Item item = type.load(type, id, settings);
+        reader.close();
+        settings.clear();
+        return item;
+
+    }
+
 
     public static FileHandle loadFile(Paths path, String name) {
         return Gdx.files.internal(path.getPath() + name);

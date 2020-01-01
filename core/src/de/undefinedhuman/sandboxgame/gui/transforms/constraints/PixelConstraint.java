@@ -8,7 +8,7 @@ public class PixelConstraint extends Constraint {
 
     @Override
     public int getValue(float scale) {
-        return (int) ((int) (value + (isPosition() ? gui.getParentBounds().getValue(axis) : 0)) * scale);
+        return (int) ((isPosition() ? guiTransform.parent.getValue(axis) : 0) + (value * scale));
     }
 
 }

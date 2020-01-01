@@ -1,0 +1,72 @@
+package de.undefinedhuman.sandboxgame.world;
+
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import de.undefinedhuman.sandboxgame.items.ItemManager;
+import de.undefinedhuman.sandboxgame.items.type.blocks.Block;
+import de.undefinedhuman.sandboxgame.utils.Variables;
+
+import java.util.Random;
+
+public class World {
+
+    public static World instance;
+
+    public String name;
+    public int width, height, seed, blockWidth, blockHeight;
+    public WorldLayer mainLayer, backLayer;
+    public Random random;
+
+    private int maxX, minX, maxY, minY;
+    private Color batchColor = new Color();
+
+    public World(String name, int width, int height, int seed) {
+
+        this.random = new Random(seed);
+        this.mainLayer = new WorldLayer(true, width, height);
+        this.backLayer = new WorldLayer(false, width, height);
+
+        this.name = name;
+        this.width = width;
+        this.height = height;
+        this.blockWidth = width * Variables.BLOCK_SIZE;
+        this.blockHeight = height * Variables.BLOCK_SIZE;
+        this.seed = seed;
+
+    }
+
+    public void computeBounds(OrthographicCamera camera) {
+
+        this.minX = ((int) ((((int) camera.position.x) - camera.zoom * camera.viewportWidth / 2 - 32) / getTileWidth()));
+        this.minY = ((int) ((((int) camera.position.y) - camera.zoom * camera.viewportHeight / 2 - 32) / getTileHeight()));
+        this.maxX = ((int) ((((int) camera.position.x) + camera.zoom * camera.viewportWidth / 2 + 32) / getTileWidth()));
+        this.maxY = ((int) ((((int) camera.position.y) + camera.zoom * camera.viewportHeight / 2 + 32) / getTileHeight()));
+
+        if (this.minY < 0) this.minY = 0;
+        if (this.maxY > this.height - 2) this.maxY = (this.height - 2);
+        if(minX<-width+2)minX = -width+2;
+        if(maxX>width*2-2)maxX = width*2-2;
+
+    }
+
+    public void renderMainLayer(SpriteBatch batch) {
+        // for(int i = 0; i < width; i++) for(int j = 0; j < height; j++) mainLayer.renderBlock(batch, batchColor.set(Color.WHITE), i, j);
+        for(int i = this.minX; i <= maxX; i++) for (int j = this.minY; j <= maxY; j++) mainLayer.renderBlock(batch, batchColor.set(Color.WHITE), i, j);
+    }
+
+    public void renderBackLayer(SpriteBatch batch) {
+        for(int i = this.minX; i <= maxX; i++) for (int j = this.minY; j <= maxY; j++) {
+            Block block = (Block) ItemManager.instance.getItem(World.instance.mainLayer.getBlock(i, j));
+            if (block.id == 0 || mainLayer.getState(i, j) != 0 || !block.isFull) backLayer.renderBlock(batch, batchColor.set(0.45f,0.45f,0.45f,1), i, j);
+        }
+    }
+
+    public float getTileWidth() {
+        return Variables.BLOCK_SIZE;
+    }
+    public float getTileHeight() {
+        return Variables.BLOCK_SIZE;
+    }
+
+}

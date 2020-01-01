@@ -1,6 +1,7 @@
 package de.undefinedhuman.sandboxgame.gui.texture;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.file.FileReader;
 import de.undefinedhuman.sandboxgame.engine.file.Paths;
 import de.undefinedhuman.sandboxgame.engine.ressources.ResourceManager;
@@ -28,6 +29,10 @@ public enum GuiTemplate {
         for(int i = 0; i < 9; i++) textures[i] = Paths.GUI_PATH.getPath() + "/template/" + templateName + "/" + i + ".png";
         TextureManager.instance.addTexture(textures);
 
+    }
+
+    public Vector2 getOffset() {
+        return new Vector2(cornerSize, cornerSize);
     }
 
     public void delete() {

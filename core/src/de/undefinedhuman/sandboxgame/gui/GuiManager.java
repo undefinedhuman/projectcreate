@@ -1,9 +1,11 @@
 package de.undefinedhuman.sandboxgame.gui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
+import de.undefinedhuman.sandboxgame.gui.transforms.GuiTransform;
 import de.undefinedhuman.sandboxgame.utils.Manager;
 
 import java.util.ArrayList;
@@ -11,12 +13,12 @@ import java.util.ArrayList;
 public class GuiManager extends Manager {
 
     public static GuiManager instance;
-    public GuiComponent screen = null;
+    public GuiTransform screen = null;
 
-    private ArrayList<Gui> guis = new ArrayList<>();
+    private ArrayList<GuiTransform> guis = new ArrayList<>();
 
     public GuiManager() {
-        if(instance != null) instance = this;
+        if(instance == null) instance = this;
     }
 
     @Override
@@ -27,19 +29,19 @@ public class GuiManager extends Manager {
     }
 
     @Override
-    public void resize(float width, float height) {
-        screen.initScreen(width, height);
-        for(Gui gui : guis) gui.resize((int) width, (int) height);
+    public void resize(int width, int height) {
+        screen.setScale(width, height);
+        for(GuiTransform gui : guis) gui.resize(width, height);
     }
 
     @Override
     public void update(float delta) {
-        for(Gui gui : guis) gui.update(delta);
+        for(GuiTransform gui : guis) gui.update(delta);
     }
 
     @Override
-    public void render(SpriteBatch batch, OrthographicCamera camera) {
-        for (Gui gui : guis) gui.render(batch, camera);
+    public void renderGui(SpriteBatch batch, OrthographicCamera camera) {
+        for (GuiTransform gui : guis) gui.render(batch, camera);
     }
 
     @Override
@@ -49,13 +51,15 @@ public class GuiManager extends Manager {
         guis.clear();
     }
 
-    public void addGui(Gui... guis) {
-        for(Gui gui : guis) if(!hasGui(gui)) {
+    public void addGui(GuiTransform... guis) {
+        for(GuiTransform gui : guis) if(!hasGui(gui)) {
             this.guis.add(gui);
             gui.init();
+            gui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         }
     }
-    public void removeGui(Gui gui) { if(hasGui(gui)) this.guis.remove(gui); }
-    public boolean hasGui(Gui gui) { return guis.contains(gui); }
+
+    public void removeGui(GuiTransform gui) { if(hasGui(gui)) this.guis.remove(gui); }
+    public boolean hasGui(GuiTransform gui) { return guis.contains(gui); }
 
 }

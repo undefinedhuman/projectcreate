@@ -1,8 +1,8 @@
 package de.undefinedhuman.sandboxgame.gui.transforms.offset;
 
-import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.Constraint;
 
-public class RelativeOffset extends Offset {
+public class RelativeOffset extends Constraint {
 
     public RelativeOffset(float value) {
         super(value);
@@ -10,7 +10,7 @@ public class RelativeOffset extends Offset {
 
     @Override
     public int getValue(float guiScale) {
-        return (int) (gui.getBounds().getValue(isX() ? Axis.WIDTH : Axis.HEIGHT) * value);
+        return (int) (guiTransform.getValue(getScaleAxis()) * value);
     }
 
 }

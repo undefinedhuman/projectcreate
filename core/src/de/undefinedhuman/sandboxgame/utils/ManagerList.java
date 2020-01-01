@@ -21,13 +21,12 @@ public class ManagerList {
     public void init() {
         for(Manager manager : managers) manager.init();
     }
-    public void resize(float width, float height) { for(Manager manager : managers) manager.resize(width, height); }
+    public void resize(int width, int height) { for(Manager manager : managers) manager.resize(width, height); }
     public void update(float delta) {
         for(Manager manager : managers) manager.update(delta);
     }
-    public void render(SpriteBatch batch, OrthographicCamera camera) {
-        for(Manager manager : managers) manager.render(batch, camera);
-    }
+    public void render(SpriteBatch batch, OrthographicCamera camera) { for(Manager manager : managers) manager.render(batch, camera); }
+    public void renderGui(SpriteBatch batch, OrthographicCamera camera) { for(Manager manager : managers) manager.renderGui(batch, camera); }
     public void delete() {
         for(int i = managers.size()-1; i >= 0; i--) managers.get(i).delete();
         managers.clear();

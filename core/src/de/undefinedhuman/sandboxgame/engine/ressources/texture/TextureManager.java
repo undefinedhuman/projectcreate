@@ -1,14 +1,15 @@
 package de.undefinedhuman.sandboxgame.engine.ressources.texture;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.engine.ressources.ResourceManager;
 import de.undefinedhuman.sandboxgame.utils.Manager;
+import de.undefinedhuman.sandboxgame.utils.Tools;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class TextureManager extends Manager {
-
-    // TODO Wenn auf eine Instant einer Texture verwiesen wird also z.b. für irgendeine Klasse nur Texture = TextureManager.getTexture(name) gemacht wird bekommt diese Texture keinen Index wie bei add. (Falls sie schon existiert)
 
     public static TextureManager instance;
 
@@ -25,23 +26,29 @@ public class TextureManager extends Manager {
         addTexture("blank.png");
     }
 
-    public boolean addTexture(String name) {
-        if (!hasTexture(name)) textures.put(name, new TextureValue(ResourceManager.loadTexture(name)));
-        else textures.get(name).add();
-        return hasTexture(name);
+    public boolean addTexture(String... names) {
+        boolean loaded = false;
+        for (String name : names) {
+            if (!hasTexture(name)) {
+                textures.put(name, new TextureValue(ResourceManager.loadTexture(name)));
+                loaded |= hasTexture(name);
+            } else textures.get(name).add();
+        }
+        if(loaded) Log.info("Texture" + Tools.appendSToString(names) + " loaded successfully: " + Arrays.toString(names));
+        return loaded;
     }
-    public void addTexture(String... names) { for (String s : names) addTexture(s); }
 
-    public void removeTexture(String name) {
-        if(hasTexture(name)) textures.get(name).remove();
-        if(textures.get(name).remove) textures.remove(name);
+    public void removeTexture(String... names) {
+        for (String name : names) {
+            if(hasTexture(name)) textures.get(name).remove();
+            if(textures.containsKey(name) && textures.get(name).remove) textures.remove(name);
+        }
     }
-    public void removeTexture(String... names) { for (String s : names) removeTexture(s); }
 
     public TextureRegion getTexture(String name) {
         TextureValue value = textures.get(name);
         if (value != null || addTexture(name)) return textures.get(name).get();
-        return hasTexture("Unknown.png") ? getTexture("Unknown.png") : null;
+        return hasTexture("Unknown.png") && !name.equals("Unknown.png") ? getTexture("Unknown.png") : null;
     }
 
     public boolean hasTexture(String name) {

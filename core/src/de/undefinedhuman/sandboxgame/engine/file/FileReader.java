@@ -97,7 +97,7 @@ public class FileReader {
 
     public int getID() {
         String[] data = fileName.split("-");
-        return Integer.valueOf(data[0]);
+        return Integer.parseInt(data[0]);
     }
 
     public boolean isEndOfLine() {

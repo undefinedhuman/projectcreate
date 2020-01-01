@@ -1,0 +1,77 @@
+package de.undefinedhuman.sandboxgame.inventory;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import de.undefinedhuman.sandboxgame.gui.Gui;
+import de.undefinedhuman.sandboxgame.gui.GuiComponent;
+import de.undefinedhuman.sandboxgame.gui.text.Text;
+import de.undefinedhuman.sandboxgame.items.ItemManager;
+import de.undefinedhuman.sandboxgame.utils.Variables;
+
+public class InvItem extends Gui {
+
+    private int id, amount;
+    private Text amountText;
+
+    public InvItem(int id) {
+        this(id,0);
+    }
+
+    public InvItem(int id, int amount) {
+
+        super(ItemManager.instance.getItem(id).iconTexture);
+        set("r0.5","r0.5","p" + Variables.ITEM_SIZE,"p" + Variables.ITEM_SIZE).setCentered();
+
+        this.id = id; this.amount = amount;
+        amountText = new Text(amount);
+        amountText.setPosition("r0.75","r0.25").setCentered();
+        amountText.parent = this;
+
+    }
+
+    public void setStats(int id, int amount) {
+        this.id = id;
+        this.amount = amount;
+        amountText.setText(amount);
+        setTexture(ItemManager.instance.getItem(id).iconTexture);
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+        amountText.setText(amount);
+    }
+
+    public int getID() {
+        return id;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void removeItem() {
+        if(this.amount > 0) this.amount--;
+        amountText.setText(amount);
+    }
+
+    @Override
+    public GuiComponent setPosition(int x, int y) {
+        super.setPosition(x, y);
+        amountText.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        return this;
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+        amountText.resize(width, height);
+    }
+
+    @Override
+    public void render(SpriteBatch batch, OrthographicCamera camera) {
+        super.render(batch, camera);
+        if(amount > 1) amountText.render(batch, camera);
+    }
+
+}

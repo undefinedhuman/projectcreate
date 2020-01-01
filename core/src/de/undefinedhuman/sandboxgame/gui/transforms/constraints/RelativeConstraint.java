@@ -8,8 +8,8 @@ public class RelativeConstraint extends Constraint {
 
     @Override
     public int getValue(float scale) {
-        if(isPosition()) return (int) (gui.getParentBounds().getValue(axis) + gui.getParentBounds().getValue(getScaleAxis()) * value);
-        else return (int) (gui.getParentBounds().getValue(axis) * value);
+        if(isPosition()) return (int) (guiTransform.parent.getValue(axis) + guiTransform.parent.getValue(getScaleAxis()) * value);
+        else return (int) (guiTransform.parent.getValue(axis) * value);
     }
 
 }

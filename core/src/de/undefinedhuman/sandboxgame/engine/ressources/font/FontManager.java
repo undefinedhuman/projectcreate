@@ -2,10 +2,13 @@ package de.undefinedhuman.sandboxgame.engine.ressources.font;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import de.undefinedhuman.sandboxgame.Main;
+import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.engine.ressources.ResourceManager;
 import de.undefinedhuman.sandboxgame.utils.Manager;
+import de.undefinedhuman.sandboxgame.utils.Tools;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class FontManager extends Manager {
@@ -25,22 +28,26 @@ public class FontManager extends Manager {
     }
 
     public void loadFonts(Font... fonts) {
-        for(Font font : fonts) loadFont(font);
-    }
 
-    public void loadFont(Font font) {
+        boolean loaded = false;
 
-        ArrayList<BitmapFont> fontList = new ArrayList<>();
+        for(Font font : fonts) {
+            ArrayList<BitmapFont> fontList = new ArrayList<>();
 
-        for(int i = 0; i < 10; i++) {
-            BitmapFont bitmapFont = ResourceManager.loadFont(font.name());
-            bitmapFont.getData().markupEnabled = true;
-            bitmapFont.getData().setScale(i + 1);
-            bitmapFont.getData().spaceXadvance = i + 1;
-            fontList.add(bitmapFont);
+            for(int i = 0; i < 10; i++) {
+                BitmapFont bitmapFont = ResourceManager.loadFont(font.name());
+                if(bitmapFont == null) continue;
+                else loaded = true;
+                bitmapFont.getData().markupEnabled = true;
+                bitmapFont.getData().setScale(i + 1);
+                bitmapFont.getData().spaceXadvance = i + 1;
+                fontList.add(bitmapFont);
+            }
+            this.fonts.put(font, fontList);
         }
 
-        fonts.put(font, fontList);
+        if(loaded) Log.info("Font" + Tools.appendSToString(fonts) + " loaded: " + Arrays.toString(fonts));
+
     }
 
     public BitmapFont getFont(Font font) {

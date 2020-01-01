@@ -12,8 +12,8 @@ public class SettingsManager extends Manager {
     public Setting displayHeight, displayWidth, fullScreen, language, renderHitbox, firstRun, RGB, fullBright, dayLight, guiScale;
 
     public SettingsManager() {
-        this.settings = new ArrayList<>();
         if(instance == null) instance = this;
+        this.settings = new ArrayList<>();
     }
 
     @Override

@@ -57,10 +57,19 @@ public class GuiTexture {
     }
 
     private void addTexture(String... names) {
-        for(String s : names) {
-            textureNames.add(s);
-            textures.add(TextureManager.instance.getTexture(s));
+        TextureManager.instance.addTexture(names);
+        for(String name : names) {
+            textureNames.add(name);
+            textures.add(TextureManager.instance.getTexture(name));
         }
+    }
+
+    public void setTexture(String texture) {
+        if(template != null) template = null;
+        for(String name : textureNames) TextureManager.instance.removeTexture(name);
+        this.textureNames.clear();
+        this.textures.clear();
+        addTexture(texture);
     }
 
     public int getCornerSize() { return cornerSize; }
@@ -77,6 +86,10 @@ public class GuiTexture {
         batch.setColor(color);
         batch.draw(textures.get(id), x, y, width, height);
         batch.setColor(col);
+    }
+
+    public GuiTemplate getTemplate() {
+        return template;
     }
 
 }

@@ -7,13 +7,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Align;
+import de.undefinedhuman.sandboxgame.Main;
 import de.undefinedhuman.sandboxgame.engine.ressources.font.Font;
 import de.undefinedhuman.sandboxgame.engine.ressources.font.FontManager;
 import de.undefinedhuman.sandboxgame.gui.GuiComponent;
 import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
-import de.undefinedhuman.sandboxgame.gui.transforms.constraints.ConstantConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.Constraint;
-import de.undefinedhuman.sandboxgame.gui.transforms.constraints.Constraints;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
 
 public class Text extends GuiComponent {
@@ -31,23 +30,24 @@ public class Text extends GuiComponent {
         this.text = String.valueOf(text);
         this.font = FontManager.instance.getFont(fontType);
         lineLength = new PixelConstraint(0).setGui(this).setAxis(Axis.WIDTH);
+        calcScale = false;
     }
 
     @Override
     public void resize(int width, int height) {
+        guiScale = Math.max((int) Math.ceil(Main.guiScale * baseGuiScale), 1);
+        font = FontManager.instance.getFont(fontType, guiScale);
+        layout.setText(font, text, color, lineLength.getValue(guiScale), align, wrap);
+        setScale((int) layout.width, (int) layout.height);
         super.resize(width, height);
-        font = FontManager.instance.getFont(fontType, scale);
-        layout.setText(font, text, color, lineLength.getValue(scale), align, wrap);
-        this.constraints.setValue(Axis.WIDTH, layout.width);
-        this.constraints.setValue(Axis.HEIGHT, layout.height);
-        super.resize(width, height);
-        bounds.addValue(Axis.Y, (int) layout.height);
+        position.y += layout.height;
     }
 
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         super.render(batch, camera);
-        font.draw(batch, layout, bounds.getValue(Axis.X), bounds.getValue(Axis.Y));
+        if(!visible || !parent.isVisible()) return;
+        font.draw(batch, layout, position.x, position.y);
     }
 
     @Override
@@ -90,14 +90,5 @@ public class Text extends GuiComponent {
     public Color getColor() { return color; }
     public String getText() { return this.text; }
     public GlyphLayout getLayout() { return layout; }
-
-    @Override
-    public GuiComponent setConstraints(Constraints constraints) {
-        super.setConstraints(constraints);
-        this.constraints.setConstraint(Axis.WIDTH, new ConstantConstraint(0));
-        this.constraints.setConstraint(Axis.HEIGHT, new ConstantConstraint(0));
-        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        return this;
-    }
 
 }

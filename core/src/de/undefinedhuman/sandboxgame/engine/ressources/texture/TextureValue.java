@@ -2,6 +2,7 @@ package de.undefinedhuman.sandboxgame.engine.ressources.texture;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import de.undefinedhuman.sandboxgame.utils.Tools;
 
 public class TextureValue {
 
@@ -12,6 +13,7 @@ public class TextureValue {
 
     public TextureValue(Texture texture) {
         this.texture = new TextureRegion(texture);
+        Tools.fixBleeding(this.texture);
     }
 
     public void add() {

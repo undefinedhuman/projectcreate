@@ -1,21 +1,21 @@
 package de.undefinedhuman.sandboxgame.gui.transforms.constraints;
 
-import de.undefinedhuman.sandboxgame.gui.GuiComponent;
 import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
+import de.undefinedhuman.sandboxgame.gui.transforms.GuiTransform;
 
 public abstract class Constraint {
 
     protected float value;
 
-    protected GuiComponent gui;
+    protected GuiTransform guiTransform;
     protected Axis axis;
 
     public Constraint(float value) {
         this.value = value;
     }
 
-    public Constraint setGui(GuiComponent gui) {
-        this.gui = gui;
+    public Constraint setGui(GuiTransform guiTransform) {
+        this.guiTransform = guiTransform;
         return this;
     }
 
@@ -29,6 +29,7 @@ public abstract class Constraint {
     public void setValue(float value) {
         this.value = value;
     }
+    public float getValue() { return value; }
 
     protected boolean isPosition() { return axis == Axis.X || axis == Axis.Y; }
 

@@ -2,22 +2,23 @@ package de.undefinedhuman.sandboxgame.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import de.undefinedhuman.sandboxgame.Main;
+import de.undefinedhuman.sandboxgame.entity.Entity;
+import de.undefinedhuman.sandboxgame.entity.EntityManager;
+import de.undefinedhuman.sandboxgame.entity.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.sandboxgame.gui.Gui;
-import de.undefinedhuman.sandboxgame.gui.GuiComponent;
-import de.undefinedhuman.sandboxgame.gui.GuiManager;
-import de.undefinedhuman.sandboxgame.gui.elements.Slider;
-import de.undefinedhuman.sandboxgame.gui.event.ChangeEvent;
-import de.undefinedhuman.sandboxgame.gui.text.Text;
-import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
-import de.undefinedhuman.sandboxgame.gui.texture.GuiTexture;
-import de.undefinedhuman.sandboxgame.gui.transforms.constraints.Constraints;
-import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
-import de.undefinedhuman.sandboxgame.gui.transforms.constraints.RelativeConstraint;
+import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
+import de.undefinedhuman.sandboxgame.screen.gamescreen.GameScreen;
+import de.undefinedhuman.sandboxgame.world.World;
+import de.undefinedhuman.sandboxgame.world.WorldGenerator;
+import de.undefinedhuman.sandboxgame.world.settings.BiomeSetting;
+import de.undefinedhuman.sandboxgame.world.settings.WorldPreset;
+import de.undefinedhuman.sandboxgame.world.settings.WorldSetting;
 
 public class TestScreen implements Screen {
 
@@ -28,7 +29,6 @@ public class TestScreen implements Screen {
     private SpriteBatch batch;
 
     private Gui gui;
-    private GuiComponent text;
 
     @Override
     public void show() {
@@ -37,31 +37,38 @@ public class TestScreen implements Screen {
         viewport = new ScreenViewport(camera);
         batch = new SpriteBatch();
 
+        WorldGenerator.instance = new WorldGenerator();
+
+        World.instance = WorldGenerator.instance.generateWorld(new WorldPreset("Main", WorldSetting.DEV, BiomeSetting.DEV));
+        EntityManager.instance.init();
+
+        Entity player = BlueprintManager.instance.getBlueprint(0).createInstance();
+        player.mainPlayer = true;
+        player.setPosition(1000,16*50);
+        player.setWorldID(0);
+        GameManager.instance.player = player;
+        EntityManager.instance.addEntity(0, player);
+
+        Main.instance.setScreen(GameScreen.instance);
+
+        /*ClientManager.instance.connect();
+
+        LoginPacket packet = new LoginPacket();
+        packet.name = "GentleXD " + new Random().nextInt(100);
+        ClientManager.instance.sendTCP(packet);*/
+
         Gdx.graphics.setResizable(true);
 
-        GuiManager.instance = new GuiManager();
-        GuiManager.instance.init();
+    }
 
-        Slider slider = new Slider(new GuiTexture(GuiTemplate.SCROLL_PANEL),"gui/sound bar.png","gui/pointer.png",true);
-        slider.setConstraints(new Constraints().set(new PixelConstraint(25), new RelativeConstraint(0.5f), new PixelConstraint(128), new PixelConstraint(4)).setCenteredY());
-        GuiComponent textSlider = new Text("1.0f").setColor(Color.ORANGE).setConstraints(new Constraints().setCenteredY().setPosition(new RelativeConstraint(1.075f), new RelativeConstraint(0.5f)));
-        slider.addChild(textSlider);
-        slider.addChangeListener(new ChangeEvent() {
-            @Override
-            public void notify(float progress) {
-                ((Text) textSlider).setText((int) (progress * 100));
-            }
-        });
-        GuiManager.instance.addGui(slider);
+    @Override
+    public void render(float delta) {
 
-        gui = new Gui(new GuiTexture(GuiTemplate.SMALL_PANEL));
-        gui.setScale(0.5f);
-        Constraints constraints = new Constraints().set(new RelativeConstraint(0.5f), new PixelConstraint(150), new PixelConstraint(128), new PixelConstraint(128)).setCenteredX();
-        gui.setConstraints(constraints);
-        text = new Text("Hallo").setConstraints(new Constraints()
-                .setPosition(new RelativeConstraint(0.5f), new RelativeConstraint(0.5f)).setCentered());
-        gui.addChild(text);
-        GuiManager.instance.addGui(gui);
+        clear();
+
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+        batch.end();
 
     }
 
@@ -71,22 +78,6 @@ public class TestScreen implements Screen {
         camera.setToOrtho(false, width, height);
         viewport.update(width, height);
         camera.update();
-
-        GuiManager.instance.resize(width, height);
-
-    }
-
-    @Override
-    public void render(float delta) {
-
-        GuiManager.instance.update(delta);
-
-        ((Text) text).setText("Hallo");
-
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-        GuiManager.instance.render(batch, camera);
-        batch.end();
 
     }
 
@@ -101,5 +92,12 @@ public class TestScreen implements Screen {
 
     @Override
     public void dispose() {}
+
+    private void clear() {
+
+        Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1);
+        Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
+
+    }
 
 }

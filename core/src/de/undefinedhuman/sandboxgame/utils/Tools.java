@@ -15,7 +15,15 @@ import de.undefinedhuman.sandboxgame.engine.file.FileUtils;
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.file.Paths;
 import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
+import de.undefinedhuman.sandboxgame.entity.Entity;
+import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
+import de.undefinedhuman.sandboxgame.entity.ecs.components.equip.EquipComponent;
 import de.undefinedhuman.sandboxgame.gui.Gui;
+import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
+import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
+import de.undefinedhuman.sandboxgame.world.Noise;
+import de.undefinedhuman.sandboxgame.world.WorldLayer;
+import de.undefinedhuman.sandboxgame.world.layer.LayerTransition;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -31,13 +39,12 @@ public class Tools {
     public static boolean isLinux = System.getProperty("os.name").contains("Linux");
     public static Random random = new Random();
 
-    public static String getTime() {
+    private static Noise noise = new Noise(2,1.7f,0.4f);
 
+    public static String getTime() {
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy - HH-mm-ss");
         Calendar cal = Calendar.getInstance();
-
         return df.format(cal.getTime());
-
     }
 
     public static Vector2 getScreenPos(OrthographicCamera cam, Vector2 position) {
@@ -45,40 +52,31 @@ public class Tools {
     }
 
     public static Vector2 getScreenPos(OrthographicCamera cam, float x, float y) {
-
         Vector3 worldCoords = new Vector3(x, y, 0.0F);
         cam.project(worldCoords);
         return new Vector2(worldCoords.x, worldCoords.y);
-
     }
 
     public static Vector2 getWorldPos(OrthographicCamera cam, float x, float y) {
-
-        Vector3 worldCoords = new Vector3(x, y, 0.0F);
+        Vector3 worldCoords = new Vector3(x, y,0.0F);
         cam.unproject(worldCoords);
         return new Vector2(worldCoords.x, worldCoords.y);
-
     }
 
     public static Vector2 getWorldPos(OrthographicCamera cam, Vector2 pos) {
-
-        Vector3 worldCoords = new Vector3(pos.x, pos.y,0.0F);
-        worldCoords = cam.unproject(worldCoords);
-        return new Vector2(worldCoords.x, worldCoords.y);
-
+        return getWorldPos(cam, pos.x, pos.y);
     }
 
-    public static Vector2 getAbsoluteMouse(OrthographicCamera cam) {
-        return getAbsolutePos(cam, Gdx.input.getX(), Gdx.input.getY());
+    public static Vector2 getWorldCoordsOfMouse(OrthographicCamera cam) {
+        return getWorldPos(cam, Gdx.input.getX(), Gdx.input.getY());
     }
 
-    public static Vector2 getAbsolutePos(OrthographicCamera cam, float x, float y) {
-
-        Vector3 worldCoord = new Vector3(x, y, 0.0F);
-        cam.unproject(worldCoord);
-        return new Vector2(worldCoord.x, worldCoord.y);
-
+    public static Vector2 convertToWorldCoords(float x, float y) {
+        Vector3 worldCoords = new Vector3(x, y, 0.0F);
+        GameManager.gameCamera.unproject(worldCoords);
+        return new Vector2((int) (worldCoords.x / Variables.BLOCK_SIZE), (int) (worldCoords.y / Variables.BLOCK_SIZE));
     }
+
 
     public static Vector3 lerp(Vector3 vecFrom, Vector3 vecTo, float speed) {
         if ((vecFrom.x - vecTo.x > 750.0f) || (vecFrom.x - vecTo.x < -750.0f) || (vecFrom.y - vecTo.y > 750.0f) || (vecFrom.y - vecTo.y < -750.0f))
@@ -124,7 +122,7 @@ public class Tools {
         Vector2 vec = new Vector2(x2-x,y2-y);
         Color bColor = batch.getColor();
         batch.setColor(col);
-        batch.draw(new TextureRegion(TextureManager.instance.getTexture("blank.png")), x-w/2, y, w/2, 0, w, vec.len(), 1, 1, vec.angle()-90);
+        batch.draw(new TextureRegion(TextureManager.instance.getTexture("blank.png")),x-w/2, y,w/2,0, w, vec.len(),1,1,vec.angle()-90);
         batch.setColor(bColor);
     }
 
@@ -132,8 +130,8 @@ public class Tools {
         Vector2 vec = new Vector2(x2-x,y2-y);
         Sprite sprite = new Sprite(tex, 0, 0, tex.getWidth(), (int) vec.len()+bonus);
         sprite.setColor(batch.getColor());
-        sprite.setOrigin(tex.getWidth()/2, 0);
-        sprite.setPosition(x-tex.getWidth()/2, y);
+        sprite.setOrigin(tex.getWidth() >> 1, 0);
+        sprite.setPosition(x - (tex.getWidth() >> 1), y);
         sprite.setRotation( vec.angle()-90);
         sprite.draw(batch);
     }
@@ -141,34 +139,32 @@ public class Tools {
     public static float swordLerp(float x, float y, float speed) {
         if(y - x > 180) y -= 360;
         if(x - y > 180) x -= 360;
-        float t = (y - x) * speed * Main.delta;
-        if(t < -40 * speed * Main.delta) t = -40 * speed * Main.delta;
-        if(t > 40 * speed*Main.delta) t = 40 * speed * Main.delta;
-        float result = x + t;
-        while(result > 360) result -= 360;
-        while(result < 0) result += 360;
-        return result;
+        return getResult(x, y, speed);
     }
 
     public static float swordLerpTurned(float x, float y, float speed, boolean turned) {
         while (turned && y < x) y += 360;
         while (!turned && y > x) y -= 360;
         if(Math.abs(x - y) < 0.3f) return y;
-        float result, t = (y - x) * speed * Main.delta;
+        return getResult(x, y, speed);
+    }
+
+    private static float getResult(float x, float y, float speed) {
+        float t = (y - x) * speed * Main.delta;
         if (t < -40 * speed * Main.delta) t = -40 * speed * Main.delta;
-        else if (t > 40 * speed * Main.delta) t = 40 * speed * Main.delta;
-        result = x + t;
+        if (t > 40 * speed * Main.delta) t = 40 * speed * Main.delta;
+        float result = x + t;
         while(result > 360) result -= 360;
         while(result < 0) result += 360;
         return result;
     }
 
-    public static Vector2[] getPoints(Vector2 positon, Vector2 size, float angle, Vector2 center) {
+    public static Vector2[] getPoints(Vector2 position, Vector2 size, float angle, Vector2 center) {
         Vector2[] points = new Vector2[4];
-        points[0] = positon;
-        points[1] = new Vector2(positon).add(size.x, 0);
-        points[2] = new Vector2(positon).add(0, size.y);
-        points[3] = new Vector2(positon).add(size);
+        points[0] = position;
+        points[1] = new Vector2(position).add(size.x, 0);
+        points[2] = new Vector2(position).add(0, size.y);
+        points[3] = new Vector2(position).add(size);
         for (Vector2 point : points) Tools.rotatePoint(point, center, angle);
         return points;
     }
@@ -205,6 +201,35 @@ public class Tools {
         batch.setColor(batchColor);
     }
 
+    public static boolean collideSAT(Sprite a, Vector2[] hitboxPoints) {
+        Vector2[] aVectors = getVertices(a);
+        Axis axis1 = new Axis(aVectors[1].x - aVectors[0].x, aVectors[1].y - aVectors[0].y), axis2 = new Axis(aVectors[1].x - aVectors[2].x, aVectors[1].y - aVectors[2].y);
+        Axis axis3 = new Axis(hitboxPoints[0].x - hitboxPoints[3].x, hitboxPoints[0].y - hitboxPoints[3].y), axis4 = new Axis(hitboxPoints[0].x - hitboxPoints[1].x, hitboxPoints[0].y - hitboxPoints[1].y);
+        return (collideAxis(aVectors, hitboxPoints, axis1) && collideAxis(aVectors, hitboxPoints, axis2) && collideAxis(aVectors, hitboxPoints, axis3) && collideAxis(aVectors, hitboxPoints, axis4));
+    }
+
+    private static boolean collideAxis(Vector2[] pointsA, Vector2[] pointsB, Axis axis) {
+        Vector2[] axisAPoints = projectPointsOnAxis(axis, pointsA), axisBPoints = projectPointsOnAxis(axis, pointsB);
+        float axis1MaxA = axis.getMaxPointOnAxis(axisAPoints), axis1MinA = axis.getMinPointOnAxis(axisAPoints), axis1MaxB = axis.getMaxPointOnAxis(axisBPoints), axis1MinB = axis.getMinPointOnAxis(axisBPoints);
+        return axis1MinB <= axis1MaxA && axis1MaxB >= axis1MinA;
+    }
+
+    public static Vector2[] getVertices(Sprite texture) {
+        float[] vertices = texture.getVertices();
+        Vector2[] vec = new Vector2[4];
+        vec[0] = new Vector2(vertices[SpriteBatch.X1], vertices[SpriteBatch.Y1]);
+        vec[1] = new Vector2(vertices[SpriteBatch.X2], vertices[SpriteBatch.Y2]);
+        vec[2] = new Vector2(vertices[SpriteBatch.X3], vertices[SpriteBatch.Y3]);
+        vec[3] = new Vector2(vertices[SpriteBatch.X4], vertices[SpriteBatch.Y4]);
+        return vec;
+    }
+
+    private static Vector2[] projectPointsOnAxis(Axis axis, Vector2[] vectors) {
+        Vector2[] fvec = new Vector2[vectors.length];
+        for (int i = 0; i < fvec.length; i++) fvec[i] = axis.projectPoint(vectors[i]);
+        return fvec;
+    }
+
     public static int floor(float f) {
         if(f >= 0) return (int) f;
         else return (int) f-1;
@@ -215,60 +240,6 @@ public class Tools {
         while(angle>360) angle -= 360;
         return angle;
     }
-
-    /*public static boolean collideSAT(Sprite spriteA, Vector2[] verticesB) {
-
-        Vector2[] verticesA = getVertices(spriteA);
-
-        for (int i = 0; i < verticesA.length; i++) {
-            Vector2 A = verticesA[i], B = verticesA[(i + 1) % verticesA.length], normal = new Vector2(B.x - A.x, B.y - A.y).rotate90(-1);
-            if (intersects(verticesA, verticesB, normal)) return false;
-        }
-
-        for (int i = 0; i < verticesB.length; i++) {
-            Vector2 A = verticesB[i], B = verticesB[(i + 1) % verticesB.length], normal = new Vector2(B.x - A.x, B.y - A.y).rotate90(-1);
-            if (intersects(verticesA, verticesB, normal)) return false;
-        }
-
-        return true;
-
-    }
-
-
-    public static boolean collideSAT(Vector2[] verticesA, Vector2[] verticesB) {
-
-        for (int i = 0; i < verticesA.length; i++) {
-            Vector2 A = verticesA[i], B = verticesA[(i + 1) % verticesA.length], normal = new Vector2(B.x - A.x, B.y - A.y).rotate90(-1);
-            if (intersects(verticesA, verticesB, normal)) return false;
-        }
-
-        for (int i = 0; i < verticesB.length; i++) {
-            Vector2 A = verticesB[i], B = verticesB[(i + 1) % verticesB.length], normal = new Vector2(B.x - A.x, B.y - A.y).rotate90(-1);
-            if (intersects(verticesA, verticesB, normal)) return false;
-        }
-
-        return true;
-
-    }
-
-    private static boolean intersects(Vector2[] verticesA, Vector2[] verticesB, Vector2 axis) {
-
-        float minA = Float.MAX_VALUE, maxA = Float.MIN_VALUE;
-        for (Vector2 vertex : verticesA) {
-            float value = vertex.dot(axis);
-            if (value < minA) minA = value;
-            if (value > maxA) maxA = value;
-        }
-
-        float minB = Float.MAX_VALUE, maxB = Float.MIN_VALUE;
-        for (Vector2 vertex : verticesB) {
-            float value = vertex.dot(axis);
-            if (value < minB) minB = value;
-            if (value > maxB) maxB = value;
-        }
-
-        return minA > maxB || minB > maxA;
-    }*/
 
     public static void screenshot() {
         byte[] pixels = ScreenUtils.getFrameBufferPixels(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), true);
@@ -327,7 +298,7 @@ public class Tools {
         return val >= min && val <= max;
     }
 
-    public static Vector2 convertToWorldCoord(Vector2 pos) {
+    public static Vector2 convertToWorldCoords(Vector2 pos) {
         return new Vector2(pos.x / 16, pos.y / 16);
     }
 
@@ -389,18 +360,13 @@ public class Tools {
     }
 
     public static Vector2[] loadVector2Array(HashMap<String, LineSplitter> settings, String name, Vector2 defaultValue) {
-
         if(settings.containsKey(name)) {
-
             LineSplitter s = settings.get(name);
             Vector2[] vectors = new Vector2[s.getNextInt()];
             for(int i = 0; i < vectors.length; i++) vectors[i] = s.getNextVector2();
             return vectors;
-
         }
-
         return new Vector2[0];
-
     }
 
     public static Vector3 loadVector3(HashMap<String, LineSplitter> settings, String name, Vector3 defaultValue) {
@@ -434,5 +400,36 @@ public class Tools {
         return maxID;
     }
 
+    public static boolean getLayerTransitionMaxY(WorldLayer worldLayer, int x, int y, int maxY, LayerTransition trans) {
+
+        switch (trans) {
+
+            case TOP:
+                return y > maxY && (worldLayer.blocks[x][y+2] == 0 || worldLayer.blocks[x][y+1] == 0);
+            case SIN:
+                return y < (maxY + (int) (Math.sin(x*50) * 5));
+            case RANDOM:
+                return y < (maxY + random.nextInt(3) - 1);
+            case CAVE:
+                int tempY = maxY - y;
+                return noise.select(0.5f, noise.gradient(x, tempY,100));
+            case LINEAR:
+                return y < maxY;
+
+        }
+
+        return false;
+
+    }
+
+    public static boolean isItemSelected(Entity entity) {
+        EquipComponent equipComponent;
+        if((equipComponent = (EquipComponent) entity.getComponent(ComponentType.EQUIP)) != null || entity.mainPlayer) return (entity.mainPlayer ? InventoryManager.instance.getSelector().getSelectedInvItem() != null : equipComponent.itemIDs[0] != -1);
+        return false;
+    }
+
+    public static String appendSToString(Object[] objects) {
+        return objects.length > 1 ? "s" : "";
+    }
 
 }

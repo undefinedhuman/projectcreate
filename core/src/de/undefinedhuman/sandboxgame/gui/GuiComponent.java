@@ -1,65 +1,50 @@
 package de.undefinedhuman.sandboxgame.gui;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.sandboxgame.Main;
-import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
-import de.undefinedhuman.sandboxgame.gui.transforms.Bounds;
-import de.undefinedhuman.sandboxgame.gui.transforms.constraints.Constraints;
-import de.undefinedhuman.sandboxgame.utils.Tools;
+import de.undefinedhuman.sandboxgame.gui.event.Event;
+import de.undefinedhuman.sandboxgame.gui.transforms.GuiTransform;
 
-public class GuiComponent {
+import java.util.ArrayList;
 
-    public GuiComponent parent;
+public class GuiComponent extends GuiTransform {
 
-    protected Bounds bounds = new Bounds();
-    protected Constraints constraints;
-    protected boolean visible = true, init = false;
-    protected float baseScale = 1, scale, alpha = 1;
+    protected float alpha = 1;
     protected Color color = new Color(Color.WHITE);
 
+    private ArrayList<Event> events = new ArrayList<>();
+
     public GuiComponent() {
-        this.parent = GuiManager.instance.screen;
-        this.constraints = new Constraints();
+        super();
     }
 
+    @Override
+    public void init() {
+        super.init();
+    }
+
+    @Override
     public void resize(int width, int height) {
-        if(!init) return;
-        scale = Math.max((int) Math.ceil(Main.guiScale * baseScale), 1);
-        this.bounds.resize(constraints, scale);
+        super.resize(width, height);
     }
 
-    public void init() {}
+    @Override
+    public void update(float delta) {
+        super.update(delta);
+        for(Event event : events) event.update(delta);
+    }
 
-    public void update(float delta) { }
-
+    @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
-        if(!visible || !parent.visible || !init) return;
+        super.render(batch, camera);
+        if(!visible || !parent.isVisible()) return;
+        for(Event event : events) event.render(batch, camera);
     }
 
+    @Override
     public void delete() {
-        if(constraints != null) constraints.delete();
-    }
-
-    public GuiComponent setConstraints(Constraints constraints) {
-        this.constraints = constraints.setGui(this);
-        init = true;
-        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        return this;
-    }
-
-    public GuiComponent setVisible(boolean visible) {
-        this.visible = visible;
-        return this;
-    }
-
-    public GuiComponent setScale(float scale) {
-        this.baseScale = scale;
-        if(init) resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        return this;
+        events.clear();
     }
 
     public GuiComponent setAlpha(float alpha) {
@@ -74,26 +59,9 @@ public class GuiComponent {
         return this;
     }
 
-    public GuiComponent initScreen(float width, float height) {
-        this.parent = this;
-        this.init = true;
-        this.bounds.initScreen(width, height);
-        return this;
+    public void addEvent(Event event) {
+        this.events.add(event);
+        event.setGuiComponent(this);
     }
-
-    public boolean isClicked(OrthographicCamera camera) {
-        Vector2 coords = Tools.getAbsoluteMouse(camera);
-        float x = getBound(Axis.X), y = getBound(Axis.Y);
-        return (coords.x >= x && coords.x <= x + getBound(Axis.WIDTH)) && (coords.y >= y && coords.y <= y + getBound(Axis.HEIGHT));
-    }
-
-    public Vector2 getPosition() { return new Vector2(getBound(Axis.X), getBound(Axis.Y)); }
-    public Vector2 getScale() { return new Vector2(getBound(Axis.WIDTH), getBound(Axis.HEIGHT)); }
-    public boolean isVisible() { return visible; }
-    public int getBound(Axis axis) { return bounds.getValue(axis); }
-    public Constraints getConstraints() { return constraints; }
-    public Bounds getParentBounds() { return parent.getBounds(); }
-    public Bounds getBounds() { return bounds; }
-    public GuiComponent getParent() { return parent; }
 
 }
