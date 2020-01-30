@@ -428,6 +428,10 @@ public class Tools {
         return false;
     }
 
+    public static int isEqual(int i, int j) {
+        return i == j ? 1 : 0;
+    }
+
     public static String appendSToString(Object[] objects) {
         return objects.length > 1 ? "s" : "";
     }

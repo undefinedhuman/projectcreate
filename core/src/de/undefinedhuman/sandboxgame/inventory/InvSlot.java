@@ -41,6 +41,7 @@ public class InvSlot extends Slot {
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         off = (int) (-(selected ? (Variables.SELECTED_AMOUNT / 2) : 0) * guiScale);
         position.add(off, off);
+        texture.resize((int) position.x, (int) position.y, (int) scale.x, (int) scale.y, guiScale);
     }
 
     public void setSelected(boolean selected) {

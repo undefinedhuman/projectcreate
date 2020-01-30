@@ -65,8 +65,7 @@ public class GuiTransform {
     }
 
     public GuiTransform setPosition(Vector2 position) {
-        this.position.set(position);
-        return this;
+        return setPosition((int) position.x, (int) position.y);
     }
 
     public GuiTransform setPosition(String x, String y) {
@@ -81,8 +80,7 @@ public class GuiTransform {
     }
 
     public GuiTransform setScale(Vector2 scale) {
-        this.scale.set(scale);
-        return this;
+        return setScale((int) scale.x, (int) scale.y);
     }
 
     public GuiTransform setScale(String width, String height) {

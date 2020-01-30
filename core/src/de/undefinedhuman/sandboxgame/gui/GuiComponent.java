@@ -49,13 +49,11 @@ public class GuiComponent extends GuiTransform {
 
     public GuiComponent setAlpha(float alpha) {
         this.alpha = alpha;
-        this.color.a = alpha;
         return this;
     }
 
     public GuiComponent setColor(Color color) {
-        float alpha = this.color.a;
-        this.color = new Color(color.r, color.g, color.b, alpha);
+        this.color = color;
         return this;
     }
 

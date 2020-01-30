@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import de.undefinedhuman.sandboxgame.crafting.gui.CraftingInventory;
 import de.undefinedhuman.sandboxgame.engine.ressources.font.Font;
 import de.undefinedhuman.sandboxgame.equip.EquipScreen;
 import de.undefinedhuman.sandboxgame.gui.Gui;
@@ -33,7 +32,6 @@ public class InventoryManager extends Manager {
     private Inventory inventory;
     private InspectScreen inspectScreen;
     private EquipScreen equipScreen;
-    private CraftingInventory craftingInventory;
 
     public InventoryManager() {
 
@@ -46,8 +44,6 @@ public class InventoryManager extends Manager {
         sidePanel = new SidePanel();
         inspectScreen = new InspectScreen();
         inspectScreen.setVisible(false);
-        craftingInventory = new CraftingInventory();
-        craftingInventory.setVisible(false);
         equipScreen = new EquipScreen();
         equipScreen.setTitle(GuiTemplate.SLOT,"Equip", Font.Normal, Color.WHITE);
         equipScreen.setVisible(false);

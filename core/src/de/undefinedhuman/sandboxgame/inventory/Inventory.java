@@ -25,8 +25,7 @@ public class Inventory extends Gui implements InvTarget {
         this.row = row; this.col = col;
         inventory = new InvSlot[row][col];
         this.offset.set(offset != null ? offset : new Vector2(template.cornerSize, template.cornerSize));
-        Vector2 invScale = Variables.getInventoryScale(this.offset, col, row);
-        setScale("p" + invScale.x,"p"+ invScale.y);
+        setScale(Variables.getInventoryWidth(this.offset.x, col), Variables.getInventoryHeight(this.offset.y, row));
 
         for(int i = 0; i < inventory.length; i++) for (int j = 0; j < inventory[i].length; j++) {
             inventory[i][j] = new InvSlot();

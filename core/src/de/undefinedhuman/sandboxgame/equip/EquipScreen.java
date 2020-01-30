@@ -15,14 +15,13 @@ public class EquipScreen extends Gui implements InvTarget {
 
     private EquipSlot[] slots = new EquipSlot[4];
     private Vector2[] offset = new Vector2[] { new Vector2(0, 102), new Vector2(0, 68), new Vector2(-26, 40), new Vector2(0, -4) };
-    private String[] texture = new String[] { "gui/Helmet-Preview.png", "gui/Chestplate-Preview.png", "gui/Arms-Preview.png", "gui/Boots-Preview.png" };
+    private String[] texture = new String[] { "gui/preview/equip/Helmet-Preview.png", "gui/preview/equip/Chestplate-Preview.png", "gui/preview/equip/Arms-Preview.png", "gui/preview/equip/Boots-Preview.png" };
     private ItemType[] type = new ItemType[] { ItemType.HELMET, ItemType.ARMOR, ItemType.ARMOR, ItemType.ARMOR };
 
     public EquipScreen() {
         super(GuiTemplate.SMALL_PANEL);
-        Vector2 scale = Variables.getInventoryScale(new Vector2(GuiTemplate.SMALL_PANEL.cornerSize, GuiTemplate.SMALL_PANEL.cornerSize),5,10);
-        setScale("p" + scale.x,"p" + scale.y);
-        Gui gui = new Gui("gui/Human-Preview.png");
+        setScale(Variables.getInventoryWidth(GuiTemplate.SMALL_PANEL,5), Variables.getInventoryHeight(GuiTemplate.SMALL_PANEL,10));
+        Gui gui = new Gui("gui/preview/equip/Human-Preview.png");
         gui.set("r0.5","r0.5","p64","p128").setOffsetY("p48").setCentered();
         addChild(gui);
 

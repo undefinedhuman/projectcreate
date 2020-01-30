@@ -15,36 +15,33 @@ import java.util.HashMap;
 
 public enum ItemType {
 
-    ITEM(new Item()), TOOL(new Tool()), PICKAXE(new Pickaxe()), SWORD(new Sword()), WEAPON(new Weapon()),
-    BLOCK(new Block()), BOW(new Bow()), STAFF(new Staff()), ARMOR(new Armor()), HELMET(new Helmet());
+    ITEM(new Item(),""), TOOL(new Tool(),"gui/preview/crafting/Tools.png"), PICKAXE(new Pickaxe(),""), SWORD(new Sword(),""), WEAPON(new Weapon(),"gui/preview/crafting/Weapons.png"),
+    BLOCK(new Block(),"gui/preview/crafting/Blocks.png"), BOW(new Bow(),""), STAFF(new Staff(),""), ARMOR(new Armor(),"gui/preview/crafting/Armor.png"), HELMET(new Helmet(),""),
+    STRUCTURE(new Item(),"gui/preview/crafting/Structures.png");
 
     private Item item;
+    private String previewTexture;
 
-    ItemType(Item item) {
-
+    ItemType(Item item, String previewTexture) {
         this.item = item;
+        this.previewTexture = previewTexture;
+    }
 
+    public String getPreviewTexture() {
+        return previewTexture;
     }
 
     public Item load(ItemType type, int id, HashMap<String, LineSplitter> splitter) {
 
         Item item = null;
 
-        if (this.item != null) {
+        try {
+            item = this.item.getClass().newInstance();
+        } catch (InstantiationException | IllegalAccessException e) { e.printStackTrace(); }
 
-            try {
-                item = this.item.getClass().newInstance();
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-
-            if (item != null) {
-                item.load(id, splitter);
-                item.type = type;
-            }
-
-        }
-
+        if(item == null) return null;
+        item.load(id, splitter);
+        item.type = type;
         return item;
 
     }

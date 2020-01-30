@@ -1,0 +1,114 @@
+Aktuelle TODO's:
+ - Kleines Profile für Gegner bauen in der Mitte des Screens
+
+TODO's:
+ - Profile Class überarbeiten, die health und mana bars noch mit animationen verschönern
+ - Profile Component
+ - Combat Component wieder im Editor hinzufügen
+ - SpriteData überarbeiten
+ - Editor PositionSettings das laden funktioniert nicht der Daten
+ - Evtl das Combat System überarbeiten mehr mit Animationen arbeiten und Positionen
+
+Combat System:
+ - Verschiedene Materialien, für jede Waffe.
+ - Waffen haben verschiedene Attacken.
+ - Jede Waffe hat ein Level.
+ - Waffen können verschiedene Effekte/Enchantments haben die bekommen dann auch Ränder wie hier https://www.gamedevmarket.net/asset/pixel-art-fantasy-iconset-24x24-2181/
+
+Drop Items:
+ - Drop Items sollen je nach Seltenheit ein Licht Effekt bekommen.
+ - Drop Items brauchen eine Pick Up Sound
+ - an den Rändern der Welt die Drop Items fixen das auch die von 6500 bis z.b. 50 angezeigt werden
+ - Chunks einführen
+
+Crystal:
+ - Crystal geben Boost oder extra Effekte wenn man z.b. einen Mertoriten Crystal hat und diesen aktiviert und man dann einen Enemy hittet kommt ein Meteroit.
+ - Man kann Crystals equippen z.b. eine Level 1 Starter Waffe kann kein Crystal die Level 100 3 Crystals.
+
+Planets:
+ - Random Planet Genertor mit dann auswahl auf welchen Planeten man möchte.
+ - Es gibt Planeten Ringe und Sonnensysteme z.b. jeder Spieler Clan hat sein eigenes Sonnensystem
+ - Später gibt es einen Haupt Server der alle "offiziellen" Server mit einander verbindet.
+ - Jeder Spieler kann dann zwischen diesen Servern hin und her wechseln, auf private kann man nur wenn man eingeladen wird oder man das Passwort kennt.
+ - Die Hauptwelt und jede Spieler Welt hat wenn man diese auswählt ein kleines Icon unter sich oder irgendwie in einer Ecke des Screens. Dort sieht man ein Icon des Spielers oder der jeweiligen Nation
+
+
+    // Tress should be huge, crafting screens each recipe item should get a preview (animated for for example structures), normal player characters can be enemys.
+    // Fishes there should some small friendly fishes (different type), also some small animals like frogs, birds, schnecken etc. but there should also be some bigger animals most of them should be, aggressive
+    // For example cows can be tamed they get a different skin then they can be breed and feed etc. like in minecraft
+
+
+Effekte:
+ - Jeder Effekt hat einen Cooldown Meteroit z.b. 5 min Fire z.b. 5 sec Heal 0 sec. etc.
+ - Jeder Effect hat eine Status Anzeige die entweder die momentanen Effekte oder Cooldowns anzeigt.
+    - z.B. ein Fire Effekt macht über Zeit Schaden.
+
+Tutorial:
+ - Start Level wo einem die Basics beigebracht werden mit Bildern (Nach Rechts und links laufen springen etc.)
+
+Story:
+ - Haupt Welt mehrere Biome. Hauptwelt besitzt 6 Monde jeder mehrere Völker
+
+Screenshot:
+ - Screenshot Manager mit Datei Erstellung und dann Methode zum erstellen eines Screenshots.
+
+Emotes:
+ - Man kann kleine Emote Buttons drücken mit Smiley etc. und wenn man einen drückt kommt eine Sprechblase über einem die das Emote mit Animation abspielt!
+
+Gui:
+ - Es soll ein einheitliches Scale System geben für die Guis und auch für die Welt.
+ - Inventory verschiedene Screens Also Inventory, Chests, Inspect etc.
+ - Verhalten von RelativePosition überprüfen wenn das Parent Gui gecentered ist.
+ - Chat Gui (Multicolor text)
+
+Crafting:
+ - Erst wenn man manche Materialien gefunden hat werden Rezepte freigegeben. Sillouten einbauen bei Crafting Menu
+
+Party/Friend System:
+ - Anzeigen irgendwo unter dem Spieler Stats GUI
+
+Multiplayer:
+ - Packets die die Spieler einer löschenden Welt auf die Main Welt teleportiert!
+ - Auto Disconnect wenn der Client nach 5 Minuten keine Antwort schickt.
+ - Server is still starting einbauen, sodass z.b. die Main World erst generiert wird bevor Speiler connecten
+ - Drop Items Multiplayer manchmal spawnen die an anderen Positionen sodass manchmal manche eingesammelt werden können die eigentlich garnicht existieren.
+
+Entity:
+ - Spieler Init wenn der ClientManager den gameManager Player setzt davor darf das Player Profile nicht initialisiert werden.
+ - Scale System Da z.b. Weapon Offset und Pos etc. ungenau werden
+ - EquipSystem Selected Arm Texture dynamisch machen
+ - EquipSystem Variablen dynamisch machen.
+ - Right Arm Selected Texture entfernen
+ - Movement Component Animation Names änderbar machen
+
+World:
+ - Kleine Höhlen irgendwie 4 * 6 groß mit kleiner Kiste in der Mitte
+ - In kleinen Pberwelt Höhlen Säulen einfpgen im Hintergrund siehe Starbound oder dieses Block Pack
+   -> Und kleine Säulen also 4 * 10 auf der Oberfläche nach oben einbauen
+
+Drop Items:
+ - Vom selben typ zu einem Stack zusammenfassen
+
+Font Manager:
+ - Es gibt eine Default Liste mit Fonts z.B. Title, Normal, Hover, jede Anwendung die eine Font braucht bekommt eine eigene Instanz in einer Liste mit eigener Scale etc.
+
+Bugs:
+ - Licht Bug an den Rändern der Welt entfernen.
+ - Drop items Render Bug an den Rändern der Welt entfernen
+ - Die Blocks Checks also check3Cells am boden der Welt fixen.
+ - Load Music Function einbauen das ein "Unknown" also ein Standard Sound geladen wird wie bei den Texturen.
+ - Splashscreen Resize Methode anpassen
+ - Light Manager Default Height also die Höhe an der das Limit der World genertation ist.
+ - In größer Höhe funktoniert die Lauf animation nicht vernünftig
+ - Arrow spawnt wenn man nach rechts läuft aber nach links schaut nicht richtig
+ - Window Resize kann den SPieler verschieben z.B. unter Spieler ist eine Höhle und dann kann der Spieler dahin "tpt" werden
+
+      * Wenn ein Spieler nAFK ist kann er angeklickt werden mit AFK Info und er hat Sleep als Z Z Z Partikel über sich und die Augen zu
+      * Notifications überarbeiten ;D
+      * Achievment System & Settings! Achievments werden in einer ART Scroll Panel dargestellt es existieren 4-5 Elemente an Achievments und dann gibts Pfeile um immer ein nues anzeiogen zu lassen wie Starbound Charakter Auswahl!
+      * Effects Progess Bar die sich in der Zeit immer verringert udn links am Rand angezeigt wird
+      * Unter Name und Health etc
+      * Changelog programmieren mit Time View und Latest Löschen und neu anlegen auf der Website aufrufbar mit jedem nueen Upload wird eine neue Version und ein neuer Changelog erwartet beim Upload programm!
+      * Death Screen
+      * Shop Gold System Katergorien anhand der ItemTypes. Alles sortieren etc.
+      * Shop System Item werdenauf Seiten verlagert und dann Arraylist mit Pfeilen unten im GUI zum weiter klicken im Shop was items an geht dann kaufen mit Details Screen

@@ -2,13 +2,13 @@ package de.undefinedhuman.sandboxgame.items.type.weapons;
 
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
+import de.undefinedhuman.sandboxgame.items.Item;
 import de.undefinedhuman.sandboxgame.items.ItemType;
-import de.undefinedhuman.sandboxgame.items.type.tools.Tool;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
 import java.util.HashMap;
 
-public class Weapon extends Tool {
+public class Weapon extends Item {
 
     public Vector2 hitboxSize;
 

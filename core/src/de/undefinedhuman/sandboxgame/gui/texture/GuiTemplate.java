@@ -9,7 +9,13 @@ import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
 
 public enum GuiTemplate {
 
-    BIG_BUTTON("Big Button"), HOTBAR("Hotbar"), PANEL("Panel"), SCROLL_PANEL("Scroll Panel"), SMALL_PANEL("Small Panel"), SMALL_BUTTON("Small Button"), SLOT("Slot");
+    BIG_BUTTON("Big Button"),
+    HOTBAR("Hotbar"),
+    PANEL("Panel"),
+    SCROLL_PANEL("Scroll Panel"),
+    SMALL_PANEL("Small Panel"),
+    SMALL_BUTTON("Small Button"),
+    SLOT("Slot");
 
     public String templateName;
     public int cornerSize;

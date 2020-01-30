@@ -1,7 +1,6 @@
 package de.undefinedhuman.sandboxgame.inventory;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.ressources.font.Font;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.text.Text;
@@ -19,8 +18,7 @@ public class InspectScreen extends Gui {
     public InspectScreen() {
 
         super(GuiTemplate.SMALL_PANEL);
-        Vector2 invScale = Variables.getInventoryScale(new Vector2(GuiTemplate.SMALL_PANEL.cornerSize, GuiTemplate.SMALL_PANEL.cornerSize),5,10);
-        setScale("p" + invScale.x,"p" + invScale.y);
+        setScale(Variables.getInventoryWidth(GuiTemplate.SMALL_PANEL,5), Variables.getInventoryHeight(GuiTemplate.SMALL_PANEL,10));
         Item item = new ItemManager().getItem(13);
         previewImage = new Gui(item.inspectTexture);
         previewImage.set("r0.5","r0.85","p32","p32").setCentered();

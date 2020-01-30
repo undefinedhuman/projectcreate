@@ -27,15 +27,12 @@ import de.undefinedhuman.sandboxgame.entity.ecs.components.sprite.SpriteComponen
 import de.undefinedhuman.sandboxgame.entity.ecs.components.sprite.SpriteParam;
 import de.undefinedhuman.sandboxgame.entity.ecs.components.stats.health.HealthComponent;
 import de.undefinedhuman.sandboxgame.entity.ecs.components.stats.mana.ManaComponent;
-import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.GuiManager;
-import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
 import de.undefinedhuman.sandboxgame.items.ItemManager;
 import de.undefinedhuman.sandboxgame.items.drop.DropItemManager;
 import de.undefinedhuman.sandboxgame.projectiles.Projectile;
 import de.undefinedhuman.sandboxgame.utils.Tools;
-import de.undefinedhuman.sandboxgame.utils.Variables;
 import de.undefinedhuman.sandboxgame.world.World;
 import de.undefinedhuman.sandboxgame.world.WorldGenerator;
 import de.undefinedhuman.sandboxgame.world.WorldManager;
@@ -58,18 +55,13 @@ public class GameManager {
 
     private float tempCam = 0;
 
-    private Gui gui;
-
     public GameManager() {
         gameCamera = new OrthographicCamera(); guiCamera = new OrthographicCamera();
         guiViewport = new ScreenViewport(guiCamera);
         gameBatch = new SpriteBatch(); guiBatch = new SpriteBatch();
 
-        this.gui = new Gui(GuiTemplate.SMALL_PANEL);
-        Vector2 invScale = Variables.getInventoryScale(GuiTemplate.SMALL_PANEL.getOffset(),15,10);
-        this.gui.set("r0.5","r0.5","p" + invScale.x,"p" + invScale.y).setCentered();
-        this.gui.addChild(new Gui(GuiTemplate.SLOT).set("r0","r0.5","p" + (invScale.x/2 - GuiTemplate.SMALL_PANEL.cornerSize),"p"+ (invScale.y - GuiTemplate.SMALL_PANEL.cornerSize*2)).setOffsetX("p" + GuiTemplate.SMALL_PANEL.cornerSize).setCenteredY());
-        GuiManager.instance.addGui(gui);
+        //CraftingInventory craftingInventory = new CraftingInventory();
+
     }
 
     public void init() {

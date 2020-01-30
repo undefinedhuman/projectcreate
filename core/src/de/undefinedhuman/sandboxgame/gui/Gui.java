@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.ressources.font.Font;
 import de.undefinedhuman.sandboxgame.gui.text.Text;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
@@ -34,7 +35,7 @@ public class Gui extends GuiComponent {
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
-        this.texture.resize(guiScale);
+        this.texture.resize((int) position.x, (int) position.y, (int) scale.x, (int) scale.y, guiScale);
         for(GuiTransform component : children) component.resize(width, height);
     }
 
@@ -48,7 +49,7 @@ public class Gui extends GuiComponent {
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         super.render(batch, camera);
         if (!visible || !parent.isVisible()) return;
-        texture.render(batch, (int) position.x, (int) position.y, (int) scale.x, (int) scale.y, color);
+        texture.render(batch, alpha);
         for(GuiTransform component : children) component.render(batch, camera);
     }
 
@@ -77,12 +78,32 @@ public class Gui extends GuiComponent {
         return this;
     }
 
+    @Override
+    public GuiComponent setColor(Color color) {
+        texture.setColor(color);
+        return super.setColor(color);
+    }
+
+    @Override
+    public GuiTransform setPosition(int x, int y) {
+        texture.resize(x, y, (int) scale.x, (int) scale.y, guiScale);
+        return super.setPosition(x, y);
+    }
+
+    @Override
+    public GuiTransform setScale(int width, int height) {
+        texture.resize((int) position.x, (int) position.y, width, height, guiScale);
+        return super.setScale(width, height);
+    }
+
     public void setTexture(String texture) {
         this.texture.setTexture(texture);
     }
-
     public GuiTemplate getTemplate() {
         return texture.getTemplate();
     }
+    public Vector2 getOffset() { return texture.getOffset(); }
+    public int getCornerSize() { return texture.getCornerSize(); }
+    public int getBaseCornerSize() { return texture.getBaseCornerSize(); }
 
 }
