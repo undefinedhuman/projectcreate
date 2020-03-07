@@ -21,8 +21,9 @@ public class AnimationSystem extends System {
         SpriteComponent spriteComponent;
         AnimationComponent animationComponent;
 
-        if((spriteComponent = (SpriteComponent) entity.getComponent(ComponentType.SPRITE)) != null && (animationComponent = (AnimationComponent) entity.getComponent(ComponentType.ANIMATION)) != null) {
-            for(AnimationParam animationParam : animationComponent.getAnimationParams()) for(String s : animationParam.spriteDataName) spriteComponent.getSpriteData(s).createRegions();
+        if ((spriteComponent = (SpriteComponent) entity.getComponent(ComponentType.SPRITE)) != null && (animationComponent = (AnimationComponent) entity.getComponent(ComponentType.ANIMATION)) != null) {
+            for (AnimationParam animationParam : animationComponent.getAnimationParams())
+                for (String s : animationParam.spriteDataName) spriteComponent.getSpriteData(s).createRegions();
         }
 
     }
@@ -33,14 +34,14 @@ public class AnimationSystem extends System {
         SpriteComponent spriteComponent;
         AnimationComponent animationComponent;
 
-        if((spriteComponent = (SpriteComponent) entity.getComponent(ComponentType.SPRITE)) != null && (animationComponent = (AnimationComponent) entity.getComponent(ComponentType.ANIMATION)) != null) {
+        if ((spriteComponent = (SpriteComponent) entity.getComponent(ComponentType.SPRITE)) != null && (animationComponent = (AnimationComponent) entity.getComponent(ComponentType.ANIMATION)) != null) {
 
             animationComponent.addAnimationTime(delta);
             AnimationParam currentParam = animationComponent.getCurrentAnimationParam();
-            for(String name : currentParam.spriteDataName) {
+            for (String name : currentParam.spriteDataName) {
 
                 SpriteData data = spriteComponent.getSpriteData(name);
-                if(data.isAnimated()) data.setSpriteByRegion(animationComponent.getCurrentAnimationFrameID());
+                if (data.isAnimated()) data.setSpriteByRegion(animationComponent.getCurrentAnimationFrameID());
                 else data.setSpriteByRegion(0);
 
             }

@@ -4,14 +4,13 @@ import java.util.Random;
 
 public enum Biome {
 
-    GRASSLAND(6,1.7f,0.4f,1,"DESERT"), DESERT(8,1.2f,0.1f,4,"GRASSLAND"),
-    CAVE(7,1.4f,0.4f,0);
+    GRASSLAND(6, 1.7f, 0.4f, 1, "DESERT"), DESERT(8, 1.2f, 0.1f, 4, "GRASSLAND"),
+    CAVE(7, 1.4f, 0.4f, 0);
     //CAVE(8,1.7f, 0.4f,0);
 
+    public int blockID;
     private Noise noise;
     private String[] possibleNeighbors;
-    public int blockID;
-
     private Random random = new Random();
 
     Biome(int octaves, float amplitude, float roughness, int blockID, String... possibleNeighbors) {
@@ -31,7 +30,7 @@ public enum Biome {
     }
 
     public Biome getRandomNeighbor() {
-        return Biome.valueOf(possibleNeighbors[new Random().nextInt(possibleNeighbors.length-1)]);
+        return Biome.valueOf(possibleNeighbors[new Random().nextInt(possibleNeighbors.length - 1)]);
     }
 
 }

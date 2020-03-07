@@ -8,9 +8,8 @@ import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
 
 public class InteractionComponent extends Component {
 
-    private int range, inputKey;
-
     public boolean pressed = false;
+    private int range, inputKey;
 
     public InteractionComponent(Entity entity, int range, int inputKey) {
         super(entity);
@@ -19,12 +18,12 @@ public class InteractionComponent extends Component {
         this.type = ComponentType.INTERACTION;
     }
 
-    public void setRange(int range) {
-        this.range = range;
-    }
-
     public int getRange() {
         return range;
+    }
+
+    public void setRange(int range) {
+        this.range = range;
     }
 
     public int getInputKey() {
@@ -32,9 +31,9 @@ public class InteractionComponent extends Component {
     }
 
     @Override
-    public void setNetworkData(LineSplitter s) {}
+    public void receive(LineSplitter splitter) {}
 
     @Override
-    public void getNetworkData(LineWriter w) {}
+    public void send(LineWriter writer) {}
 
 }

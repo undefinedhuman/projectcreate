@@ -16,7 +16,7 @@ public class BlueprintManager extends Manager {
     private HashMap<Integer, Blueprint> blueprints;
 
     public BlueprintManager() {
-        if(instance == null) instance = this;
+        if (instance == null) instance = this;
         blueprints = new HashMap<>();
     }
 
@@ -26,18 +26,29 @@ public class BlueprintManager extends Manager {
         loadBlueprints(0);
     }
 
-    public void addBlueprint(Blueprint blueprint) {
-        this.blueprints.put(blueprint.getID(), blueprint);
-    }
-
     public boolean loadBlueprints(Integer... ids) {
         boolean loaded = false;
         for (int id : ids) {
             if (!hasBlueprint(id)) blueprints.put(id, ResourceManager.loadBlueprint(id));
             loaded |= hasBlueprint(id);
         }
-        if(loaded) Log.info("Blueprint" + Tools.appendSToString(ids) + " loaded successfully: " + Arrays.toString(ids));
+        if (loaded)
+            Log.info("Blueprint" + Tools.appendSToString(ids) + " loaded successfully: " + Arrays.toString(ids));
         return loaded;
+    }
+
+    public boolean hasBlueprint(int id) {
+        return blueprints.containsKey(id);
+    }
+
+    @Override
+    public void delete() {
+        for (Blueprint blueprint : blueprints.values()) blueprint.delete();
+        blueprints.clear();
+    }
+
+    public void addBlueprint(Blueprint blueprint) {
+        this.blueprints.put(blueprint.getID(), blueprint);
     }
 
     public void removeBlueprints(int... ids) {
@@ -51,16 +62,6 @@ public class BlueprintManager extends Manager {
     public Blueprint getBlueprint(int id) {
         if (hasBlueprint(id) || loadBlueprints(id)) return blueprints.get(id);
         return hasBlueprint(0) ? getBlueprint(0) : null;
-    }
-
-    public boolean hasBlueprint(int id) {
-        return blueprints.containsKey(id);
-    }
-
-    @Override
-    public void delete() {
-        for (Blueprint blueprint : blueprints.values()) blueprint.delete();
-        blueprints.clear();
     }
 
 }

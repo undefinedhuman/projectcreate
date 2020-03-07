@@ -26,21 +26,27 @@ public class AnimationComponent extends Component {
     @Override
     public void init() {}
 
+    @Override
+    public void receive(LineSplitter splitter) {}
+
+    @Override
+    public void send(LineWriter writer) {}
+
     public void setAnimation(String animationName) {
 
-        if(!currentAnimation.equalsIgnoreCase(animationName)) {
+        if (!currentAnimation.equalsIgnoreCase(animationName)) {
             currentAnimation = animationName;
             animationTime = 0;
         }
 
     }
 
-    public AnimationParam getCurrentAnimationParam() {
-        return animationParams.get(currentAnimation);
-    }
-
     public int getCurrentAnimationFrameID() {
         return (int) (getCurrentAnimationParam().animationBounds.x + getCurrentAnimationIndex());
+    }
+
+    public AnimationParam getCurrentAnimationParam() {
+        return animationParams.get(currentAnimation);
     }
 
     public int getCurrentAnimationIndex() {
@@ -78,11 +84,5 @@ public class AnimationComponent extends Component {
     public void setAnimationTimeMultiplier(float animationTimeMultiplier) {
         this.animationTimeMultiplier = animationTimeMultiplier;
     }
-
-    @Override
-    public void setNetworkData(LineSplitter s) {}
-
-    @Override
-    public void getNetworkData(LineWriter w) {}
 
 }

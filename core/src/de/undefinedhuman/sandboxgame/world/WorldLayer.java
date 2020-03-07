@@ -40,25 +40,14 @@ public class WorldLayer {
 
     }
 
-    public byte getBlock(int x, int y) {
-
-        if (y < height - 1 && y >= 0) {
-
-            if((x < 0) || (x >= this.width)) { x = getPositionX(x); return this.blocks[x][y]; }
-            else return this.blocks[x][y];
-
-        }
-
-        return 0;
-
-    }
-
     public byte getBlock(Vector2 pos) {
 
         if (pos.y < height - 1 && pos.y >= 0) {
 
-            if((pos.x < 0) || (pos.x >= this.width)) { pos.x = getPositionX((int) pos.x); return this.blocks[(int) pos.x][(int) pos.y]; }
-            else return this.blocks[(int) pos.x][(int) pos.y];
+            if ((pos.x < 0) || (pos.x >= this.width)) {
+                pos.x = getPositionX((int) pos.x);
+                return this.blocks[(int) pos.x][(int) pos.y];
+            } else return this.blocks[(int) pos.x][(int) pos.y];
 
         }
 
@@ -66,17 +55,11 @@ public class WorldLayer {
 
     }
 
-    public byte getRot(int x, int y) {
+    private int getPositionX(int x) {
 
-        x = getPositionX(x);
-        if(y < height - 1 && y > 0) { return this.rot[x][y]; } else { return 0; }
-
-    }
-
-    public byte getState(int x, int y) {
-
-        x = getPositionX(x);
-        if(y < height - 1 && y > 0) { return this.state[x][y]; } else { return 0; }
+        if (x < 0) x = (width + x);
+        else if (x > width - 1) x = (x - width);
+        return x;
 
     }
 
@@ -97,18 +80,24 @@ public class WorldLayer {
 
     }
 
-    public void setState(int x, int y, int state) {
+    public WorldLayer setState(int x, int y, int state) {
 
         if (!(y <= 0 || y >= height)) {
 
             if ((x < 0) || (x >= width)) {
 
                 x = getPositionX(x);
-                if(this.state[x][y] != state) { this.state[x][y] = (byte) (state); }
+                if (this.state[x][y] != state) {
+                    this.state[x][y] = (byte) (state);
+                }
 
-            } else if ((this.state[x][y] != (byte) state)) { this.state[x][y] = (byte) (state); }
+            } else if ((this.state[x][y] != (byte) state)) {
+                this.state[x][y] = (byte) (state);
+            }
 
         }
+
+        return this;
 
     }
 
@@ -119,7 +108,9 @@ public class WorldLayer {
             if ((x < 0) || (x >= width)) {
 
                 x = getPositionX(x);
-                if(this.rot[x][y] != rot) { this.rot[x][y] = (byte) rot; }
+                if (this.rot[x][y] != rot) {
+                    this.rot[x][y] = (byte) rot;
+                }
 
             } else if ((this.rot[x][y] != rot)) this.rot[x][y] = (byte) rot;
 
@@ -127,28 +118,58 @@ public class WorldLayer {
 
     }
 
-    private int getPositionX(int x) {
-
-        if (x < 0) x = (width + x);
-        else if (x > width - 1) x = (x - width);
-        return x;
-
-    }
-
     public void renderBlock(SpriteBatch batch, Color col, int i, int j) {
 
         Block block = (Block) ItemManager.instance.getItem(getBlock(i, j));
 
-        if(block != null && block.id != 0) {
+        if (block != null && block.id != 0) {
 
             TextureRegion texture = block.blockTextures[getState(i, j)][getRot(i, j)];
 
-            color.set(1 * col.r,1 * col.g,1 * col.b,1f);// TODO Tools.getShadowColor(i, j);
+            color.set(1 * col.r, 1 * col.g, 1 * col.b, 1f);// TODO Tools.getShadowColor(i, j);
             batch.setColor(color);
-            batch.draw(texture, i * 16, j * 16,8,8,16,16, 1,1,0);
+            batch.draw(texture, i * 16, j * 16, 8, 8, 16, 16, 1, 1, 0);
 
-            if(block.id == 3 && getBlock(i,j+1) == 0) TopLayerManager.instance.render(batch, i, j, TopLayerType.GRASS,getBlock(i-1,j) != 0,getBlock(i+1,j) != 0);
+            if (block.id == 3 && getBlock(i, j + 1) == 0)
+                TopLayerManager.instance.render(batch, i, j, TopLayerType.GRASS, getBlock(i - 1, j) != 0, getBlock(i + 1, j) != 0);
 
+        }
+
+    }
+
+    public byte getBlock(int x, int y) {
+
+        if (y < height - 1 && y >= 0) {
+
+            if ((x < 0) || (x >= this.width)) {
+                x = getPositionX(x);
+                return this.blocks[x][y];
+            } else return this.blocks[x][y];
+
+        }
+
+        return 0;
+
+    }
+
+    public byte getState(int x, int y) {
+
+        x = getPositionX(x);
+        if (y < height - 1 && y > 0) {
+            return this.state[x][y];
+        } else {
+            return 0;
+        }
+
+    }
+
+    public byte getRot(int x, int y) {
+
+        x = getPositionX(x);
+        if (y < height - 1 && y > 0) {
+            return this.rot[x][y];
+        } else {
+            return 0;
         }
 
     }

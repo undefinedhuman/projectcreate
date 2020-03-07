@@ -21,7 +21,7 @@ public class PacketUtils {
         ComponentPacket packet = new ComponentPacket();
         packet.worldID = GameManager.instance.player.getWorldID();
         packet.worldName = World.instance.name;
-        packet.data = entity.getNetworkData(types);
+        packet.data = entity.send(types);
         return packet;
 
     }
@@ -51,18 +51,19 @@ public class PacketUtils {
 
     public static void handleBlockPacket(BlockPacket packet) {
 
-        if(packet.id == -1) WorldManager.instance.destroyBlock(new Vector2(packet.x, packet.y), packet.main,false);
-        else WorldManager.instance.placeBlock(packet.main, new Vector2(packet.x, packet.y), (byte) packet.id,false);
+        if (packet.id == -1) WorldManager.instance.destroyBlock(new Vector2(packet.x, packet.y), packet.main, false);
+        else WorldManager.instance.placeBlock(packet.main, new Vector2(packet.x, packet.y), (byte) packet.id, false);
 
     }
 
     public static void handleComponentPacket(ComponentPacket packet) {
 
         Entity entity = EntityManager.instance.getEntity(packet.worldID);
-        if(entity != null) {
-            LineSplitter s = new LineSplitter(packet.data,true, Variables.SEPARATOR);
+        if (entity != null) {
+            LineSplitter s = new LineSplitter(packet.data, true, Variables.SEPARATOR);
             int size = s.getNextInt();
-            for(int i = 0; i < size; i++) entity.getComponent(ComponentType.valueOf(s.getNextString())).setNetworkData(s);
+            for (int i = 0; i < size; i++)
+                entity.getComponent(ComponentType.valueOf(s.getNextString())).receive(s);
         }
 
     }
@@ -70,8 +71,8 @@ public class PacketUtils {
     public static void handleEquipComponent(EquipPacket packet) {
 
         Entity entity = EntityManager.instance.getEntity(packet.entityID);
-        if(entity != null) {
-            if(packet.equip) EquipManager.instance.equipItem(entity, packet.equipedItemID, packet.armor);
+        if (entity != null) {
+            if (packet.equip) EquipManager.instance.equipItem(entity, packet.equipedItemID, packet.armor);
             else EquipManager.instance.unEquipItem(entity, packet.equipedItemID, packet.armor);
         }
 

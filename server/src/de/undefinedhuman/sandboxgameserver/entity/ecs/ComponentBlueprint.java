@@ -14,7 +14,9 @@ public abstract class ComponentBlueprint {
     }
 
     public abstract Component createInstance(Entity entity);
+
     public abstract void load(FileReader reader, int id);
+
     public abstract void delete();
 
 }

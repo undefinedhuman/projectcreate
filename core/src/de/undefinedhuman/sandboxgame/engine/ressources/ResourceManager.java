@@ -26,7 +26,7 @@ public class ResourceManager {
         Texture texture = null;
         try {
             texture = new Texture(Gdx.files.internal(path));
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             Log.error("Error while loading texture: " + path + "\n" + ex.getMessage());
         }
         return texture != null ? texture : loadTexture("Unknown.png");
@@ -37,7 +37,7 @@ public class ResourceManager {
         try {
             music = Gdx.audio.newMusic(Gdx.files.internal(path));
             Log.info("Music loaded successfully: " + path);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             Log.error("Error while loading music: " + path + "\n" + ex.getMessage());
         }
         return music;
@@ -52,7 +52,7 @@ public class ResourceManager {
         BitmapFont bitmapFont = null;
         try {
             bitmapFont = new BitmapFont(Gdx.files.internal(path), false);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             Log.error("Error while loading BitmapFont: " + path + "\n" + ex.getMessage());
         }
         return bitmapFont;
@@ -65,7 +65,7 @@ public class ResourceManager {
         try {
             sound = Gdx.audio.newSound(Gdx.files.internal(name));
             Log.info("Sound loaded successfully: " + name);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             Log.error("Error while loading sound: " + name + "\n" + ex.getMessage());
         }
 
@@ -74,15 +74,10 @@ public class ResourceManager {
     }
 
     public static ShaderProgram loadShader(String vertexName, String fragmentName) {
-
-        String vertexShader = Gdx.files.internal("shader/" + vertexName + ".glsl").readString();
-        String fragmentShader = Gdx.files.internal("shader/" + fragmentName + ".glsl").readString();
-        ShaderProgram shaderProgram = new ShaderProgram(vertexShader, fragmentShader);
+        ShaderProgram shaderProgram = new ShaderProgram(Gdx.files.internal("shader/" + vertexName + ".glsl").readString(), Gdx.files.internal("shader/" + fragmentName + ".glsl").readString());
         if (!shaderProgram.isCompiled()) Log.error("Error while compiling shader: " + "\n" + shaderProgram.getLog());
-        if(shaderProgram.isCompiled()) Log.info("Error while loading music: " + vertexName + ", " + fragmentName);
-
+        if (shaderProgram.isCompiled()) Log.info("Error while loading music: " + vertexName + ", " + fragmentName);
         return shaderProgram;
-
     }
 
     public static Blueprint loadBlueprint(int id) {
@@ -95,13 +90,17 @@ public class ResourceManager {
         Vector2 size = reader.getNextVector2();
         int componentSize = reader.getNextInt();
         Blueprint blueprint = new Blueprint(id, type, size);
-        for(int i = 0; i < componentSize; i++) {
+        for (int i = 0; i < componentSize; i++) {
             reader.nextLine();
             blueprint.addComponentBlueprint(ComponentType.load(reader.getNextString(), reader, id));
         }
         reader.close();
         return blueprint;
 
+    }
+
+    public static FileHandle loadFile(Paths path, String name) {
+        return Gdx.files.internal(path.getPath() + name);
     }
 
     public static Item loadItem(int id) {
@@ -113,20 +112,15 @@ public class ResourceManager {
         reader.nextLine();
         int size = reader.getNextInt();
         HashMap<String, LineSplitter> settings = new HashMap<>();
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             reader.nextLine();
-            settings.put(reader.getNextString(), new LineSplitter(reader.nextLine(),true,";"));
+            settings.put(reader.getNextString(), new LineSplitter(reader.nextLine(), true, ";"));
         }
         Item item = type.load(type, id, settings);
         reader.close();
         settings.clear();
         return item;
 
-    }
-
-
-    public static FileHandle loadFile(Paths path, String name) {
-        return Gdx.files.internal(path.getPath() + name);
     }
 
     public static boolean existItem(int id) {

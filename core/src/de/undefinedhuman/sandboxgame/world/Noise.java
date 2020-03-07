@@ -20,6 +20,30 @@ public class Noise {
 
     }
 
+    public float gradient(float x, float y, float maxY) {
+        float value = y / maxY;
+        value += scale(0.5f, 0, fractal(x, y));
+        return linInterpolation(0, 1, value);
+    }
+
+    public float scale(float scale, float offset, float value) {
+        return value * scale + offset;
+    }
+
+    public float fractal(float x, float y) {
+        float value = 0;
+        float d = (float) Math.pow(2, octaves - 1);
+        for (int i = 0; i < octaves; i++) {
+            float freq = (float) (Math.pow(2, i) / d), amp = (float) Math.pow(roughness, i) * amplitude;
+            value += getInterpolatedNoise(x * freq, y * freq) * amp;
+        }
+        return Math.abs(value);
+    }
+
+    public float linInterpolation(float a, float b, float v) {
+        return (a * (b - v) + b * v);
+    }
+
     public float getInterpolatedNoise(float x, float y) {
 
         int intX = (int) x, intY = (int) y;
@@ -39,39 +63,19 @@ public class Noise {
 
     }
 
+    private float cosInterpolation(float a, float b, float blend) {
+        float c = (float) ((1f - Math.cos((blend * Math.PI))) * 0.5f);
+        return a * (1 - c) + b * c;
+    }
+
     private float getNoise(int x, int y) {
         random.setSeed(x * 49632 + y * 325176 + seed);
         return random.nextFloat() * 2f - 1f;
     }
 
-    public float gradient(float x, float y, float maxY) {
-        float value = y / maxY;
-        value += scale(0.5f, 0, fractal(x, y));
-        return linInterpolation(0,1, value);
-    }
-
-    public float fractal(float x, float y) {
-        float value = 0;
-        float d = (float) Math.pow(2, octaves - 1);
-        for (int i = 0; i < octaves; i++) {
-            float freq = (float) (Math.pow(2, i) / d), amp = (float) Math.pow(roughness, i) * amplitude;
-            value += getInterpolatedNoise(x * freq, y * freq) * amp;
-        }
-        return Math.abs(value);
-    }
-
     public boolean select(float threshold, float value) { return value >= threshold; }
+
     public boolean selectDiff(float threshold, float value) { return value <= threshold; }
-    public float scale(float scale, float offset, float value) {
-        return value * scale + offset;
-    }
-    private float cosInterpolation(float a, float b, float blend) {
-        float c = (float) ((1f - Math.cos((blend * Math.PI))) * 0.5f);
-        return a * (1 - c) + b * c;
-    }
-    public float linInterpolation(float a, float b, float v) {
-        return (a * (b - v) + b * v);
-    }
 
     public Noise setSeed(int seed) {
         this.seed = seed;

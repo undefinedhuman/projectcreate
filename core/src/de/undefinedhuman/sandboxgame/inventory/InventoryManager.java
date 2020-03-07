@@ -35,7 +35,7 @@ public class InventoryManager extends Manager {
 
     public InventoryManager() {
 
-        if(instance == null) instance = this;
+        if (instance == null) instance = this;
 
         dragAndDrop = new DragAndDrop();
         slots = new Gui[4];
@@ -45,10 +45,10 @@ public class InventoryManager extends Manager {
         inspectScreen = new InspectScreen();
         inspectScreen.setVisible(false);
         equipScreen = new EquipScreen();
-        equipScreen.setTitle(GuiTemplate.SLOT,"Equip", Font.Normal, Color.WHITE);
+        equipScreen.setTitle(GuiTemplate.SLOT, "Equip", Font.Normal, Color.WHITE);
         equipScreen.setVisible(false);
-        inventory = new Inventory(10,5);
-        inventory.setTitle(GuiTemplate.SLOT,"Inventory", Font.Normal, Color.WHITE);
+        inventory = new Inventory(10, 5);
+        inventory.setTitle(GuiTemplate.SLOT, "Inventory", Font.Normal, Color.WHITE);
         inventory.setVisible(false);
 
         dragAndDrop.addTarget(inventory, selector, equipScreen);
@@ -58,15 +58,24 @@ public class InventoryManager extends Manager {
     @Override
     public void init() {
         super.init();
-        addTempItems(selector,1,8,9,10,11);
+        addTempItems(selector, 1, 8, 9, 10, 11);
         addTempItems(inventory, ItemManager.instance.getItems().keySet());
         selector.setSelected(0);
     }
 
     @Override
+    public void resize(int width, int height) {
+        dragAndDrop.resize(width, height);
+        sidePanel.resize(width, height);
+        selector.resize(width, height);
+        for (Gui slot : slots) if (slot != null) slot.resize(width, height);
+    }
+
+    @Override
     public void update(float delta) {
-        selector.updateSelector(); sidePanel.update(delta);
-        for(Gui slot : slots) if(slot != null) slot.update(delta);
+        selector.updateSelector();
+        sidePanel.update(delta);
+        for (Gui slot : slots) if (slot != null) slot.update(delta);
     }
 
     @Override
@@ -74,14 +83,16 @@ public class InventoryManager extends Manager {
         dragAndDrop.update(camera);
         selector.render(batch, camera);
         sidePanel.render(batch, camera);
-        for(Gui slot : slots) if(slot != null) slot.render(batch, camera);
+        for (Gui slot : slots) if (slot != null) slot.render(batch, camera);
         dragAndDrop.render(batch, camera);
     }
 
-    @Override
-    public void resize(int width, int height) {
-        dragAndDrop.resize(width, height); sidePanel.resize(width, height); selector.resize(width, height);
-        for(Gui slot : slots) if(slot != null) slot.resize(width, height);
+    private void addTempItems(Inventory inventory, int... ids) {
+        for (int id : ids) inventory.addItem(id, ItemManager.instance.getItem(id).maxAmount);
+    }
+
+    private void addTempItems(Inventory inventory, Set<Integer> ids) {
+        for (int id : ids) inventory.addItem(id, ItemManager.instance.getItem(id).maxAmount);
     }
 
     public Selector getSelector() {
@@ -89,71 +100,79 @@ public class InventoryManager extends Manager {
     }
 
     public void addGuiToSlot(Gui gui) {
-        if(gui == null) return;
-        if(!sidePanel.isVisible()) sidePanel.setVisible(true);
-        maxSlot = Tools.clamp(maxSlot+1,0,3);
-        if(slots[maxSlot] != null) removeGui(maxSlot);
+        if (gui == null) return;
+        if (!sidePanel.isVisible()) sidePanel.setVisible(true);
+        maxSlot = Tools.clamp(maxSlot + 1, 0, 3);
+        if (slots[maxSlot] != null) removeGui(maxSlot);
         this.slots[maxSlot] = gui;
         setGuiVisible(maxSlot, gui);
-        for(int i = maxSlot; i < slots.length; i++) if(slots[i] != null) maxSlot = i;
-    }
-
-    public void addGuiToSlot(int id, Gui gui) {
-        if(gui == null) return;
-        if(!sidePanel.isVisible()) sidePanel.setVisible(true);
-        if(!Tools.isInRange(id,0,3)) return;
-        if(slots[id] == null) this.slots[id] = gui;
-        for(int i = 0; i < slots.length; i++) if(slots[i] != null) maxSlot = i;
-        setGuiVisible(id, gui);
+        for (int i = maxSlot; i < slots.length; i++) if (slots[i] != null) maxSlot = i;
     }
 
     public void removeGuiFromSlot(Gui gui) {
-        if(gui == null) return;
+        if (gui == null) return;
         int id = -1;
-        for(int i = 0; i < slots.length; i++) if(gui == slots[i]) id = i;
-        if(id != -1) {
+        for (int i = 0; i < slots.length; i++) if (gui == slots[i]) id = i;
+        if (id != -1) {
             gui.setVisible(false);
             slots[id] = null;
         } else return;
-        for(int i = id+1; i < slots.length; i++) if(slots[i] != null) { addGuiToSlot(i-1, slots[i]); slots[i] = null; } else break;
+        for (int i = id + 1; i < slots.length; i++)
+            if (slots[i] != null) {
+                addGuiToSlot(i - 1, slots[i]);
+                slots[i] = null;
+            } else break;
         maxSlot = 3;
-        for(int i = 0; i < slots.length; i++) if(slots[i] == null) { maxSlot = Tools.clamp(i-1,-1,3); break; }
+        for (int i = 0; i < slots.length; i++)
+            if (slots[i] == null) {
+                maxSlot = Tools.clamp(i - 1, -1, 3);
+                break;
+            }
     }
 
     public void removeGuiFromSlot(int id) {
-        if(Tools.isInRange(id,0,3) && slots[id] != null) {
+        if (Tools.isInRange(id, 0, 3) && slots[id] != null) {
             slots[id].setVisible(false);
             slots[id] = null;
         }
-        for(int i = id+1; i < slots.length; i++) addGuiToSlot(i-1, slots[i]);
+        for (int i = id + 1; i < slots.length; i++) addGuiToSlot(i - 1, slots[i]);
         maxSlot--;
     }
 
-    private void removeGui(int id) {
-        if(id != -1) {
-            slots[id].setVisible(false);
-            slots[id] = null;
-        }
+    public void addGuiToSlot(int id, Gui gui) {
+        if (gui == null) return;
+        if (!sidePanel.isVisible()) sidePanel.setVisible(true);
+        if (!Tools.isInRange(id, 0, 3)) return;
+        if (slots[id] == null) this.slots[id] = gui;
+        for (int i = 0; i < slots.length; i++) if (slots[i] != null) maxSlot = i;
+        setGuiVisible(id, gui);
     }
 
     public void setGuiVisible(int id, Gui gui) {
-        gui.setPosition("r1","r0.5").setCentered(-1f,-0.5f).setOffsetX("p" + getWidth(id));
+        gui.setPosition("r1", "r0.5").setCentered(-1f, -0.5f).setOffsetX("p" + getWidth(id));
         gui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         gui.setVisible(true);
     }
 
+    private int getWidth(int id) {
+        int width = (int) (-25 - 10 * (id + 1) - sidePanel.getBaseValue(Axis.WIDTH));
+        for (int i = 0; i < id; i++) if (slots[i] != null) width -= slots[i].getBaseValue(Axis.WIDTH);
+        return width;
+    }
+
+    private void removeGui(int id) {
+        if (id != -1) {
+            slots[id].setVisible(false);
+            slots[id] = null;
+        }
+    }
+
     public void removeAllGui() {
-        for(int i = 0; i < slots.length; i++) {
+        for (int i = 0; i < slots.length; i++) {
             slots[i].setVisible(false);
             slots[i] = null;
         }
         maxSlot = -1;
-    }
-
-    private int getWidth(int id) {
-        int width = (int) (-25 -10 * (id+1) - sidePanel.getBaseValue(Axis.WIDTH));
-        for(int i = 0; i < id; i++) if(slots[i] != null) width -= slots[i].getBaseValue(Axis.WIDTH);
-        return width;
     }
 
     public boolean isFull(int id, int amount) {
@@ -162,12 +181,12 @@ public class InventoryManager extends Manager {
 
     public int addItem(int id, int amount) {
         int i = selector.addItem(id, amount);
-        if(i != 0) i = inventory.addItem(id, i);
+        if (i != 0) i = inventory.addItem(id, i);
         return i;
     }
 
     public void openGui(Gui gui) {
-        if(gui.isVisible()) removeGuiFromSlot(gui);
+        if (gui.isVisible()) removeGuiFromSlot(gui);
         else addGuiToSlot(gui);
     }
 
@@ -175,20 +194,12 @@ public class InventoryManager extends Manager {
         return inventory.isVisible();
     }
 
-    public boolean overGui() {
-        return Tools.isOverGuis(GameManager.guiCamera, selector, sidePanel, slots[0], slots[1], slots[2], slots[3]);
-    }
-
     public boolean canUseItem() {
         return !(dragAndDrop.isMoving() || overGui());
     }
 
-    private void addTempItems(Inventory inventory, int... ids) {
-        for(int id : ids) inventory.addItem(id, ItemManager.instance.getItem(id).maxAmount);
-    }
-
-    private void addTempItems(Inventory inventory, Set<Integer> ids) {
-        for(int id : ids) inventory.addItem(id, ItemManager.instance.getItem(id).maxAmount);
+    public boolean overGui() {
+        return Tools.isOverGuis(GameManager.guiCamera, selector, sidePanel, slots[0], slots[1], slots[2], slots[3]);
     }
 
     public void handleClick(int id) {
@@ -196,9 +207,11 @@ public class InventoryManager extends Manager {
         switch (id) {
 
             case 0:
-                openGui(inventory); break;
+                openGui(inventory);
+                break;
             case 1:
-                openGui(equipScreen); break;
+                openGui(equipScreen);
+                break;
             case 2:
             case 3:
             case 4:

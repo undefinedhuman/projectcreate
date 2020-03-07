@@ -23,8 +23,11 @@ public abstract class Component {
     }
 
     public abstract void load(FileReader reader);
+
     public abstract void save(FileWriter writer);
+
     public abstract void getNetworkData(LineWriter w);
+
     public abstract void setNetworkData(LineSplitter s);
 
 }

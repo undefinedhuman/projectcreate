@@ -53,19 +53,19 @@ public class CollisionComponent extends Component {
         Vector2[] vec = new Vector2[4];
         float x = pos.x + offset.x, y = pos.y + offset.y;
         vec[0] = new Vector2(x, y);
-        vec[1] = new Vector2(x,y + height);
-        vec[3] = new Vector2(x + width,y);
-        vec[2] = new Vector2(x + width,y + height);
+        vec[1] = new Vector2(x, y + height);
+        vec[3] = new Vector2(x + width, y);
+        vec[2] = new Vector2(x + width, y + height);
 
         return vec;
 
     }
 
     @Override
-    public void setNetworkData(LineSplitter s) {}
+    public void receive(LineSplitter splitter) {}
 
     @Override
-    public void getNetworkData(LineWriter w) {
+    public void send(LineWriter writer) {
 
     }
 

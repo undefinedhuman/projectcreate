@@ -55,18 +55,15 @@ public class EntityList {
 
     public ArrayList<Entity> getEntityInRangeForCollision(Vector2 pos, float range) {
 
-        ArrayList<Entity> entitiesinRange = new ArrayList<>();
+        ArrayList<Entity> entitiesInRange = new ArrayList<>();
 
         for (Integer id : entitiesForCollision) {
-
             Entity entity = entities.get(id);
-
-            float entityDis = new Vector2(entity.getX() - pos.x, entity.getY() - pos.y).len();
-            if (entityDis <= range) entitiesinRange.add(entity);
-
+            float entityDis = new Vector2(entity.transform.getPosition()).sub(pos).len();
+            if (entityDis <= range) entitiesInRange.add(entity);
         }
 
-        return entitiesinRange;
+        return entitiesInRange;
 
     }
 

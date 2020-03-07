@@ -11,16 +11,12 @@ public class FileManager {
     public static BufferedReader getBufferedReader(FsFile file) {
 
         try {
-
             return new BufferedReader(new FileReader(new File(file.getPath())));
-
         } catch (Exception ex) {
-
             Log.instance.error("Can't create file reader");
             Log.instance.error(ex.getMessage());
             Log.instance.crash();
             return null;
-
         }
 
     }
@@ -30,12 +26,10 @@ public class FileManager {
         try {
             return new BufferedReader(new InputStreamReader(stream));
         } catch (Exception ex) {
-
             Log.instance.error("Can't create file reader");
             Log.instance.error(ex.getMessage());
             Log.instance.crash();
             return null;
-
         }
 
     }

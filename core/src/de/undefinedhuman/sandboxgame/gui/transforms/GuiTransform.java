@@ -33,8 +33,13 @@ public class GuiTransform {
 
     public void resize(int width, int height) {
         this.guiScale = Math.max((int) Math.ceil(Main.guiScale * baseGuiScale), 1);
-        if(calcScale) this.scale.set(getConstraint(Axis.WIDTH), getConstraint(Axis.HEIGHT));
+        if (calcScale) this.scale.set(getConstraint(Axis.WIDTH), getConstraint(Axis.HEIGHT));
         this.position.set(getConstraint(Axis.X) + getConstraint(Axis.OFFSET_X) + scale.x * centerOffset.x, getConstraint(Axis.Y) + getConstraint(Axis.OFFSET_Y) + scale.y * centerOffset.y);
+    }
+
+    private int getConstraint(Axis axis) {
+        if (!constraints.containsKey(axis)) return 0;
+        return constraints.get(axis).getValue(guiScale);
     }
 
     public void update(float delta) {}
@@ -55,8 +60,8 @@ public class GuiTransform {
         return new Vector2(position);
     }
 
-    public Vector2 getScale() {
-        return new Vector2(scale);
+    public GuiTransform setPosition(Vector2 position) {
+        return setPosition((int) position.x, (int) position.y);
     }
 
     public GuiTransform setPosition(int x, int y) {
@@ -64,14 +69,12 @@ public class GuiTransform {
         return this;
     }
 
-    public GuiTransform setPosition(Vector2 position) {
-        return setPosition((int) position.x, (int) position.y);
+    public Vector2 getScale() {
+        return new Vector2(scale);
     }
 
-    public GuiTransform setPosition(String x, String y) {
-        addConstraint(Axis.X, getConstraintFromString(x));
-        addConstraint(Axis.Y, getConstraintFromString(y));
-        return this;
+    public GuiTransform setScale(Vector2 scale) {
+        return setScale((int) scale.x, (int) scale.y);
     }
 
     public GuiTransform setScale(int width, int height) {
@@ -79,8 +82,10 @@ public class GuiTransform {
         return this;
     }
 
-    public GuiTransform setScale(Vector2 scale) {
-        return setScale((int) scale.x, (int) scale.y);
+    public GuiTransform setPosition(String x, String y) {
+        addConstraint(Axis.X, getConstraintFromString(x));
+        addConstraint(Axis.Y, getConstraintFromString(y));
+        return this;
     }
 
     public GuiTransform setScale(String width, String height) {
@@ -90,7 +95,8 @@ public class GuiTransform {
     }
 
     public GuiTransform setOffset(String x, String y) {
-        setOffsetX(x); setOffsetY(y);
+        setOffsetX(x);
+        setOffsetY(y);
         return this;
     }
 
@@ -105,12 +111,8 @@ public class GuiTransform {
     }
 
     public GuiTransform setCentered() {
-        setCenteredX(); setCenteredY();
-        return this;
-    }
-
-    public GuiTransform setCentered(float x, float y) {
-        setCenteredX(x); setCenteredY(y);
+        setCenteredX();
+        setCenteredY();
         return this;
     }
 
@@ -119,13 +121,19 @@ public class GuiTransform {
         return this;
     }
 
-    public GuiTransform setCenteredX(float centerX) {
-        this.centerOffset.x = centerX;
+    public GuiTransform setCenteredY() {
+        this.centerOffset.y = -0.5f;
         return this;
     }
 
-    public GuiTransform setCenteredY() {
-        this.centerOffset.y = -0.5f;
+    public GuiTransform setCentered(float x, float y) {
+        setCenteredX(x);
+        setCenteredY(y);
+        return this;
+    }
+
+    public GuiTransform setCenteredX(float centerX) {
+        this.centerOffset.x = centerX;
         return this;
     }
 
@@ -140,23 +148,27 @@ public class GuiTransform {
     }
 
     public float getBaseValue(Axis axis) {
-        if(!constraints.containsKey(axis)) return 0;
+        if (!constraints.containsKey(axis)) return 0;
         return constraints.get(axis).getValue();
     }
 
     public int getValue(Axis axis) {
-        switch(axis) {
-            case X: return (int) position.x;
-            case Y: return (int) position.y;
-            case WIDTH: return (int) scale.x;
-            case HEIGHT: return (int) scale.y;
+        switch (axis) {
+            case X:
+                return (int) position.x;
+            case Y:
+                return (int) position.y;
+            case WIDTH:
+                return (int) scale.x;
+            case HEIGHT:
+                return (int) scale.y;
         }
         return 0;
     }
 
     public GuiTransform initScreen(int width, int height) {
         this.parent = this;
-        setPosition(0,0);
+        setPosition(0, 0);
         setScale(width, height);
         return this;
     }
@@ -171,12 +183,12 @@ public class GuiTransform {
         return this;
     }
 
+    public boolean isVisible() { return visible; }
+
     public GuiTransform setVisible(boolean visible) {
         this.visible = visible;
         return this;
     }
-
-    public boolean isVisible() { return visible; }
 
     private void addConstraint(Axis axis, Constraint constraint) {
         this.constraints.put(axis, constraint.setAxis(axis).setGui(this));
@@ -192,19 +204,18 @@ public class GuiTransform {
     private Constraint getConstraintFromString(String constraint) {
         char c = getChar(constraint);
         float f = getFloatFromString(constraint);
-        switch(c) {
-            case 'r': return new RelativeConstraint(f);
-            case 'c': return new ConstantConstraint(f);
-            default: return new PixelConstraint(f);
+        switch (c) {
+            case 'r':
+                return new RelativeConstraint(f);
+            case 'c':
+                return new ConstantConstraint(f);
+            default:
+                return new PixelConstraint(f);
         }
     }
 
     private char getChar(String s) { return s.charAt(0); }
-    private float getFloatFromString(String s) { return Float.parseFloat(s.substring(1)); }
 
-    private int getConstraint(Axis axis) {
-        if(!constraints.containsKey(axis)) return 0;
-        return constraints.get(axis).getValue(guiScale);
-    }
+    private float getFloatFromString(String s) { return Float.parseFloat(s.substring(1)); }
 
 }

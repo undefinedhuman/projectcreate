@@ -13,7 +13,7 @@ public class BackgroundLayer {
 
     private float currentX, time = 0, blendFactor, localTime = 0;
     private Vector2 initialSize, size;
-    private int currentTime = 1, nextTime = 2, transition = Variables.HOUR_LENGTH/2;
+    private int currentTime = 1, nextTime = 2, transition = Variables.HOUR_LENGTH / 2;
 
     public BackgroundLayer(Vector2 size) {
         this.initialSize = size;
@@ -24,6 +24,11 @@ public class BackgroundLayer {
         setSize(height);
     }
 
+    private void setSize(int height) {
+        int scale = (int) Math.ceil(height / initialSize.y);
+        this.size = new Vector2(initialSize.x * scale, initialSize.y * scale);
+    }
+
     public void update(float delta, float speed) {
 
         time += delta;
@@ -32,11 +37,11 @@ public class BackgroundLayer {
 
         int currentDuration = Time.valueOf(currentTime).duration;
 
-        if(time <= currentDuration - transition) blendFactor = 0;
+        if (time <= currentDuration - transition) blendFactor = 0;
         else {
-            if(time >= currentDuration) {
+            if (time >= currentDuration) {
                 currentTime = nextTime;
-                nextTime = (nextTime+1) % Time.values().length;
+                nextTime = (nextTime + 1) % Time.values().length;
                 time = 0;
             }
             blendFactor = (time % transition) / transition;
@@ -44,7 +49,7 @@ public class BackgroundLayer {
 
         if (speed == 0) return;
         currentX += speed * delta;
-        currentX = Tools.clamp(currentX, -size.x,0);
+        currentX = Tools.clamp(currentX, -size.x, 0);
         currentX = currentX >= 0 ? -size.x : currentX <= -size.x ? 0 : currentX;
 
     }
@@ -53,25 +58,20 @@ public class BackgroundLayer {
         float renderX = currentX;
         do {
             Color batchColor = batch.getColor();
-            renderLayer(batch, camera, currentTime, renderX,1 - blendFactor);
+            renderLayer(batch, camera, currentTime, renderX, 1 - blendFactor);
             renderLayer(batch, camera, nextTime, renderX, blendFactor);
             batch.setColor(batchColor);
             renderX += size.x;
-        } while (renderX <= Gdx.graphics.getWidth());
+        }while (renderX <= Gdx.graphics.getWidth());
+    }
+
+    private void renderLayer(SpriteBatch batch, OrthographicCamera camera, int id, float renderX, float blendFactor) {
+        batch.setColor(1, 1, 1, blendFactor);
+        batch.draw(TextureManager.instance.getTexture(Time.valueOf(id).texture), (camera != null ? camera.position.x - camera.viewportWidth / 2 : 0) + renderX, 0, size.x, size.y);
     }
 
     public int getTime() {
         return (int) localTime;
-    }
-
-    private void renderLayer(SpriteBatch batch, OrthographicCamera camera, int id, float renderX, float blendFactor) {
-        batch.setColor(1,1,1, blendFactor);
-        batch.draw(TextureManager.instance.getTexture(Time.valueOf(id).texture), (camera != null ? camera.position.x - camera.viewportWidth / 2 : 0) + renderX,0, size.x, size.y);
-    }
-
-    private void setSize(int height) {
-        int scale = (int) Math.ceil(height / initialSize.y);
-        this.size = new Vector2(initialSize.x * scale, initialSize.y * scale);
     }
 
 }

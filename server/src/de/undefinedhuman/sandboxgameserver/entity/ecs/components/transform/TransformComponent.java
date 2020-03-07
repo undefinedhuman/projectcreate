@@ -34,6 +34,14 @@ public class TransformComponent extends Component {
         checkWorld();
     }
 
+    private void checkWorld() {
+
+        if (position.x < 0.0F) position.x = WorldManager.instance.getWorld("Main").width * 16 + position.x;
+        if (position.x >= WorldManager.instance.getWorld("Main").width * 16)
+            position.x = 0.0F + (position.x - WorldManager.instance.getWorld("Main").width * 16);
+
+    }
+
     public float getWidth() {
         return size.x;
     }
@@ -76,14 +84,6 @@ public class TransformComponent extends Component {
 
     public Vector2 getCenter() {
         return new Vector2(size.x / 2, size.y / 2);
-    }
-
-    private void checkWorld() {
-
-        if (position.x < 0.0F) position.x = WorldManager.instance.getWorld("Main").width * 16 + position.x;
-        if (position.x >= WorldManager.instance.getWorld("Main").width * 16)
-            position.x = 0.0F + (position.x - WorldManager.instance.getWorld("Main").width * 16);
-
     }
 
     @Override

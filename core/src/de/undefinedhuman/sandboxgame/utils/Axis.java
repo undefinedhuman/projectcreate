@@ -8,7 +8,8 @@ public class Axis {
 
     public Axis(float x, float y) {
 
-        this.x = x; this.y = y;
+        this.x = x;
+        this.y = y;
 
     }
 
@@ -36,17 +37,17 @@ public class Axis {
 
     }
 
+    private float skalarMultiplikation(Vector2 vector) {
+
+        return vector.x * this.x + vector.y * this.y;
+
+    }
+
     public float getMinPointOnAxis(Vector2[] vectors) {
 
         Vector2 lowest = vectors[0];
         for (Vector2 vector : vectors) if (skalarMultiplikation(vector) < skalarMultiplikation(lowest)) lowest = vector;
         return skalarMultiplikation(lowest);
-
-    }
-
-    private float skalarMultiplikation(Vector2 vector) {
-
-        return vector.x * this.x + vector.y * this.y;
 
     }
 

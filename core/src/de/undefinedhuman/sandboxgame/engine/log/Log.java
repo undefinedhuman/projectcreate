@@ -21,7 +21,31 @@ public class Log extends Manager {
 
     public Log() {
         logMessages = new ArrayList<>();
-        if(instance == null) instance = this;
+        if (instance == null) instance = this;
+    }
+
+    public static void log(Object msg) {
+        createMessage("Log", msg);
+    }
+
+    public static void error(Object msg) {
+        createMessage("Error", msg);
+    }
+
+    public static void info(Object... values) {
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < values.length; i++) s.append(values[i]).append(i < values.length - 1 ? ", " : "");
+        createMessage("Info", s.toString());
+    }
+
+    private static void createMessage(String title, Object msg) {
+        String message = generateMessage(title, String.valueOf(msg));
+        System.out.println(message);
+        logMessages.add(message);
+    }
+
+    private static String generateMessage(String prefix, String msg) {
+        return "[" + Tools.getTime() + "] [" + prefix + "] " + msg;
     }
 
     @Override
@@ -30,73 +54,42 @@ public class Log extends Manager {
         load();
     }
 
-    public static void log(Object msg) {
-        createMessage("Log", msg);
-    }
-    public static void error(Object msg) {
-        createMessage("Error", msg);
-    }
-    public static void info(Object msg) {
-        createMessage("Info", msg);
+    @Override
+    public void delete() {
+        save();
     }
 
-    public static void info(Object... values) {
-        StringBuilder s = new StringBuilder();
-        for(int i = 0; i < values.length; i++) s.append(values[i]).append(i < values.length - 1 ? ", " : "");
-        createMessage("Info", s.toString());
+    public void save() {
+        if(file == null || !file.exists()) return;
+        FileWriter writer = file.getFileWriter(false, "");
+        info("Log file successfully saved!");
+        for (String message : logMessages) writer.writeString(message).nextLine();
+        logMessages.clear();
+        writer.close();
+    }
+
+    public static void info(Object msg) {
+        createMessage("Info", msg);
     }
 
     public void load() {
         checkLogs();
         file = new FsFile(Paths.LOG_PATH, fileName, false);
-        if(file.exists()) info("Log file successfully created!");
-    }
-
-    public void save() {
-
-        if(file != null && file.exists()) {
-
-            FileWriter writer = file.getFileWriter(false, "");
-            info("Log file successfully saved!");
-            for(String s : logMessages) { writer.writeString(s); writer.nextLine(); }
-            logMessages.clear();
-            writer.close();
-
-        }
-
+        if (file.exists()) info("Log file successfully created!");
     }
 
     private void checkLogs() {
-
-        ArrayList<File> fileToRemove = new ArrayList<>();
+        ArrayList<File> filesToRemove = new ArrayList<>();
         File dir = new File(Paths.LOG_PATH.getPath());
-
-        if(dir.exists()) if(dir.isDirectory()) {
-
-            File[] files = dir.listFiles();
-
-            if(files != null) if(files.length != 0) {
-
-                for(File file : files) if ((new Date().getTime() - file.lastModified()) > 2 * 24 * 60 * 60 * 1000) fileToRemove.add(file);
-                int dFiles = 0;
-                for(File file : fileToRemove) if(file.delete()) dFiles++;
-                info("Deleted " + dFiles + " log files!");
-                fileToRemove.clear();
-
-            }
-
-        }
-
-    }
-
-    private static String generateMessage(String prefix, String msg) {
-        return "[" + Tools.getTime() + "] [" + prefix + "] " + msg;
-    }
-
-    private static void createMessage(String title, Object msg) {
-        String message = generateMessage(title, String.valueOf(msg));
-        System.out.println(message);
-        logMessages.add(message);
+        if (!dir.exists() || !dir.isDirectory()) return;
+        File[] files = dir.listFiles();
+        if(files == null || files.length == 0) return;
+        for (File file : files)
+            if ((new Date().getTime() - file.lastModified()) > 172800000) filesToRemove.add(file);
+        int dFiles = 0;
+        for (File file : filesToRemove) if (file.delete()) dFiles++;
+        info("Deleted " + dFiles + " log files!");
+        filesToRemove.clear();
     }
 
     public void crash() {
@@ -108,11 +101,6 @@ public class Log extends Manager {
         error(errorMessage);
         save();
         System.exit(1);
-    }
-
-    @Override
-    public void delete() {
-        save();
     }
 
 }

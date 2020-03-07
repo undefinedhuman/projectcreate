@@ -9,11 +9,10 @@ import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
 
 public class MovementComponent extends Component {
 
-    private float speed, jumpSpeed, gravity;
     public Vector2 velocity;
-
     public boolean moveRight = false, moveLeft = false, beginHike = false;
     public boolean canJump = false;
+    private float speed, jumpSpeed, gravity;
 
     public MovementComponent(Entity entity, float speed, float jumpSpeed, float gravity) {
 
@@ -21,7 +20,7 @@ public class MovementComponent extends Component {
         this.speed = speed;
         this.jumpSpeed = jumpSpeed;
         this.gravity = gravity;
-        this.velocity = new Vector2(0,0);
+        this.velocity = new Vector2(0, 0);
         this.type = ComponentType.MOVEMENT;
 
     }
@@ -60,6 +59,10 @@ public class MovementComponent extends Component {
 
     }
 
+    public void setCanJump(boolean canJump) {
+        this.canJump = canJump;
+    }
+
     public void forceJump() {
 
         this.velocity.y = (jumpSpeed * 2.3F);
@@ -67,8 +70,9 @@ public class MovementComponent extends Component {
 
     }
 
-    public void setCanJump(boolean canJump) {
-        this.canJump = canJump;
+    @Override
+    public void receive(LineSplitter splitter) {
+        move(splitter.getNextBoolean(), splitter.getNextBoolean());
     }
 
     public void move(boolean left, boolean right) {
@@ -76,19 +80,16 @@ public class MovementComponent extends Component {
         this.moveLeft = left;
         this.moveRight = right;
 
+        // TODO Maybe wrong?
+
         //this.animationTime = (right || left) ? (canJump ? 0 : animationTime) : animationTime;
 
     }
 
     @Override
-    public void setNetworkData(LineSplitter s) {
-        move(s.getNextBoolean(), s.getNextBoolean());
-    }
-
-    @Override
-    public void getNetworkData(LineWriter w) {
-        w.writeBoolean(moveLeft);
-        w.writeBoolean(moveRight);
+    public void send(LineWriter writer) {
+        writer.writeBoolean(moveLeft);
+        writer.writeBoolean(moveRight);
     }
 
 }

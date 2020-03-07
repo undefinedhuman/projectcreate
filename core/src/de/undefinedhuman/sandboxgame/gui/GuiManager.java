@@ -18,25 +18,25 @@ public class GuiManager extends Manager {
     private ArrayList<GuiTransform> guis = new ArrayList<>();
 
     public GuiManager() {
-        if(instance == null) instance = this;
+        if (instance == null) instance = this;
     }
 
     @Override
     public void init() {
-        for(GuiTemplate template : GuiTemplate.values()) template.load();
+        for (GuiTemplate template : GuiTemplate.values()) template.load();
         TextureManager.instance.addTexture("gui/Chains/Chain-Top-Right.png", "gui/Chains/Chain-Top-Left.png", "gui/Chains/Chain-Mid-Right.png", "gui/Chains/Chain-Mid-Left.png", "gui/Chains/Chain-Bottom-Right.png", "gui/Chains/Chain-Bottom-Left.png");
-        screen = new GuiComponent().initScreen(1280,720);
+        screen = new GuiComponent().initScreen(1280, 720);
     }
 
     @Override
     public void resize(int width, int height) {
         screen.setScale(width, height);
-        for(GuiTransform gui : guis) gui.resize(width, height);
+        for (GuiTransform gui : guis) gui.resize(width, height);
     }
 
     @Override
     public void update(float delta) {
-        for(GuiTransform gui : guis) gui.update(delta);
+        for (GuiTransform gui : guis) gui.update(delta);
     }
 
     @Override
@@ -46,20 +46,22 @@ public class GuiManager extends Manager {
 
     @Override
     public void delete() {
-        for(GuiTemplate template : GuiTemplate.values()) template.delete();
+        for (GuiTemplate template : GuiTemplate.values()) template.delete();
         screen.delete();
         guis.clear();
     }
 
     public void addGui(GuiTransform... guis) {
-        for(GuiTransform gui : guis) if(!hasGui(gui)) {
-            this.guis.add(gui);
-            gui.init();
-            gui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        }
+        for (GuiTransform gui : guis)
+            if (!hasGui(gui)) {
+                this.guis.add(gui);
+                gui.init();
+                gui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            }
     }
 
-    public void removeGui(GuiTransform gui) { if(hasGui(gui)) this.guis.remove(gui); }
     public boolean hasGui(GuiTransform gui) { return guis.contains(gui); }
+
+    public void removeGui(GuiTransform gui) { if (hasGui(gui)) this.guis.remove(gui); }
 
 }

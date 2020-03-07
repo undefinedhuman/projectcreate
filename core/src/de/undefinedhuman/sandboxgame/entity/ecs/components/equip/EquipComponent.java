@@ -17,7 +17,7 @@ public class EquipComponent extends Component {
     public EquipComponent(Entity entity, String itemTextureName, String armTextureName, String itemHitboxTextureName, Vector2[] itemOffsets, Vector2[] itemPositions, String[] invisibleSprites) {
 
         super(entity);
-        for(int i = 0; i < itemIDs.length; i++) itemIDs[0] = -1;
+        for (int i = 0; i < itemIDs.length; i++) itemIDs[0] = -1;
         this.itemOffsets = itemOffsets;
         this.itemPositions = itemPositions;
         this.invisibleSprites = invisibleSprites;
@@ -28,23 +28,26 @@ public class EquipComponent extends Component {
     public Vector2 getCurrentPosition(int index) {
         return itemPositions[index];
     }
+
     public Vector2 getCurrentOffset(int index) {
         return itemOffsets[index];
     }
+
     public String[] getInvisibleSprites() { return invisibleSprites; }
+
     public void setItemID(int index, int itemID) {
-        if(!Tools.isInRange(index,0,4)) return;
+        if (!Tools.isInRange(index, 0, 4)) return;
         itemIDs[index] = itemID;
     }
 
     @Override
-    public void setNetworkData(LineSplitter s) {
-        for(int i = 0; i < itemIDs.length; i++) itemIDs[i] = s.getNextInt();
+    public void receive(LineSplitter splitter) {
+        for (int i = 0; i < itemIDs.length; i++) itemIDs[i] = splitter.getNextInt();
     }
 
     @Override
-    public void getNetworkData(LineWriter w) {
-        for (int itemID : itemIDs) w.writeInt(itemID);
+    public void send(LineWriter writer) {
+        for (int itemID : itemIDs) writer.writeInt(itemID);
     }
 
 }

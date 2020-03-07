@@ -17,25 +17,20 @@ public class Blueprint {
     private Vector2 size;
 
     public Blueprint(int id, EntityType type, Vector2 size) {
-
         this.id = id;
         this.type = type;
         this.size = size;
         componentBlueprints = new HashMap<>();
-
     }
 
     public Entity createInstance(ComponentParam... param) {
-
         Entity entity = new Entity(this, size);
         HashMap<ComponentType, ComponentParam> params = new HashMap<>();
         for (ComponentParam p : param) params.put(p.getType(), p);
         for (ComponentBlueprint blueprint : componentBlueprints.values())
             entity.addComponent(blueprint.createInstance(entity, params));
         entity.init();
-
         return entity;
-
     }
 
     public int getID() {

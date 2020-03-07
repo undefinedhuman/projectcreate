@@ -18,13 +18,21 @@ public class BlueprintManager {
         this.blueprints.put(blueprint.getID(), blueprint);
     }
 
+    public void addBlueprint(int... ids) {
+        for (int id : ids) loadBlueprint(id);
+    }
+
     public boolean loadBlueprint(int id) {
         if (!hasBlueprint(id)) blueprints.put(id, ResourceManager.instance.loadBlueprint(id));
         return hasBlueprint(id);
     }
 
-    public void addBlueprint(int... ids) {
-        for (int id : ids) loadBlueprint(id);
+    public boolean hasBlueprint(int id) {
+        return blueprints.containsKey(id);
+    }
+
+    public void removeBlueprints(int... ids) {
+        for (int id : ids) removeBlueprint(id);
     }
 
     public void removeBlueprint(int id) {
@@ -38,18 +46,10 @@ public class BlueprintManager {
 
     }
 
-    public void removeBlueprints(int... ids) {
-        for (int id : ids) removeBlueprint(id);
-    }
-
     public Blueprint getBlueprint(int id) {
         if (hasBlueprint(id)) return blueprints.get(id);
         else if (loadBlueprint(id)) return blueprints.get(id);
         return hasBlueprint(0) ? getBlueprint(0) : null;
-    }
-
-    public boolean hasBlueprint(int id) {
-        return blueprints.containsKey(id);
     }
 
     public void delete() {

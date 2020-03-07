@@ -32,7 +32,7 @@ public class NameBlueprint extends ComponentBlueprint {
     @Override
     public void load(HashMap<String, LineSplitter> settings, int id) {
 
-        this.name = Tools.loadString(settings,"Name","");
+        this.name = Tools.loadString(settings, "Name", "");
 
     }
 

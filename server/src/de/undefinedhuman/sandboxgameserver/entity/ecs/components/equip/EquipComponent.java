@@ -21,7 +21,7 @@ public class EquipComponent extends Component {
 
     @Override
     public void load(FileReader reader) {
-        for(int i = 0; i < itemIDs.length; i++) itemIDs[i] = reader.getNextInt();
+        for (int i = 0; i < itemIDs.length; i++) itemIDs[i] = reader.getNextInt();
     }
 
     @Override
@@ -36,7 +36,7 @@ public class EquipComponent extends Component {
 
     @Override
     public void setNetworkData(LineSplitter s) {
-        for(int i = 0; i < itemIDs.length; i++) itemIDs[i] = s.getNextInt();
+        for (int i = 0; i < itemIDs.length; i++) itemIDs[i] = s.getNextInt();
     }
 
 }

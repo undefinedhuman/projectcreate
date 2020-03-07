@@ -19,7 +19,7 @@ public class LanguageManager extends Manager {
 
     public LanguageManager() {
         languageList = new HashMap<>();
-        if(instance == null) instance = this;
+        if (instance == null) instance = this;
     }
 
     @Override
@@ -31,18 +31,6 @@ public class LanguageManager extends Manager {
         }
     }
 
-    public String getLanguageName() {
-        return languageName;
-    }
-
-    public String getString(String key, Replacement... replacements) {
-        if(languageList == null) return languageName + " not found!";
-        String s = languageList.get(key);
-        if(s == null) return key + " not found!";
-        for(Replacement replacement : replacements) s = s.replaceAll(replacement.getName(), replacement.getValue());
-        return s;
-    }
-
     public boolean loadLanguage(String languageName) {
 
         try {
@@ -52,7 +40,7 @@ public class LanguageManager extends Manager {
             Array<XmlReader.Element> languages = root.getChildrenByName("language");
             for (int i = 0; i < languages.size; ++i) {
                 XmlReader.Element language = languages.get(i);
-                if(!language.hasAttribute("name") || !language.getAttribute("name").equals(languageName)) continue;
+                if (!language.hasAttribute("name") || !language.getAttribute("name").equals(languageName)) continue;
                 languages.clear();
                 Array<XmlReader.Element> strings = language.getChildrenByName("string");
                 for (int j = 0; j < strings.size; ++j) {
@@ -75,6 +63,18 @@ public class LanguageManager extends Manager {
     @Override
     public void delete() {
         languageList.clear();
+    }
+
+    public String getLanguageName() {
+        return languageName;
+    }
+
+    public String getString(String key, Replacement... replacements) {
+        if (languageList == null) return languageName + " not found!";
+        String s = languageList.get(key);
+        if (s == null) return key + " not found!";
+        for (Replacement replacement : replacements) s = s.replaceAll(replacement.getName(), replacement.getValue());
+        return s;
     }
 
 }

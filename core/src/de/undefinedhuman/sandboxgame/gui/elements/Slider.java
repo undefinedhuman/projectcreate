@@ -44,6 +44,21 @@ public class Slider extends Gui {
         notifyChangeListener();
     }
 
+    private void initPointer(String texture) {
+        pointer = new Gui(new GuiTexture(texture));
+        pointer.set("r" + progress, "r0.5f", "p4", "p14").setCentered();
+        addChild(pointer);
+    }
+
+    private void initProgress(String texture, boolean wrap) {
+        progressTexture = new Texture(TextureManager.instance.getTexture(texture).getTexture().getTextureData());
+        if (wrap) progressTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.ClampToEdge);
+    }
+
+    private void notifyChangeListener() {
+        for (ChangeEvent changeListener : changeListeners) changeListener.notify(progress);
+    }
+
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
@@ -53,31 +68,32 @@ public class Slider extends Gui {
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
 
-        if((isClicked(camera) || pointer.isClicked(camera)) && Mouse.isLeftClicked()) grabbed = true;
-        else if(!Mouse.isLeftClicked()) grabbed = false;
+        if ((isClicked(camera) || pointer.isClicked(camera)) && Mouse.isLeftClicked()) grabbed = true;
+        else if (!Mouse.isLeftClicked()) grabbed = false;
 
-        if(grabbed) {
+        if (grabbed) {
             float mouseX = Mouse.getMouseCoords().x;
-            this.progress = Tools.clamp((mouseX - position.x) / scale.x,0,1f);
+            this.progress = Tools.clamp((mouseX - position.x) / scale.x, 0, 1f);
             resizePointer();
             notifyChangeListener();
         }
 
         super.render(batch, camera);
-        batch.draw(progressTexture,position.x + texture.getCornerSize(),position.y + texture.getCornerSize(),0,0, (int) progressWidth, (int) progressHeight);
+        batch.draw(progressTexture, position.x + texture.getCornerSize(), position.y + texture.getCornerSize(), 0, 0, (int) progressWidth, (int) progressHeight);
         pointer.render(batch, camera);
 
     }
 
-    private void initPointer(String texture) {
-        pointer = new Gui(new GuiTexture(texture));
-        pointer.set("r" + progress,"r0.5f","p4","p14").setCentered();
-        addChild(pointer);
+    private void resizePointer() {
+        if (pointer == null) return;
+        progressWidth = progress * (scale.x - texture.getCornerSize() * 2);
+        progressHeight = scale.y - texture.getCornerSize() * 2;
+        pointer.setValue(Axis.X, progressWidth / scale.x);
+        pointer.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
-    private void initProgress(String texture, boolean wrap) {
-        progressTexture = new Texture(TextureManager.instance.getTexture(texture).getTexture().getTextureData());
-        if(wrap) progressTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.ClampToEdge);
+    public float getProgress() {
+        return progress;
     }
 
     public void setProgress(float progress) {
@@ -86,24 +102,8 @@ public class Slider extends Gui {
         notifyChangeListener();
     }
 
-    public float getProgress() {
-        return progress;
-    }
-
     public void addChangeListener(ChangeEvent changeListener) {
         this.changeListeners.add(changeListener);
-    }
-
-    private void notifyChangeListener() {
-        for(ChangeEvent changeListener : changeListeners) changeListener.notify(progress);
-    }
-
-    private void resizePointer() {
-        if(pointer == null) return;
-        progressWidth = progress * (scale.x - texture.getCornerSize() * 2);
-        progressHeight = scale.y - texture.getCornerSize() * 2;
-        pointer.setValue(Axis.X,progressWidth / scale.x);
-        pointer.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
 }

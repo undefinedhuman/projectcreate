@@ -35,9 +35,9 @@ public class CollisionBlueprint extends ComponentBlueprint {
     @Override
     public void load(HashMap<String, LineSplitter> settings, int id) {
 
-        this.width = Tools.loadFloat(settings,"Width",0);
-        this.height = Tools.loadFloat(settings,"Height",0);
-        this.offset = Tools.loadVector2(settings,"Offset",new Vector2(0,0));
+        this.width = Tools.loadFloat(settings, "Width", 0);
+        this.height = Tools.loadFloat(settings, "Height", 0);
+        this.offset = Tools.loadVector2(settings, "Offset", new Vector2(0, 0));
 
     }
 

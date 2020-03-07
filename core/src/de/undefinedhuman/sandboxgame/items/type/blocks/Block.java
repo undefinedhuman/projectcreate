@@ -51,32 +51,34 @@ public class Block extends Item {
     public void load(int id, HashMap<String, LineSplitter> settings) {
 
         super.load(id, settings);
-        if(settings.containsKey("Atlas")) atlasName = settings.get("Atlas").getNextString();
+        if (settings.containsKey("Atlas")) atlasName = settings.get("Atlas").getNextString();
         atlasPath = Paths.ITEM_PATH.getPath() + id + "/" + atlasName + ".atlas";
         iconTexture = Paths.ITEM_PATH.getPath() + id + "/" + atlasName + " Icon.png";
         TextureManager.instance.addTexture(iconTexture);
 
-        if(settings.containsKey("Sound")) soundName = Paths.ITEM_PATH.getPath() + id + "/" + settings.get("Sound").getNextString();
+        if (settings.containsKey("Sound"))
+            soundName = Paths.ITEM_PATH.getPath() + id + "/" + settings.get("Sound").getNextString();
         SoundManager.instance.addSound(soundName);
 
-        durability = Tools.loadInt(settings,"Durability",0);
-        dropID = Tools.loadInt(settings,"DropID", id);
-        unbreakable = Tools.loadBoolean(settings,"Unbreakable",false);
-        collide = Tools.loadBoolean(settings,"Collide",true);
-        fluid = Tools.loadBoolean(settings,"Fluid",false);
-        animated = Tools.loadBoolean(settings,"Animated",false);
-        hasLight = Tools.loadBoolean(settings,"HasLight",false);
-        hasStates = Tools.loadBoolean(settings,"HasStates",true);
-        isFull = Tools.loadBoolean(settings,"IsFull",true);
-        canBePlacedInBackLayer = Tools.loadBoolean(settings,"PlacedInBackL",true);
-        lightColor = Tools.loadVector3(settings,"LightColor",new Vector3());
+        durability = Tools.loadInt(settings, "Durability", 0);
+        dropID = Tools.loadInt(settings, "DropID", id);
+        unbreakable = Tools.loadBoolean(settings, "Unbreakable", false);
+        collide = Tools.loadBoolean(settings, "Collide", true);
+        fluid = Tools.loadBoolean(settings, "Fluid", false);
+        animated = Tools.loadBoolean(settings, "Animated", false);
+        hasLight = Tools.loadBoolean(settings, "HasLight", false);
+        hasStates = Tools.loadBoolean(settings, "HasStates", true);
+        isFull = Tools.loadBoolean(settings, "IsFull", true);
+        canBePlacedInBackLayer = Tools.loadBoolean(settings, "PlacedInBackL", true);
+        lightColor = Tools.loadVector3(settings, "LightColor", new Vector3());
         init();
 
     }
 
     public void init() {
         textureAtlas = new TextureAtlas(atlasPath);
-        for (int i = 0; i < 6; i++) for (int j = 0; j < 4; j++) blockTextures[i][j] = textureAtlas.findRegion(atlasName + "_" + i + "_" + j);
+        for (int i = 0; i < 6; i++)
+            for (int j = 0; j < 4; j++) blockTextures[i][j] = textureAtlas.findRegion(atlasName + "_" + i + "_" + j);
     }
 
     @Override

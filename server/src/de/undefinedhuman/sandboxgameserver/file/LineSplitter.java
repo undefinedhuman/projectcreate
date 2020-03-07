@@ -24,20 +24,28 @@ public class LineSplitter {
 
     }
 
+    private String getNextData() {
+
+        if (hasMoreValues()) {
+            String s = this.data[this.pointer++];
+            return (base ? Base64Coder.decodeString(s) : s);
+        }
+
+        return null;
+
+    }
+
+    public boolean hasMoreValues() {
+
+        return this.pointer < this.data.length;
+
+    }
+
     public int getNextInt() {
 
         String s = getNextData();
 
         if (s != null) return Integer.parseInt(s);
-        return 0;
-
-    }
-
-    public float getNextFloat() {
-
-        String s = getNextData();
-
-        if (s != null) return Float.parseFloat(s);
         return 0;
 
     }
@@ -73,20 +81,12 @@ public class LineSplitter {
         return new Vector2(getNextFloat(), getNextFloat());
     }
 
-    public boolean hasMoreValues() {
+    public float getNextFloat() {
 
-        return this.pointer < this.data.length;
+        String s = getNextData();
 
-    }
-
-    private String getNextData() {
-
-        if (hasMoreValues()) {
-            String s = this.data[this.pointer++];
-            return (base ? Base64Coder.decodeString(s) : s);
-        }
-
-        return null;
+        if (s != null) return Float.parseFloat(s);
+        return 0;
 
     }
 

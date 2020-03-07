@@ -1,0 +1,9 @@
+[06-03-2020 - 17-22-41] [Info] Successfully created 06-03-2020 - 17-22-41.txt
+[06-03-2020 - 17-22-41] [Info] Log file successfully created!
+[06-03-2020 - 17-22-41] [Info] Log file successfully saved!
+[06-03-2020 - 17-22-41] [Info] Loaded Entity Blueprint ID: 0
+[06-03-2020 - 17-22-45] [Info] Successfully created settings.world
+[06-03-2020 - 17-22-46] [Info] Successfully created entities.world
+[06-03-2020 - 17-22-46] [Info] World Main generated!
+[06-03-2020 - 17-23-56] [Info] World Main saved!
+[06-03-2020 - 17-23-56] [Info] Log file successfully saved!

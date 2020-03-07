@@ -7,7 +7,8 @@ public class ChunkPosition {
     public ChunkPosition() { }
 
     public ChunkPosition(int x, int y) {
-        this.x = x; this.y = y;
+        this.x = x;
+        this.y = y;
     }
 
     public void setPosition(int x, int y) {

@@ -28,7 +28,7 @@ public class EntityList {
 
         this.entities.put(id, entity);
         if (entity.hasComponent(ComponentType.COLLISION)) entitiesForCollision.add(entity);
-        if(entity.getType() == EntityType.PLAYER) players.put(id, entity);
+        if (entity.getType() == EntityType.PLAYER) players.put(id, entity);
 
     }
 
@@ -46,11 +46,11 @@ public class EntityList {
 
     public void removeEntity(int id) {
 
-        if(hasEntity(id)) {
+        if (hasEntity(id)) {
 
             Entity entity = entities.get(id);
             if (entity.hasComponent(ComponentType.COLLISION)) entitiesForCollision.remove(entity);
-            if(entity.getType() == EntityType.PLAYER) players.remove(id);
+            if (entity.getType() == EntityType.PLAYER) players.remove(id);
             this.entities.remove(id);
             this.idManager.addID(id);
 
@@ -66,10 +66,6 @@ public class EntityList {
         return entities;
     }
 
-    public Collection<Entity> getPlayers() {
-        return players.values();
-    }
-
     public Collection<Integer> getPlayersID() {
         return players.keySet();
     }
@@ -81,6 +77,10 @@ public class EntityList {
                 return true;
         return false;
 
+    }
+
+    public Collection<Entity> getPlayers() {
+        return players.values();
     }
 
     public ArrayList<Entity> getEntityInRangeForCollision(Vector2 pos, float range) {

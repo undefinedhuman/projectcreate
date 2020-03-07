@@ -18,8 +18,8 @@ public class Staff extends Weapon {
     @Override
     public void load(int id, HashMap<String, LineSplitter> settings) {
         super.load(id, settings);
-        launcherAngle = Tools.loadFloat(settings,"Launcher Angle",-18);
-        launcherDistance = Tools.loadFloat(settings,"Launcher Distance",63);
+        launcherAngle = Tools.loadFloat(settings, "Launcher Angle", -18);
+        launcherDistance = Tools.loadFloat(settings, "Launcher Distance", 63);
         type = ItemType.BOW;
     }
 

@@ -13,6 +13,7 @@ public abstract class Event {
     }
 
     public abstract void update(float delta);
+
     public abstract void render(SpriteBatch batch, OrthographicCamera camera);
 
 }

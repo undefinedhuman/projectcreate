@@ -43,6 +43,14 @@ public class WorldLayer {
 
     }
 
+    private int getPositionX(int x) {
+
+        if (x < 0) x = (this.width + x);
+        else if (x > this.width - 1) x = (x - this.width);
+        return x;
+
+    }
+
     public byte getBlock(Vector2 pos) {
 
         if (pos.y < height - 1 && pos.y >= 0) {
@@ -72,14 +80,6 @@ public class WorldLayer {
             }
 
         }
-
-    }
-
-    private int getPositionX(int x) {
-
-        if (x < 0) x = (this.width + x);
-        else if (x > this.width - 1) x = (x - this.width);
-        return x;
 
     }
 

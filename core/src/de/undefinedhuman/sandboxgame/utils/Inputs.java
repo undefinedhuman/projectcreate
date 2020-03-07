@@ -17,7 +17,7 @@ public class Inputs extends Manager implements InputProcessor {
     public static Inputs instance;
 
     public Inputs() {
-        if(instance == null) instance = this;
+        if (instance == null) instance = this;
     }
 
     @Override
@@ -28,15 +28,15 @@ public class Inputs extends Manager implements InputProcessor {
         switch (keycode) {
 
             case Input.Keys.A:
-                ((MovementComponent) player.getComponent(ComponentType.MOVEMENT)).move(true,false);
+                ((MovementComponent) player.getComponent(ComponentType.MOVEMENT)).move(true, false);
                 ClientManager.instance.sendTCP(PacketUtils.createComponentPacket(player, ComponentType.MOVEMENT));
                 break;
             case Input.Keys.D:
-                ((MovementComponent) player.getComponent(ComponentType.MOVEMENT)).move(false,true);
+                ((MovementComponent) player.getComponent(ComponentType.MOVEMENT)).move(false, true);
                 ClientManager.instance.sendTCP(PacketUtils.createComponentPacket(player, ComponentType.MOVEMENT));
                 break;
             case Input.Keys.SPACE:
-                if(((MovementComponent) player.getComponent(ComponentType.MOVEMENT)).jump()) {
+                if (((MovementComponent) player.getComponent(ComponentType.MOVEMENT)).jump()) {
                     JumpPacket packet = new JumpPacket();
                     packet.id = player.getWorldID();
                     ClientManager.instance.sendTCP(packet);
@@ -87,7 +87,7 @@ public class Inputs extends Manager implements InputProcessor {
 
         Entity player = GameManager.instance.player;
 
-        switch(keycode) {
+        switch (keycode) {
 
             case Input.Keys.A:
                 boolean moveRight = Gdx.input.isKeyPressed(Input.Keys.D);
@@ -96,7 +96,7 @@ public class Inputs extends Manager implements InputProcessor {
                 break;
             case Input.Keys.D:
                 boolean moveLeft = Gdx.input.isKeyPressed(Input.Keys.A);
-                ((MovementComponent) player.getComponent(ComponentType.MOVEMENT)).move(moveLeft,false);
+                ((MovementComponent) player.getComponent(ComponentType.MOVEMENT)).move(moveLeft, false);
                 ClientManager.instance.sendTCP(PacketUtils.createComponentPacket(player, ComponentType.MOVEMENT));
                 break;
 
@@ -132,11 +132,11 @@ public class Inputs extends Manager implements InputProcessor {
     @Override
     public boolean scrolled(int amount) {
 
-        if(!InventoryManager.instance.isInventoryOpened()) {
+        if (!InventoryManager.instance.isInventoryOpened()) {
 
             int selected = InventoryManager.instance.getSelector().getSelected() + amount, selectorLength = InventoryManager.instance.getSelector().getInv()[0].length;
-            if(selected >= selectorLength) selected = 0;
-            if(selected < 0) selected = selectorLength-1;
+            if (selected >= selectorLength) selected = 0;
+            if (selected < 0) selected = selectorLength - 1;
             InventoryManager.instance.getSelector().setSelected(selected);
 
         }

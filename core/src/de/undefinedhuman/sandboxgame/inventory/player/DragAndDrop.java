@@ -38,30 +38,40 @@ public class DragAndDrop {
 
         boolean leftMouse = Gdx.input.isButtonPressed(0), rightMouse = Gdx.input.isButtonPressed(1), isClicked = false;
 
-        if(InventoryManager.instance.isInventoryOpened()) {
+        if (InventoryManager.instance.isInventoryOpened()) {
 
-            if(moving) {
+            if (moving) {
 
                 isClicked = true;
-                if(!alreadyClicked && ((leftMouse && (!isLeft) || (isLeft && rightMouse)))) { placeOneItem(camera); alreadyClicked = true; }
+                if (!alreadyClicked && ((leftMouse && (!isLeft) || (isLeft && rightMouse)))) {
+                    placeOneItem(camera);
+                    alreadyClicked = true;
+                }
 
             }
 
-            if(!isClicked) {
-                if(leftMouse) { startMoving(false, camera); isLeft = true; }
-                if(rightMouse) { startMoving(true, camera); isLeft = false; }
+            if (!isClicked) {
+                if (leftMouse) {
+                    startMoving(false, camera);
+                    isLeft = true;
+                }
+                if (rightMouse) {
+                    startMoving(true, camera);
+                    isLeft = false;
+                }
             }
 
-            if((!rightMouse && isLeft) || (!isLeft && !leftMouse)) alreadyClicked = false;
+            if ((!rightMouse && isLeft) || (!isLeft && !leftMouse)) alreadyClicked = false;
 
-            if(moving && ((isLeft && !leftMouse) || (!isLeft && !rightMouse))) {
+            if (moving && ((isLeft && !leftMouse) || (!isLeft && !rightMouse))) {
 
                 Slot clickedSlot = null;
-                for(InvTarget inventory : targets) if((clickedSlot = inventory.getClickedSlot(camera)) != null) break;
-                if(clickedSlot != null && clickedSlot.isCompatible(currentItem)) {
+                for (InvTarget inventory : targets) if ((clickedSlot = inventory.getClickedSlot(camera)) != null) break;
+                if (clickedSlot != null && clickedSlot.isCompatible(currentItem)) {
 
-                    if(clickedSlot.getItem() == null || clickedSlot.getItem().getID() == currentItem.getID() || half) { currentItem.setAmount(clickedSlot.addItem(currentItem)); }
-                    else {
+                    if (clickedSlot.getItem() == null || clickedSlot.getItem().getID() == currentItem.getID() || half) {
+                        currentItem.setAmount(clickedSlot.addItem(currentItem));
+                    } else {
 
                         InvItem clickedItem = clickedSlot.getItem();
                         clickedSlot.setItem(currentItem.getID(), currentItem.getAmount());
@@ -73,7 +83,7 @@ public class DragAndDrop {
 
                 } else {
 
-                    if(InventoryManager.instance.overGui()) cancelMoving();
+                    if (InventoryManager.instance.overGui()) cancelMoving();
                     else {
                         DropItemManager.instance.addDropItem(currentItem.getID(), currentItem.getAmount(), Tools.getWorldPos(GameManager.gameCamera, new Vector2(Mouse.getX() - 8, Mouse.getY() - 8)));
                         removeTempItem();
@@ -85,34 +95,13 @@ public class DragAndDrop {
 
         } else {
 
-            if(moving) {
+            if (moving) {
 
                 Slot clickedSlot = null;
-                for(InvTarget inventory : targets) if((clickedSlot = inventory.getClickedSlot(camera)) != null) break;
-                if(clickedSlot != null && clickedSlot.isCompatible(currentItem)) currentItem.setAmount(clickedSlot.addItem(currentItem));
+                for (InvTarget inventory : targets) if ((clickedSlot = inventory.getClickedSlot(camera)) != null) break;
+                if (clickedSlot != null && clickedSlot.isCompatible(currentItem))
+                    currentItem.setAmount(clickedSlot.addItem(currentItem));
                 cancelMoving();
-
-            }
-
-        }
-
-    }
-
-    private void startMoving(boolean right, OrthographicCamera camera) {
-
-        Slot clickedSlot = null;
-        for(InvTarget inventory : targets) if((clickedSlot = inventory.getClickedSlot(camera)) != null) break;
-        if(clickedSlot != null) {
-
-            InvItem clickedItem = clickedSlot.getItem();
-
-            if(clickedItem != null) {
-
-                if(right) { int amount = clickedItem.getAmount()/2; half = true; currentItem.setStats(clickedItem.getID(), amount); clickedSlot.removeItem(amount); }
-                else { half = false; currentItem.setStats(clickedItem.getID(), clickedItem.getAmount()); clickedSlot.deleteItem(); }
-
-                lastSlot = clickedSlot;
-                moving = true;
 
             }
 
@@ -123,11 +112,43 @@ public class DragAndDrop {
     private void placeOneItem(OrthographicCamera camera) {
 
         Slot clickedSlot = null;
-        for(InvTarget inventory : targets) if((clickedSlot = inventory.getClickedSlot(camera)) != null) break;
-        if(clickedSlot != null && clickedSlot.isCompatible(currentItem)) {
+        for (InvTarget inventory : targets) if ((clickedSlot = inventory.getClickedSlot(camera)) != null) break;
+        if (clickedSlot != null && clickedSlot.isCompatible(currentItem)) {
 
-            if(clickedSlot.addItem(currentItem.getID(), 1) == 0) { currentItem.setAmount(currentItem.getAmount() - 1); }
-            if(currentItem.getAmount() < 1) currentItem.setStats(0,0);
+            if (clickedSlot.addItem(currentItem.getID(), 1) == 0) {
+                currentItem.setAmount(currentItem.getAmount() - 1);
+            }
+            if (currentItem.getAmount() < 1) currentItem.setStats(0, 0);
+
+        }
+
+    }
+
+    private void startMoving(boolean right, OrthographicCamera camera) {
+
+        Slot clickedSlot = null;
+        for (InvTarget inventory : targets) if ((clickedSlot = inventory.getClickedSlot(camera)) != null) break;
+        if (clickedSlot != null) {
+
+            InvItem clickedItem = clickedSlot.getItem();
+
+            if (clickedItem != null) {
+
+                if (right) {
+                    int amount = clickedItem.getAmount() / 2;
+                    half = true;
+                    currentItem.setStats(clickedItem.getID(), amount);
+                    clickedSlot.removeItem(amount);
+                } else {
+                    half = false;
+                    currentItem.setStats(clickedItem.getID(), clickedItem.getAmount());
+                    clickedSlot.deleteItem();
+                }
+
+                lastSlot = clickedSlot;
+                moving = true;
+
+            }
 
         }
 
@@ -142,8 +163,9 @@ public class DragAndDrop {
 
     private void removeTempItem() {
 
-        currentItem.setStats(0,0);
-        moving = false; half = false;
+        currentItem.setStats(0, 0);
+        moving = false;
+        half = false;
 
     }
 
@@ -151,8 +173,8 @@ public class DragAndDrop {
 
         Vector2 mousePosition = Tools.getWorldCoordsOfMouse(camera);
 
-        if(moving && (currentItem.getID() != 0 && currentItem.getAmount() != 0)) {
-            currentItem.setPosition((int) (mousePosition.x - currentItem.getScale().x/2), (int) (mousePosition.y - currentItem.getScale().y/2));
+        if (moving && (currentItem.getID() != 0 && currentItem.getAmount() != 0)) {
+            currentItem.setPosition((int) (mousePosition.x - currentItem.getScale().x / 2), (int) (mousePosition.y - currentItem.getScale().y / 2));
             currentItem.render(batch, camera);
         }
 
@@ -161,16 +183,24 @@ public class DragAndDrop {
     public void resize(int width, int height) {
         currentItem.resize(width, height);
     }
-    public void addTarget(InvTarget... targets) { for(InvTarget target : targets) if(!hasTarget(target)) this.targets.add(target); }
-    public void addTarget(InvTarget target) {
-        if(!hasTarget(target)) targets.add(target);
+
+    public void addTarget(InvTarget... targets) {
+        for (InvTarget target : targets)
+            if (!hasTarget(target)) this.targets.add(target);
     }
-    public void removeTarget(InvTarget target) {
-        if(hasTarget(target)) targets.remove(target);
-    }
+
     public boolean hasTarget(InvTarget inventory) {
         return targets.contains(inventory);
     }
+
+    public void addTarget(InvTarget target) {
+        if (!hasTarget(target)) targets.add(target);
+    }
+
+    public void removeTarget(InvTarget target) {
+        if (hasTarget(target)) targets.remove(target);
+    }
+
     public boolean isMoving() {
         return moving;
     }

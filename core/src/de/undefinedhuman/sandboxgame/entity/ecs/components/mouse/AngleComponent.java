@@ -12,7 +12,7 @@ public class AngleComponent extends Component {
     public float angle = 0;
     public boolean isTurned = false;
 
-    public Vector2 mousePos = new Vector2(0,0);
+    public Vector2 mousePos = new Vector2(0, 0);
 
     public AngleComponent(Entity entity) {
         super(entity);
@@ -26,17 +26,17 @@ public class AngleComponent extends Component {
     }
 
     @Override
-    public void setNetworkData(LineSplitter s) {
-        this.mousePos = s.getNextVector2();
-        this.angle = s.getNextFloat();
-        this.isTurned = s.getNextBoolean();
+    public void receive(LineSplitter splitter) {
+        this.mousePos = splitter.getNextVector2();
+        this.angle = splitter.getNextFloat();
+        this.isTurned = splitter.getNextBoolean();
     }
 
     @Override
-    public void getNetworkData(LineWriter w) {
-        w.writeVector2(mousePos);
-        w.writeFloat(angle);
-        w.writeBoolean(isTurned);
+    public void send(LineWriter writer) {
+        writer.writeVector2(mousePos);
+        writer.writeFloat(angle);
+        writer.writeBoolean(isTurned);
     }
 
 }

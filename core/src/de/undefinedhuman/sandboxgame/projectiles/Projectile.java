@@ -24,7 +24,7 @@ public class Projectile {
 
         this.ownerWorldID = owner.getWorldID();
         this.position = new Vector2(position);
-        this.position.sub((int) (texture.getRegionWidth()/2f),(int) (texture.getRegionHeight()/2f));
+        this.position.sub((int) (texture.getRegionWidth() / 2f), (int) (texture.getRegionHeight() / 2f));
 
     }
 
@@ -33,16 +33,17 @@ public class Projectile {
         int tests = (int) Math.max(1, delta * 400 * velocity.len() / 800f);
 
         this.velocity.y -= gravity * delta / tests;
-        this.position.mulAdd(velocity,delta / tests);
+        this.position.mulAdd(velocity, delta / tests);
 
         velocity.clamp(0, 5000);
 
-        if(Math.abs(velocity.x) > 0.01f || Math.abs(velocity.y) > 0.01f) rotation = Tools.swordLerp(rotation,velocity.angle() - 45,10);
+        if (Math.abs(velocity.x) > 0.01f || Math.abs(velocity.y) > 0.01f)
+            rotation = Tools.swordLerp(rotation, velocity.angle() - 45, 10);
 
     }
 
     public void render(SpriteBatch batch) {
-        batch.draw(new TextureRegion(texture), position.x, position.y, (int) (texture.getRegionWidth()/2f), (int) (texture.getRegionHeight()/2f), texture.getRegionWidth(), texture.getRegionHeight(),1,1, rotation);
+        batch.draw(new TextureRegion(texture), position.x, position.y, (int) (texture.getRegionWidth() / 2f), (int) (texture.getRegionHeight() / 2f), texture.getRegionWidth(), texture.getRegionHeight(), 1, 1, rotation);
     }
 
 }

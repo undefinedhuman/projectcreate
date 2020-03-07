@@ -39,13 +39,7 @@ public class Tools {
     public static boolean isLinux = System.getProperty("os.name").contains("Linux");
     public static Random random = new Random();
 
-    private static Noise noise = new Noise(2,1.7f,0.4f);
-
-    public static String getTime() {
-        DateFormat df = new SimpleDateFormat("dd-MM-yyyy - HH-mm-ss");
-        Calendar cal = Calendar.getInstance();
-        return df.format(cal.getTime());
-    }
+    private static Noise noise = new Noise(2, 1.7f, 0.4f);
 
     public static Vector2 getScreenPos(OrthographicCamera cam, Vector2 position) {
         return getScreenPos(cam, position.x, position.y);
@@ -57,14 +51,14 @@ public class Tools {
         return new Vector2(worldCoords.x, worldCoords.y);
     }
 
-    public static Vector2 getWorldPos(OrthographicCamera cam, float x, float y) {
-        Vector3 worldCoords = new Vector3(x, y,0.0F);
-        cam.unproject(worldCoords);
-        return new Vector2(worldCoords.x, worldCoords.y);
-    }
-
     public static Vector2 getWorldPos(OrthographicCamera cam, Vector2 pos) {
         return getWorldPos(cam, pos.x, pos.y);
+    }
+
+    public static Vector2 getWorldPos(OrthographicCamera cam, float x, float y) {
+        Vector3 worldCoords = new Vector3(x, y, 0.0F);
+        cam.unproject(worldCoords);
+        return new Vector2(worldCoords.x, worldCoords.y);
     }
 
     public static Vector2 getWorldCoordsOfMouse(OrthographicCamera cam) {
@@ -77,7 +71,6 @@ public class Tools {
         return new Vector2((int) (worldCoords.x / Variables.BLOCK_SIZE), (int) (worldCoords.y / Variables.BLOCK_SIZE));
     }
 
-
     public static Vector3 lerp(Vector3 vecFrom, Vector3 vecTo, float speed) {
         if ((vecFrom.x - vecTo.x > 750.0f) || (vecFrom.x - vecTo.x < -750.0f) || (vecFrom.y - vecTo.y > 750.0f) || (vecFrom.y - vecTo.y < -750.0f))
             return vecTo;
@@ -85,7 +78,7 @@ public class Tools {
     }
 
     public static boolean isOverGuis(OrthographicCamera cam, Gui... guis) {
-        for(Gui gui : guis) if(gui != null && gui.isVisible() && gui.isClicked(cam)) return true;
+        for (Gui gui : guis) if (gui != null && gui.isVisible() && gui.isClicked(cam)) return true;
         return false;
     }
 
@@ -101,16 +94,16 @@ public class Tools {
         return angle;
     }
 
-    public static Vector2 rotatePoint(Vector2 point, Vector2 center, float angle) {
-        float s = (float) Math.sin(angle), c = (float) Math.cos(angle);
-        Vector2 temp = new Vector2(point).sub(center);
-        Vector2 newPoint = new Vector2(temp.x * c - temp.y * s, temp.x * s + temp.y * c);
-        point = new Vector2(newPoint).add(center);
-        return point;
-    }
-
     public static boolean isDifferentEnough(float a, float b, float c, float d, float e) {
-        if(Math.abs(a - b) > 0.02F) { return true; } if(Math.abs(a - c) > 0.02F) { return true; } if(Math.abs(a - d) > 0.02F) { return true; }
+        if (Math.abs(a - b) > 0.02F) {
+            return true;
+        }
+        if (Math.abs(a - c) > 0.02F) {
+            return true;
+        }
+        if (Math.abs(a - d) > 0.02F) {
+            return true;
+        }
         return Math.abs(a - e) > 0.02F;
     }
 
@@ -119,33 +112,26 @@ public class Tools {
     }
 
     public static void drawLine(SpriteBatch batch, Color col, float w, float x, float y, float x2, float y2) {
-        Vector2 vec = new Vector2(x2-x,y2-y);
+        Vector2 vec = new Vector2(x2 - x, y2 - y);
         Color bColor = batch.getColor();
         batch.setColor(col);
-        batch.draw(new TextureRegion(TextureManager.instance.getTexture("blank.png")),x-w/2, y,w/2,0, w, vec.len(),1,1,vec.angle()-90);
+        batch.draw(new TextureRegion(TextureManager.instance.getTexture("blank.png")), x - w / 2, y, w / 2, 0, w, vec.len(), 1, 1, vec.angle() - 90);
         batch.setColor(bColor);
     }
 
     public static void drawLine(SpriteBatch batch, Texture tex, float x, float y, float x2, float y2, int bonus) {
-        Vector2 vec = new Vector2(x2-x,y2-y);
-        Sprite sprite = new Sprite(tex, 0, 0, tex.getWidth(), (int) vec.len()+bonus);
+        Vector2 vec = new Vector2(x2 - x, y2 - y);
+        Sprite sprite = new Sprite(tex, 0, 0, tex.getWidth(), (int) vec.len() + bonus);
         sprite.setColor(batch.getColor());
         sprite.setOrigin(tex.getWidth() >> 1, 0);
         sprite.setPosition(x - (tex.getWidth() >> 1), y);
-        sprite.setRotation( vec.angle()-90);
+        sprite.setRotation(vec.angle() - 90);
         sprite.draw(batch);
     }
 
     public static float swordLerp(float x, float y, float speed) {
-        if(y - x > 180) y -= 360;
-        if(x - y > 180) x -= 360;
-        return getResult(x, y, speed);
-    }
-
-    public static float swordLerpTurned(float x, float y, float speed, boolean turned) {
-        while (turned && y < x) y += 360;
-        while (!turned && y > x) y -= 360;
-        if(Math.abs(x - y) < 0.3f) return y;
+        if (y - x > 180) y -= 360;
+        if (x - y > 180) x -= 360;
         return getResult(x, y, speed);
     }
 
@@ -154,9 +140,16 @@ public class Tools {
         if (t < -40 * speed * Main.delta) t = -40 * speed * Main.delta;
         if (t > 40 * speed * Main.delta) t = 40 * speed * Main.delta;
         float result = x + t;
-        while(result > 360) result -= 360;
-        while(result < 0) result += 360;
+        while (result > 360) result -= 360;
+        while (result < 0) result += 360;
         return result;
+    }
+
+    public static float swordLerpTurned(float x, float y, float speed, boolean turned) {
+        while (turned && y < x) y += 360;
+        while (!turned && y > x) y -= 360;
+        if (Math.abs(x - y) < 0.3f) return y;
+        return getResult(x, y, speed);
     }
 
     public static Vector2[] getPoints(Vector2 position, Vector2 size, float angle, Vector2 center) {
@@ -167,6 +160,14 @@ public class Tools {
         points[3] = new Vector2(position).add(size);
         for (Vector2 point : points) Tools.rotatePoint(point, center, angle);
         return points;
+    }
+
+    public static Vector2 rotatePoint(Vector2 point, Vector2 center, float angle) {
+        float s = (float) Math.sin(angle), c = (float) Math.cos(angle);
+        Vector2 temp = new Vector2(point).sub(center);
+        Vector2 newPoint = new Vector2(temp.x * c - temp.y * s, temp.x * s + temp.y * c);
+        point = new Vector2(newPoint).add(center);
+        return point;
     }
 
     public static void drawRect(SpriteBatch batch, float x, float y, float w, float h, Color color) {
@@ -208,12 +209,6 @@ public class Tools {
         return (collideAxis(aVectors, hitboxPoints, axis1) && collideAxis(aVectors, hitboxPoints, axis2) && collideAxis(aVectors, hitboxPoints, axis3) && collideAxis(aVectors, hitboxPoints, axis4));
     }
 
-    private static boolean collideAxis(Vector2[] pointsA, Vector2[] pointsB, Axis axis) {
-        Vector2[] axisAPoints = projectPointsOnAxis(axis, pointsA), axisBPoints = projectPointsOnAxis(axis, pointsB);
-        float axis1MaxA = axis.getMaxPointOnAxis(axisAPoints), axis1MinA = axis.getMinPointOnAxis(axisAPoints), axis1MaxB = axis.getMaxPointOnAxis(axisBPoints), axis1MinB = axis.getMinPointOnAxis(axisBPoints);
-        return axis1MinB <= axis1MaxA && axis1MaxB >= axis1MinA;
-    }
-
     public static Vector2[] getVertices(Sprite texture) {
         float[] vertices = texture.getVertices();
         Vector2[] vec = new Vector2[4];
@@ -224,6 +219,12 @@ public class Tools {
         return vec;
     }
 
+    private static boolean collideAxis(Vector2[] pointsA, Vector2[] pointsB, Axis axis) {
+        Vector2[] axisAPoints = projectPointsOnAxis(axis, pointsA), axisBPoints = projectPointsOnAxis(axis, pointsB);
+        float axis1MaxA = axis.getMaxPointOnAxis(axisAPoints), axis1MinA = axis.getMinPointOnAxis(axisAPoints), axis1MaxB = axis.getMaxPointOnAxis(axisBPoints), axis1MinB = axis.getMinPointOnAxis(axisBPoints);
+        return axis1MinB <= axis1MaxA && axis1MaxB >= axis1MinA;
+    }
+
     private static Vector2[] projectPointsOnAxis(Axis axis, Vector2[] vectors) {
         Vector2[] fvec = new Vector2[vectors.length];
         for (int i = 0; i < fvec.length; i++) fvec[i] = axis.projectPoint(vectors[i]);
@@ -231,13 +232,13 @@ public class Tools {
     }
 
     public static int floor(float f) {
-        if(f >= 0) return (int) f;
-        else return (int) f-1;
+        if (f >= 0) return (int) f;
+        else return (int) f - 1;
     }
 
     public static float angleCrop(float angle) {
-        while(angle<0) angle += 360;
-        while(angle>360) angle -= 360;
+        while (angle < 0) angle += 360;
+        while (angle > 360) angle -= 360;
         return angle;
     }
 
@@ -250,6 +251,12 @@ public class Tools {
         pixmap.dispose();
     }
 
+    public static String getTime() {
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy - HH-mm-ss");
+        Calendar cal = Calendar.getInstance();
+        return df.format(cal.getTime());
+    }
+
     public static TextureRegion fixBleeding(TextureRegion region) {
         float fix = 0.1f, x = region.getRegionX(), y = region.getRegionY(), width = region.getRegionWidth(), height = region.getRegionHeight(), invTexWidth = 1f / region.getTexture().getWidth(), invTexHeight = 1f / region.getTexture().getHeight();
         region.setRegion((x + fix) * invTexWidth, (y + fix) * invTexHeight, (x + width - fix) * invTexWidth, (y + height - fix) * invTexHeight);
@@ -257,12 +264,13 @@ public class Tools {
     }
 
     public static boolean ctrl() {
-        if(isMac) return Gdx.input.isKeyPressed(Input.Keys.SYM);
-        else return Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_RIGHT);
+        if (isMac) return Gdx.input.isKeyPressed(Input.Keys.SYM);
+        else
+            return Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_RIGHT);
     }
 
     public static boolean ctrl(int keycode) {
-        if(isMac) return keycode == Input.Keys.SYM;
+        if (isMac) return keycode == Input.Keys.SYM;
         else return keycode == Input.Keys.CONTROL_LEFT || keycode == Input.Keys.CONTROL_RIGHT;
     }
 
@@ -310,11 +318,13 @@ public class Tools {
         try {
             Integer.parseInt(text);
             return true;
-        } catch (NumberFormatException ex) { return false; }
+        } catch (NumberFormatException ex) {
+            return false;
+        }
     }
 
     public static boolean compareVector(Vector2 a, Vector2 b) {
-        if(a == null || b == null) return false;
+        if (a == null || b == null) return false;
         return (a.x == b.x) && (a.y == b.y);
     }
 
@@ -323,18 +333,13 @@ public class Tools {
         return new Vector2((int) (baseScale.x * ratio), (int) (baseScale.y * ratio));
     }
 
-    public static String loadString(HashMap<String, LineSplitter> settings, String name, String defaultValue) {
-        if(settings.containsKey(name)) return settings.get(name).getNextString();
-        return defaultValue;
-    }
-
     public static String[] loadStringArray(HashMap<String, LineSplitter> settings, String name, String defaultValue) {
 
-        if(settings.containsKey(name)) {
+        if (settings.containsKey(name)) {
 
             LineSplitter s = settings.get(name);
             String[] strings = new String[s.getNextInt()];
-            for(int i = 0; i < strings.length; i++) strings[i] = s.getNextString();
+            for (int i = 0; i < strings.length; i++) strings[i] = s.getNextString();
             return strings;
 
         }
@@ -343,12 +348,13 @@ public class Tools {
 
     }
 
-    public static float loadFloat(HashMap<String, LineSplitter> settings, String name, Object defaultValue) {
-        return Float.parseFloat(loadString(settings, name, String.valueOf(defaultValue)));
-    }
-
     public static int loadInt(HashMap<String, LineSplitter> settings, String name, Object defaultValue) {
         return Integer.parseInt(loadString(settings, name, String.valueOf(defaultValue)));
+    }
+
+    public static String loadString(HashMap<String, LineSplitter> settings, String name, String defaultValue) {
+        if (settings.containsKey(name)) return settings.get(name).getNextString();
+        return defaultValue;
     }
 
     public static double loadDouble(HashMap<String, LineSplitter> settings, String name, Object defaultValue) {
@@ -359,11 +365,15 @@ public class Tools {
         return new Vector2(loadFloat(settings, name, defaultValue.x), loadFloat(settings, name, defaultValue.y));
     }
 
+    public static float loadFloat(HashMap<String, LineSplitter> settings, String name, Object defaultValue) {
+        return Float.parseFloat(loadString(settings, name, String.valueOf(defaultValue)));
+    }
+
     public static Vector2[] loadVector2Array(HashMap<String, LineSplitter> settings, String name, Vector2 defaultValue) {
-        if(settings.containsKey(name)) {
+        if (settings.containsKey(name)) {
             LineSplitter s = settings.get(name);
             Vector2[] vectors = new Vector2[s.getNextInt()];
-            for(int i = 0; i < vectors.length; i++) vectors[i] = s.getNextVector2();
+            for (int i = 0; i < vectors.length; i++) vectors[i] = s.getNextVector2();
             return vectors;
         }
         return new Vector2[0];
@@ -383,17 +393,20 @@ public class Tools {
     }
 
     public static boolean contains(byte worldBlockID, byte[] blockIDs) {
-        for(byte id : blockIDs) if(worldBlockID == id) return false;
+        for (byte id : blockIDs) if (worldBlockID == id) return false;
         return true;
     }
 
     public static byte getMostFrequentArrayElement(byte[] array) {
         Arrays.sort(array);
         byte maxID = array[0], currentID = array[0], maxAmount = 1, currentAmount = 1;
-        for(int i = 1; i < array.length; i++) {
+        for (int i = 1; i < array.length; i++) {
             if (currentID == array[i]) currentAmount++;
             else {
-                if (currentAmount > maxAmount) { maxAmount = currentAmount; maxID = currentID; }
+                if (currentAmount > maxAmount) {
+                    maxAmount = currentAmount;
+                    maxID = currentID;
+                }
                 currentAmount = 1;
             }
         }
@@ -405,14 +418,14 @@ public class Tools {
         switch (trans) {
 
             case TOP:
-                return y > maxY && (worldLayer.blocks[x][y+2] == 0 || worldLayer.blocks[x][y+1] == 0);
+                return y > maxY && (worldLayer.blocks[x][y + 2] == 0 || worldLayer.blocks[x][y + 1] == 0);
             case SIN:
-                return y < (maxY + (int) (Math.sin(x*50) * 5));
+                return y < (maxY + (int) (Math.sin(x * 50) * 5));
             case RANDOM:
                 return y < (maxY + random.nextInt(3) - 1);
             case CAVE:
                 int tempY = maxY - y;
-                return noise.select(0.5f, noise.gradient(x, tempY,100));
+                return noise.select(0.5f, noise.gradient(x, tempY, 100));
             case LINEAR:
                 return y < maxY;
 
@@ -424,7 +437,8 @@ public class Tools {
 
     public static boolean isItemSelected(Entity entity) {
         EquipComponent equipComponent;
-        if((equipComponent = (EquipComponent) entity.getComponent(ComponentType.EQUIP)) != null || entity.mainPlayer) return (entity.mainPlayer ? InventoryManager.instance.getSelector().getSelectedInvItem() != null : equipComponent.itemIDs[0] != -1);
+        if ((equipComponent = (EquipComponent) entity.getComponent(ComponentType.EQUIP)) != null || entity.mainPlayer)
+            return (entity.mainPlayer ? InventoryManager.instance.getSelector().getSelectedInvItem() != null : equipComponent.itemIDs[0] != -1);
         return false;
     }
 

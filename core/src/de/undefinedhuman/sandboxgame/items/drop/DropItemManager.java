@@ -24,10 +24,10 @@ public class DropItemManager {
 
     public void update(float delta) {
 
-        for(DropItem dropItem : dropItems) {
+        for (DropItem dropItem : dropItems) {
 
             dropItem.update(delta);
-            if(dropItem.isDead) dropItemsToRemove.add(dropItem);
+            if (dropItem.isDead) dropItemsToRemove.add(dropItem);
 
         }
 

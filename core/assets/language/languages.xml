@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languages>
 
-    <language name="eu_DE" >
-        <string key="SplashScreenSkipText" value="Druecke %key% zum Ueberspringen" />
+    <language name="eu_DE">
+        <string key="SplashScreenSkipText" value="Druecke %key% zum Ueberspringen"/>
     </language>
 
-    <language name="eu_EN" >
-        <string key="SplashScreenSkipText" value="Press %key%" />
+    <language name="eu_EN">
+        <string key="SplashScreenSkipText" value="Press %key%"/>
     </language>
 
 </languages>

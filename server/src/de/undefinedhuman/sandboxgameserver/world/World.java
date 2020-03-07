@@ -46,27 +46,18 @@ public class World {
         this.list = new EntityList(idManager);
 
         // TODO : Irgendwie das Task System überarbeiten
-        if(name.equalsIgnoreCase("Main")) alwaysLoaded = true;
+        if (name.equalsIgnoreCase("Main")) alwaysLoaded = true;
 
         this.seed = seed;
 
     }
 
-    public void addEntity(int id, Entity entity) {
-
-        if(entity.getType() == EntityType.PLAYER) { playersOnline++; WorldManager.instance.removeWorldToDelete(name); }
-        entity.setWorldName(name);
-        entity.setWorldID(id);
-        this.list.addEntity(id, entity);
-
-    }
-
     public void removeEntity(int id) {
 
-        if(list.hasEntity(id)) {
-            if(list.getEntity(id).getType() == EntityType.PLAYER) playersOnline--;
+        if (list.hasEntity(id)) {
+            if (list.getEntity(id).getType() == EntityType.PLAYER) playersOnline--;
             this.list.removeEntity(id);
-            if(playersOnline == 0) WorldManager.instance.addWorldToDelete(name);
+            if (playersOnline == 0) WorldManager.instance.addWorldToDelete(name);
         }
 
     }
@@ -93,7 +84,7 @@ public class World {
 
     public void saveEntities() {
 
-        FsFile entityFile = new FsFile(Paths.WORLD_PATH, name + "/entities.world",false);
+        FsFile entityFile = new FsFile(Paths.WORLD_PATH, name + "/entities.world", false);
         FileWriter entityWriter = entityFile.getFileWriter(true);
         entityWriter.writeInt(list.getEntities().size() - list.getPlayers().size());
         entityWriter.nextLine();
@@ -115,7 +106,7 @@ public class World {
 
     public void loadEntities(String worldName) {
 
-        FsFile entityFile = new FsFile(Paths.WORLD_PATH, worldName + "/entities.world",false,false);
+        FsFile entityFile = new FsFile(Paths.WORLD_PATH, worldName + "/entities.world", false, false);
 
         if (entityFile.exists()) {
 
@@ -137,8 +128,20 @@ public class World {
 
     }
 
+    public void addEntity(int id, Entity entity) {
+
+        if (entity.getType() == EntityType.PLAYER) {
+            playersOnline++;
+            WorldManager.instance.removeWorldToDelete(name);
+        }
+        entity.setWorldName(name);
+        entity.setWorldID(id);
+        this.list.addEntity(id, entity);
+
+    }
+
     public Vector2 getSpawnPoint() {
-        return new Vector2(spawnPoint.x * 16,spawnPoint.y * 16);
+        return new Vector2(spawnPoint.x * 16, spawnPoint.y * 16);
     }
 
     public int getPlayersOnline() {

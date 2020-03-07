@@ -6,14 +6,12 @@ import de.undefinedhuman.sandboxgame.utils.Tools;
 
 public class TextureValue {
 
+    public boolean remove = false;
     private int usages = 1;
     private TextureRegion texture;
 
-    public boolean remove = false;
-
     public TextureValue(Texture texture) {
-        this.texture = new TextureRegion(texture);
-        Tools.fixBleeding(this.texture);
+        this.texture = Tools.fixBleeding(new TextureRegion(texture));
     }
 
     public void add() {
@@ -26,7 +24,7 @@ public class TextureValue {
 
     public void remove() {
         usages--;
-        if(usages <= 0) {
+        if (usages <= 0) {
             delete();
             remove = true;
         }

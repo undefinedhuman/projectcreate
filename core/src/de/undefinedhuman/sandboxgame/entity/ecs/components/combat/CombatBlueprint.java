@@ -21,13 +21,13 @@ public class CombatBlueprint extends ComponentBlueprint {
     }
 
     @Override
-    public void load(HashMap<String, LineSplitter> settings, int id) {
-        
+    public void loadComponent(FileReader reader, int id) {
+        super.loadComponent(reader, id);
     }
 
     @Override
-    public void loadComponent(FileReader reader, int id) {
-        super.loadComponent(reader, id);
+    public void load(HashMap<String, LineSplitter> settings, int id) {
+
     }
 
     @Override

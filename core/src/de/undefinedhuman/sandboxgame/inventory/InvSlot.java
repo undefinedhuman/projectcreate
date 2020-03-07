@@ -13,7 +13,7 @@ public class InvSlot extends Slot {
 
     public InvSlot() {
         super();
-        setScale("p" + Variables.SLOT_SIZE,"p" + Variables.SLOT_SIZE);
+        setScale("p" + Variables.SLOT_SIZE, "p" + Variables.SLOT_SIZE);
     }
 
     @Override
@@ -44,14 +44,14 @@ public class InvSlot extends Slot {
         texture.resize((int) position.x, (int) position.y, (int) scale.x, (int) scale.y, guiScale);
     }
 
+    public boolean isSelected() {
+        return selected;
+    }
+
     public void setSelected(boolean selected) {
         this.selected = selected;
         setScale(selected);
-        if(invItem != null) invItem.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-    }
-
-    public boolean isSelected() {
-        return selected;
+        if (invItem != null) invItem.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
 }

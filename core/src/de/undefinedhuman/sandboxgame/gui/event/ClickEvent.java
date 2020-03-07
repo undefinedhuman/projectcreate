@@ -16,7 +16,7 @@ public abstract class ClickEvent extends Event {
 
         if (!Gdx.input.isButtonPressed(0) && isClicked) isClicked = false;
 
-        if(!isClicked && Gdx.input.isButtonPressed(0) && guiComponent.isVisible() && guiComponent.isClicked(camera)) {
+        if (!isClicked && Gdx.input.isButtonPressed(0) && guiComponent.isVisible() && guiComponent.isClicked(camera)) {
             isClicked = true;
             onClick();
         }

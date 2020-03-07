@@ -37,9 +37,9 @@ public class ShoulderComponent extends Component {
     }
 
     @Override
-    public void setNetworkData(LineSplitter s) {}
+    public void receive(LineSplitter splitter) {}
 
     @Override
-    public void getNetworkData(LineWriter w) {}
+    public void send(LineWriter writer) {}
 
 }

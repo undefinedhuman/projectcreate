@@ -12,9 +12,9 @@ public abstract class EquipSlot extends Slot {
 
     public EquipSlot(String previewTexture, ItemType equipType) {
         super(equipType);
-        setScale("p" + Variables.SLOT_SIZE,"p" + Variables.SLOT_SIZE);
+        setScale("p" + Variables.SLOT_SIZE, "p" + Variables.SLOT_SIZE);
         previewGui = new Gui(previewTexture);
-        previewGui.set("r0.5","r0.5","p" + Variables.ITEM_SIZE,"p" + Variables.ITEM_SIZE).setCentered();
+        previewGui.set("r0.5", "r0.5", "p" + Variables.ITEM_SIZE, "p" + Variables.ITEM_SIZE).setCentered();
         previewGui.setAlpha(0.5f);
         previewGui.parent = this;
     }
@@ -23,17 +23,6 @@ public abstract class EquipSlot extends Slot {
     public void resize(int width, int height) {
         super.resize(width, height);
         previewGui.resize(width, height);
-    }
-
-    @Override
-    public void render(SpriteBatch batch, OrthographicCamera camera) {
-
-        super.render(batch, camera);
-        if(invItem != null) {
-            if(invItem.getAmount() > 0) invItem.render(batch, camera);
-            else this.deleteItem();
-        } else previewGui.render(batch, camera);
-
     }
 
     @Override
@@ -49,6 +38,18 @@ public abstract class EquipSlot extends Slot {
     }
 
     public abstract void equip();
+
+    @Override
+    public void render(SpriteBatch batch, OrthographicCamera camera) {
+
+        super.render(batch, camera);
+        if (invItem != null) {
+            if (invItem.getAmount() > 0) invItem.render(batch, camera);
+            else this.deleteItem();
+        } else previewGui.render(batch, camera);
+
+    }
+
     public abstract void unequip();
 
 }

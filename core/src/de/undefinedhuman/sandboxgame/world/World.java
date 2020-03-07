@@ -45,28 +45,32 @@ public class World {
 
         if (this.minY < 0) this.minY = 0;
         if (this.maxY > this.height - 2) this.maxY = (this.height - 2);
-        if(minX<-width+2)minX = -width+2;
-        if(maxX>width*2-2)maxX = width*2-2;
+        if (minX < -width + 2) minX = -width + 2;
+        if (maxX > width * 2 - 2) maxX = width * 2 - 2;
 
-    }
-
-    public void renderMainLayer(SpriteBatch batch) {
-        // for(int i = 0; i < width; i++) for(int j = 0; j < height; j++) mainLayer.renderBlock(batch, batchColor.set(Color.WHITE), i, j);
-        for(int i = this.minX; i <= maxX; i++) for (int j = this.minY; j <= maxY; j++) mainLayer.renderBlock(batch, batchColor.set(Color.WHITE), i, j);
-    }
-
-    public void renderBackLayer(SpriteBatch batch) {
-        for(int i = this.minX; i <= maxX; i++) for (int j = this.minY; j <= maxY; j++) {
-            Block block = (Block) ItemManager.instance.getItem(World.instance.mainLayer.getBlock(i, j));
-            if (block.id == 0 || mainLayer.getState(i, j) != 0 || !block.isFull) backLayer.renderBlock(batch, batchColor.set(0.45f,0.45f,0.45f,1), i, j);
-        }
     }
 
     public float getTileWidth() {
         return Variables.BLOCK_SIZE;
     }
+
     public float getTileHeight() {
         return Variables.BLOCK_SIZE;
+    }
+
+    public void renderMainLayer(SpriteBatch batch) {
+        // for(int i = 0; i < width; i++) for(int j = 0; j < height; j++) mainLayer.renderBlock(batch, batchColor.set(Color.WHITE), i, j);
+        for (int i = this.minX; i <= maxX; i++)
+            for (int j = this.minY; j <= maxY; j++) mainLayer.renderBlock(batch, batchColor.set(Color.WHITE), i, j);
+    }
+
+    public void renderBackLayer(SpriteBatch batch) {
+        for (int i = this.minX; i <= maxX; i++)
+            for (int j = this.minY; j <= maxY; j++) {
+                Block block = (Block) ItemManager.instance.getItem(World.instance.mainLayer.getBlock(i, j));
+                if (block.id == 0 || mainLayer.getState(i, j) != 0 || !block.isFull)
+                    backLayer.renderBlock(batch, batchColor.set(0.45f, 0.45f, 0.45f, 1), i, j);
+            }
     }
 
 }

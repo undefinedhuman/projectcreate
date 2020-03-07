@@ -42,16 +42,16 @@ public class Item {
         this.id = id;
 
         if (type != ItemType.BLOCK) {
-            itemTexture = Paths.ITEM_PATH.getPath() + id + "/" + Tools.loadString(settings,"Texture","Unknown.png");
-            iconTexture = Paths.ITEM_PATH.getPath() + id + "/" + Tools.loadString(settings,"Icon","Unknown.png");
+            itemTexture = Paths.ITEM_PATH.getPath() + id + "/" + Tools.loadString(settings, "Texture", "Unknown.png");
+            iconTexture = Paths.ITEM_PATH.getPath() + id + "/" + Tools.loadString(settings, "Icon", "Unknown.png");
             TextureManager.instance.addTexture(itemTexture, iconTexture);
         }
 
-        name = Tools.loadString(settings,"Name","");
-        desc = Tools.loadString(settings,"Description","");
-        isStackable = Tools.loadBoolean(settings,"Stackable",false);
-        maxAmount = Tools.loadInt(settings,"MaxAmount",0);
-        canShake = Tools.loadBoolean(settings,"Shake",false);
+        name = Tools.loadString(settings, "Name", "");
+        desc = Tools.loadString(settings, "Description", "");
+        isStackable = Tools.loadBoolean(settings, "Stackable", false);
+        maxAmount = Tools.loadInt(settings, "MaxAmount", 0);
+        canShake = Tools.loadBoolean(settings, "Shake", false);
 
     }
 

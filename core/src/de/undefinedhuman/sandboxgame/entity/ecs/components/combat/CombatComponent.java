@@ -15,17 +15,15 @@ public class CombatComponent extends Component {
     public boolean canAttack = false, charged = false;
 
     public CombatComponent(Entity entity) {
-
         super(entity);
         this.type = ComponentType.COMBAT;
-
     }
 
     @Override
-    public void setNetworkData(LineSplitter s) {}
+    public void receive(LineSplitter splitter) {}
 
     @Override
-    public void getNetworkData(LineWriter w) {
+    public void send(LineWriter writer) {
 
     }
 

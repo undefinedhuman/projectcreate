@@ -10,87 +10,77 @@ import java.io.IOException;
 
 public class FileWriter {
 
-    private String seperator = Variables.SEPARATOR;
+    private String separator = Variables.SEPARATOR;
 
     private BufferedWriter writer;
     private boolean base;
 
     public FileWriter(FsFile file, boolean base) {
-        this.base = base;
-        writer = FileManager.getBufferedWriter(file);
+        this(file, base, false, Variables.SEPARATOR);
     }
 
     public FileWriter(FsFile file, boolean base, boolean append) {
+        this(file, base, append, Variables.SEPARATOR);
+    }
+
+    public FileWriter(FsFile file, boolean base, String separator) {
+        this(file, base, false, separator);
+    }
+
+    public FileWriter(FsFile file, boolean base, boolean append, String separator) {
+        this.separator = separator;
         this.base = base;
         writer = FileManager.getBufferedWriter(file, append);
     }
 
-    public FileWriter(FsFile file, boolean base, String seperator) {
-        this.seperator = seperator;
-        this.base = base;
-        writer = FileManager.getBufferedWriter(file);
+    public FileWriter writeString(String s) {
+        return writeValue(s);
     }
 
-    public FileWriter(FsFile file, boolean base, boolean append, String seperator) {
-
-        this.seperator = seperator;
-
-        this.base = base;
-        writer = FileManager.getBufferedWriter(file, append);
-
+    public FileWriter writeInt(int i) {
+        return writeValue(i);
     }
 
-    public void writeString(String s) {
-        writeValue(s);
+    public FileWriter writeLong(long l) {
+        return writeValue(l);
     }
 
-    public void writeFloat(float f) {
-        writeValue(f);
+    public FileWriter writeBoolean(boolean b) {
+        return writeValue(FileManager.booleanToInt(b));
     }
 
-    public void writeInt(int i) {
-        writeValue(i);
+    public FileWriter writeDouble(double d) {
+        return writeValue(d);
     }
 
-    public void writeLong(long l) {
-        writeValue(l);
-    }
-
-    public void writeBoolean(boolean b) {
-        writeValue(FileManager.booleanToInt(b));
-    }
-
-    public void writeDouble(double d) {
-        writeValue(d);
-    }
-
-    public void writeVector2(Vector2 vector) {
-
+    public FileWriter writeVector2(Vector2 vector) {
         writeFloat(vector.x);
         writeFloat(vector.y);
-
+        return this;
     }
 
-    public void nextLine() {
+    public FileWriter writeFloat(float f) {
+        return writeValue(f);
+    }
 
+    public FileWriter writeValue(Object v) {
+        try {
+            writer.write(base ? Base64Coder.encodeString(String.valueOf(v)) + this.separator : v + this.separator);
+        } catch (IOException ex) {
+            Log.instance.error(ex.getMessage());
+            Log.instance.crash();
+        }
+        return this;
+    }
+
+    public FileWriter nextLine() {
         try {
             writer.newLine();
         } catch (IOException ex) {
             Log.instance.error(ex.getMessage());
             Log.instance.crash();
         }
-
-    }
-
-    public void writeValue(Object v) {
-
-        try {
-            writer.write(base ? Base64Coder.encodeString(String.valueOf(v)) + this.seperator : v + this.seperator);
-        } catch (IOException ex) {
-            Log.instance.error(ex.getMessage());
-            Log.instance.crash();
-        }
-
+        return this;
     }
 
     public void close() {

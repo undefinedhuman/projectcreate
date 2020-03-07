@@ -18,7 +18,7 @@ public class FontManager extends Manager {
     private HashMap<Font, ArrayList<BitmapFont>> fonts;
 
     public FontManager() {
-        if(instance == null) instance = this;
+        if (instance == null) instance = this;
         this.fonts = new HashMap<>();
     }
 
@@ -31,12 +31,12 @@ public class FontManager extends Manager {
 
         boolean loaded = false;
 
-        for(Font font : fonts) {
+        for (Font font : fonts) {
             ArrayList<BitmapFont> fontList = new ArrayList<>();
 
-            for(int i = 0; i < 10; i++) {
+            for (int i = 0; i < 10; i++) {
                 BitmapFont bitmapFont = ResourceManager.loadFont(font.name());
-                if(bitmapFont == null) continue;
+                if (bitmapFont == null) continue;
                 else loaded = true;
                 bitmapFont.getData().markupEnabled = true;
                 bitmapFont.getData().setScale(i + 1);
@@ -46,8 +46,17 @@ public class FontManager extends Manager {
             this.fonts.put(font, fontList);
         }
 
-        if(loaded) Log.info("Font" + Tools.appendSToString(fonts) + " loaded: " + Arrays.toString(fonts));
+        if (loaded) Log.info("Font" + Tools.appendSToString(fonts) + " loaded: " + Arrays.toString(fonts));
 
+    }
+
+    @Override
+    public void delete() {
+        for (ArrayList<BitmapFont> list : fonts.values()) {
+            for (BitmapFont font : list) font.dispose();
+            list.clear();
+        }
+        fonts.clear();
     }
 
     public BitmapFont getFont(Font font) {
@@ -56,15 +65,6 @@ public class FontManager extends Manager {
 
     public BitmapFont getFont(Font font, float scale) {
         return fonts.get(font).get((int) (Math.max(Math.min(10, scale), 1) - 1));
-    }
-
-    @Override
-    public void delete() {
-        for (ArrayList<BitmapFont> list : fonts.values()) {
-            for(BitmapFont font : list) font.dispose();
-            list.clear();
-        }
-        fonts.clear();
     }
 
 }

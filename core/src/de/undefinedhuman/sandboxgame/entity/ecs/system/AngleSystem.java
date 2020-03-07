@@ -8,7 +8,6 @@ import de.undefinedhuman.sandboxgame.entity.ecs.System;
 import de.undefinedhuman.sandboxgame.entity.ecs.components.mouse.AngleComponent;
 import de.undefinedhuman.sandboxgame.entity.ecs.components.sprite.SpriteComponent;
 import de.undefinedhuman.sandboxgame.entity.ecs.components.sprite.SpriteData;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.transform.TransformComponent;
 import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
@@ -18,7 +17,7 @@ public class AngleSystem extends System {
 
     public AngleSystem() {
 
-        if(instance == null) instance = this;
+        if (instance == null) instance = this;
 
     }
 
@@ -28,21 +27,20 @@ public class AngleSystem extends System {
     @Override
     public void update(float delta, Entity entity) {
 
-        TransformComponent transformComponent;
         AngleComponent angleComponent;
         SpriteComponent spriteComponent;
 
-        if((angleComponent = (AngleComponent) entity.getComponent(ComponentType.ANGLE)) != null) {
+        if ((angleComponent = (AngleComponent) entity.getComponent(ComponentType.ANGLE)) != null) {
 
-            if((transformComponent = (TransformComponent) entity.getComponent(ComponentType.TRANSFORM)) != null && entity.mainPlayer) {
+            if (entity.mainPlayer) {
 
                 Vector2 mousePos = Tools.getWorldCoordsOfMouse(GameManager.gameCamera);
 
                 float angle = angleComponent.angle;
-                boolean turned = angleComponent.isTurned, mouse = mousePos.x < transformComponent.getPosition().x + transformComponent.getWidth() / 2;
+                boolean turned = angleComponent.isTurned, mouse = mousePos.x < entity.transform.getPosition().x + entity.transform.getSize().x / 2;
 
                 angleComponent.angle = mouse ? (turned ? -(angle) : angle) : (!turned ? -(angle) : angle);
-                angleComponent.isTurned = !(mousePos.x < transformComponent.getPosition().x + transformComponent.getWidth() / 2);
+                angleComponent.isTurned = !(mousePos.x < entity.transform.getPosition().x + entity.transform.getSize().x / 2);
 
                 angleComponent.angle = Tools.angleCrop(angleComponent.angle);
 

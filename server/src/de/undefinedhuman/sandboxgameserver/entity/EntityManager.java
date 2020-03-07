@@ -30,30 +30,6 @@ public class EntityManager {
 
     }
 
-    public void savePlayer(String worldName, Entity entity) {
-
-        String name = ((NameComponent) entity.getComponent(ComponentType.NAME)).getName();
-
-        FsFile file = new FsFile(Paths.PLAYER_PATH, name + ".player", false);
-        FileWriter writer = file.getFileWriter(true);
-        writer.writeString(worldName);
-        writer.nextLine();
-        saveEntity(writer, entity);
-        writer.close();
-
-    }
-
-    public Entity generatePlayer(String playerName) {
-
-        Entity player = BlueprintManager.instance.getBlueprint(0).createInstance();
-        ((NameComponent) player.getComponent(ComponentType.NAME)).setName(playerName);
-        player.setPosition(WorldManager.instance.getWorld("Main").getSpawnPoint());
-        savePlayer("Main", player);
-
-        return player;
-
-    }
-
     public Entity loadEntity(FileReader reader) {
 
         reader.nextLine();
@@ -70,6 +46,30 @@ public class EntityManager {
         }
 
         return entity;
+
+    }
+
+    public Entity generatePlayer(String playerName) {
+
+        Entity player = BlueprintManager.instance.getBlueprint(0).createInstance();
+        ((NameComponent) player.getComponent(ComponentType.NAME)).setName(playerName);
+        player.setPosition(WorldManager.instance.getWorld("Main").getSpawnPoint());
+        savePlayer("Main", player);
+
+        return player;
+
+    }
+
+    public void savePlayer(String worldName, Entity entity) {
+
+        String name = ((NameComponent) entity.getComponent(ComponentType.NAME)).getName();
+
+        FsFile file = new FsFile(Paths.PLAYER_PATH, name + ".player", false);
+        FileWriter writer = file.getFileWriter(true);
+        writer.writeString(worldName);
+        writer.nextLine();
+        saveEntity(writer, entity);
+        writer.close();
 
     }
 

@@ -24,13 +24,13 @@ public class ClientManager extends Manager {
     public static ClientManager instance;
 
     public String ip = "127.0.0.1";
-    private Timer playerUpdateTimer60, playerUpdateTimer10;
     public boolean connected = false;
+    private Timer playerUpdateTimer60, playerUpdateTimer10;
     private Client client;
 
     public ClientManager() {
 
-        client = new Client(1048576,1048576);
+        client = new Client(1048576, 1048576);
         client.start();
 
         PacketManager.register(client);
@@ -41,7 +41,7 @@ public class ClientManager extends Manager {
             }
         });
 
-        playerUpdateTimer60 = new Timer(0.015f,true) {
+        playerUpdateTimer60 = new Timer(0.015f, true) {
             @Override
             public void action() {
                 Entity player = GameManager.instance.player;
@@ -51,7 +51,7 @@ public class ClientManager extends Manager {
             }
         };
 
-        playerUpdateTimer10 = new Timer(0.1f,true) {
+        playerUpdateTimer10 = new Timer(0.1f, true) {
             @Override
             public void action() {
 
@@ -65,23 +65,43 @@ public class ClientManager extends Manager {
 
     }
 
+    public void sendUDP(Object object) {
+        client.sendUDP(object);
+    }
+
     public void connect() {
 
-        try { client.connect(5000, ip, 56098, 56099); } catch (IOException e) { Log.error(e.getMessage()); }
+        try {
+            client.connect(5000, ip, 56098, 56099);
+        } catch (IOException e) {
+            Log.error(e.getMessage());
+        }
         if (client.isConnected()) Log.info("Connected to Server!");
 
     }
 
     public void reconnect() {
 
-        try { client.reconnect(); } catch (IOException e) { Log.error(e.getMessage()); }
+        try {
+            client.reconnect();
+        } catch (IOException e) {
+            Log.error(e.getMessage());
+        }
         if (client.isConnected()) Log.info("Connected to Server!");
 
     }
 
     @Override
     public void update(float delta) {
-        if(connected) { playerUpdateTimer60.update(delta); playerUpdateTimer10.update(delta); }
+        if (connected) {
+            playerUpdateTimer60.update(delta);
+            playerUpdateTimer10.update(delta);
+        }
+    }
+
+    @Override
+    public void delete() {
+        super.delete();
     }
 
     public boolean isConnected() {
@@ -98,15 +118,6 @@ public class ClientManager extends Manager {
 
     public void sendTCP(Object object) {
         client.sendTCP(object);
-    }
-
-    public void sendUDP(Object object) {
-        client.sendUDP(object);
-    }
-
-    @Override
-    public void delete() {
-        super.delete();
     }
 
 }

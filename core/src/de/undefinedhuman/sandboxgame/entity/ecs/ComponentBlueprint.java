@@ -22,10 +22,10 @@ public abstract class ComponentBlueprint {
 
         HashMap<String, LineSplitter> settings = new HashMap<>();
         int size = reader.getNextInt();
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
 
             reader.nextLine();
-            settings.put(reader.getNextString(), new LineSplitter(reader.nextLine(),true,";"));
+            settings.put(reader.getNextString(), new LineSplitter(reader.nextLine(), true, ";"));
 
         }
 
@@ -35,6 +35,7 @@ public abstract class ComponentBlueprint {
     }
 
     public abstract void load(HashMap<String, LineSplitter> settings, int id);
+
     public abstract void delete();
 
 }

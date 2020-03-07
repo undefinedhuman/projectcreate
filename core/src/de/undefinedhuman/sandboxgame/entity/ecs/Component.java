@@ -3,8 +3,9 @@ package de.undefinedhuman.sandboxgame.entity.ecs;
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.file.LineWriter;
 import de.undefinedhuman.sandboxgame.entity.Entity;
+import de.undefinedhuman.sandboxgame.network.components.NetworkComponent;
 
-public abstract class Component {
+public abstract class Component implements NetworkComponent {
 
     protected Entity entity;
     protected ComponentType type;
@@ -18,7 +19,9 @@ public abstract class Component {
     }
 
     public void init() {}
-    public abstract void setNetworkData(LineSplitter s);
-    public abstract void getNetworkData(LineWriter w);
+
+    public abstract void send(LineWriter writer);
+
+    public abstract void receive(LineSplitter splitter);
 
 }

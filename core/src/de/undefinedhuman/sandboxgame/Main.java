@@ -2,6 +2,7 @@ package de.undefinedhuman.sandboxgame;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GL30;
 import de.undefinedhuman.sandboxgame.engine.config.ConfigManager;
 import de.undefinedhuman.sandboxgame.engine.config.SettingsManager;
@@ -43,7 +44,7 @@ public class Main extends Game {
         instance = this;
         managerList = new ManagerList();
         managerList.addManager(new Log(), new SettingsManager(), new ConfigManager(), new LanguageManager(), new TextureManager(), new SoundManager(), new FontManager(), new Inputs(), new GuiManager(), new BlueprintManager(), new ItemManager());
-        timer = new Timer(1,true) {
+        timer = new Timer(1, true) {
             @Override
             public void action() {
                 Window.instance.update();
@@ -58,40 +59,6 @@ public class Main extends Game {
         setScreen(TestScreen.instance);
     }
 
-    @Override
-    public void render() {
-        delta = Gdx.graphics.getDeltaTime() * Variables.deltaMultiplier;
-        managerList.update(delta);
-        timer.update(delta);
-        clear();
-        super.render();
-    }
-
-    @Override
-    public void pause() {
-        super.pause();
-    }
-
-    @Override
-    public void dispose() {
-        super.dispose();
-        managerList.delete();
-        Window.instance.delete();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        int guiSetting = SettingsManager.instance.guiScale.getInt();
-        guiScale = guiSetting == 5 ? Math.max(width / 640, 1) : guiSetting;
-        managerList.resize(width, height);
-        super.resize(width, height);
-    }
-
-    @Override
-    public void resume() {
-        super.resume();
-    }
-
     private void initScreens() {
 
         TestScreen.instance = new TestScreen();
@@ -102,7 +69,7 @@ public class Main extends Game {
 
         EntityManager.instance = new EntityManager();
 
-        World.instance = new World("Main",1000,1000,100);
+        World.instance = new World("Main", 1000, 1000, 100);
         WorldManager.instance = new WorldManager();
 
         ClientManager.instance = new ClientManager();
@@ -111,8 +78,43 @@ public class Main extends Game {
         TopLayerManager.instance.load();
     }
 
+    @Override
+    public void dispose() {
+        super.dispose();
+        managerList.delete();
+        Window.instance.delete();
+    }
+
+    @Override
+    public void pause() {
+        super.pause();
+    }
+
+    @Override
+    public void resume() {
+        super.resume();
+    }
+
+    @Override
+    public void render() {
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        delta = Gdx.graphics.getDeltaTime() * Variables.deltaMultiplier;
+        managerList.update(delta);
+        timer.update(delta);
+        clear();
+        super.render();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        int guiSetting = SettingsManager.instance.guiScale.getInt();
+        guiScale = guiSetting == 5 ? Math.max(width / 640, 1) : guiSetting;
+        managerList.resize(width, height);
+        super.resize(width, height);
+    }
+
     private void clear() {
-        Gdx.gl.glClearColor(1,1,1,1);
+        Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
     }
 

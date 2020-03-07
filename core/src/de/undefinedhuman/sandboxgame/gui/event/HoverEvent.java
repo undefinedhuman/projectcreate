@@ -15,16 +15,16 @@ public abstract class HoverEvent extends Event {
 
     @Override
     public void update(float delta) {
-        if(over) time += delta;
+        if (over) time += delta;
     }
 
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
 
-        if(guiComponent.isClicked(camera) && guiComponent.isVisible()) {
+        if (guiComponent.isClicked(camera) && guiComponent.isVisible()) {
             over = true;
             if (time >= delayTime) onMouseEnter(batch);
-        } else if(over) {
+        } else if (over) {
             time = 0;
             over = false;
             onMouseLeave();
@@ -33,6 +33,7 @@ public abstract class HoverEvent extends Event {
     }
 
     public abstract void onMouseEnter(SpriteBatch batch);
+
     public abstract void onMouseLeave();
 
 }

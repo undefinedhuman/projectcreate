@@ -26,6 +26,10 @@ public class LineWriter {
         writeData(s);
     }
 
+    private void writeData(Object o) {
+        data.append(base ? Base64Coder.encodeString(String.valueOf(o)) : o).append(separator);
+    }
+
     public void writeInt(int i) {
         writeData(i);
     }
@@ -55,10 +59,6 @@ public class LineWriter {
         writeData(v.x);
         writeData(v.y);
         writeData(v.z);
-    }
-
-    private void writeData(Object o) {
-        data.append(base ? Base64Coder.encodeString(String.valueOf(o)) : o).append(separator);
     }
 
     public String getData() {

@@ -24,14 +24,20 @@ public class EquipSystem extends System {
 
     @Override
     public void init(Entity entity) {
-        SpriteComponent spriteComponent; EquipComponent equipComponent;
-        if((spriteComponent = (SpriteComponent) entity.getComponent(ComponentType.SPRITE)) != null && (equipComponent = (EquipComponent) entity.getComponent(ComponentType.EQUIP)) != null) setVisible(spriteComponent, equipComponent.getInvisibleSprites());
+        SpriteComponent spriteComponent;
+        EquipComponent equipComponent;
+        if ((spriteComponent = (SpriteComponent) entity.getComponent(ComponentType.SPRITE)) != null && (equipComponent = (EquipComponent) entity.getComponent(ComponentType.EQUIP)) != null)
+            setVisible(spriteComponent, equipComponent.getInvisibleSprites());
     }
 
     @Override
     public void update(float delta, Entity entity) {
 
-        SpriteComponent spriteComponent; EquipComponent equipComponent; AngleComponent angleComponent; AnimationComponent animationComponent; ShoulderComponent shoulderComponent;
+        SpriteComponent spriteComponent;
+        EquipComponent equipComponent;
+        AngleComponent angleComponent;
+        AnimationComponent animationComponent;
+        ShoulderComponent shoulderComponent;
 
         if ((spriteComponent = (SpriteComponent) entity.getComponent(ComponentType.SPRITE)) != null && (equipComponent = (EquipComponent) entity.getComponent(ComponentType.EQUIP)) != null && (angleComponent = (AngleComponent) entity.getComponent(ComponentType.ANGLE)) != null && (shoulderComponent = (ShoulderComponent) entity.getComponent(ComponentType.SHOULDER)) != null && (animationComponent = (AnimationComponent) entity.getComponent(ComponentType.ANIMATION)) != null) {
 
@@ -48,12 +54,12 @@ public class EquipSystem extends System {
                     case PICKAXE:
                     case STAFF:
                     case BOW:
-                        setSpriteData(spriteComponent,"Item", angleComponent.isTurned ? shoulderPosition.x + weaponOffset.x - 10 : entity.getWidth() - shoulderPosition.x - weaponOffset.x + 10, shoulderPosition.y + weaponOffset.y - 4,
-                                angleComponent.isTurned ? -weaponOffset.x + 12 : weaponOffset.x - 12, -weaponOffset.y + 6,angleComponent.angle + (angleComponent.isTurned ? -45 : 45));
-                        setSpriteData(spriteComponent,"ItemHitbox", angleComponent.isTurned ? 4 : entity.getWidth() - 4,19, (angleComponent.isTurned ? 50 - weaponOffset.x : -50 + weaponOffset.x),21 - weaponOffset.y, angleComponent.angle);
+                        setSpriteData(spriteComponent, "Item", angleComponent.isTurned ? shoulderPosition.x + weaponOffset.x - 10 : entity.transform.getWidth() - shoulderPosition.x - weaponOffset.x + 10, shoulderPosition.y + weaponOffset.y - 4,
+                                angleComponent.isTurned ? -weaponOffset.x + 12 : weaponOffset.x - 12, -weaponOffset.y + 6, angleComponent.angle + (angleComponent.isTurned ? -45 : 45));
+                        setSpriteData(spriteComponent, "ItemHitbox", angleComponent.isTurned ? 4 : entity.transform.getSize().x - 4, 19, (angleComponent.isTurned ? 50 - weaponOffset.x : -50 + weaponOffset.x), 21 - weaponOffset.y, angleComponent.angle);
                         break;
                     default:
-                        setSpriteData(spriteComponent,"Item", angleComponent.isTurned ? 7 : 9, 26,47 + (angleComponent.isTurned ? -weaponOffset.x : 10 + weaponOffset.x),14 - weaponOffset.y, angleComponent.angle);
+                        setSpriteData(spriteComponent, "Item", angleComponent.isTurned ? 7 : 9, 26, 47 + (angleComponent.isTurned ? -weaponOffset.x : 10 + weaponOffset.x), 14 - weaponOffset.y, angleComponent.angle);
                         break;
 
                 }
@@ -75,7 +81,7 @@ public class EquipSystem extends System {
     }
 
     private void setVisible(SpriteComponent component, String... data) {
-        for(String s : data) component.getSpriteData(s).setVisible(false);
+        for (String s : data) component.getSpriteData(s).setVisible(false);
     }
 
 }

@@ -1,35 +1,38 @@
 package de.undefinedhuman.sandboxgame.engine.config;
 
-import java.util.ArrayList;
-
 public class Setting {
 
     private String name;
     private Object value;
 
-    public Setting(String name, Object value, ArrayList<Setting> settings) {
-
+    public Setting(String name, Object value) {
         this.name = name;
         this.value = value;
-
-        settings.add(this);
-
+        SettingsManager.instance.getSettings().add(this);
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Object getValue() {
         return value;
     }
 
-    public String getString() {
-        return String.valueOf(value);
+    public void setValue(Object value) {
+        this.value = value;
     }
 
     public boolean getBoolean() {
         return Boolean.parseBoolean(getString());
+    }
+
+    public String getString() {
+        return String.valueOf(value);
     }
 
     public float getFloat() {
@@ -38,14 +41,6 @@ public class Setting {
 
     public int getInt() {
         return Integer.parseInt(getString());
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setValue(Object value) {
-        this.value = value;
     }
 
 }

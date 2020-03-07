@@ -17,13 +17,19 @@ public class Selector extends Inventory {
     private int selected = 0;
 
     public Selector() {
-        super(1,9, new Vector2(8,8), GuiTemplate.HOTBAR);
-        setPosition("r0.5","r1").setCentered(-0.5f,-1).setOffsetY("p-10");
+        super(1, 9, new Vector2(8, 8), GuiTemplate.HOTBAR);
+        setPosition("r0.5", "r1").setCentered(-0.5f, -1).setOffsetY("p-10");
     }
 
     public void updateSelector() {
         ItemManager.instance.useItem(getSelectedItemID());
-        if(getInv()[0][selected].getItem() == null) EquipManager.instance.unEquipItemNetwork(GameManager.instance.player,0,false);
+        if (getInv()[0][selected].getItem() == null)
+            EquipManager.instance.unEquipItemNetwork(GameManager.instance.player, 0, false);
+    }
+
+    public int getSelectedItemID() {
+        InvItem item = getInv()[0][selected].getItem();
+        return item != null ? item.getID() : 0;
     }
 
     @Override
@@ -37,25 +43,25 @@ public class Selector extends Inventory {
         super.render(batch, camera);
     }
 
+    private void refresh() {
+        for (int i = 0; i < getInv()[0].length; i++) {
+            getInv()[0][i].setSelected(false);
+        }
+        if (!InventoryManager.instance.isInventoryOpened()) {
+            getInv()[0][selected].setSelected(true);
+        }
+    }
+
     public int getSelected() {
         return this.selected;
     }
 
     public void setSelected(int index) {
-        if(!InventoryManager.instance.isInventoryOpened()) this.selected = index;
+        if (!InventoryManager.instance.isInventoryOpened()) this.selected = index;
         InvItem item = getInv()[0][selected].getItem();
-        if(item != null) EquipManager.instance.equipItemNetwork(GameManager.instance.player, getInv()[0][selected].getItem().getID(),false);
-        else EquipManager.instance.unEquipItemNetwork(GameManager.instance.player,0,false);
-    }
-
-    private void refresh() {
-        for(int i = 0; i < getInv()[0].length; i++) { getInv()[0][i].setSelected(false); }
-        if(!InventoryManager.instance.isInventoryOpened()) { getInv()[0][selected].setSelected(true); }
-    }
-
-    public int getSelectedItemID() {
-        InvItem item = getInv()[0][selected].getItem();
-        return item != null ? item.getID() : 0;
+        if (item != null)
+            EquipManager.instance.equipItemNetwork(GameManager.instance.player, getInv()[0][selected].getItem().getID(), false);
+        else EquipManager.instance.unEquipItemNetwork(GameManager.instance.player, 0, false);
     }
 
     public Item getSelectedItem() {

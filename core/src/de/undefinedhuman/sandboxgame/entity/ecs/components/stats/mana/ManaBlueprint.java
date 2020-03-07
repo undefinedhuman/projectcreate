@@ -31,7 +31,7 @@ public class ManaBlueprint extends ComponentBlueprint {
     @Override
     public void load(HashMap<String, LineSplitter> settings, int id) {
 
-        this.maxMana = Tools.loadFloat(settings,"MaxMana",0);
+        this.maxMana = Tools.loadFloat(settings, "MaxMana", 0);
 
     }
 

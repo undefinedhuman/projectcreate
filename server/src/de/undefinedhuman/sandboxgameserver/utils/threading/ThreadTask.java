@@ -11,6 +11,7 @@ public abstract class ThreadTask implements Runnable {
     }
 
     public abstract void runTask();
+
     public abstract void endTask();
 
 }

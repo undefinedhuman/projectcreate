@@ -20,9 +20,9 @@ public class InteractionSystem extends System {
     private Text helpText;
 
     public InteractionSystem() {
-        if(instance == null) instance = this;
+        if (instance == null) instance = this;
         helpText = new Text("");
-        GuiManager.instance.addGui(helpText.setGuiScale(1f).setPosition("r0.5","p50").setCentered().setVisible(true));
+        GuiManager.instance.addGui(helpText.setGuiScale(1f).setPosition("r0.5", "p50").setCentered().setVisible(true));
     }
 
     @Override
@@ -35,21 +35,22 @@ public class InteractionSystem extends System {
 
         helpText.setVisible(false);
 
-        if((interactionComponent = (InteractionComponent) entity.getComponent(ComponentType.INTERACTION)) != null) {
+        if ((interactionComponent = (InteractionComponent) entity.getComponent(ComponentType.INTERACTION)) != null) {
 
-            if(distanceVector.set(entity.getCenteredPosition()).dst(GameManager.instance.player.getCenteredPosition()) < interactionComponent.getRange()) {
+            if (distanceVector.set(entity.transform.getCenterPosition()).dst(GameManager.instance.player.transform.getCenterPosition()) < interactionComponent.getRange()) {
 
                 helpText.setVisible(true);
                 helpText.setText("Press " + Input.Keys.toString(interactionComponent.getInputKey()) + " for interaction!");
 
-                if(!interactionComponent.pressed && Gdx.input.isKeyPressed(interactionComponent.getInputKey())) {
+                if (!interactionComponent.pressed && Gdx.input.isKeyPressed(interactionComponent.getInputKey())) {
                     Log.info("INTERACTION!");
                     interactionComponent.pressed = true;
                 }
 
             }
 
-            if(interactionComponent.pressed && !Gdx.input.isKeyPressed(interactionComponent.getInputKey())) interactionComponent.pressed = false;
+            if (interactionComponent.pressed && !Gdx.input.isKeyPressed(interactionComponent.getInputKey()))
+                interactionComponent.pressed = false;
 
         }
 

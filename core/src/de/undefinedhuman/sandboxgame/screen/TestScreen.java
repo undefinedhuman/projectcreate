@@ -39,12 +39,12 @@ public class TestScreen implements Screen {
 
         WorldGenerator.instance = new WorldGenerator();
 
-        World.instance = WorldGenerator.instance.generateWorld(new WorldPreset("Main", WorldSetting.DEV, BiomeSetting.DEV));
+        World.instance = WorldGenerator.instance.generateTestWorld(new WorldPreset("Main", WorldSetting.DEV, BiomeSetting.DEV));
         EntityManager.instance.init();
 
         Entity player = BlueprintManager.instance.getBlueprint(0).createInstance();
         player.mainPlayer = true;
-        player.setPosition(1000,16*50);
+        player.transform.setPosition(1000, 800);
         player.setWorldID(0);
         GameManager.instance.player = player;
         EntityManager.instance.addEntity(0, player);

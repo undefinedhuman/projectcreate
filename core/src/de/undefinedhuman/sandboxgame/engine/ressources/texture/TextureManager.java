@@ -17,7 +17,7 @@ public class TextureManager extends Manager {
 
     public TextureManager() {
         textures = new HashMap<>();
-        if(instance == null) instance = this;
+        if (instance == null) instance = this;
     }
 
     @Override
@@ -34,21 +34,9 @@ public class TextureManager extends Manager {
                 loaded |= hasTexture(name);
             } else textures.get(name).add();
         }
-        if(loaded) Log.info("Texture" + Tools.appendSToString(names) + " loaded successfully: " + Arrays.toString(names));
+        if (loaded)
+            Log.info("Texture" + Tools.appendSToString(names) + " loaded successfully: " + Arrays.toString(names));
         return loaded;
-    }
-
-    public void removeTexture(String... names) {
-        for (String name : names) {
-            if(hasTexture(name)) textures.get(name).remove();
-            if(textures.containsKey(name) && textures.get(name).remove) textures.remove(name);
-        }
-    }
-
-    public TextureRegion getTexture(String name) {
-        TextureValue value = textures.get(name);
-        if (value != null || addTexture(name)) return textures.get(name).get();
-        return hasTexture("Unknown.png") && !name.equals("Unknown.png") ? getTexture("Unknown.png") : null;
     }
 
     public boolean hasTexture(String name) {
@@ -59,6 +47,19 @@ public class TextureManager extends Manager {
     public void delete() {
         for (TextureValue texture : textures.values()) texture.delete();
         textures.clear();
+    }
+
+    public void removeTexture(String... names) {
+        for (String name : names) {
+            if (hasTexture(name)) textures.get(name).remove();
+            if (textures.containsKey(name) && textures.get(name).remove) textures.remove(name);
+        }
+    }
+
+    public TextureRegion getTexture(String name) {
+        TextureValue value = textures.get(name);
+        if (value != null || addTexture(name)) return textures.get(name).get();
+        return hasTexture("Unknown.png") && !name.equals("Unknown.png") ? getTexture("Unknown.png") : null;
     }
 
 }

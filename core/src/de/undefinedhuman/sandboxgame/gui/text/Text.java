@@ -33,6 +33,12 @@ public class Text extends GuiComponent {
         calcScale = false;
     }
 
+    public Text setWrap(boolean wrap) {
+        this.wrap = wrap;
+        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        return this;
+    }
+
     @Override
     public void resize(int width, int height) {
         guiScale = Math.max((int) Math.ceil(Main.guiScale * baseGuiScale), 1);
@@ -46,7 +52,7 @@ public class Text extends GuiComponent {
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         super.render(batch, camera);
-        if(!visible || !parent.isVisible()) return;
+        if (!visible || !parent.isVisible()) return;
         font.draw(batch, layout, position.x, position.y);
     }
 
@@ -54,24 +60,6 @@ public class Text extends GuiComponent {
     public void delete() {
         super.delete();
         layout.reset();
-    }
-
-    public Text setFont(Font font) {
-        this.fontType = font;
-        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        return this;
-    }
-
-    public Text setText(Object text) {
-        this.text = String.valueOf(text);
-        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        return this;
-    }
-
-    public Text setWrap(boolean wrap) {
-        this.wrap = wrap;
-        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        return this;
     }
 
     public Text setAlign(int align) {
@@ -87,8 +75,23 @@ public class Text extends GuiComponent {
     }
 
     public BitmapFont getFont() { return this.font; }
+
+    public Text setFont(Font font) {
+        this.fontType = font;
+        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        return this;
+    }
+
     public Color getColor() { return color; }
+
     public String getText() { return this.text; }
+
+    public Text setText(Object text) {
+        this.text = String.valueOf(text);
+        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        return this;
+    }
+
     public GlyphLayout getLayout() { return layout; }
 
 }

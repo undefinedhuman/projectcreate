@@ -16,10 +16,8 @@ import java.util.HashMap;
 public class EntityManager {
 
     public static EntityManager instance;
-
-    private Chunk[][] chunks;
     public ChunkPosition chunkSize = new ChunkPosition();
-
+    private Chunk[][] chunks;
     private HashMap<Integer, Entity> entities;
     private ArrayList<Entity> players;
     private ArrayList<Integer> entitiesToRemove;
@@ -50,20 +48,30 @@ public class EntityManager {
 
     public void init() {
         clearEntities();
-        chunkSize.setPosition(World.instance.width/ Variables.CHUNK_SIZE,World.instance.height/Variables.CHUNK_SIZE);
+        chunkSize.setPosition(World.instance.width / Variables.CHUNK_SIZE, World.instance.height / Variables.CHUNK_SIZE);
         chunks = new Chunk[chunkSize.x][chunkSize.y];
-        for(int i = 0; i < chunkSize.x; i++) {
-            for(int j = 0; j < chunkSize.y; j++) {
+        for (int i = 0; i < chunkSize.x; i++) {
+            for (int j = 0; j < chunkSize.y; j++) {
                 chunks[i][j] = new Chunk();
             }
         }
     }
 
+    private void clearEntities() {
+        entitiesToRemove.clear();
+        players.clear();
+        entities.clear();
+    }
+
     public void addEntity(int id, Entity entity) {
         RenderSystem.dirty = true;
         this.entities.put(id, entity);
-        this.chunks[entity.getChunkPosition().x][entity.getChunkPosition().y].addEntity(id, entity);
+        this.chunks[entity.transform.getChunkPosition().x][entity.transform.getChunkPosition().y].addEntity(id, entity);
         initSystems(entity);
+    }
+
+    private void initSystems(Entity entity) {
+        for (System system : systems) system.init(entity);
     }
 
     public Entity getEntity(int id) {
@@ -88,11 +96,11 @@ public class EntityManager {
 
     public void update(float delta) {
         for (Entity entity : this.entities.values()) for (System system : systems) system.update(delta, entity);
-        if(entitiesToRemove.size() > 0) {
+        if (entitiesToRemove.size() > 0) {
             RenderSystem.dirty = true;
             for (int i : entitiesToRemove) {
                 Entity entity = entities.get(i);
-                chunks[entity.getChunkPosition().x][entity.getChunkPosition().y].removeEntity(i);
+                chunks[entity.transform.getChunkPosition().x][entity.transform.getChunkPosition().y].removeEntity(i);
                 entities.remove(i);
             }
             entitiesToRemove.clear();
@@ -102,6 +110,7 @@ public class EntityManager {
     public void render(SpriteBatch batch) {
         for (System system : systems) system.render(batch);
     }
+
     public void render(SpriteBatch batch, Entity entity) {
         for (System system : systems) system.render(batch, entity);
     }
@@ -111,19 +120,11 @@ public class EntityManager {
         clearEntities();
     }
 
-    private void clearEntities() {
-        entitiesToRemove.clear();
-        players.clear();
-        entities.clear();
-    }
-
-    private void initSystems(Entity entity) {
-        for (System system : systems) system.init(entity);
-    }
-
     public ArrayList<Entity> getEntityInRangeForCollision(Vector2 pos, float range) {
         ArrayList<Entity> entitiesInRange = new ArrayList<>();
-        for (Entity entity : entities.values()) if (new Vector2().set(entity.getX() - pos.x, entity.getY() - pos.y).len() <= range) entitiesInRange.add(entity);
+        for (Entity entity : entities.values())
+            if (new Vector2().set(entity.transform.getPosition()).sub(pos).len() <= range)
+                entitiesInRange.add(entity);
         return entitiesInRange;
     }
 

@@ -3,7 +3,8 @@ package de.undefinedhuman.sandboxgame.engine.file;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.utils.Variables;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 public class FsFile {
 
@@ -12,40 +13,48 @@ public class FsFile {
 
     private File file;
 
-    public FsFile(String filename, boolean isDirectory) {
+    public FsFile(Paths path, String fileName, boolean isDirectory) {
+        this(path.getPath() + fileName, isDirectory);
+    }
 
-        this.path = filename;
+    public FsFile(String fileName, boolean isDirectory) {
+        this.path = fileName;
         this.isDirectory = isDirectory;
         String[] dirs = this.path.split(Variables.FILE_SEPARATOR);
         this.name = dirs[dirs.length - 1];
 
         file = new File(this.path);
         createFile(isDirectory);
-
     }
 
-    public FsFile(Paths path, String filename, boolean isDirectory) {
-
-        this.path = path.getPath() + filename;
-        this.isDirectory = isDirectory;
-        String[] dirs = this.path.split(Variables.FILE_SEPARATOR);
-        this.name = dirs[dirs.length - 1];
-
-        file = new File(this.path);
-        createFile(isDirectory);
-
+    public void createFile(boolean isDirectory) {
+        try {
+            createNewFile(isDirectory);
+        } catch (IOException ex) {
+            Log.error(ex.getMessage());
+            Log.instance.crash();
+        }
     }
 
-    public FsFile(FsFile file, String filename, boolean isDirectory) {
+    private void createNewFile(boolean isDirectory) throws IOException {
+        if (exists()) return;
+        if (!file.getParentFile().exists()) if (!file.getParentFile().mkdirs()) Log.instance.crash();
+        if (isDirectory) if (file.mkdir()) Log.info("Successfully created dir: " + file.getPath());
+        else Log.instance.crash();
+        if (!isDirectory) if (file.createNewFile()) Log.info("Successfully created " + file.getName());
+        else Log.instance.crash();
+    }
 
-        this.path = file.getPath() + Variables.FILE_SEPARATOR + filename;
-        this.isDirectory = isDirectory;
-        String[] dirs = this.path.split(Variables.FILE_SEPARATOR);
-        this.name = dirs[dirs.length - 1];
+    public boolean exists() {
+        return file.exists();
+    }
 
-        this.file = new File(this.path);
-        createFile(isDirectory);
+    public FsFile(FsFile file, String fileName, boolean isDirectory) {
+        this(file.getPath() + Variables.FILE_SEPARATOR + fileName, isDirectory);
+    }
 
+    public String getPath() {
+        return this.path;
     }
 
     public FileReader getFileReader(boolean base) {
@@ -53,54 +62,19 @@ public class FsFile {
     }
 
     public FileReader getFileReader(boolean base, String seperator) {
-
         return new FileReader(this, base, seperator);
-
     }
 
     public FileWriter getFileWriter(boolean base) {
-
         return new FileWriter(this, base);
-
     }
 
     public FileWriter getFileWriter(boolean base, String seperator) {
-
         return new FileWriter(this, base, seperator);
-
-    }
-
-
-    public String getPath() {
-
-        return this.path;
-
     }
 
     public String getName() {
-
         return name;
-
-    }
-
-    public void createFile(boolean isDirectory) {
-
-        try {
-            createNewFile(isDirectory);
-        } catch(IOException ex) {
-            Log.error(ex.getMessage());
-            Log.instance.crash();
-        }
-
-    }
-
-    private void createNewFile(boolean isDirectory) throws IOException {
-
-        if(exists()) return;
-        if(!file.getParentFile().exists()) if(!file.getParentFile().mkdirs()) Log.instance.crash();
-        if(isDirectory) if(file.mkdir()) Log.info("Successfully created dir: " + file.getPath()); else Log.instance.crash();
-        if(!isDirectory) if(file.createNewFile()) Log.info("Successfully created " + file.getName()); else Log.instance.crash();
-
     }
 
     public File getFile() {
@@ -109,10 +83,6 @@ public class FsFile {
 
     public boolean isDirectory() {
         return isDirectory;
-    }
-
-    public boolean exists() {
-        return file.exists();
     }
 
     public boolean isEmpty() {

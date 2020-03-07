@@ -37,12 +37,12 @@ public class EquipBlueprint extends ComponentBlueprint {
     @Override
     public void load(HashMap<String, LineSplitter> settings, int id) {
 
-        this.itemTextureName = Tools.loadString(settings,"Item Texture","Item");
-        this.itemHitboxTextureName = Tools.loadString(settings,"Item Hitbox","ItemHitbox");
-        this.armTextureName = Tools.loadString(settings,"Right Arm","RightArm");
-        this.itemPositions = Tools.loadVector2Array(settings,"Item Position",null);
-        this.itemOffsets = Tools.loadVector2Array(settings,"Item Offset",null);
-        this.invivisbleSprites = Tools.loadStringArray(settings, "Invisible Sprites",null);
+        this.itemTextureName = Tools.loadString(settings, "Item Texture", "Item");
+        this.itemHitboxTextureName = Tools.loadString(settings, "Item Hitbox", "ItemHitbox");
+        this.armTextureName = Tools.loadString(settings, "Right Arm", "RightArm");
+        this.itemPositions = Tools.loadVector2Array(settings, "Item Position", null);
+        this.itemOffsets = Tools.loadVector2Array(settings, "Item Offset", null);
+        this.invivisbleSprites = Tools.loadStringArray(settings, "Invisible Sprites", null);
 
     }
 

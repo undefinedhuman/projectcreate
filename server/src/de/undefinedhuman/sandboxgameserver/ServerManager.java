@@ -33,11 +33,15 @@ public class ServerManager {
 
         initManager();
 
-        server = new Server(1048576,1048576);
+        server = new Server(1048576, 1048576);
 
         PacketManager.register(server);
         server.addListener(new ServerListener());
-        try { server.bind(56098, 56099); } catch (IOException e) { Log.instance.info(e.getMessage()); }
+        try {
+            server.bind(56098, 56099);
+        } catch (IOException e) {
+            Log.instance.info(e.getMessage());
+        }
         server.start();
 
         logUpdateThread = new Timer();
@@ -50,19 +54,17 @@ public class ServerManager {
         playerUpdate.schedule(new TimerTask() {
             @Override
             public void run() {
-                for(Entity entity : WorldManager.instance.getPlayers()) if(!entity.c.isConnected()) WorldManager.instance.getWorld(entity.getWorldName()).removeEntity(entity.getWorldID());
+                for (Entity entity : WorldManager.instance.getPlayers())
+                    if (!entity.c.isConnected())
+                        WorldManager.instance.getWorld(entity.getWorldName()).removeEntity(entity.getWorldID());
             }
-        },0,30000);
+        }, 0, 30000);
 
         BlueprintManager.instance.loadBlueprint(0);
 
         if (WorldManager.instance.worldExists("Main")) WorldManager.instance.loadWorld("Main");
         else WorldManager.instance.generateWorld(new WorldPreset("Main", WorldSetting.DEV, BiomeSetting.DEV));
 
-    }
-
-    public Server getServer() {
-        return server;
     }
 
     private void initManager() {
@@ -78,6 +80,10 @@ public class ServerManager {
 
     }
 
+    public Server getServer() {
+        return server;
+    }
+
     public void sendToTCP(Connection c, Object object) {
         server.sendToTCP(c.getID(), object);
     }
@@ -90,16 +96,12 @@ public class ServerManager {
         server.sendToUDP(id, object);
     }
 
-    public void sendAllTcp(Object object) {
-        server.sendToAllTCP(object);
-    }
-
     public void sendToAllUDP(Object object) {
         server.sendToAllUDP(object);
     }
 
     public void sendToAllFromWorldExceptID(int id, String worldName, Object object) {
-        synchronized(WorldManager.instance.getWorld(worldName).getPlayers()) {
+        synchronized (WorldManager.instance.getWorld(worldName).getPlayers()) {
             if (WorldManager.instance.hasWorld(worldName))
                 for (Entity entity : WorldManager.instance.getWorld(worldName).getPlayers())
                     if (entity.c.isConnected()) {
@@ -130,6 +132,10 @@ public class ServerManager {
         Log.instance.save();
         server.stop();
 
+    }
+
+    public void sendAllTcp(Object object) {
+        server.sendToAllTCP(object);
     }
 
 }

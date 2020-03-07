@@ -15,17 +15,18 @@ public class InvItem extends Gui {
     private Text amountText;
 
     public InvItem(int id) {
-        this(id,0);
+        this(id, 0);
     }
 
     public InvItem(int id, int amount) {
 
         super(ItemManager.instance.getItem(id).iconTexture);
-        set("r0.5","r0.5","p" + Variables.ITEM_SIZE,"p" + Variables.ITEM_SIZE).setCentered();
+        set("r0.5", "r0.5", "p" + Variables.ITEM_SIZE, "p" + Variables.ITEM_SIZE).setCentered();
 
-        this.id = id; this.amount = amount;
+        this.id = id;
+        this.amount = amount;
         amountText = new Text(amount);
-        amountText.setPosition("r0.75","r0.25").setCentered();
+        amountText.setPosition("r0.75", "r0.25").setCentered();
         amountText.parent = this;
 
     }
@@ -37,11 +38,6 @@ public class InvItem extends Gui {
         setTexture(ItemManager.instance.getItem(id).iconTexture);
     }
 
-    public void setAmount(int amount) {
-        this.amount = amount;
-        amountText.setText(amount);
-    }
-
     public int getID() {
         return id;
     }
@@ -50,16 +46,14 @@ public class InvItem extends Gui {
         return amount;
     }
 
-    public void removeItem() {
-        if(this.amount > 0) this.amount--;
+    public void setAmount(int amount) {
+        this.amount = amount;
         amountText.setText(amount);
     }
 
-    @Override
-    public GuiComponent setPosition(int x, int y) {
-        super.setPosition(x, y);
-        amountText.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        return this;
+    public void removeItem() {
+        if (this.amount > 0) this.amount--;
+        amountText.setText(amount);
     }
 
     @Override
@@ -71,7 +65,14 @@ public class InvItem extends Gui {
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         super.render(batch, camera);
-        if(amount > 1) amountText.render(batch, camera);
+        if (amount > 1) amountText.render(batch, camera);
+    }
+
+    @Override
+    public GuiComponent setPosition(int x, int y) {
+        super.setPosition(x, y);
+        amountText.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        return this;
     }
 
 }

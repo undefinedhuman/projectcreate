@@ -20,8 +20,8 @@ public class Armor extends Item {
     @Override
     public void load(int id, HashMap<String, LineSplitter> settings) {
         super.load(id, settings);
-        armor = Tools.loadFloat(settings,"Armor",0);
-        inVisibleSprites = Tools.loadStringArray(settings,"Invisible Sprites","");
+        armor = Tools.loadFloat(settings, "Armor", 0);
+        inVisibleSprites = Tools.loadStringArray(settings, "Invisible Sprites", "");
         type = ItemType.ARMOR;
     }
 

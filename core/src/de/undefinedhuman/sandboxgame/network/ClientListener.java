@@ -28,6 +28,11 @@ public class ClientListener extends Listener {
     @Override
     public void connected(Connection connection) {}
 
+    @Override
+    public void disconnected(Connection connection) {
+        ClientManager.instance.connected = false;
+    }
+
     public void received(Connection c, Object o) {
 
         if (o instanceof LoginPacket) {
@@ -42,12 +47,12 @@ public class ClientListener extends Listener {
 
         }
 
-        if(o instanceof AddPlayerPacket) {
+        if (o instanceof AddPlayerPacket) {
 
             AddPlayerPacket packet = (AddPlayerPacket) o;
             Entity player = BlueprintManager.instance.getBlueprint(0).createInstance();
             player.mainPlayer = true;
-            player.loadEntityInfo(packet.playerInfo);
+            player.receive(packet.playerInfo);
             player.setWorldID(packet.worldID);
             GameManager.instance.player = player;
             EntityManager.instance.addEntity(packet.worldID, player);
@@ -58,67 +63,67 @@ public class ClientListener extends Listener {
 
         }
 
-        if(ClientManager.instance.connected) {
+        if (ClientManager.instance.connected) {
 
-            if(o instanceof AddEntityPacket) {
+            if (o instanceof AddEntityPacket) {
 
                 AddEntityPacket packet = (AddEntityPacket) o;
                 Entity entity = BlueprintManager.instance.getBlueprint(packet.blueprintID).createInstance();
-                entity.loadEntityInfo(packet.entityInfo);
+                entity.receive(packet.entityInfo);
                 entity.setWorldID(packet.worldID);
                 EntityManager.instance.addEntity(packet.worldID, entity);
 
             }
 
-            if(o instanceof RemoveEntityPacket) {
+            if (o instanceof RemoveEntityPacket) {
                 RemoveEntityPacket packet = (RemoveEntityPacket) o;
                 EntityManager.instance.removeEntity(packet.worldID);
             }
 
-            if(o instanceof ServerClosedPacket) {
+            if (o instanceof ServerClosedPacket) {
 //                ClientManager.instance.connected = false;
 //                Main.instance.setScreen(MenuScreen.instance);
 //                MenuScreen.instance.setErrorMessage("Server closed!");
             }
 
-            if(o instanceof WorldPacket) {
+            if (o instanceof WorldPacket) {
 
                 WorldPacket packet = (WorldPacket) o;
-                World.instance = new World(packet.worldName, packet.width, packet.height,0);
+                World.instance = new World(packet.worldName, packet.width, packet.height, 0);
                 EntityManager.instance.init();
 //                LoadingScreen.instance.worldLoaded = true;
 
             }
 
-            if(o instanceof WorldLayerPacket) {
+            if (o instanceof WorldLayerPacket) {
 //
 //                WorldLayerPacket packet = (WorldLayerPacket) o;
 //                LoadingScreen.instance.loadLayer(packet);
 
             }
 
-            if(o instanceof JumpPacket) {
+            if (o instanceof JumpPacket) {
 
                 JumpPacket packet = (JumpPacket) o;
                 ((MovementComponent) EntityManager.instance.getEntity(packet.id).getComponent(ComponentType.MOVEMENT)).forceJump();
 
             }
 
-            if(o instanceof ComponentPacket) {
+            if (o instanceof ComponentPacket) {
 
                 ComponentPacket packet = (ComponentPacket) o;
                 PacketUtils.handleComponentPacket(packet);
 
             }
 
-            if(o instanceof BlockPacket) {
+            if (o instanceof BlockPacket) {
 
                 BlockPacket packet = (BlockPacket) o;
                 PacketUtils.handleBlockPacket(packet);
 
             }
 
-            if(o instanceof EquipPacket) {
+            if (o instanceof EquipPacket) {
 
                 EquipPacket packet = (EquipPacket) o;
                 PacketUtils.handleEquipComponent(packet);
@@ -127,11 +132,6 @@ public class ClientListener extends Listener {
 
         }
 
-    }
-
-    @Override
-    public void disconnected(Connection connection) {
-        ClientManager.instance.connected = false;
     }
 
 }

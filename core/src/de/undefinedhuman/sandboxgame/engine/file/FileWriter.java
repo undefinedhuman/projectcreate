@@ -1,7 +1,6 @@
 package de.undefinedhuman.sandboxgame.engine.file;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Base64Coder;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.utils.Variables;
@@ -11,63 +10,59 @@ import java.io.IOException;
 
 public class FileWriter {
 
-    private String separator = Variables.SEPARATOR;
+    private String separator;
 
     private BufferedWriter writer;
     private boolean base;
 
     public FileWriter(FsFile file, boolean base) {
-
-        this.base = base;
-        writer = FileUtils.getBufferedWriter(file);
-
+        this(file, base, Variables.SEPARATOR);
     }
 
     public FileWriter(FsFile file, boolean base, String separator) {
-
         this.separator = separator;
-
         this.base = base;
         writer = FileUtils.getBufferedWriter(file);
-
     }
 
-    public void writeString(String s) {
-        writeValue(s);
+    public FileWriter writeString(String s) {
+        return writeValue(s);
     }
-    public void writeFloat(float f) {
-        writeValue(f);
+    public FileWriter writeInt(int i) {
+        return writeValue(i);
     }
-    public void writeInt(int i) {
-        writeValue(i);
+    public FileWriter writeFloat(float f) {
+        return writeValue(f);
     }
-    public void writeLong(long l) {
-        writeValue(l);
+    public FileWriter writeLong(long l) {
+        return writeValue(l);
     }
-    public void writeBoolean(boolean b) {
-        writeValue(FileUtils.booleanToInt(b));
+    public FileWriter writeBoolean(boolean b) {
+        return writeValue(FileUtils.booleanToInt(b));
     }
-    public void writeDouble(double d) {
-        writeValue(d);
+    public FileWriter writeDouble(double d) {
+        return writeValue(d);
     }
-
-    public void writeVector2(Vector2 vec2) {
-        writeFloat(vec2.x);
-        writeFloat(vec2.y);
+    public FileWriter writeVector2(Vector2 vector) {
+        return writeFloat(vector.x).writeFloat(vector.y);
     }
 
-    public void writeVector3(Vector3 vec3) {
-        writeFloat(vec3.x);
-        writeFloat(vec3.y);
-        writeFloat(vec3.z);
+    public FileWriter writeValue(Object v) {
+        try {
+            writer.write(base ? Base64Coder.encodeString(String.valueOf(v)) + this.separator : v + this.separator);
+        } catch (IOException ex) {
+            Log.instance.crash(ex.getMessage());
+        }
+        return this;
     }
 
-    public void nextLine() {
-        try { writer.newLine(); } catch(IOException ex) { Log.instance.crash(ex.getMessage()); }
-    }
-
-    public void writeValue(Object v) {
-        try { writer.write(base ? Base64Coder.encodeString(String.valueOf(v)) + this.separator : v + this.separator); } catch (IOException ex) { Log.instance.crash(ex.getMessage()); }
+    public FileWriter nextLine() {
+        try {
+            writer.newLine();
+        } catch (IOException ex) {
+            Log.instance.crash(ex.getMessage());
+        }
+        return this;
     }
 
     public void close() {

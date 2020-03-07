@@ -25,6 +25,34 @@ public class FsFile {
 
     }
 
+    public void createFile(boolean isDirectory) {
+
+        try {
+            createNewFile(isDirectory);
+        } catch (IOException ex) {
+
+            Log.instance.error(ex.getMessage());
+            Log.instance.crash();
+
+        }
+
+    }
+
+    private void createNewFile(boolean isDirectory) throws IOException {
+
+        if (exists()) return;
+        if (!file.getParentFile().exists()) if (!file.getParentFile().mkdirs()) Log.instance.crash();
+        if (isDirectory) if (file.mkdir()) Log.instance.info("Successfully created dir: " + file.getPath());
+        else Log.instance.crash();
+        if (!isDirectory) if (file.createNewFile()) Log.instance.info("Successfully created " + file.getName());
+        else Log.instance.crash();
+
+    }
+
+    public boolean exists() {
+        return file.exists();
+    }
+
     public FsFile(Paths path, boolean isDirectory) {
 
         this.path = path.getPath();
@@ -59,6 +87,10 @@ public class FsFile {
         this.file = new File(this.path);
         createFile(isDirectory);
 
+    }
+
+    public String getPath() {
+        return this.path;
     }
 
     public FsFile(Paths path, String filename, boolean isDirectory, boolean create) {
@@ -97,48 +129,12 @@ public class FsFile {
         return new FileWriter(this, base, append, seperator);
     }
 
-    public String getPath() {
-        return this.path;
-    }
-
     public String getName() {
         return name;
     }
 
-    public void createFile(boolean isDirectory) {
-
-        try {
-            createNewFile(isDirectory);
-        } catch (IOException ex) {
-
-            Log.instance.error(ex.getMessage());
-            Log.instance.crash();
-
-        }
-
-    }
-
-    private void createNewFile(boolean isDirectory) throws IOException {
-
-        if (exists()) return;
-        if (!file.getParentFile().exists()) if (!file.getParentFile().mkdirs()) Log.instance.crash();
-        if (isDirectory) if (file.mkdir()) Log.instance.info("Successfully created dir: " + file.getPath());
-        else Log.instance.crash();
-        if (!isDirectory) if (file.createNewFile()) Log.instance.info("Successfully created " + file.getName());
-        else Log.instance.crash();
-
-    }
-
-    public File getFile() {
-        return file;
-    }
-
     public boolean isDirectory() {
         return isDirectory;
-    }
-
-    public boolean exists() {
-        return file.exists();
     }
 
     public boolean isEmpty() {
@@ -147,6 +143,10 @@ public class FsFile {
 
     public void delete() {
         FileManager.deleteFile(getFile());
+    }
+
+    public File getFile() {
+        return file;
     }
 
     public boolean hasChildren(String name) {

@@ -27,7 +27,7 @@ public class AnimationParam {
 
         int size = reader.getNextInt();
         String[] textures = new String[size];
-        for(int i = 0; i < size; i++) textures[i] = reader.getNextString();
+        for (int i = 0; i < size; i++) textures[i] = reader.getNextString();
         float frameTime = reader.getNextFloat();
         Vector2 animationBounds = reader.getNextVector2();
         return new AnimationParam(textures, animationBounds, frameTime, Animation.PlayMode.valueOf(reader.getNextString()));

@@ -21,8 +21,8 @@ public class ResourceManager {
 
     public Blueprint loadBlueprint(int id) {
 
-        FsFile file = new FsFile(Paths.ENTITY_FOLDER,id + "/settings.txt",false);
-        FileReader reader = new FileReader(file,true);
+        FsFile file = new FsFile(Paths.ENTITY_FOLDER, id + "/settings.txt", false);
+        FileReader reader = new FileReader(file, true);
         reader.nextLine();
         EntityType type = EntityType.valueOf(reader.getNextString());
         reader.getNextString();
@@ -30,12 +30,12 @@ public class ResourceManager {
         int componentSize = reader.getNextInt();
         Blueprint blueprint = new Blueprint(id, type, size);
 
-        for(int i = 0; i < componentSize; i++) {
+        for (int i = 0; i < componentSize; i++) {
 
             reader.nextLine();
             String componentName = reader.getNextString();
 
-            if(ComponentType.hasType(componentName)) {
+            if (ComponentType.hasType(componentName)) {
                 ComponentBlueprint componentBlueprint = ComponentType.load(componentName, reader, id);
                 blueprint.addComponentBlueprint(componentBlueprint);
             }

@@ -27,7 +27,8 @@ public class Blueprint {
     public Entity createInstance() {
 
         Entity entity = new Entity(this, size);
-        for (ComponentBlueprint blueprint : componentBlueprints.values()) entity.addComponent(blueprint.createInstance(entity));
+        for (ComponentBlueprint blueprint : componentBlueprints.values())
+            entity.addComponent(blueprint.createInstance(entity));
         entity.init();
 
         return entity;

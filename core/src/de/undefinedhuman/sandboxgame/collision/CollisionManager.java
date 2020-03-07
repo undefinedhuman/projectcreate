@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
 import de.undefinedhuman.sandboxgame.entity.ecs.components.collision.CollisionComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.transform.TransformComponent;
 import de.undefinedhuman.sandboxgame.items.ItemManager;
 import de.undefinedhuman.sandboxgame.items.type.blocks.Block;
 import de.undefinedhuman.sandboxgame.utils.Variables;
@@ -15,15 +14,14 @@ public class CollisionManager {
     public static boolean blockCanBePlaced(Entity entity, Vector2 blockPosition, byte cell) {
 
         CollisionComponent collisionComponent;
-        TransformComponent transformComponent;
 
-        if((transformComponent = (TransformComponent) entity.getComponent(ComponentType.TRANSFORM)) != null && (collisionComponent = (CollisionComponent) entity.getComponent(ComponentType.COLLISION)) != null) {
+        if ((collisionComponent = (CollisionComponent) entity.getComponent(ComponentType.COLLISION)) != null) {
 
-            Vector2 pos = new Vector2().add(transformComponent.getPosition()).add(collisionComponent.getOffset());
+            Vector2 pos = new Vector2().add(entity.transform.getPosition()).add(collisionComponent.getOffset());
 
             boolean collide = collide(pos, collisionComponent.getWidth(), collisionComponent.getHeight());
 
-            if(!collide) {
+            if (!collide) {
 
                 World.instance.mainLayer.setBlock((int) blockPosition.x, (int) blockPosition.y, cell);
                 collide = collide(pos, collisionComponent.getWidth(), collisionComponent.getHeight());
@@ -43,13 +41,19 @@ public class CollisionManager {
 
         boolean collide = false;
 
-        if(position.y < 0 || position.y + width > World.instance.height * Variables.BLOCK_SIZE) collide = true;
+        if (position.y < 0 || position.y + width > World.instance.height * Variables.BLOCK_SIZE) collide = true;
 
         for (int yPos = (int) (position.y / Variables.BLOCK_SIZE); yPos < Math.ceil(((int) position.y + height) / Variables.BLOCK_SIZE); yPos++)
             for (int xPos = (int) (position.x / Variables.BLOCK_SIZE); xPos < Math.ceil(((int) position.x + width) / Variables.BLOCK_SIZE); xPos++)
                 if (!collide) collide = collide(World.instance.mainLayer.getBlock(xPos, yPos));
 
         return collide;
+
+    }
+
+    public static boolean collide(byte id) {
+
+        return ((Block) ItemManager.instance.getItem(id)).collide;
 
     }
 
@@ -77,12 +81,6 @@ public class CollisionManager {
 
     public static boolean collideWithEntityAABB(Vector2 position, float width, float height, Vector2 position2, float width2, float height2) {
         return position.x < position2.x + width2 && position.x + width > position2.x && position.y < position2.y + height2 && position.y + height > position2.y;
-    }
-
-    public static boolean collide(byte id) {
-
-        return ((Block) ItemManager.instance.getItem(id)).collide;
-
     }
 
 }

@@ -34,9 +34,9 @@ public class MovementBlueprint extends ComponentBlueprint {
     @Override
     public void load(HashMap<String, LineSplitter> settings, int id) {
 
-        this.speed = Tools.loadFloat(settings,"Speed",0);
-        this.jumpSpeed = Tools.loadFloat(settings,"Jump-Speed",0);
-        this.gravity = Tools.loadFloat(settings,"Gravity",0);
+        this.speed = Tools.loadFloat(settings, "Speed", 0);
+        this.jumpSpeed = Tools.loadFloat(settings, "Jump-Speed", 0);
+        this.gravity = Tools.loadFloat(settings, "Gravity", 0);
 
     }
 

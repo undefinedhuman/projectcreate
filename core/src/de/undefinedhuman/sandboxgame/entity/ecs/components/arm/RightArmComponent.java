@@ -9,11 +9,10 @@ import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
 
 public class RightArmComponent extends Component {
 
-    private String textureName, selectedTexture;
-
     public float shakeAngle = 0;
     public boolean shakeDirection = false;
     public Vector2 turnedOffset, origin, shoulderPosOffset;
+    private String textureName, selectedTexture;
 
     public RightArmComponent(Entity entity, String textureName, Vector2 turnedOffset, Vector2 origin, Vector2 shoulderPosOffset, String selectedTexture) {
 
@@ -28,15 +27,16 @@ public class RightArmComponent extends Component {
     }
 
     @Override
-    public void setNetworkData(LineSplitter s) {
-        this.shakeAngle = s.getNextFloat();
-        this.shakeDirection = s.getNextBoolean();
+    public void receive(LineSplitter splitter) {
+        this.shakeAngle = splitter.getNextFloat();
+        this.shakeDirection = splitter.getNextBoolean();
     }
 
     @Override
-    public void getNetworkData(LineWriter w) {}
+    public void send(LineWriter writer) {}
 
     public String getSelectedTexture() { return selectedTexture; }
+
     public String getTextureName() { return textureName; }
 
 }

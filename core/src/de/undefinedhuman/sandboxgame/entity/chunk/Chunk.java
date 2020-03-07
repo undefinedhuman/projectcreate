@@ -18,15 +18,15 @@ public class Chunk {
 
     public void addEntity(int id, Entity entity) {
         this.entities.put(id, entity);
-        if(entity.hasComponent(ComponentType.COLLISION)) entitiesForCollision.add(entity);
-        if(entity.getType() == EntityType.PLAYER) players.add(entity);
+        if (entity.hasComponent(ComponentType.COLLISION)) entitiesForCollision.add(entity);
+        if (entity.getType() == EntityType.PLAYER) players.add(entity);
     }
 
     public void removeEntity(int id) {
-        if(!entities.containsKey(id)) return;
+        if (!entities.containsKey(id)) return;
         Entity entity = entities.get(id);
-        if(entity.hasComponent(ComponentType.COLLISION)) entitiesForCollision.remove(entity);
-        if(entity.getType() == EntityType.PLAYER) players.remove(entity);
+        if (entity.hasComponent(ComponentType.COLLISION)) entitiesForCollision.remove(entity);
+        if (entity.getType() == EntityType.PLAYER) players.remove(entity);
         this.entities.remove(id);
     }
 
@@ -35,9 +35,11 @@ public class Chunk {
     }
 
     public ArrayList<Entity> getEntityInRangeForCollision(Vector2 pos, float range) {
-        ArrayList<Entity> entitiesinRange = new ArrayList<>();
-        for (Entity entity : entitiesForCollision) if (distanceVector.set(entity.getX() - pos.x, entity.getY() - pos.y).len() <= range) entitiesinRange.add(entity);
-        return entitiesinRange;
+        ArrayList<Entity> entitiesInRange = new ArrayList<>();
+        for (Entity entity : entitiesForCollision)
+            if (distanceVector.set(entity.transform.getPosition()).sub(pos).len() <= range)
+                entitiesInRange.add(entity);
+        return entitiesInRange;
     }
 
     public ArrayList<Entity> getEntitiesForCollision() {

@@ -32,8 +32,8 @@ public class ShoulderBlueprint extends ComponentBlueprint {
     @Override
     public void load(HashMap<String, LineSplitter> settings, int id) {
 
-        this.shoulderPos = Tools.loadVector2Array(settings,"Shoulder Pos",null);
-        this.shoulderOffsets = Tools.loadVector2Array(settings,"Shoulder Off",null);
+        this.shoulderPos = Tools.loadVector2Array(settings, "Shoulder Pos", null);
+        this.shoulderOffsets = Tools.loadVector2Array(settings, "Shoulder Off", null);
 
     }
 

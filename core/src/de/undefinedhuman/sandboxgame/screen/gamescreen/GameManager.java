@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import de.undefinedhuman.sandboxgame.crafting.gui.CraftingInventory;
 import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.EntityManager;
@@ -45,64 +46,69 @@ import java.util.HashMap;
 public class GameManager {
 
     public static GameManager instance;
-
-    public SpriteBatch gameBatch, guiBatch;
     public static OrthographicCamera gameCamera, guiCamera;
-    private Viewport guiViewport;
-
+    public SpriteBatch gameBatch, guiBatch;
     public Entity player, boss, furnace;
     public Projectile projectile = null;
-
+    private Viewport guiViewport;
     private float tempCam = 0;
 
     public GameManager() {
-        gameCamera = new OrthographicCamera(); guiCamera = new OrthographicCamera();
+        gameCamera = new OrthographicCamera();
+        guiCamera = new OrthographicCamera();
         guiViewport = new ScreenViewport(guiCamera);
-        gameBatch = new SpriteBatch(); guiBatch = new SpriteBatch();
+        gameBatch = new SpriteBatch();
+        guiBatch = new SpriteBatch();
 
-        //CraftingInventory craftingInventory = new CraftingInventory();
+        CraftingInventory craftingInventory = new CraftingInventory();
 
     }
 
     public void init() {
 
-        boss = new Entity(EntityType.ENTITY, new Vector2(360,360));
-        boss.addComponent(new HealthComponent(boss,1000, new Vector2(0,120)));
+        boss = new Entity(EntityType.ENTITY, new Vector2(360, 360));
+        boss.addComponent(new HealthComponent(boss, 1000, new Vector2(0, 120)));
         HashMap<String, SpriteParam> sprites = new HashMap<>();
-        sprites.put("Main", new SpriteParam("Abomination.png",100, new Vector2(48,1)));
+        sprites.put("Main", new SpriteParam("Abomination.png", 100, new Vector2(48, 1)));
         boss.addComponent(new SpriteComponent(boss, sprites));
         HashMap<String, AnimationParam> animations = new HashMap<>();
-        animations.put("Idle", new AnimationParam(new String[] {"Main"}, new Vector2(1,6),0.1f, Animation.PlayMode.LOOP));
-        animations.put("Attack", new AnimationParam(new String[] {"Main"}, new Vector2(7,21),0.1f, Animation.PlayMode.LOOP));
-        animations.put("Run", new AnimationParam(new String[] {"Main"}, new Vector2(25,32),0.05f, Animation.PlayMode.LOOP));
-        animations.put("Hurt", new AnimationParam(new String[] {"Main"}, new Vector2(34,36),0.1f, Animation.PlayMode.NORMAL));
-        animations.put("Die", new AnimationParam(new String[] {"Main"}, new Vector2(37,45),0.1f, Animation.PlayMode.NORMAL));
-        boss.addComponent(new AnimationComponent(boss,"Idle", animations));
-        boss.addComponent(new NameComponent(boss,"Abomination"));
-        boss.addComponent(new CollisionComponent(boss,102,178, new Vector2(120,10)));
-        boss.addComponent(new MovementComponent(boss,250,250,1000));
-        boss.setPosition(100,6600);
+        animations.put("Idle", new AnimationParam(new String[] {"Main"}, new Vector2(1, 6), 0.1f, Animation.PlayMode.LOOP));
+        animations.put("Attack", new AnimationParam(new String[] {"Main"}, new Vector2(7, 21), 0.1f, Animation.PlayMode.LOOP));
+        animations.put("Run", new AnimationParam(new String[] {"Main"}, new Vector2(25, 32), 0.05f, Animation.PlayMode.LOOP));
+        animations.put("Hurt", new AnimationParam(new String[] {"Main"}, new Vector2(34, 36), 0.1f, Animation.PlayMode.NORMAL));
+        animations.put("Die", new AnimationParam(new String[] {"Main"}, new Vector2(37, 45), 0.1f, Animation.PlayMode.NORMAL));
+        boss.addComponent(new AnimationComponent(boss, "Idle", animations));
+        boss.addComponent(new NameComponent(boss, "Abomination"));
+        boss.addComponent(new CollisionComponent(boss, 102, 178, new Vector2(120, 10)));
+        boss.addComponent(new MovementComponent(boss, 250, 250, 1000));
+        boss.transform.setPosition(100, 6600);
         //EntityManager.instance.addEntity(100, boss);
 
-        furnace = new Entity(EntityType.SCENERY, new Vector2(128,128));
+        furnace = new Entity(EntityType.SCENERY, new Vector2(128, 128));
         sprites = new HashMap<>();
-        sprites.put("Main", new SpriteParam("props/Furnace.png",-1, new Vector2(7,1)));
+        sprites.put("Main", new SpriteParam("props/Furnace.png", -1, new Vector2(7, 1)));
         furnace.addComponent(new SpriteComponent(furnace, sprites));
         animations = new HashMap<>();
-        animations.put("Idle", new AnimationParam(new String[] { "Main" }, new Vector2(0,0),0, Animation.PlayMode.NORMAL));
-        animations.put("Running", new AnimationParam(new String[] {"Main"}, new Vector2(2,7),0.09f, Animation.PlayMode.LOOP));
-        furnace.addComponent(new AnimationComponent(furnace,"Running", animations));
-        furnace.addComponent(new CollisionComponent(furnace,84,62, new Vector2(22,0)));
-        furnace.addComponent(new InteractionComponent(furnace,75, Input.Keys.F));
-        furnace.setPosition(800,16*50);
+        animations.put("Idle", new AnimationParam(new String[] {"Main"}, new Vector2(0, 0), 0, Animation.PlayMode.NORMAL));
+        animations.put("Running", new AnimationParam(new String[] {"Main"}, new Vector2(2, 7), 0.09f, Animation.PlayMode.LOOP));
+        furnace.addComponent(new AnimationComponent(furnace, "Running", animations));
+        furnace.addComponent(new CollisionComponent(furnace, 84, 62, new Vector2(22, 0)));
+        furnace.addComponent(new InteractionComponent(furnace, 75, Input.Keys.F));
+        furnace.transform.setPosition(800, 800);
         EntityManager.instance.addEntity(101, furnace);
 
         ((HealthComponent) player.getComponent(ComponentType.HEALTH)).getProfileOffset().set(0, 10);
-        player.addComponent(new ManaComponent(player,100));
+        player.addComponent(new ManaComponent(player, 100));
         player.addComponent(new CombatComponent(player));
 
         loadManager();
 
+    }
+
+    private void loadManager() {
+        ItemManager.instance.init();
+        InventoryManager.instance.init();
+        DropItemManager.instance = new DropItemManager();
     }
 
     public void resize(int width, int height) {
@@ -126,15 +132,18 @@ public class GameManager {
         //ClientManager.instance.update(delta);
 
         // TODO Remove
-        if(Gdx.input.isKeyJustPressed(Input.Keys.U)) World.instance = WorldGenerator.instance.generateWorld(new WorldPreset("Main", WorldSetting.DEV, BiomeSetting.DEV));
-        if(Gdx.input.isKeyJustPressed(Input.Keys.H)) gameCamera.zoom++;
-        if(Gdx.input.isKeyJustPressed(Input.Keys.J)) gameCamera.zoom--;
-        if(Gdx.input.isKeyJustPressed(Input.Keys.P)) ((HealthComponent) player.getComponent(ComponentType.HEALTH)).damage(10);
-        if(Gdx.input.isKeyJustPressed(Input.Keys.O)) ((HealthComponent) player.getComponent(ComponentType.HEALTH)).heal(10);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.U))
+            World.instance = WorldGenerator.instance.generateWorld(new WorldPreset("Main", WorldSetting.DEV, BiomeSetting.DEV));
+        if (Gdx.input.isKeyJustPressed(Input.Keys.H)) gameCamera.zoom++;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.J)) gameCamera.zoom--;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.P))
+            ((HealthComponent) player.getComponent(ComponentType.HEALTH)).damage(10);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.O))
+            ((HealthComponent) player.getComponent(ComponentType.HEALTH)).heal(10);
 
         //World.instance.lightManager.updateLight();
 
-        if(projectile != null) projectile.update(delta);
+        if (projectile != null) projectile.update(delta);
 
         GuiManager.instance.update(delta);
         InventoryManager.instance.update(delta);
@@ -143,6 +152,24 @@ public class GameManager {
         WorldManager.instance.update(delta);
 
         updateCamera();
+
+    }
+
+    private void updateCamera() {
+
+        if (GameManager.instance.player != null) {
+
+            tempCam = gameCamera.viewportHeight * gameCamera.zoom / 2.0F;
+            gameCamera.position.set(Tools.lerp(gameCamera.position, new Vector3().set(new Vector2(player.transform.getPosition()).mulAdd(player.transform.getCenter(), 0.5f), 10), 250));
+
+            if (gameCamera.position.y < tempCam) gameCamera.position.y = (tempCam);
+            float currentMaxHeight = World.instance.height * 16 - tempCam - 32;
+            if (gameCamera.position.y > currentMaxHeight)
+                gameCamera.position.y = currentMaxHeight;
+
+            gameCamera.update();
+
+        }
 
     }
 
@@ -155,10 +182,10 @@ public class GameManager {
         //World.instance.renderBackLayer(gameBatch);
         EntityManager.instance.render(gameBatch);
         DropItemManager.instance.render(gameBatch);
-        if(projectile != null) projectile.render(gameBatch);
+        if (projectile != null) projectile.render(gameBatch);
         World.instance.renderMainLayer(gameBatch);
 
-        gameBatch.draw(TextureManager.instance.getTexture("tree/Tree.png"),1000,16*50,128,128);
+        gameBatch.draw(TextureManager.instance.getTexture("tree/Tree.png"), 1000, 16 * 50, 128, 128);
         gameBatch.end();
 
         guiViewport.apply();
@@ -176,29 +203,6 @@ public class GameManager {
         DropItemManager.instance.delete();
         EntityManager.instance.delete();
         ItemManager.instance.delete();
-
-    }
-
-    private void loadManager() {
-        ItemManager.instance.init();
-        InventoryManager.instance.init();
-        DropItemManager.instance = new DropItemManager();
-    }
-
-    private void updateCamera() {
-
-        if(GameManager.instance.player != null) {
-
-            tempCam = gameCamera.viewportHeight * gameCamera.zoom / 2.0F;
-
-            gameCamera.position.set(Tools.lerp(gameCamera.position, new Vector3((int) (player.getX() + player.getWidth() / 2), (int) (player.getY() + player.getHeight() / 2),10),250));
-
-            if (gameCamera.position.y < tempCam) gameCamera.position.y = (tempCam);
-            if (gameCamera.position.y > World.instance.height * 16 - tempCam - 32.0F) gameCamera.position.y = (World.instance.height * 16 - tempCam - 32.0F);
-
-            gameCamera.update();
-
-        }
 
     }
 

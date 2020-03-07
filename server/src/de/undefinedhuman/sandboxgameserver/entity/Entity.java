@@ -67,10 +67,6 @@ public class Entity {
         this.components.addComponent(component);
     }
 
-    public boolean hasComponent(ComponentType type) {
-        return components.hasComponent(type);
-    }
-
     public boolean hasComponents(ComponentType... types) {
 
         boolean hasComponents = true;
@@ -79,11 +75,8 @@ public class Entity {
 
     }
 
-    public Component getComponent(ComponentType type) {
-
-        if (hasComponent(type)) return components.getComponent(type);
-        return null;
-
+    public boolean hasComponent(ComponentType type) {
+        return components.hasComponent(type);
     }
 
     public ComponentList getComponents() {
@@ -118,7 +111,10 @@ public class Entity {
 
         LineWriter writer = new LineWriter(true);
         writer.writeInt(components.getComponents().size());
-        for(Component component : components.getComponents()) { writer.writeString(component.getType().toString()); component.getNetworkData(writer); }
+        for (Component component : components.getComponents()) {
+            writer.writeString(component.getType().toString());
+            component.getNetworkData(writer);
+        }
         return writer.getData();
 
     }
@@ -127,8 +123,18 @@ public class Entity {
 
         LineWriter writer = new LineWriter(true);
         writer.writeInt(types.length);
-        for(ComponentType type : types) { writer.writeString(type.toString()); getComponent(type).getNetworkData(writer); }
+        for (ComponentType type : types) {
+            writer.writeString(type.toString());
+            getComponent(type).getNetworkData(writer);
+        }
         return writer.getData();
+
+    }
+
+    public Component getComponent(ComponentType type) {
+
+        if (hasComponent(type)) return components.getComponent(type);
+        return null;
 
     }
 

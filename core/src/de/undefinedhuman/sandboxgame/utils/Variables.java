@@ -28,7 +28,7 @@ public class Variables {
     }
 
     public static String getInventoryWidth(float offsetX, int col) {
-        return "p" + (offsetX * 2 + (SLOT_SIZE * col + SLOT_SPACE * (col-1)));
+        return "p" + (offsetX * 2 + (SLOT_SIZE * col + SLOT_SPACE * (col - 1)));
     }
 
     public static String getInventoryHeight(GuiTemplate template, int row) {
@@ -36,7 +36,7 @@ public class Variables {
     }
 
     public static String getInventoryHeight(float offsetY, int row) {
-        return "p" + (offsetY * 2 + (SLOT_SIZE * row + SLOT_SPACE * (row-1)));
+        return "p" + (offsetY * 2 + (SLOT_SIZE * row + SLOT_SPACE * (row - 1)));
     }
 
 }

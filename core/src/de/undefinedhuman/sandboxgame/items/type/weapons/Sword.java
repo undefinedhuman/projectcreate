@@ -19,8 +19,8 @@ public class Sword extends Weapon {
     @Override
     public void load(int id, HashMap<String, LineSplitter> settings) {
         super.load(id, settings);
-        damage = Tools.loadFloat(settings,"Damage",5);
-        speed = Tools.loadFloat(settings,"Speed",1.1f);
+        damage = Tools.loadFloat(settings, "Damage", 5);
+        speed = Tools.loadFloat(settings, "Speed", 1.1f);
         type = ItemType.SWORD;
     }
 

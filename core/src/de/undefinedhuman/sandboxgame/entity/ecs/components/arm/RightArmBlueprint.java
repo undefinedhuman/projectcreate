@@ -35,11 +35,11 @@ public class RightArmBlueprint extends ComponentBlueprint {
     @Override
     public void load(HashMap<String, LineSplitter> settings, int id) {
 
-        textureName = Tools.loadString(settings,"Texture Data",null);
-        selectedTexture = Tools.loadString(settings,"Selected Texture Data",null);
-        turnedOffset = Tools.loadVector2(settings,"Turned Offset", new Vector2());
-        origin = Tools.loadVector2(settings,"Origin",new Vector2());
-        shoulderPos = Tools.loadVector2(settings,"Shoulder Pos", new Vector2());
+        textureName = Tools.loadString(settings, "Texture Data", null);
+        selectedTexture = Tools.loadString(settings, "Selected Texture Data", null);
+        turnedOffset = Tools.loadVector2(settings, "Turned Offset", new Vector2());
+        origin = Tools.loadVector2(settings, "Origin", new Vector2());
+        shoulderPos = Tools.loadVector2(settings, "Shoulder Pos", new Vector2());
 
     }
 

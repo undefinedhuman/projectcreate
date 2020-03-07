@@ -15,7 +15,7 @@ public class PacketUtils {
 
         World world = WorldManager.instance.getWorld(packet.worldName);
 
-        if(packet.main) world.mainLayer.setBlock(packet.x, packet.y, (byte) (packet.id == -1 ? 0 : packet.id));
+        if (packet.main) world.mainLayer.setBlock(packet.x, packet.y, (byte) (packet.id == -1 ? 0 : packet.id));
         else world.backLayer.setBlock(packet.x, packet.y, (byte) (packet.id == -1 ? 0 : packet.id));
 
     }
@@ -23,11 +23,11 @@ public class PacketUtils {
     public static void handleComponentPacket(ComponentPacket packet) {
 
         Entity entity = WorldManager.instance.getWorld(packet.worldName).getEntity(packet.worldID);
-        if(entity != null) {
+        if (entity != null) {
 
-            LineSplitter s = new LineSplitter(packet.data,true, Variables.SEPARATOR);
+            LineSplitter s = new LineSplitter(packet.data, true, Variables.SEPARATOR);
             int size = s.getNextInt();
-            for(int i = 0; i < size; i++) {
+            for (int i = 0; i < size; i++) {
                 String s1 = s.getNextString();
                 ComponentType type = ComponentType.valueOf(s1);
                 entity.getComponent(type).setNetworkData(s);

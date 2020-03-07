@@ -44,6 +44,32 @@ public class ServerListener extends Listener {
     public void connected(Connection connection) {}
 
     @Override
+    public void disconnected(Connection connection) {
+
+        int id = connection.getID();
+        if (players.containsKey(id)) {
+
+            Entity entity = players.get(id);
+
+            for (Entity worldPlayer : WorldManager.instance.getWorld(entity.getWorldName()).getPlayers()) {
+
+                RemoveEntityPacket packet = new RemoveEntityPacket();
+                packet.worldID = entity.getWorldID();
+                ServerManager.instance.sendToTCP(worldPlayer.c, packet);
+
+            }
+
+            Log.instance.info(((NameComponent) entity.getComponent(ComponentType.NAME)).getName() + " has disconnected!");
+
+            EntityManager.instance.savePlayer(entity.getWorldName(), entity);
+            WorldManager.instance.getWorld(entity.getWorldName()).removeEntity(entity.getWorldID());
+            players.remove(id);
+
+        }
+
+    }
+
+    @Override
     public void received(Connection connection, Object o) {
 
         if (o instanceof LoginPacket) {
@@ -53,15 +79,15 @@ public class ServerListener extends Listener {
 
             packet.loggedIn = !loggedIn;
             ServerManager.instance.sendToTCP(connection.getID(), packet);
-            if(loggedIn) return;
+            if (loggedIn) return;
 
             Log.instance.info(packet.name + " is connected!");
 
             String playerName = packet.name, worldName;
             Entity player;
 
-            if(EntityManager.instance.playerExists(playerName)) {
-                FsFile file = new FsFile(Paths.PLAYER_PATH, playerName + ".player",false,false);
+            if (EntityManager.instance.playerExists(playerName)) {
+                FsFile file = new FsFile(Paths.PLAYER_PATH, playerName + ".player", false, false);
                 FileReader reader = file.getFileReader(true);
                 reader.nextLine();
                 worldName = reader.getNextString();
@@ -79,7 +105,7 @@ public class ServerListener extends Listener {
                 @Override
                 public void runTask() {
 
-                    if(!WorldManager.instance.hasWorld(worldName)) {
+                    if (!WorldManager.instance.hasWorld(worldName)) {
 
                         WorldManager.instance.load(worldName);
                         Log.instance.info("World " + worldName + " loaded!");
@@ -106,7 +132,7 @@ public class ServerListener extends Listener {
 
                     World world = WorldManager.instance.getWorld(worldName);
 
-                    for(Entity entity : world.getPlayers()) {
+                    for (Entity entity : world.getPlayers()) {
 
                         entity.c.sendTCP(addEntityPacket);
                         AddEntityPacket addOtherEntityPacket = new AddEntityPacket();
@@ -125,11 +151,11 @@ public class ServerListener extends Listener {
 
         }
 
-        if(players.containsKey(connection.getID())) {
+        if (players.containsKey(connection.getID())) {
 
             Entity entity = players.get(connection.getID());
 
-            if(o instanceof WorldPacket) {
+            if (o instanceof WorldPacket) {
 
                 WorldPacket packet = (WorldPacket) o;
                 World world = WorldManager.instance.getWorld(entity.getWorldName());
@@ -140,7 +166,7 @@ public class ServerListener extends Listener {
 
             }
 
-            if(o instanceof WorldLayerPacket) {
+            if (o instanceof WorldLayerPacket) {
 
                 ThreadManager.instance.addTask(TaskType.WORLDSEND, new ThreadTask() {
 
@@ -161,7 +187,7 @@ public class ServerListener extends Listener {
 
             }
 
-            if(o instanceof JumpPacket) {
+            if (o instanceof JumpPacket) {
 
                 JumpPacket packet = (JumpPacket) o;
                 ((MovementComponent) entity.getComponent(ComponentType.MOVEMENT)).forceJump();
@@ -169,7 +195,7 @@ public class ServerListener extends Listener {
 
             }
 
-            if(o instanceof ComponentPacket) {
+            if (o instanceof ComponentPacket) {
 
                 ComponentPacket packet = (ComponentPacket) o;
                 PacketUtils.handleComponentPacket(packet);
@@ -177,7 +203,7 @@ public class ServerListener extends Listener {
 
             }
 
-            if(o instanceof BlockPacket) {
+            if (o instanceof BlockPacket) {
 
                 BlockPacket packet = (BlockPacket) o;
                 PacketUtils.handleBlockPacket(packet);
@@ -185,7 +211,7 @@ public class ServerListener extends Listener {
 
             }
 
-            if(o instanceof EquipPacket) {
+            if (o instanceof EquipPacket) {
 
                 EquipPacket packet = (EquipPacket) o;
                 Entity player = players.get(connection.getID());
@@ -195,32 +221,6 @@ public class ServerListener extends Listener {
                 ServerManager.instance.sendToAllFromWorldExceptID(connection.getID(), player.getWorldName(), packet);
 
             }
-
-        }
-
-    }
-
-    @Override
-    public void disconnected(Connection connection) {
-
-        int id = connection.getID();
-        if(players.containsKey(id)) {
-
-            Entity entity = players.get(id);
-
-            for(Entity worldPlayer : WorldManager.instance.getWorld(entity.getWorldName()).getPlayers()) {
-
-                RemoveEntityPacket packet = new RemoveEntityPacket();
-                packet.worldID = entity.getWorldID();
-                ServerManager.instance.sendToTCP(worldPlayer.c, packet);
-
-            }
-
-            Log.instance.info(((NameComponent) entity.getComponent(ComponentType.NAME)).getName() + " has disconnected!");
-
-            EntityManager.instance.savePlayer(entity.getWorldName(), entity);
-            WorldManager.instance.getWorld(entity.getWorldName()).removeEntity(entity.getWorldID());
-            players.remove(id);
 
         }
 

@@ -13,7 +13,8 @@ public class TopLayerTexture {
 
         this.textures = textures;
         this.offset = offset;
-        this.left = left; this.right = right;
+        this.left = left;
+        this.right = right;
         TextureManager.instance.addTexture(textures);
 
     }

@@ -21,14 +21,21 @@ public class LineSplitter {
         return s != null ? s : "";
     }
 
+    private String getNextData() {
+        if (hasMoreValues()) {
+            String s = this.data[this.pointer++];
+            return (base ? Base64Coder.decodeString(s) : s);
+        }
+        return null;
+    }
+
+    public boolean hasMoreValues() {
+        return this.pointer < this.data.length;
+    }
+
     public int getNextInt() {
         String s = getNextData();
         return s != null ? Integer.parseInt(s) : 0;
-    }
-
-    public float getNextFloat() {
-        String s = getNextData();
-        return s != null ? Float.parseFloat(s) : 0;
     }
 
     public long getNextLong() {
@@ -50,34 +57,24 @@ public class LineSplitter {
         return new Vector2(getNextFloat(), getNextFloat());
     }
 
+    public float getNextFloat() {
+        String s = getNextData();
+        return s != null ? Float.parseFloat(s) : 0;
+    }
+
     public Vector3 getNextVector3() {
         return new Vector3(getNextFloat(), getNextFloat(), getNextFloat());
     }
 
-    public boolean hasMoreValues() {
-        return this.pointer < this.data.length;
-    }
-
-    private String getNextData() {
-
-        if(hasMoreValues()) {
-            String s = this.data[this.pointer++];
-            return (base ? Base64Coder.decodeString(s) : s);
-        }
-
-        return null;
-
-    }
-
     public String getData() {
         StringBuilder builder = new StringBuilder();
-        while(hasMoreValues()) builder.append(getNextData()).append(";");
+        while (hasMoreValues()) builder.append(getNextData()).append(";");
         return builder.toString();
     }
 
     public String getDataString() {
         StringBuilder builder = new StringBuilder();
-        for(String s : data) builder.append(s);
+        for (String s : data) builder.append(s);
         return builder.toString();
     }
 

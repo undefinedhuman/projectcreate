@@ -34,7 +34,7 @@ public class HealthBlueprint extends ComponentBlueprint {
     @Override
     public void load(HashMap<String, LineSplitter> settings, int id) {
 
-        this.maxHealth = Tools.loadFloat(settings,"MaxHealth",0);
+        this.maxHealth = Tools.loadFloat(settings, "MaxHealth", 0);
 
     }
 

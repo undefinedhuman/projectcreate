@@ -24,7 +24,10 @@ public class Main {
         while (!exit) {
 
             String str = scan.nextLine();
-            if (str.equals("exit") || str.equals("quit") || str.equals("stop")) { exit = true; closing = true; }
+            if (str.equals("exit") || str.equals("quit") || str.equals("stop")) {
+                exit = true;
+                closing = true;
+            }
 
         }
 

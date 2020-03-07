@@ -30,11 +30,6 @@ public enum ComponentType {
         return ComponentType.valueOf(name).load(reader, id);
     }
 
-    public static boolean hasType(String name) {
-        for(ComponentType type : values()) if(type.name().equalsIgnoreCase(name)) return true;
-        return false;
-    }
-
     public ComponentBlueprint load(FileReader reader, int id) {
 
         ComponentBlueprint componentBlueprint = null;
@@ -53,6 +48,11 @@ public enum ComponentType {
 
         return componentBlueprint;
 
+    }
+
+    public static boolean hasType(String name) {
+        for (ComponentType type : values()) if (type.name().equalsIgnoreCase(name)) return true;
+        return false;
     }
 
 }

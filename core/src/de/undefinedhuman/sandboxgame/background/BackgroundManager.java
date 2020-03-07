@@ -13,8 +13,8 @@ public class BackgroundManager extends Manager {
     private BackgroundLayer background;
 
     public BackgroundManager() {
-        if(instance == null) instance = this;
-        background = new BackgroundLayer(new Vector2(320,180));
+        if (instance == null) instance = this;
+        background = new BackgroundLayer(new Vector2(320, 180));
     }
 
     @Override

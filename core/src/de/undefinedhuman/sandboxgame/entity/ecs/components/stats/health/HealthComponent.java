@@ -59,15 +59,11 @@ public class HealthComponent extends Component {
     }
 
     @Override
-    public void setNetworkData(LineSplitter s) {
-
-        this.currentHealth = s.getNextFloat();
-
+    public void receive(LineSplitter splitter) {
+        this.currentHealth = splitter.getNextFloat();
     }
 
     @Override
-    public void getNetworkData(LineWriter w) {
-
-    }
+    public void send(LineWriter writer) {}
 
 }

@@ -31,7 +31,7 @@ public class AnimationBlueprint extends ComponentBlueprint {
         reader.nextLine();
         this.defaultAnimation = reader.getNextString();
         int size = reader.getNextInt();
-        for(int i = 0; i < size; i++) animations.put(reader.getNextString(), AnimationParam.load(reader));
+        for (int i = 0; i < size; i++) animations.put(reader.getNextString(), AnimationParam.load(reader));
     }
 
     @Override

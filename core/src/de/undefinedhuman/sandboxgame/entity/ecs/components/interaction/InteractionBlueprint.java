@@ -26,8 +26,8 @@ public class InteractionBlueprint extends ComponentBlueprint {
 
     @Override
     public void load(HashMap<String, LineSplitter> settings, int id) {
-        this.range = Tools.loadInt(settings,"Range",0);
-        this.key = Tools.loadInt(settings,"Key", Input.Keys.F);
+        this.range = Tools.loadInt(settings, "Range", 0);
+        this.key = Tools.loadInt(settings, "Key", Input.Keys.F);
     }
 
     @Override

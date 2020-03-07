@@ -27,13 +27,11 @@ public class NameComponent extends Component {
     }
 
     @Override
-    public void setNetworkData(LineSplitter s) {
-        this.name = s.getNextString();
+    public void receive(LineSplitter splitter) {
+        this.name = splitter.getNextString();
     }
 
     @Override
-    public void getNetworkData(LineWriter w) {
-
-    }
+    public void send(LineWriter writer) {}
 
 }

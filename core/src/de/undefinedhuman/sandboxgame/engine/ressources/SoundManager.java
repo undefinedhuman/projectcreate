@@ -13,7 +13,7 @@ public class SoundManager extends Manager {
 
     public SoundManager() {
         sounds = new HashMap<>();
-        if(instance == null) instance = this;
+        if (instance == null) instance = this;
     }
 
     @Override
@@ -22,16 +22,7 @@ public class SoundManager extends Manager {
     }
 
     public void addSound(String... names) {
-        for(String s : names) if(!hasSound(s)) sounds.put(s, ResourceManager.loadSound(s));
-    }
-
-    public void removeSound(String... names) {
-        for(String name : names) if(hasSound(name)) { sounds.get(name).dispose(); sounds.remove(name); }
-    }
-
-    public Sound getSound(String name) {
-        if(hasSound(name)) return sounds.get(name);
-        return getSound("dirtSound.wav");
+        for (String s : names) if (!hasSound(s)) sounds.put(s, ResourceManager.loadSound(s));
     }
 
     public boolean hasSound(String name) {
@@ -40,8 +31,21 @@ public class SoundManager extends Manager {
 
     @Override
     public void delete() {
-        for(Sound sound : sounds.values()) sound.dispose();
+        for (Sound sound : sounds.values()) sound.dispose();
         sounds.clear();
+    }
+
+    public void removeSound(String... names) {
+        for (String name : names)
+            if (hasSound(name)) {
+                sounds.get(name).dispose();
+                sounds.remove(name);
+            }
+    }
+
+    public Sound getSound(String name) {
+        if (hasSound(name)) return sounds.get(name);
+        return getSound("dirtSound.wav");
     }
 
 }

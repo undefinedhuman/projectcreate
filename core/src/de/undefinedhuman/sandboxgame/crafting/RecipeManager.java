@@ -5,7 +5,6 @@ import java.util.HashMap;
 public class RecipeManager {
 
     public static RecipeManager instance;
-
     public HashMap<Integer, Recipe> recipes;
 
     public RecipeManager() {

@@ -20,7 +20,7 @@ public class Weapon extends Item {
     public void load(int id, HashMap<String, LineSplitter> settings) {
         super.load(id, settings);
         type = ItemType.WEAPON;
-        hitboxSize = Tools.loadVector2(settings,"Hitbox Size", new Vector2());
+        hitboxSize = Tools.loadVector2(settings, "Hitbox Size", new Vector2());
     }
 
 }

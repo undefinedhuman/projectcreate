@@ -34,83 +34,44 @@ public class Log {
 
     }
 
-    public void error(Object msg) {
-
-        String message = generateMessage("Error", String.valueOf(msg));
-
+    public void info(Object msg) {
+        String message = generateMessage("Info", String.valueOf(msg));
         System.out.println(message);
         addMessage(message);
-
     }
 
-    public void info(Object msg) {
+    private String generateMessage(String prefix, String msg) {
+        return "[" + Tools.getTime() + "] [" + prefix + "] " + msg;
+    }
 
-        String message = generateMessage("Info", String.valueOf(msg));
+    private void addMessage(Object obj) {
+        logMessages.add(String.valueOf(obj));
+    }
 
+    public void error(Object msg) {
+        String message = generateMessage("Error", String.valueOf(msg));
         System.out.println(message);
         addMessage(message);
-
     }
 
     public void info(Object... values) {
-
         StringBuilder s = new StringBuilder();
         for (int i = 0; i < values.length; i++) s.append(values[i]).append(i < values.length - 1 ? ", " : "");
         String message = generateMessage("Info", s.toString());
         System.out.println(message);
         addMessage(message);
-
-    }
-
-    private String generateMessage(String prefix, String msg) {
-
-        return "[" + Tools.getTime() + "] [" + prefix + "] " + msg;
-
-    }
-
-    private void addMessage(Object obj) {
-
-        logMessages.add(String.valueOf(obj));
-
     }
 
     public void load() {
-
         checkLogs();
-
         file = new FsFile(Paths.LOG_PATH, fileName, false);
         if (file.exists()) info("Log file successfully created!");
-
-    }
-
-    public void save() {
-
-        if (file != null && file.exists()) {
-
-            FileWriter writer = file.getFileWriter(false, "", true);
-
-            info("Log file successfully saved!");
-
-            for (String s : logMessages) {
-
-                writer.writeString(s);
-                writer.nextLine();
-
-            }
-
-            logMessages.clear();
-            writer.close();
-
-        }
-
     }
 
     private void checkLogs() {
 
         ArrayList<File> fileToRemove = new ArrayList<>();
-
         File dir = new File(Paths.LOG_PATH.getPath());
-
         if (dir.exists()) if (dir.isDirectory()) {
 
             File[] files = dir.listFiles();
@@ -137,10 +98,24 @@ public class Log {
     }
 
     public void crash() {
-
         save();
         System.exit(0);
+    }
 
+    public void crash(String message) {
+        error(message);
+        save();
+        System.exit(0);
+    }
+
+    public void save() {
+        if (file != null && file.exists()) {
+            FileWriter writer = file.getFileWriter(false, "", true);
+            info("Log file successfully saved!");
+            for (String s : logMessages) writer.writeString(s).nextLine();
+            logMessages.clear();
+            writer.close();
+        }
     }
 
 }

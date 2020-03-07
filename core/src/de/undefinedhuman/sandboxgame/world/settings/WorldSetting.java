@@ -14,12 +14,10 @@ public enum WorldSetting {
     private Biome startBiome;
 
     WorldSetting(int biomeSize, Biome startBiome, Biome... neededBiomes) {
-
         this.biomeSize = biomeSize;
         this.startBiome = startBiome;
         this.neededBiomes = new ArrayList<>();
         this.neededBiomes.addAll(Arrays.asList(neededBiomes));
-
     }
 
     public int getBiomeSize() {

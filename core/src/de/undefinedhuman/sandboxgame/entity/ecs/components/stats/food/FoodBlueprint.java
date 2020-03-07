@@ -15,24 +15,18 @@ public class FoodBlueprint extends ComponentBlueprint {
     private float maxFood;
 
     public FoodBlueprint() {
-
         this.maxFood = 0;
         this.type = ComponentType.FOOD;
-
     }
 
     @Override
     public Component createInstance(Entity entity, HashMap<ComponentType, ComponentParam> params) {
-
         return new FoodComponent(entity, maxFood);
-
     }
 
     @Override
     public void load(HashMap<String, LineSplitter> settings, int id) {
-
-        this.maxFood = Tools.loadFloat(settings,"MaxFood",0);
-
+        this.maxFood = Tools.loadFloat(settings, "MaxFood", 0);
     }
 
     @Override

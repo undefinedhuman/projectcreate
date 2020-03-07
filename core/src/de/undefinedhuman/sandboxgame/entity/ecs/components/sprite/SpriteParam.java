@@ -17,5 +17,5 @@ public class SpriteParam {
         this.region = region;
 
     }
-    
+
 }
