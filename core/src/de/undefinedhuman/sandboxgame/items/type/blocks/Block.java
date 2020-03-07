@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.file.Paths;
-import de.undefinedhuman.sandboxgame.engine.ressources.SoundManager;
 import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.items.Item;
 import de.undefinedhuman.sandboxgame.items.ItemType;
@@ -58,7 +57,7 @@ public class Block extends Item {
 
         if (settings.containsKey("Sound"))
             soundName = Paths.ITEM_PATH.getPath() + id + "/" + settings.get("Sound").getNextString();
-        SoundManager.instance.addSound(soundName);
+        // TODO SoundManager.instance.addSound(soundName);
 
         durability = Tools.loadInt(settings, "Durability", 0);
         dropID = Tools.loadInt(settings, "DropID", id);

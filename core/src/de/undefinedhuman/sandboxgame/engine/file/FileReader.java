@@ -20,13 +20,12 @@ public class FileReader {
     public FileReader(FileHandle file, boolean base) {
         this.reader = new BufferedReader(file.reader());
         this.base = base;
+        this.separator = Variables.SEPARATOR;
         this.fileName = file.name();
     }
 
     public FileReader(FsFile file, boolean base) {
-        this.reader = FileUtils.getBufferedReader(file);
-        this.base = base;
-        this.fileName = file.getName();
+        this(file, base, Variables.SEPARATOR);
     }
 
     public FileReader(FsFile file, boolean base, String separator) {
@@ -38,16 +37,10 @@ public class FileReader {
 
     public String nextLine() {
         String line = null;
-        try {
-            line = reader.readLine();
-        } catch (IOException ex) {
-            Log.error(ex.getMessage());
-        }
-        if (line != null) {
-            splitter = new LineSplitter(line, base, separator.equalsIgnoreCase("") ? Variables.SEPARATOR : separator);
-            return line;
-        }
-        return null;
+        try { line = reader.readLine(); } catch (IOException ex) { Log.error(ex.getMessage()); }
+        if (line == null) return null;
+        splitter = new LineSplitter(line, base, separator);
+        return line;
     }
 
     public int getNextInt() {

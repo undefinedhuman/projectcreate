@@ -31,6 +31,8 @@ import de.undefinedhuman.sandboxgame.world.layer.topLayer.TopLayerManager;
 
 public class Main extends Game {
 
+    // TODO Split the game and engine code so server and game can share things like the log, lamguage, items, entities, etc.
+
     public static Main instance;
 
     public static float delta;

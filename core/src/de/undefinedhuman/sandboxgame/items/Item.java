@@ -10,6 +10,9 @@ import java.util.HashMap;
 
 public class Item {
 
+    // TODO Rework the whole setting thing with setting class just like the player settings like window width and height -
+    //  Make it so that the editor can automatically create the settings and save them and the game can automatically can load them.
+
     public int id, maxAmount;
     public String name, desc;
     public ItemType type;
