@@ -1,5 +1,6 @@
 package de.undefinedhuman.sandboxgameserver.entity.ecs;
 
+import de.undefinedhuman.sandboxgame.engine.file.FileReader;
 import de.undefinedhuman.sandboxgameserver.entity.ecs.components.arm.LeftArmBlueprint;
 import de.undefinedhuman.sandboxgameserver.entity.ecs.components.arm.RightArmBlueprint;
 import de.undefinedhuman.sandboxgameserver.entity.ecs.components.collision.CollisionBlueprint;
@@ -10,7 +11,6 @@ import de.undefinedhuman.sandboxgameserver.entity.ecs.components.health.HealthBl
 import de.undefinedhuman.sandboxgameserver.entity.ecs.components.mouse.AngleBlueprint;
 import de.undefinedhuman.sandboxgameserver.entity.ecs.components.movement.MovementBlueprint;
 import de.undefinedhuman.sandboxgameserver.entity.ecs.components.name.NameBlueprint;
-import de.undefinedhuman.sandboxgameserver.file.FileReader;
 
 public enum ComponentType {
 

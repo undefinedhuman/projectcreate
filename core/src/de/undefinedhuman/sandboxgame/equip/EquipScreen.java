@@ -7,9 +7,9 @@ import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.inventory.EquipSlot;
 import de.undefinedhuman.sandboxgame.inventory.InvTarget;
 import de.undefinedhuman.sandboxgame.inventory.Slot;
-import de.undefinedhuman.sandboxgame.items.ItemType;
+import de.undefinedhuman.sandboxgame.engine.items.ItemType;
 import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
-import de.undefinedhuman.sandboxgame.utils.Variables;
+import de.undefinedhuman.sandboxgame.utils.Tools;
 
 public class EquipScreen extends Gui implements InvTarget {
 
@@ -20,7 +20,7 @@ public class EquipScreen extends Gui implements InvTarget {
 
     public EquipScreen() {
         super(GuiTemplate.SMALL_PANEL);
-        setScale(Variables.getInventoryWidth(GuiTemplate.SMALL_PANEL, 5), Variables.getInventoryHeight(GuiTemplate.SMALL_PANEL, 10));
+        setScale(Tools.getInventoryWidth(GuiTemplate.SMALL_PANEL, 5), Tools.getInventoryHeight(GuiTemplate.SMALL_PANEL, 10));
         Gui gui = new Gui("gui/preview/equip/Human-Preview.png");
         gui.set("r0.5", "r0.5", "p64", "p128").setOffsetY("p48").setCentered();
         addChild(gui);

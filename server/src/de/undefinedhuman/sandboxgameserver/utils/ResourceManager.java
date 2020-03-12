@@ -2,14 +2,14 @@ package de.undefinedhuman.sandboxgameserver.utils;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.sandboxgame.engine.file.FileReader;
+import de.undefinedhuman.sandboxgame.engine.file.FsFile;
+import de.undefinedhuman.sandboxgame.engine.file.Paths;
+import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgameserver.entity.EntityType;
 import de.undefinedhuman.sandboxgameserver.entity.ecs.ComponentBlueprint;
 import de.undefinedhuman.sandboxgameserver.entity.ecs.ComponentType;
 import de.undefinedhuman.sandboxgameserver.entity.ecs.blueprint.Blueprint;
-import de.undefinedhuman.sandboxgameserver.file.FileReader;
-import de.undefinedhuman.sandboxgameserver.file.FsFile;
-import de.undefinedhuman.sandboxgameserver.file.Paths;
-import de.undefinedhuman.sandboxgameserver.log.Log;
 
 public class ResourceManager {
 
@@ -44,7 +44,7 @@ public class ResourceManager {
 
         reader.close();
 
-        Log.instance.info("Loaded Entity Blueprint ID: " + id);
+        Log.info("Loaded Entity Blueprint ID: " + id);
 
         return blueprint;
 

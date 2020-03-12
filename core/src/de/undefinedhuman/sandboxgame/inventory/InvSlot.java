@@ -3,8 +3,8 @@ package de.undefinedhuman.sandboxgame.inventory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.gui.transforms.GuiTransform;
-import de.undefinedhuman.sandboxgame.utils.Variables;
 
 public class InvSlot extends Slot {
 

@@ -2,6 +2,7 @@ package de.undefinedhuman.sandboxgame.network.utils;
 
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.EntityManager;
 import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
@@ -10,7 +11,6 @@ import de.undefinedhuman.sandboxgame.network.packets.entity.ComponentPacket;
 import de.undefinedhuman.sandboxgame.network.packets.inventory.EquipPacket;
 import de.undefinedhuman.sandboxgame.network.packets.world.BlockPacket;
 import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
-import de.undefinedhuman.sandboxgame.utils.Variables;
 import de.undefinedhuman.sandboxgame.world.World;
 import de.undefinedhuman.sandboxgame.world.WorldManager;
 

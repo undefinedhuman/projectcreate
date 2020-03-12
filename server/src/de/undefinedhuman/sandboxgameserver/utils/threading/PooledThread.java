@@ -1,6 +1,6 @@
 package de.undefinedhuman.sandboxgameserver.utils.threading;
 
-import de.undefinedhuman.sandboxgameserver.log.Log;
+import de.undefinedhuman.sandboxgame.engine.log.Log;
 
 public class PooledThread extends Thread {
 
@@ -24,8 +24,7 @@ public class PooledThread extends Thread {
             try {
                 task = threadPool.getTask();
             } catch (InterruptedException ex) {
-                Log.instance.error("Thread " + name + " is interrupted!");
-                Log.instance.error(ex.getMessage());
+                Log.error("Thread " + name + " is interrupted:\n" + ex.getMessage());
             }
             if (task == null) return;
 

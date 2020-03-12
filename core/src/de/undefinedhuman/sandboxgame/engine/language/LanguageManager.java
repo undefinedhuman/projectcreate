@@ -5,8 +5,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 import de.undefinedhuman.sandboxgame.engine.config.SettingsManager;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
-import de.undefinedhuman.sandboxgame.utils.Manager;
-import de.undefinedhuman.sandboxgame.utils.Variables;
+import de.undefinedhuman.sandboxgame.engine.utils.Manager;
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 
 import java.util.HashMap;
 

@@ -5,8 +5,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Base64Coder;
-import de.undefinedhuman.sandboxgame.items.ItemManager;
-import de.undefinedhuman.sandboxgame.items.type.blocks.Block;
+import de.undefinedhuman.sandboxgame.engine.items.ItemManager;
+import de.undefinedhuman.sandboxgame.engine.items.type.blocks.Block;
 import de.undefinedhuman.sandboxgame.world.layer.topLayer.TopLayerManager;
 import de.undefinedhuman.sandboxgame.world.layer.topLayer.TopLayerType;
 

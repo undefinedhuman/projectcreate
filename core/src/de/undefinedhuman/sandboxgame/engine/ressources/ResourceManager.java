@@ -15,8 +15,8 @@ import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.entity.EntityType;
 import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
 import de.undefinedhuman.sandboxgame.entity.ecs.blueprint.Blueprint;
-import de.undefinedhuman.sandboxgame.items.Item;
-import de.undefinedhuman.sandboxgame.items.ItemType;
+import de.undefinedhuman.sandboxgame.engine.items.Item;
+import de.undefinedhuman.sandboxgame.engine.items.ItemType;
 
 import java.util.HashMap;
 

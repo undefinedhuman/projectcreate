@@ -3,11 +3,11 @@ package de.undefinedhuman.sandboxgame.inventory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.GuiComponent;
 import de.undefinedhuman.sandboxgame.gui.text.Text;
-import de.undefinedhuman.sandboxgame.items.ItemManager;
-import de.undefinedhuman.sandboxgame.utils.Variables;
+import de.undefinedhuman.sandboxgame.engine.items.ItemManager;
 
 public class InvItem extends Gui {
 

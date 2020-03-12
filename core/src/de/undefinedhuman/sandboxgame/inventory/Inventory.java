@@ -3,10 +3,11 @@ package de.undefinedhuman.sandboxgame.inventory;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
-import de.undefinedhuman.sandboxgame.items.ItemManager;
-import de.undefinedhuman.sandboxgame.utils.Variables;
+import de.undefinedhuman.sandboxgame.engine.items.ItemManager;
+import de.undefinedhuman.sandboxgame.utils.Tools;
 
 public class Inventory extends Gui implements InvTarget {
 
@@ -26,7 +27,7 @@ public class Inventory extends Gui implements InvTarget {
         this.col = col;
         inventory = new InvSlot[row][col];
         this.offset.set(offset != null ? offset : new Vector2(template.cornerSize, template.cornerSize));
-        setScale(Variables.getInventoryWidth(this.offset.x, col), Variables.getInventoryHeight(this.offset.y, row));
+        setScale(Tools.getInventoryWidth(this.offset.x, col), Tools.getInventoryHeight(this.offset.y, row));
 
         for (int i = 0; i < inventory.length; i++)
             for (int j = 0; j < inventory[i].length; j++) {

@@ -3,8 +3,8 @@ package de.undefinedhuman.sandboxgame.background;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.sandboxgame.utils.Manager;
-import de.undefinedhuman.sandboxgame.utils.Variables;
+import de.undefinedhuman.sandboxgame.engine.utils.Manager;
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 
 public class BackgroundManager extends Manager {
 

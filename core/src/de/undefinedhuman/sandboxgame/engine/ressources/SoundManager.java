@@ -1,7 +1,7 @@
 package de.undefinedhuman.sandboxgame.engine.ressources;
 
 import com.badlogic.gdx.audio.Sound;
-import de.undefinedhuman.sandboxgame.utils.Manager;
+import de.undefinedhuman.sandboxgame.engine.utils.Manager;
 
 import java.util.HashMap;
 

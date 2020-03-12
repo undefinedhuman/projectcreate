@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Listener;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
+import de.undefinedhuman.sandboxgame.engine.utils.Manager;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
 import de.undefinedhuman.sandboxgame.entity.ecs.components.mouse.AngleComponent;
@@ -13,7 +14,6 @@ import de.undefinedhuman.sandboxgame.network.packets.PacketManager;
 import de.undefinedhuman.sandboxgame.network.packets.entity.ComponentPacket;
 import de.undefinedhuman.sandboxgame.network.utils.PacketUtils;
 import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
-import de.undefinedhuman.sandboxgame.utils.Manager;
 import de.undefinedhuman.sandboxgame.utils.Timer;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 

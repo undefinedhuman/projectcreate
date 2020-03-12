@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.EntityManager;
 import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
@@ -12,7 +13,6 @@ import de.undefinedhuman.sandboxgame.entity.ecs.components.collision.CollisionCo
 import de.undefinedhuman.sandboxgame.entity.ecs.components.sprite.SpriteComponent;
 import de.undefinedhuman.sandboxgame.entity.ecs.components.sprite.SpriteData;
 import de.undefinedhuman.sandboxgame.utils.Tools;
-import de.undefinedhuman.sandboxgame.utils.Variables;
 
 import java.util.ArrayList;
 import java.util.HashMap;

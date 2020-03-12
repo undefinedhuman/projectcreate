@@ -1,12 +1,13 @@
 package de.undefinedhuman.sandboxgame.crafting.gui;
 
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.GuiManager;
 import de.undefinedhuman.sandboxgame.gui.elements.MenuSlot;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
-import de.undefinedhuman.sandboxgame.items.ItemType;
-import de.undefinedhuman.sandboxgame.utils.Variables;
+import de.undefinedhuman.sandboxgame.engine.items.ItemType;
+import de.undefinedhuman.sandboxgame.utils.Tools;
 
 public class CraftingInventory extends Gui {
 
@@ -14,7 +15,7 @@ public class CraftingInventory extends Gui {
 
     public CraftingInventory() {
         super(GuiTemplate.SMALL_PANEL);
-        set("r0.5", "r0.5", Variables.getInventoryWidth(GuiTemplate.SMALL_PANEL, 15), Variables.getInventoryHeight(GuiTemplate.SMALL_PANEL, 10)).setCentered();
+        set("r0.5", "r0.5", Tools.getInventoryWidth(GuiTemplate.SMALL_PANEL, 15), Tools.getInventoryHeight(GuiTemplate.SMALL_PANEL, 10)).setCentered();
         Gui menuBackground = createBackground("p" + getBaseCornerSize(), "r1", 1);
         menuBackground.setOffsetY("p" + (-getBaseCornerSize())).setCenteredY(-1);
         Gui recipeBackground = createBackground("p" + getBaseCornerSize(), "p" + getBaseCornerSize(), 8);
@@ -26,7 +27,7 @@ public class CraftingInventory extends Gui {
 
     private Gui createBackground(String x, String y, int row) {
         Gui gui = new Gui(GuiTemplate.HOTBAR);
-        gui.set(x, y, Variables.getInventoryWidth(Variables.HOTBAR_OFFSET, 7), Variables.getInventoryHeight(6, row));
+        gui.set(x, y, Tools.getInventoryWidth(Variables.HOTBAR_OFFSET, 7), Tools.getInventoryHeight(6, row));
         return gui;
     }
 

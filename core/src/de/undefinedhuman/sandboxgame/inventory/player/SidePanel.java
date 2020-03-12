@@ -1,10 +1,11 @@
 package de.undefinedhuman.sandboxgame.inventory.player;
 
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.elements.MenuSlot;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
-import de.undefinedhuman.sandboxgame.utils.Variables;
+import de.undefinedhuman.sandboxgame.utils.Tools;
 
 public class SidePanel extends Gui {
 
@@ -14,7 +15,7 @@ public class SidePanel extends Gui {
     public SidePanel() {
 
         super(GuiTemplate.SMALL_PANEL);
-        set("r1", "r0.5", Variables.getInventoryWidth(GuiTemplate.SMALL_PANEL, 1), Variables.getInventoryHeight(GuiTemplate.SMALL_PANEL, 10)).setOffsetX("p-25").setCenteredX(-1).setCenteredY();
+        set("r1", "r0.5", Tools.getInventoryWidth(GuiTemplate.SMALL_PANEL, 1), Tools.getInventoryHeight(GuiTemplate.SMALL_PANEL, 10)).setOffsetX("p-25").setCenteredX(-1).setCenteredY();
 
         for (int i = 0; i < buttons.length; i++) {
 

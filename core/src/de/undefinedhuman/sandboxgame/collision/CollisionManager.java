@@ -1,12 +1,12 @@
 package de.undefinedhuman.sandboxgame.collision;
 
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
 import de.undefinedhuman.sandboxgame.entity.ecs.components.collision.CollisionComponent;
-import de.undefinedhuman.sandboxgame.items.ItemManager;
-import de.undefinedhuman.sandboxgame.items.type.blocks.Block;
-import de.undefinedhuman.sandboxgame.utils.Variables;
+import de.undefinedhuman.sandboxgame.engine.items.ItemManager;
+import de.undefinedhuman.sandboxgame.engine.items.type.blocks.Block;
 import de.undefinedhuman.sandboxgame.world.World;
 
 public class CollisionManager {

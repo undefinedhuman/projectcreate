@@ -8,8 +8,8 @@ import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.inventory.InvItem;
 import de.undefinedhuman.sandboxgame.inventory.Inventory;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
-import de.undefinedhuman.sandboxgame.items.Item;
-import de.undefinedhuman.sandboxgame.items.ItemManager;
+import de.undefinedhuman.sandboxgame.engine.items.Item;
+import de.undefinedhuman.sandboxgame.engine.items.ItemManager;
 import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
 
 public class Selector extends Inventory {

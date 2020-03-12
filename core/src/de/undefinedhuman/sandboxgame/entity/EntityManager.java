@@ -2,11 +2,11 @@ package de.undefinedhuman.sandboxgame.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.entity.chunk.Chunk;
 import de.undefinedhuman.sandboxgame.entity.chunk.ChunkPosition;
 import de.undefinedhuman.sandboxgame.entity.ecs.System;
 import de.undefinedhuman.sandboxgame.entity.ecs.system.*;
-import de.undefinedhuman.sandboxgame.utils.Variables;
 import de.undefinedhuman.sandboxgame.world.World;
 
 import java.util.ArrayList;

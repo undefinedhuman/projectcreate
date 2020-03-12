@@ -1,9 +1,9 @@
 package de.undefinedhuman.sandboxgame.gui.elements;
 
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.event.ClickEvent;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
-import de.undefinedhuman.sandboxgame.utils.Variables;
 
 public abstract class MenuSlot extends Gui {
 

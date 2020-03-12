@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.sandboxgame.engine.ressources.font.Font;
+import de.undefinedhuman.sandboxgame.engine.utils.Manager;
 import de.undefinedhuman.sandboxgame.equip.EquipScreen;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
@@ -12,9 +13,8 @@ import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
 import de.undefinedhuman.sandboxgame.inventory.player.DragAndDrop;
 import de.undefinedhuman.sandboxgame.inventory.player.Selector;
 import de.undefinedhuman.sandboxgame.inventory.player.SidePanel;
-import de.undefinedhuman.sandboxgame.items.ItemManager;
+import de.undefinedhuman.sandboxgame.engine.items.ItemManager;
 import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
-import de.undefinedhuman.sandboxgame.utils.Manager;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
 import java.util.Set;

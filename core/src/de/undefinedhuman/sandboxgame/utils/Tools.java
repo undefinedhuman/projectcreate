@@ -15,10 +15,12 @@ import de.undefinedhuman.sandboxgame.engine.file.FileUtils;
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.file.Paths;
 import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
 import de.undefinedhuman.sandboxgame.entity.ecs.components.equip.EquipComponent;
 import de.undefinedhuman.sandboxgame.gui.Gui;
+import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
 import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
 import de.undefinedhuman.sandboxgame.world.Noise;
@@ -247,7 +249,7 @@ public class Tools {
         for (int i = 4; i < pixels.length; i += 4) pixels[i - 1] = (byte) 255;
         Pixmap pixmap = new Pixmap(Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), Pixmap.Format.RGBA8888);
         BufferUtils.copy(pixels, 0, pixmap.getPixels(), pixels.length);
-        PixmapIO.writePNG(Gdx.files.external(Paths.SCREENSHOT_PATH.getPath() + "ScreenShot_" + Tools.getTime() + ".png"), pixmap);
+        PixmapIO.writePNG(Gdx.files.external(Paths.SCREENSHOT_PATH.getPath() + "ScreenShot_" + getTime() + ".png"), pixmap);
         pixmap.dispose();
     }
 
@@ -448,6 +450,22 @@ public class Tools {
 
     public static String appendSToString(Object[] objects) {
         return objects.length > 1 ? "s" : "";
+    }
+
+    public static String getInventoryWidth(GuiTemplate template, int col) {
+        return getInventoryWidth(template.cornerSize, col);
+    }
+
+    public static String getInventoryWidth(float offsetX, int col) {
+        return "p" + (offsetX * 2 + (Variables.SLOT_SIZE * col + Variables.SLOT_SPACE * (col - 1)));
+    }
+
+    public static String getInventoryHeight(GuiTemplate template, int row) {
+        return getInventoryHeight(template.cornerSize, row);
+    }
+
+    public static String getInventoryHeight(float offsetY, int row) {
+        return "p" + (offsetY * 2 + (Variables.SLOT_SIZE * row + Variables.SLOT_SPACE * (row - 1)));
     }
 
 }

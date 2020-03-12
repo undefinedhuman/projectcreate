@@ -1,7 +1,7 @@
 package de.undefinedhuman.sandboxgameserver.entity.ecs;
 
+import de.undefinedhuman.sandboxgame.engine.file.FileReader;
 import de.undefinedhuman.sandboxgameserver.entity.Entity;
-import de.undefinedhuman.sandboxgameserver.file.FileReader;
 
 public abstract class ComponentBlueprint {
 

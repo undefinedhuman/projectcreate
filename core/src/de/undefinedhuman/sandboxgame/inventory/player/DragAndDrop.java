@@ -9,7 +9,7 @@ import de.undefinedhuman.sandboxgame.inventory.InvItem;
 import de.undefinedhuman.sandboxgame.inventory.InvTarget;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
 import de.undefinedhuman.sandboxgame.inventory.Slot;
-import de.undefinedhuman.sandboxgame.items.drop.DropItemManager;
+import de.undefinedhuman.sandboxgame.engine.items.drop.DropItemManager;
 import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
 import de.undefinedhuman.sandboxgame.utils.Mouse;
 import de.undefinedhuman.sandboxgame.utils.Tools;

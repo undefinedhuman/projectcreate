@@ -3,12 +3,12 @@ package de.undefinedhuman.sandboxgame.entity.ecs.components.transform;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.file.LineWriter;
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.EntityManager;
 import de.undefinedhuman.sandboxgame.entity.chunk.ChunkPosition;
 import de.undefinedhuman.sandboxgame.network.components.NetworkComponent;
 import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
-import de.undefinedhuman.sandboxgame.utils.Variables;
 import de.undefinedhuman.sandboxgame.world.World;
 
 public class Transform implements NetworkComponent {

@@ -10,7 +10,6 @@ public enum Paths {
     Paths(String path) {
         this.path = path;
     }
-
     public String getPath() {
         return path;
     }

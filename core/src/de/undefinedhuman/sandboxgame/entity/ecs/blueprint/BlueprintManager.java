@@ -3,7 +3,7 @@ package de.undefinedhuman.sandboxgame.entity.ecs.blueprint;
 
 import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.engine.ressources.ResourceManager;
-import de.undefinedhuman.sandboxgame.utils.Manager;
+import de.undefinedhuman.sandboxgame.engine.utils.Manager;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
 import java.util.Arrays;
