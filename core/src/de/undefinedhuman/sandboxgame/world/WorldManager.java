@@ -5,8 +5,8 @@ import de.undefinedhuman.sandboxgame.collision.CollisionManager;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.EntityManager;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
-import de.undefinedhuman.sandboxgame.engine.items.ItemManager;
-import de.undefinedhuman.sandboxgame.engine.items.drop.DropItemManager;
+import de.undefinedhuman.sandboxgame.item.ItemManager;
+import de.undefinedhuman.sandboxgame.item.drop.DropItemManager;
 import de.undefinedhuman.sandboxgame.engine.items.type.blocks.Block;
 import de.undefinedhuman.sandboxgame.engine.items.type.tools.Pickaxe;
 import de.undefinedhuman.sandboxgame.network.ClientManager;
@@ -50,7 +50,7 @@ public class WorldManager {
                 if (oldPickaxeID == pickaxe.id) {
 
                     this.destroyTime += delta;
-                    if (destroyTime > pickaxe.speed) canDestroy = true;
+                    if (destroyTime > pickaxe.speed.getFloat()) canDestroy = true;
 
                 } else setDestroyParameter(oldPickaxeID);
 
@@ -86,7 +86,7 @@ public class WorldManager {
 
                 if (main) {
 
-                    if (currentBlock.id == 0 || currentBlock.fluid) {
+                    if (currentBlock.id == 0) {
 
                         boolean canBePlaced = true;
                         for (Entity entity : EntityManager.instance.getEntitiesForCollision())
@@ -97,16 +97,16 @@ public class WorldManager {
 
                         if (canBePlaced) {
 
-                            if (block.needBack && ((Block) ItemManager.instance.getItem(getBlock(false, blockPos))).collide)
+                            if (block.needBack.getBoolean() && ((Block) ItemManager.instance.getItem(getBlock(false, blockPos))).collide.getBoolean())
                                 placeBlock(true, blockPos, (byte) id, true);
-                            if (!block.needBack && (isBlockInRange(true, blockPos) || ((Block) ItemManager.instance.getItem(getBlock(false, blockPos))).collide))
+                            if (!block.needBack.getBoolean() && (isBlockInRange(true, blockPos) || ((Block) ItemManager.instance.getItem(getBlock(false, blockPos))).collide.getBoolean()))
                                 placeBlock(true, blockPos, (byte) id, true);
 
                         }
 
                     }
 
-                } else if (getBlock(false, blockPos) == 0 && block.canBePlacedInBackLayer && (isBlockInRange(false, blockPos) || (currentBlock.id != 0 && currentBlock.collide)))
+                } else if (getBlock(false, blockPos) == 0 && block.canBePlacedInBackLayer.getBoolean() && (isBlockInRange(false, blockPos) || (currentBlock.id != 0 && currentBlock.collide.getBoolean())))
                     placeBlock(false, blockPos, (byte) id, true);
 
             }
@@ -137,10 +137,10 @@ public class WorldManager {
 
         boolean blockInRange = false;
         int below = getBlock(main, new Vector2(0, -1).add(position)), above = getBlock(main, new Vector2(0, 1).add(position)), left = getBlock(main, new Vector2(-1, 0).add(position)), right = getBlock(main, new Vector2(1, 0).add(position));
-        if (below != 0 || ((Block) ItemManager.instance.getItem(below)).collide) blockInRange = true;
-        if (above != 0 || ((Block) ItemManager.instance.getItem(above)).collide && !blockInRange) blockInRange = true;
-        if (left != 0 || ((Block) ItemManager.instance.getItem(left)).collide && !blockInRange) blockInRange = true;
-        if (right != 0 || ((Block) ItemManager.instance.getItem(right)).collide && !blockInRange) blockInRange = true;
+        if (below != 0 || ((Block) ItemManager.instance.getItem(below)).collide.getBoolean()) blockInRange = true;
+        if (above != 0 || ((Block) ItemManager.instance.getItem(above)).collide.getBoolean() && !blockInRange) blockInRange = true;
+        if (left != 0 || ((Block) ItemManager.instance.getItem(left)).collide.getBoolean() && !blockInRange) blockInRange = true;
+        if (right != 0 || ((Block) ItemManager.instance.getItem(right)).collide.getBoolean() && !blockInRange) blockInRange = true;
 
         return blockInRange;
 
@@ -249,7 +249,7 @@ public class WorldManager {
     }
 
     public boolean isTransparent(Block b) {
-        return b != null && (b.id == 0 || !b.isFull);
+        return b != null && (b.id == 0 || !b.isFull.getBoolean());
     }
 
     public void destroyBlock(boolean main) {
@@ -260,12 +260,12 @@ public class WorldManager {
             Vector2 blockPos = Tools.convertToWorldCoords(Tools.getWorldPos(GameManager.gameCamera, Mouse.getMouseCoords())), playerCenter = Tools.convertToWorldCoords(new Vector2().add(GameManager.instance.player.transform.getPosition()).add(GameManager.instance.player.transform.getCenter()));
             Block currentBlock = (Block) ItemManager.instance.getItem(getBlock(main, blockPos));
 
-            if (currentBlock.id != 0 && isInRange(blockPos, playerCenter, pickaxe.range) && !currentBlock.unbreakable) {
+            if (currentBlock.id != 0 && isInRange(blockPos, playerCenter, pickaxe.range.getInt()) && !currentBlock.unbreakable.getBoolean()) {
 
                 if ((oldBreakPos == null || oldBreakPos != blockPos) || oldLayer != main) {
 
                     oldBreakPos = blockPos;
-                    currentDurability = currentBlock.durability;
+                    currentDurability = currentBlock.durability.getFloat();
                     oldLayer = main;
 
                 }
@@ -302,7 +302,7 @@ public class WorldManager {
     }
 
     public boolean isTransparent(byte b) {
-        return b == 0 || !((Block) ItemManager.instance.getItem(b)).isFull;
+        return b == 0 || !((Block) ItemManager.instance.getItem(b)).isFull.getBoolean();
     }
 
 }

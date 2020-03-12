@@ -5,7 +5,6 @@ public class Variables {
     public static final float deltaMultiplier = 1.0f;
     public static final String SEPARATOR = ";", FILE_SEPARATOR = "/";
     public static final String DEFAULT_LANGUAGE = "eu_DE";
-    public static final String LANGUAGES_FILE = "language/languages.xml";
     public static final boolean renderHitboxes = false;
 
     // World

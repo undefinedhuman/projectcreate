@@ -31,8 +31,7 @@ public class FsFile {
         try {
             createNewFile(isDirectory);
         } catch (IOException ex) {
-            Log.error(ex.getMessage());
-            Log.instance.crash();
+            Log.instance.crash(ex.getMessage());
         }
     }
 
@@ -61,16 +60,16 @@ public class FsFile {
         return new FileReader(this, base);
     }
 
-    public FileReader getFileReader(boolean base, String seperator) {
-        return new FileReader(this, base, seperator);
+    public FileReader getFileReader(boolean base, String separator) {
+        return new FileReader(this, base, separator);
     }
 
     public FileWriter getFileWriter(boolean base) {
         return new FileWriter(this, base);
     }
 
-    public FileWriter getFileWriter(boolean base, String seperator) {
-        return new FileWriter(this, base, seperator);
+    public FileWriter getFileWriter(boolean base, String separator) {
+        return new FileWriter(this, base, separator);
     }
 
     public String getName() {

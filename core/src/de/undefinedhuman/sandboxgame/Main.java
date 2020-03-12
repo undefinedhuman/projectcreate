@@ -19,7 +19,7 @@ import de.undefinedhuman.sandboxgame.entity.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.sandboxgame.equip.EquipManager;
 import de.undefinedhuman.sandboxgame.gui.GuiManager;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
-import de.undefinedhuman.sandboxgame.engine.items.ItemManager;
+import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.network.ClientManager;
 import de.undefinedhuman.sandboxgame.screen.TestScreen;
 import de.undefinedhuman.sandboxgame.screen.gamescreen.GameScreen;

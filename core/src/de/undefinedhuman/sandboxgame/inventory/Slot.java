@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.engine.items.Item;
-import de.undefinedhuman.sandboxgame.engine.items.ItemManager;
+import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.engine.items.ItemType;
 
 public abstract class Slot extends Gui {
@@ -38,8 +38,8 @@ public abstract class Slot extends Gui {
         if (id != 0 && amount != 0) {
 
             Item type = ItemManager.instance.getItem(id);
-            int maxAmount = type.maxAmount;
-            boolean stackable = type.isStackable;
+            int maxAmount = type.maxAmount.getInt();
+            boolean stackable = type.isStackable.getBoolean();
 
             if (invItem != null) {
                 if (id == invItem.getID()) {

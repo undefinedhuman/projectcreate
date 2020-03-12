@@ -20,7 +20,7 @@ import de.undefinedhuman.sandboxgame.entity.ecs.components.sprite.SpriteData;
 import de.undefinedhuman.sandboxgame.entity.ecs.components.stats.health.HealthComponent;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
 import de.undefinedhuman.sandboxgame.engine.items.Item;
-import de.undefinedhuman.sandboxgame.engine.items.ItemManager;
+import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.engine.items.ItemType;
 import de.undefinedhuman.sandboxgame.engine.items.type.weapons.Sword;
 import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
@@ -109,7 +109,7 @@ public class ArmSystem extends System {
 
     private void calculateShake(RightArmComponent component, Item item) {
 
-        if (InventoryManager.instance.canUseItem() && item.canShake) {
+        if (InventoryManager.instance.canUseItem() && item.canShake.getBoolean()) {
 
             if (Gdx.input.isButtonPressed(0) || Gdx.input.isButtonPressed(1)) {
 
@@ -130,13 +130,13 @@ public class ArmSystem extends System {
 
         if (InventoryManager.instance.canUseItem()) {
 
-            if (!Gdx.input.isButtonPressed(0) && combatComponent.currentDamage > sword.damage / 2) {
+            if (!Gdx.input.isButtonPressed(0) && combatComponent.currentDamage > sword.damage.getFloat() / 2) {
 
                 if (combatComponent.charged || combatComponent.canAttack) {
 
                     combatComponent.charged = false;
                     combatComponent.canAttack = true;
-                    combatComponent.currentDamage -= Main.delta * sword.damage * 24 / 30;
+                    combatComponent.currentDamage -= Main.delta * sword.damage.getFloat() * 24 / 30;
                     currentAngle = Tools.swordLerpTurned(angleComponentAngle, 0, 24, !isTurned);
 
                     ArrayList<Entity> probablyHitEntity = EntityManager.instance.getEntityInRangeForCollision(combatEntity.transform.getPosition(), 200);
@@ -148,7 +148,7 @@ public class ArmSystem extends System {
                             SpriteData data = ((SpriteComponent) combatEntity.getComponent(ComponentType.SPRITE)).getSpriteData("ItemHitbox");
                             if (Tools.collideSAT(data.getSprite(), ((CollisionComponent) entity.getComponent(ComponentType.COLLISION)).getVertices(entity.transform.getPosition()))) {
 
-                                ((HealthComponent) entity.getComponent(ComponentType.HEALTH)).damage(sword.damage);
+                                ((HealthComponent) entity.getComponent(ComponentType.HEALTH)).damage(sword.damage.getFloat());
                                 combatComponent.touchedEntityList.add(entity);
 
                             }
@@ -165,16 +165,16 @@ public class ArmSystem extends System {
 
                 if (Gdx.input.isButtonPressed(0)) {
 
-                    currentAngle = Tools.swordLerpTurned(angleComponentAngle, 180, 16 * sword.speed, isTurned);
+                    currentAngle = Tools.swordLerpTurned(angleComponentAngle, 180, 16 * sword.speed.getFloat(), isTurned);
                     if (currentAngle == 180) combatComponent.charged = true;
-                    combatComponent.currentDamage += 16 * sword.speed * Main.delta * sword.damage / 10;
+                    combatComponent.currentDamage += 16 * sword.speed.getFloat() * Main.delta * sword.damage.getFloat() / 10;
 
-                } else combatComponent.currentDamage -= Main.delta * sword.damage;
+                } else combatComponent.currentDamage -= Main.delta * sword.damage.getFloat();
 
             }
 
-            if (combatComponent.currentDamage > sword.damage * 1.5f)
-                combatComponent.currentDamage = sword.damage * 1.5f;
+            if (combatComponent.currentDamage > sword.damage.getFloat() * 1.5f)
+                combatComponent.currentDamage = sword.damage.getFloat() * 1.5f;
 
         }
 

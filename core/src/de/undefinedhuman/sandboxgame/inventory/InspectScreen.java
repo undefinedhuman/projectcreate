@@ -7,7 +7,7 @@ import de.undefinedhuman.sandboxgame.gui.text.Text;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.RelativeConstraint;
 import de.undefinedhuman.sandboxgame.engine.items.Item;
-import de.undefinedhuman.sandboxgame.engine.items.ItemManager;
+import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
 public class InspectScreen extends Gui {
@@ -20,7 +20,7 @@ public class InspectScreen extends Gui {
         super(GuiTemplate.SMALL_PANEL);
         setScale(Tools.getInventoryWidth(GuiTemplate.SMALL_PANEL, 5), Tools.getInventoryHeight(GuiTemplate.SMALL_PANEL, 10));
         Item item = new ItemManager().getItem(13);
-        previewImage = new Gui(item.inspectTexture);
+        previewImage = new Gui(item.previewTexture.getString());
         previewImage.set("r0.5", "r0.85", "p32", "p32").setCentered();
         addChild(previewImage);
         nameText = new Text(item.name).setFont(Font.Title).setLineLength(new RelativeConstraint(0.75f));
@@ -35,7 +35,7 @@ public class InspectScreen extends Gui {
     }
 
     public void openInspectScreen(Item item) {
-        previewImage.setTexture(item.inspectTexture);
+        previewImage.setTexture(item.previewTexture.getString());
         nameText.setText(item.name);
         nameText.setColor(Color.RED);
         descriptionText.setText(item.desc);

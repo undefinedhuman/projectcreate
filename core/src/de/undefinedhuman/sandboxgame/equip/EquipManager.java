@@ -7,7 +7,7 @@ import de.undefinedhuman.sandboxgame.entity.ecs.components.equip.EquipComponent;
 import de.undefinedhuman.sandboxgame.entity.ecs.components.sprite.SpriteComponent;
 import de.undefinedhuman.sandboxgame.entity.ecs.components.sprite.SpriteData;
 import de.undefinedhuman.sandboxgame.engine.items.Item;
-import de.undefinedhuman.sandboxgame.engine.items.ItemManager;
+import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.engine.items.ItemType;
 import de.undefinedhuman.sandboxgame.engine.items.type.Armor.Armor;
 import de.undefinedhuman.sandboxgame.network.ClientManager;
@@ -26,14 +26,16 @@ public class EquipManager {
             ClientManager.instance.sendTCP(PacketUtils.createEquipPacket(entity, armor ? getItemIndex(ItemManager.instance.getItem(id).type) : 0, id, true, armor));
     }
 
+    // TODO Look into the Vector(0, 0) hitbox Vector in the last line
+
     public void equipItem(Entity entity, int id, boolean armor) {
         SpriteComponent spriteComponent = (SpriteComponent) entity.getComponent(ComponentType.SPRITE);
         EquipComponent equipComponent = (EquipComponent) entity.getComponent(ComponentType.EQUIP);
         Item item = ItemManager.instance.getItem(id);
         equipComponent.setItemID(armor ? getItemIndex(item.type) : 0, id);
-        setSpriteData(spriteComponent, armor ? Tools.capitalizeFirstLetter(item.type.name()) : "Item", item.useIconAsTexture ? item.iconTexture : item.itemTexture, item.useIconAsTexture ? new Vector2(16, 16) : new Vector2(120, 74), true);
-        if (armor) setVisible(spriteComponent, false, ((Armor) item).inVisibleSprites);
-        else setSpriteData(spriteComponent, "ItemHitbox", null, item.hitboxSize, false);
+        setSpriteData(spriteComponent, armor ? Tools.capitalizeFirstLetter(item.type.name()) : "Item", item.useIconAsHandTexture.getBoolean() ? item.iconTexture.getString() : item.itemTexture.getString(), item.useIconAsHandTexture.getBoolean() ? new Vector2(16, 16) : new Vector2(120, 74), true);
+        if (armor) setVisible(spriteComponent, false, ((Armor) item).inVisibleSprites.getStringArray());
+        else setSpriteData(spriteComponent, "ItemHitbox", null, new Vector2(0, 0), false);
     }
 
     private int getItemIndex(ItemType type) {
@@ -64,7 +66,7 @@ public class EquipManager {
         Item item = ItemManager.instance.getItem(id);
         equipComponent.setItemID(armor ? getItemIndex(item.type) : 0, -1);
         setVisible(spriteComponent, false, armor ? Tools.capitalizeFirstLetter(item.type.name()) : "Item");
-        if (armor) setVisible(spriteComponent, true, ((Armor) item).inVisibleSprites);
+        if (armor) setVisible(spriteComponent, true, ((Armor) item).inVisibleSprites.getStringArray());
     }
 
     public void checkEquip(Entity entity) {

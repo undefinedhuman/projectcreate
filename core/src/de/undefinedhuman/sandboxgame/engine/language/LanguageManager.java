@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 import de.undefinedhuman.sandboxgame.engine.config.SettingsManager;
+import de.undefinedhuman.sandboxgame.engine.file.Paths;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
@@ -36,7 +37,7 @@ public class LanguageManager extends Manager {
         try {
 
             XmlReader reader = new XmlReader();
-            XmlReader.Element root = reader.parse(Gdx.files.internal(Variables.LANGUAGES_FILE).reader("UTF-8"));
+            XmlReader.Element root = reader.parse(Gdx.files.internal(Paths.LANGUAGE_PATH.getPath() + "languages.xml").reader("UTF-8"));
             Array<XmlReader.Element> languages = root.getChildrenByName("language");
             for (int i = 0; i < languages.size; ++i) {
                 XmlReader.Element language = languages.get(i);

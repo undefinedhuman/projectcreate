@@ -5,7 +5,7 @@ import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
 import de.undefinedhuman.sandboxgame.entity.ecs.components.collision.CollisionComponent;
-import de.undefinedhuman.sandboxgame.engine.items.ItemManager;
+import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.engine.items.type.blocks.Block;
 import de.undefinedhuman.sandboxgame.world.World;
 
@@ -52,9 +52,7 @@ public class CollisionManager {
     }
 
     public static boolean collide(byte id) {
-
-        return ((Block) ItemManager.instance.getItem(id)).collide;
-
+        return ((Block) ItemManager.instance.getItem(id)).collide.getBoolean();
     }
 
     public static boolean collideHike(Vector2 position, float width, float height) {

@@ -81,10 +81,11 @@ project(":engine") {
     }
 }
 
-project(":engine") {
+project(":editor") {
     apply plugin: "java"
 
     dependencies {
+        compile project(":engine")
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"

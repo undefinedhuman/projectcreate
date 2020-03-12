@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
-import de.undefinedhuman.sandboxgame.engine.items.ItemManager;
+import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
 public class Inventory extends Gui implements InvTarget {
@@ -73,9 +73,9 @@ public class Inventory extends Gui implements InvTarget {
                 InvSlot slot = inventory[i][j];
 
                 if (slot.getItem() != null) {
-                    if (slot.getItem().getID() == id && ItemManager.instance.getItem(slot.getItem().getID()).isStackable)
-                        localAmount += ItemManager.instance.getItem(slot.getItem().getID()).maxAmount - slot.getItem().getAmount();
-                } else localAmount += ItemManager.instance.getItem(id).maxAmount;
+                    if (slot.getItem().getID() == id && ItemManager.instance.getItem(slot.getItem().getID()).isStackable.getBoolean())
+                        localAmount += ItemManager.instance.getItem(slot.getItem().getID()).maxAmount.getInt() - slot.getItem().getAmount();
+                } else localAmount += ItemManager.instance.getItem(id).maxAmount.getInt();
 
             }
 
@@ -91,7 +91,7 @@ public class Inventory extends Gui implements InvTarget {
                 InvSlot slot = inventory[i][j];
 
                 if (slot.getItem() != null) {
-                    if (slot.getItem().getID() == id && ItemManager.instance.getItem(slot.getItem().getID()).isStackable && slot.getItem().getAmount() < ItemManager.instance.getItem(slot.getItem().getID()).maxAmount)
+                    if (slot.getItem().getID() == id && ItemManager.instance.getItem(slot.getItem().getID()).isStackable.getBoolean() && slot.getItem().getAmount() < ItemManager.instance.getItem(slot.getItem().getID()).maxAmount.getInt())
                         return slot;
                 } else return slot;
 

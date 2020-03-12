@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.sandboxgame.Main;
 import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.utils.Tools;
@@ -15,9 +16,20 @@ public class BackgroundLayer {
     private Vector2 initialSize, size;
     private int currentTime = 1, nextTime = 2, transition = Variables.HOUR_LENGTH / 2;
 
+    private boolean background = true;
+    private String texture;
+
     public BackgroundLayer(Vector2 size) {
         this.initialSize = size;
         currentX = -size.x;
+    }
+
+    public BackgroundLayer(Vector2 size, String texture) {
+        this.initialSize = size;
+        currentX = -size.x;
+        background = false;
+        this.texture = texture;
+        TextureManager.instance.addTexture(texture);
     }
 
     public void resize(int width, int height) {
@@ -26,7 +38,8 @@ public class BackgroundLayer {
 
     private void setSize(int height) {
         int scale = (int) Math.ceil(height / initialSize.y);
-        this.size = new Vector2(initialSize.x * scale, initialSize.y * scale);
+        // TODO temp
+        this.size = new Vector2(initialSize.x * Main.guiScale, initialSize.y * Main.guiScale);
     }
 
     public void update(float delta, float speed) {
@@ -58,11 +71,17 @@ public class BackgroundLayer {
         float renderX = currentX;
         do {
             Color batchColor = batch.getColor();
-            renderLayer(batch, camera, currentTime, renderX, 1 - blendFactor);
-            renderLayer(batch, camera, nextTime, renderX, blendFactor);
+            if(background) {
+                renderLayer(batch, camera, currentTime, renderX, 1 - blendFactor);
+                renderLayer(batch, camera, nextTime, renderX, blendFactor);
+            } else batch.draw(TextureManager.instance.getTexture(texture), (camera != null ? camera.position.x - camera.viewportWidth / 2 : 0) + renderX, 0, size.x, size.y);
             batch.setColor(batchColor);
             renderX += size.x;
-        }while (renderX <= Gdx.graphics.getWidth());
+        } while (renderX <= Gdx.graphics.getWidth());
+    }
+
+    public void delete() {
+        if(!background) TextureManager.instance.removeTexture(texture);
     }
 
     private void renderLayer(SpriteBatch batch, OrthographicCamera camera, int id, float renderX, float blendFactor) {
