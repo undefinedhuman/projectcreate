@@ -147,7 +147,7 @@ public class GameManager {
 
     public void render() {
 
-        guiViewport.apply();
+        //guiViewport.apply();
         guiBatch.setProjectionMatrix(guiCamera.combined);
         guiBatch.begin();
         BackgroundManager.instance.render(guiBatch, guiCamera);
