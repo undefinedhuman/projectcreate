@@ -3,6 +3,7 @@ package de.undefinedhuman.sandboxgame.background;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.sandboxgame.Main;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
@@ -41,7 +42,7 @@ public class BackgroundManager extends Manager {
         background.update(delta, Variables.HOUR_LENGTH);
         MovementComponent movement = (MovementComponent) GameManager.instance.player.getComponent(ComponentType.MOVEMENT);
         if(movement != null)
-            mountain.update(delta, (movement.moveLeft ? 1f : movement.moveRight ? -1f : 0) * movement.getSpeed() * 2f);
+            mountain.update(delta, (movement.moveLeft ? 1f : movement.moveRight ? -1f : 0) * movement.getSpeed() * 1.1f * Main.guiScale);
     }
 
     @Override
