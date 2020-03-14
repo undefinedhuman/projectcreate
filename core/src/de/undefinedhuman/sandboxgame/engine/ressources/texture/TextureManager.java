@@ -35,7 +35,7 @@ public class TextureManager extends Manager {
             } else textures.get(name).add();
         }
         if (loaded)
-            Log.info("Texture" + Tools.appendSToString(names) + " loaded successfully: " + Arrays.toString(names));
+            Log.info("Texture" + Tools.appendSToString(names.length) + " loaded successfully: " + Arrays.toString(names));
         return loaded;
     }
 

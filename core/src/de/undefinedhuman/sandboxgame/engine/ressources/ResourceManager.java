@@ -6,18 +6,20 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.file.FileReader;
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.file.Paths;
+import de.undefinedhuman.sandboxgame.engine.items.Item;
+import de.undefinedhuman.sandboxgame.engine.items.ItemType;
+import de.undefinedhuman.sandboxgame.engine.items.type.blocks.Block;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.entity.EntityType;
 import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
 import de.undefinedhuman.sandboxgame.entity.ecs.blueprint.Blueprint;
-import de.undefinedhuman.sandboxgame.engine.items.Item;
-import de.undefinedhuman.sandboxgame.engine.items.ItemType;
 
 import java.util.HashMap;
 
@@ -25,11 +27,8 @@ public class ResourceManager {
 
     public static Texture loadTexture(String path) {
         Texture texture = null;
-        try {
-            texture = new Texture(Gdx.files.internal(path));
-        } catch (Exception ex) {
-            Log.error("Error while loading texture: " + path + "\n" + ex.getMessage());
-        }
+        try { texture = new Texture(Gdx.files.internal(path));
+        } catch (Exception ex) { Log.error("Error while loading texture: " + path + "\n" + ex.getMessage()); }
         return texture != null ? texture : loadTexture("Unknown.png");
     }
 
@@ -121,6 +120,7 @@ public class ResourceManager {
         settings.clear();
         if(item == null) return null;
         TextureManager.instance.addTexture(item.getTextures());
+        if(item.type == ItemType.BLOCK) ((Block) item).setAtlas(new TextureAtlas(((Block) item).getAtlasPath()));
         item.init();
         return item;
     }

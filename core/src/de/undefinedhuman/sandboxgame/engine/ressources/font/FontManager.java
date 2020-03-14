@@ -46,7 +46,7 @@ public class FontManager extends Manager {
             this.fonts.put(font, fontList);
         }
 
-        if (loaded) Log.info("Font" + Tools.appendSToString(fonts) + " loaded: " + Arrays.toString(fonts));
+        if (loaded) Log.info("Font" + Tools.appendSToString(fonts.length) + " loaded: " + Arrays.toString(fonts));
 
     }
 

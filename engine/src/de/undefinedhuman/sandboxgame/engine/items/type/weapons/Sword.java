@@ -7,11 +7,11 @@ public class Sword extends Weapon {
 
     public Setting
             damage = new Setting(SettingType.Float, "Damage", 5f),
-            attackSpeed = new Setting(SettingType.Float, "Attack Speed", 1f);
+            speed = new Setting(SettingType.Float, "Speed", 1f);
 
     public Sword() {
         super();
-        settings.addSettings(damage, attackSpeed);
+        settings.addSettings(damage, speed);
     }
 
 }

@@ -20,7 +20,7 @@ public class InvItem extends Gui {
 
     public InvItem(int id, int amount) {
 
-        super(ItemManager.instance.getItem(id).iconTexture);
+        super(ItemManager.instance.getItem(id).iconTexture.getString());
         set("r0.5", "r0.5", "p" + Variables.ITEM_SIZE, "p" + Variables.ITEM_SIZE).setCentered();
 
         this.id = id;
@@ -35,7 +35,7 @@ public class InvItem extends Gui {
         this.id = id;
         this.amount = amount;
         amountText.setText(amount);
-        setTexture(ItemManager.instance.getItem(id).iconTexture);
+        setTexture(ItemManager.instance.getItem(id).iconTexture.getString());
     }
 
     public int getID() {

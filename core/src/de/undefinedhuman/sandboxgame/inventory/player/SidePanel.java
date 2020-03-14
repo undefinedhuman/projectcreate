@@ -9,14 +9,14 @@ import de.undefinedhuman.sandboxgame.utils.Tools;
 
 public class SidePanel extends Gui {
 
-    private Gui[] buttons = new Gui[10];
-    private String[] textures = new String[] {"gui/Inventory Icon.png", "gui/Chestplate-Preview.png", "Unknown.png", "Unknown.png", "Unknown.png", "Unknown.png", "Unknown.png", "Unknown.png", "Unknown.png", "Unknown.png"};
+    private String[] textures = new String[] {"gui/Inventory Icon.png", "gui/preview/equip/Chestplate-Preview.png", "Unknown.png", "Unknown.png", "Unknown.png", "Unknown.png", "Unknown.png", "Unknown.png", "Unknown.png", "Unknown.png"};
 
     public SidePanel() {
 
         super(GuiTemplate.SMALL_PANEL);
         set("r1", "r0.5", Tools.getInventoryWidth(GuiTemplate.SMALL_PANEL, 1), Tools.getInventoryHeight(GuiTemplate.SMALL_PANEL, 10)).setOffsetX("p-25").setCenteredX(-1).setCenteredY();
 
+        Gui[] buttons = new Gui[10];
         for (int i = 0; i < buttons.length; i++) {
 
             int k = buttons.length - i - 1;

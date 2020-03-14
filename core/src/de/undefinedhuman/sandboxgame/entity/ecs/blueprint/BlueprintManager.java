@@ -33,7 +33,7 @@ public class BlueprintManager extends Manager {
             loaded |= hasBlueprint(id);
         }
         if (loaded)
-            Log.info("Blueprint" + Tools.appendSToString(ids) + " loaded successfully: " + Arrays.toString(ids));
+            Log.info("Blueprint" + Tools.appendSToString(ids.length) + " loaded successfully: " + Arrays.toString(ids));
         return loaded;
     }
 

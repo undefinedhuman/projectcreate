@@ -11,14 +11,14 @@ public class Block extends Item {
 
     public Setting
             durability = new Setting(SettingType.Int, "Durability", 0),
-            dropID = new Setting(SettingType.Int, "Drop ID", 0),
+            dropID = new Setting(SettingType.Int, "DropID", 0),
             unbreakable = new Setting(SettingType.Bool, "Unbreakable", false),
             collide = new Setting(SettingType.Bool, "Collide", false),
-            hasStates = new Setting(SettingType.Bool, "Has States", true),
-            isFull = new Setting(SettingType.Bool, "Is Full", false),
+            hasStates = new Setting(SettingType.Bool, "HasStates", true),
+            isFull = new Setting(SettingType.Bool, "IsFull", true),
             canBePlacedInBackLayer = new Setting(SettingType.Bool, "Back Layer", false),
-            needBack = new Setting(SettingType.Bool, "Need Back", false),
-            atlasName = new Setting(SettingType.Bool, "Atlas Name", "Dirt");
+            needBack = new Setting(SettingType.Bool, "NeedBack", false),
+            atlasName = new Setting(SettingType.String, "Atlas", "Dirt");
 
     private String atlasPath;
     public TextureRegion[][] blockTextures;
@@ -27,20 +27,32 @@ public class Block extends Item {
     public Block() {
         super();
         settings.addSettings(durability, dropID, unbreakable, collide, hasStates, isFull, canBePlacedInBackLayer, needBack, atlasName);
+        blockTextures = new TextureRegion[6][4];
     }
 
     @Override
     public String[] getTextures() {
-        this.atlasPath = Paths.ITEM_PATH.getPath() + id + "/" + atlasName + ".atlas";
-        this.iconTexture.setValue(Paths.ITEM_PATH.getPath() + id + "/" + atlasName + " Icon.png");
-        this.previewTexture.setValue(Paths.ITEM_PATH.getPath() + id + "/" + atlasName + " Icon.png");
-        return new String[] { atlasPath, iconTexture.getString(), previewTexture.getString() };
+        this.atlasPath = Paths.ITEM_PATH.getPath() + id + "/" + atlasName.getString() + ".atlas";
+        this.iconTexture.setValue(Paths.ITEM_PATH.getPath() + id + "/" + atlasName.getString() + " Icon.png");
+        this.previewTexture.setValue(Paths.ITEM_PATH.getPath() + id + "/" + atlasName.getString() + " Icon.png");
+        return new String[] { iconTexture.getString(), previewTexture.getString() };
     }
 
+    public String getAtlasPath() {
+        return atlasPath;
+    }
+
+    public void setAtlas(TextureAtlas atlas) {
+        this.textureAtlas = atlas;
+    }
+
+    @Override
     public void init() {
-        textureAtlas = new TextureAtlas(atlasPath);
         for (int i = 0; i < 6; i++)
-            for (int j = 0; j < 4; j++) blockTextures[i][j] = textureAtlas.findRegion(atlasName + "_" + i + "_" + j);
+            for (int j = 0; j < 4; j++)
+                blockTextures[i][j] = textureAtlas.findRegion(atlasName.getString() + "_" + i + "_" + j);
+        // TODO TEMP until all blocks have this setting implemented
+        useIconAsHandTexture.setValue(true);
     }
 
     @Override

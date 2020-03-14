@@ -88,11 +88,11 @@ public class InventoryManager extends Manager {
     }
 
     private void addTempItems(Inventory inventory, int... ids) {
-        for (int id : ids) inventory.addItem(id, ItemManager.instance.getItem(id).maxAmount);
+        for (int id : ids) inventory.addItem(id, ItemManager.instance.getItem(id).maxAmount.getInt());
     }
 
     private void addTempItems(Inventory inventory, Set<Integer> ids) {
-        for (int id : ids) inventory.addItem(id, ItemManager.instance.getItem(id).maxAmount);
+        for (int id : ids) inventory.addItem(id, ItemManager.instance.getItem(id).maxAmount.getInt());
     }
 
     public Selector getSelector() {

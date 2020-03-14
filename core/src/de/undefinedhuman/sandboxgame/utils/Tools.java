@@ -448,8 +448,8 @@ public class Tools {
         return i == j ? 1 : 0;
     }
 
-    public static String appendSToString(Object[] objects) {
-        return objects.length > 1 ? "s" : "";
+    public static String appendSToString(int length) {
+        return length > 1 ? "s" : "";
     }
 
     public static String getInventoryWidth(GuiTemplate template, int col) {

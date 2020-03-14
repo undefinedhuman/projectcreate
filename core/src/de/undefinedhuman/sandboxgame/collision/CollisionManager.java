@@ -52,9 +52,7 @@ public class CollisionManager {
     }
 
     public static boolean collide(byte id) {
-
-        return ((Block) ItemManager.instance.getItem(id)).collide;
-
+        return ((Block) ItemManager.instance.getItem(id)).collide.getBoolean();
     }
 
     public static boolean collideHike(Vector2 position, float width, float height) {

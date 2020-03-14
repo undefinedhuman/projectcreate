@@ -3,6 +3,7 @@ package de.undefinedhuman.sandboxgame.item;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.items.Item;
+import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.engine.ressources.ResourceManager;
 import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
@@ -15,8 +16,10 @@ import de.undefinedhuman.sandboxgame.entity.ecs.components.mouse.AngleComponent;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
 import de.undefinedhuman.sandboxgame.projectiles.Projectile;
 import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
+import de.undefinedhuman.sandboxgame.utils.Tools;
 import de.undefinedhuman.sandboxgame.world.WorldManager;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class ItemManager extends Manager {
@@ -37,12 +40,14 @@ public class ItemManager extends Manager {
     }
 
     public boolean addItems(int... ids) {
-        boolean added = false;
+        boolean loaded = false;
         for (int id : ids) {
             if (!hasItem(id) && ResourceManager.existItem(id)) items.put(id, ResourceManager.loadItem(id));
-            added |= hasItem(id);
+            loaded |= hasItem(id);
         }
-        return added;
+        if (loaded)
+            Log.info("Texture" + Tools.appendSToString(ids.length) + " loaded successfully: " + Arrays.toString(ids));
+        return loaded;
     }
 
     public boolean hasItem(int id) {

@@ -17,7 +17,7 @@ import java.util.HashMap;
 public enum ItemType {
 
     ITEM(new Item(), ""), TOOL(new Tool(), "gui/preview/crafting/Tools.png"), PICKAXE(new Pickaxe(), ""), SWORD(new Sword(), ""), WEAPON(new Weapon(), "gui/preview/crafting/Weapons.png"),
-    BLOCK(new Block(), "gui/preview/crafting/Blocks.png"), BOW(new Bow(), ""), ARMOR(new Armor(), "gui/preview/crafting/Armor.png"), HELMET(new Helmet(), ""),
+    BLOCK(new Block(), "gui/preview/crafting/Blocks.png"), BOW(new Bow(), ""), ARMOR(new Armor(), "gui/preview/crafting/Armor.png"), STAFF(new Weapon(), "gui/preview/crafting/Weapons.png"), HELMET(new Helmet(), ""),
     STRUCTURE(new Item(), "gui/preview/crafting/Structures.png");
 
     private Item item;
@@ -42,7 +42,6 @@ public enum ItemType {
         }
         item.id = id;
         item.type = type;
-        item.init();
         return item;
     }
 }
