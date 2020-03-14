@@ -5,7 +5,7 @@ import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
 import de.undefinedhuman.sandboxgame.entity.ecs.components.collision.CollisionComponent;
-import de.undefinedhuman.sandboxgame.engine.items.ItemManager;
+import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.engine.items.type.blocks.Block;
 import de.undefinedhuman.sandboxgame.world.World;
 

@@ -12,6 +12,7 @@ import de.undefinedhuman.sandboxgame.engine.file.FileReader;
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.file.Paths;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
+import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.entity.EntityType;
 import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
 import de.undefinedhuman.sandboxgame.entity.ecs.blueprint.Blueprint;
@@ -104,7 +105,6 @@ public class ResourceManager {
     }
 
     public static Item loadItem(int id) {
-
         FileHandle file = loadFile(Paths.ITEM_PATH, id + "/settings.txt");
         FileReader reader = new FileReader(file, true);
         reader.nextLine();
@@ -119,8 +119,10 @@ public class ResourceManager {
         Item item = type.load(type, id, settings);
         reader.close();
         settings.clear();
+        if(item == null) return null;
+        TextureManager.instance.addTexture(item.getTextures());
+        item.init();
         return item;
-
     }
 
     public static boolean existItem(int id) {

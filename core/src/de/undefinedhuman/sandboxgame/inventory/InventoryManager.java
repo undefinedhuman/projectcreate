@@ -13,7 +13,7 @@ import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
 import de.undefinedhuman.sandboxgame.inventory.player.DragAndDrop;
 import de.undefinedhuman.sandboxgame.inventory.player.Selector;
 import de.undefinedhuman.sandboxgame.inventory.player.SidePanel;
-import de.undefinedhuman.sandboxgame.engine.items.ItemManager;
+import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 

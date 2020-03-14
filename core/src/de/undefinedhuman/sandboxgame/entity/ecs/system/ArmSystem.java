@@ -20,7 +20,7 @@ import de.undefinedhuman.sandboxgame.entity.ecs.components.sprite.SpriteData;
 import de.undefinedhuman.sandboxgame.entity.ecs.components.stats.health.HealthComponent;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
 import de.undefinedhuman.sandboxgame.engine.items.Item;
-import de.undefinedhuman.sandboxgame.engine.items.ItemManager;
+import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.engine.items.ItemType;
 import de.undefinedhuman.sandboxgame.engine.items.type.weapons.Sword;
 import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;

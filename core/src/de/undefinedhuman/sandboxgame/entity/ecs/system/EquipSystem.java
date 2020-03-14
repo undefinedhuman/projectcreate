@@ -12,7 +12,7 @@ import de.undefinedhuman.sandboxgame.entity.ecs.components.mouse.AngleComponent;
 import de.undefinedhuman.sandboxgame.entity.ecs.components.sprite.SpriteComponent;
 import de.undefinedhuman.sandboxgame.entity.ecs.components.sprite.SpriteData;
 import de.undefinedhuman.sandboxgame.engine.items.Item;
-import de.undefinedhuman.sandboxgame.engine.items.ItemManager;
+import de.undefinedhuman.sandboxgame.item.ItemManager;
 
 public class EquipSystem extends System {
 

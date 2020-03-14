@@ -1,4 +1,4 @@
-package de.undefinedhuman.sandboxgame.engine.items.drop;
+package de.undefinedhuman.sandboxgame.item.drop;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -8,7 +8,7 @@ import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.EntityManager;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
-import de.undefinedhuman.sandboxgame.engine.items.ItemManager;
+import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 import de.undefinedhuman.sandboxgame.world.World;
 
@@ -30,7 +30,7 @@ public class DropItem {
         this.position = position;
 
         this.target = null;
-        this.sprite = new Sprite(TextureManager.instance.getTexture(ItemManager.instance.getItem(id).iconTexture));
+        this.sprite = new Sprite(TextureManager.instance.getTexture(ItemManager.instance.getItem(id).iconTexture.getString()));
 
     }
 

@@ -1,76 +1,43 @@
 package de.undefinedhuman.sandboxgame.engine.items;
 
-import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
-import de.undefinedhuman.sandboxgame.engine.file.Paths;
-import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
-import de.undefinedhuman.sandboxgame.utils.Tools;
+import de.undefinedhuman.sandboxgame.engine.settings.SettingType;
+import de.undefinedhuman.sandboxgame.engine.settings.SettingsList;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 public class Item {
 
-    // TODO Rework the whole setting thing with setting class just like the player settings like window width and height -
-    //  Make it so that the editor can automatically create the settings and save them and the game can automatically can load them.
-
     public Setting
-            id = new Setting("id", 0),
-            name = new Setting("Name", ""),
-            desc = new Setting("Description", ""),
-            isStackable = new Setting("isStackable", false),
-            canShake = new Setting("canShake", false), ;
+            name = new Setting(SettingType.String, "Name", "Unknown"),
+            desc = new Setting(SettingType.String, "Description", "Unknown"),
+            itemTexture = new Setting(SettingType.String, "Item Texture", "Unknown.png"),
+            iconTexture = new Setting(SettingType.String, "Icon Texture", "Unknown.png"),
+            previewTexture = new Setting(SettingType.String, "Preview Texture", "Unknown.png"),
+            maxAmount = new Setting(SettingType.Int, "Max Amount", 999),
+            isStackable = new Setting(SettingType.Bool, "Is Stackable", true),
+            canShake = new Setting(SettingType.Bool, "Can Shake", true),
+            rarity = new Setting(SettingType.Rarity, "Rarity", Rarity.RARE.name());
 
+    public int id;
     public ItemType type;
-
-
-    public int id, maxAmount;
-    public String name, desc;
-    public ItemType type;
-    public boolean isStackable, canShake;
-
-    public String itemTexture, iconTexture, inspectTexture;
-
-    public Rarity rarity;
-
-    public boolean useIconAsTexture = false;
-    public Vector2 hitboxSize = new Vector2();
+    protected SettingsList settings = new SettingsList();
 
     public Item() {
-
-        this.name = "Unknown";
-        this.desc = "Unknown";
-        this.iconTexture = "Unknown.png";
-        this.itemTexture = "Unknown.png";
-        this.inspectTexture = "Unknown.png";
-        this.isStackable = true;
-        this.maxAmount = 999;
-        this.canShake = true;
-        this.rarity = Rarity.RARE;
+        settings.addSettings(name, desc, itemTexture, iconTexture, previewTexture, maxAmount, isStackable, canShake, rarity);
         this.type = ItemType.ITEM;
-
     }
 
-    public void load(int id, HashMap<String, LineSplitter> settings) {
-
-        this.id = id;
-
-        if (type != ItemType.BLOCK) {
-            itemTexture = Paths.ITEM_PATH.getPath() + id + "/" + Tools.loadString(settings, "Texture", "Unknown.png");
-            iconTexture = Paths.ITEM_PATH.getPath() + id + "/" + Tools.loadString(settings, "Icon", "Unknown.png");
-            TextureManager.instance.addTexture(itemTexture, iconTexture);
-        }
-
-        name = Tools.loadString(settings, "Name", "");
-        desc = Tools.loadString(settings, "Description", "");
-        isStackable = Tools.loadBoolean(settings, "Stackable", false);
-        maxAmount = Tools.loadInt(settings, "MaxAmount", 0);
-        canShake = Tools.loadBoolean(settings, "Shake", false);
-
+    public String[] getTextures() {
+        return new String[] { itemTexture.getString(), iconTexture.getString(), previewTexture.getString() };
     }
 
-    public void delete() {
-        TextureManager.instance.removeTexture(itemTexture, iconTexture, inspectTexture);
+    public void init() { }
+
+    public void delete() {}
+
+    public ArrayList<Setting> getSettings() {
+        return settings.getSettings();
     }
 
 }

@@ -1,15 +1,26 @@
 package de.undefinedhuman.sandboxgame.engine.settings;
 
+import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.sandboxgame.engine.file.FileUtils;
 import de.undefinedhuman.sandboxgame.engine.file.FileWriter;
+import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
+import de.undefinedhuman.sandboxgame.engine.items.Rarity;
 
 import java.util.HashMap;
 
 public class Setting {
 
-    private String key;
-    private Object value;
+    private SettingType type;
+
+    protected String key;
+    protected Object value;
 
     public Setting(String key, Object value) {
+        this(SettingType.String, key, value);
+    }
+
+    public Setting(SettingType type, String key, Object value) {
+        this.type = type;
         this.key = key;
         this.value = value;
     }
@@ -27,7 +38,7 @@ public class Setting {
     }
 
     public boolean getBoolean() {
-        return Boolean.parseBoolean(getString());
+        return FileUtils.readBoolean(getString());
     }
 
     public String getString() {
@@ -42,7 +53,28 @@ public class Setting {
         return Integer.parseInt(getString());
     }
 
-    public void load(HashMap<String, String> settings) {}
-    public void save(FileWriter writer) {}
+    public Rarity getRarity() {
+        return (Rarity) value;
+    }
+
+    public String[] getStringArray() {
+        return (String[]) value;
+    }
+
+    public Vector2 getVector2() {
+        return (Vector2) value;
+    }
+
+    public SettingType getType() {
+        return type;
+    }
+
+    public void load(HashMap<String, LineSplitter> settings) {
+        this.value = settings.get(key).getNextString();
+    }
+
+    public void save(FileWriter writer) {
+        writer.writeValue(key).writeValue(value.toString());
+    }
 
 }

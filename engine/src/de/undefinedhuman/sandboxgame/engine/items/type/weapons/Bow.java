@@ -1,26 +1,17 @@
 package de.undefinedhuman.sandboxgame.engine.items.type.weapons;
 
-import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
-import de.undefinedhuman.sandboxgame.engine.items.ItemType;
-import de.undefinedhuman.sandboxgame.utils.Tools;
-
-import java.util.HashMap;
+import de.undefinedhuman.sandboxgame.engine.settings.Setting;
+import de.undefinedhuman.sandboxgame.engine.settings.SettingType;
 
 public class Bow extends Weapon {
 
-    public float launcherAngle, launcherDistance;
+    public Setting
+            launcherAngle = new Setting(SettingType.Float, "Launcher Angle", -18),
+            launcherDistance = new Setting(SettingType.Float, "Launcher Distance", 63);
 
     public Bow() {
-        this.launcherDistance = 63;
-        this.launcherAngle = -18;
-    }
-
-    @Override
-    public void load(int id, HashMap<String, LineSplitter> settings) {
-        super.load(id, settings);
-        launcherAngle = Tools.loadFloat(settings, "Launcher Angle", -18);
-        launcherDistance = Tools.loadFloat(settings, "Launcher Distance", 63);
-        type = ItemType.BOW;
+        super();
+        settings.addSettings(launcherAngle, launcherDistance);
     }
 
 }

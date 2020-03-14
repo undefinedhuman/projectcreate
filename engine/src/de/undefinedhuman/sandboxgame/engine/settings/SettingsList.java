@@ -1,14 +1,15 @@
 package de.undefinedhuman.sandboxgame.engine.settings;
 
+import de.undefinedhuman.sandboxgame.engine.utils.MultiMap;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class SettingsList {
 
-    private ArrayList<Setting> settings = new ArrayList<>();
+    private MultiMap<SettingType, Setting> settings = new MultiMap<>();
 
     public void addSettings(Setting... settings) {
-        this.settings.addAll(Arrays.asList(settings));
+        for(Setting setting : settings) this.settings.add(setting.getType(), setting);
     }
 
     public void delete() {
@@ -16,7 +17,7 @@ public class SettingsList {
     }
 
     public ArrayList<Setting> getSettings() {
-        return settings;
+        return settings.getAllValues();
     }
 
 }

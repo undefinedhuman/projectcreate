@@ -1,28 +1,19 @@
 package de.undefinedhuman.sandboxgame.engine.items.type.Armor;
 
-import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.items.Item;
-import de.undefinedhuman.sandboxgame.engine.items.ItemType;
-import de.undefinedhuman.sandboxgame.utils.Tools;
-
-import java.util.HashMap;
+import de.undefinedhuman.sandboxgame.engine.settings.Setting;
+import de.undefinedhuman.sandboxgame.engine.settings.SettingType;
+import de.undefinedhuman.sandboxgame.engine.settings.StringArraySetting;
 
 public class Armor extends Item {
 
-    public float armor;
-    public String[] inVisibleSprites;
+    public Setting
+            armor = new Setting(SettingType.Float, "Armor", 0f),
+            inVisibleSprites = new StringArraySetting("Invisible Sprites", new String[0]);
 
     public Armor() {
-        this.armor = 0;
-        this.inVisibleSprites = new String[0];
-    }
-
-    @Override
-    public void load(int id, HashMap<String, LineSplitter> settings) {
-        super.load(id, settings);
-        armor = Tools.loadFloat(settings, "Armor", 0);
-        inVisibleSprites = Tools.loadStringArray(settings, "Invisible Sprites", "");
-        type = ItemType.ARMOR;
+        super();
+        settings.addSettings(armor, inVisibleSprites);
     }
 
 }

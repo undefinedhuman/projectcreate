@@ -7,7 +7,7 @@ import de.undefinedhuman.sandboxgame.gui.text.Text;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.RelativeConstraint;
 import de.undefinedhuman.sandboxgame.engine.items.Item;
-import de.undefinedhuman.sandboxgame.engine.items.ItemManager;
+import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
 public class InspectScreen extends Gui {

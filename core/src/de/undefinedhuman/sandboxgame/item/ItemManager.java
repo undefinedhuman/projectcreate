@@ -1,8 +1,10 @@
-package de.undefinedhuman.sandboxgame.engine.items;
+package de.undefinedhuman.sandboxgame.item;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.sandboxgame.engine.items.Item;
 import de.undefinedhuman.sandboxgame.engine.ressources.ResourceManager;
+import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
@@ -34,13 +36,13 @@ public class ItemManager extends Manager {
         addItems(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13);
     }
 
-    public void addItems(int... id) {
-        for (int i : id) addItem(i);
-    }
-
-    public boolean addItem(int id) {
-        if (!hasItem(id) && ResourceManager.existItem(id)) items.put(id, ResourceManager.loadItem(id));
-        return hasItem(id);
+    public boolean addItems(int... ids) {
+        boolean added = false;
+        for (int id : ids) {
+            if (!hasItem(id) && ResourceManager.existItem(id)) items.put(id, ResourceManager.loadItem(id));
+            added |= hasItem(id);
+        }
+        return added;
     }
 
     public boolean hasItem(int id) {
@@ -49,7 +51,10 @@ public class ItemManager extends Manager {
 
     @Override
     public void delete() {
-        for (Item item : items.values()) item.delete();
+        for (Item item : items.values()) {
+            TextureManager.instance.removeTexture(item.getTextures());
+            item.delete();
+        }
         items.clear();
     }
 
@@ -66,7 +71,7 @@ public class ItemManager extends Manager {
 
     public Item getItem(int id) {
         if (hasItem(id)) return items.get(id);
-        else if (addItem(id)) return items.get(id);
+        else if (addItems(id)) return items.get(id);
         return hasItem(0) ? getItem(0) : null;
     }
 

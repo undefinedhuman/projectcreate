@@ -30,8 +30,8 @@ import de.undefinedhuman.sandboxgame.entity.ecs.components.stats.health.HealthCo
 import de.undefinedhuman.sandboxgame.entity.ecs.components.stats.mana.ManaComponent;
 import de.undefinedhuman.sandboxgame.gui.GuiManager;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
-import de.undefinedhuman.sandboxgame.engine.items.ItemManager;
-import de.undefinedhuman.sandboxgame.engine.items.drop.DropItemManager;
+import de.undefinedhuman.sandboxgame.item.ItemManager;
+import de.undefinedhuman.sandboxgame.item.drop.DropItemManager;
 import de.undefinedhuman.sandboxgame.projectiles.Projectile;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 import de.undefinedhuman.sandboxgame.world.World;

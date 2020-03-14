@@ -1,4 +1,4 @@
-package de.undefinedhuman.sandboxgame.engine.items.drop;
+package de.undefinedhuman.sandboxgame.item.drop;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;

@@ -31,6 +31,10 @@ Planets:
  - Später gibt es einen Haupt Server der alle "offiziellen" Server mit einander verbindet.
  - Jeder Spieler kann dann zwischen diesen Servern hin und her wechseln, auf private kann man nur wenn man eingeladen wird oder man das Passwort kennt.
  - Die Hauptwelt und jede Spieler Welt hat wenn man diese auswählt ein kleines Icon unter sich oder irgendwie in einer Ecke des Screens. Dort sieht man ein Icon des Spielers oder der jeweiligen Nation
+ - If you hover over one of the planets der rotations kreis wird angezeigt und ein SPieler kopf kommt unter dem Planeten oder das Stammes Icon wenn es kein Spieler Planet ist.
+   -> Sieler kopf soll ne weiße Outline bekommen
+   -> Planeten Preview stellen die Biome des Planetens dar, Die erdklumpen aus dem einen großen asset pack werden als material genutzt um biome zu bestimmen.
+   -> Jeder SPieler kann mehrere Planeten oder monde keine ahnung erzeugen mit verschiedenen biomen, biome tenmpkates zu nem npc bringen mit coolen menu wo man die biome packen kann etc.
 
 
     // Tress should be huge, crafting screens each recipe item should get a preview (animated for for example structures), normal player characters can be enemys.

@@ -7,7 +7,7 @@ import de.undefinedhuman.sandboxgame.entity.ecs.components.equip.EquipComponent;
 import de.undefinedhuman.sandboxgame.entity.ecs.components.sprite.SpriteComponent;
 import de.undefinedhuman.sandboxgame.entity.ecs.components.sprite.SpriteData;
 import de.undefinedhuman.sandboxgame.engine.items.Item;
-import de.undefinedhuman.sandboxgame.engine.items.ItemManager;
+import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.engine.items.ItemType;
 import de.undefinedhuman.sandboxgame.engine.items.type.Armor.Armor;
 import de.undefinedhuman.sandboxgame.network.ClientManager;
