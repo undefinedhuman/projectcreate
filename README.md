@@ -6,7 +6,7 @@
   </a>
 </p>
 
-> This will be a huge 2D Sandbox game.
+> This will be a 2D Sandbox game.
 
 ### 🏠 [Homepage](https://github.com/undefinedhuman/SandboxGame)
 
