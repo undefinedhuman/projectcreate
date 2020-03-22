@@ -5,6 +5,7 @@ import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 
 public enum Time {
 
+    DAY("background/Background.png", Variables.HOUR_LENGTH),
     SUNRISE("background/Sunrise.png", Variables.HOUR_LENGTH),
     MIDDAY("background/Day.png", Variables.HOUR_LENGTH * 4),
     SUNSET("background/Evening.png", Variables.HOUR_LENGTH),

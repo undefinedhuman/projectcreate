@@ -1,43 +1,39 @@
 package de.undefinedhuman.sandboxgame.background;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
 
 public class Cloud {
 
+    private String texture;
+    private Vector2 position = new Vector2();
+    private Vector2 size = new Vector2();
+    private float speed, speedFactor;
+
     public boolean dead = false;
-    private Sprite sprite;
-    private float startY, speed;
-    private float x;
 
-    public Cloud(String textureName, int startX, int startY, int width, int height, int speed) {
-
-        this.sprite = new Sprite(TextureManager.instance.getTexture(textureName));
-        this.sprite.setPosition(startX, startY);
-        this.x = startX;
-        this.startY = startY;
+    public Cloud(String texture, Vector2 startPos, int speed, float speedFactor) {
+        this.texture = texture;
+        this.position.set(startPos);
         this.speed = speed;
-        this.sprite.setSize(width, height);
-
+        this.speedFactor = speedFactor;
     }
 
-    public void update(float delta) {
-
-        sprite.setPosition(sprite.getX() - (30 + speed) * delta, startY);
-        if (sprite.getX() + sprite.getWidth() <= 0) dead = true;
-
+    public void resize(int width, int height) {
+        TextureRegion region = TextureManager.instance.getTexture(texture);
+        size.set(region.getRegionWidth() * BackgroundManager.instance.scale, region.getRegionHeight() * BackgroundManager.instance.scale);
     }
 
-    public void update(float delta, OrthographicCamera camera) {
-        x = x - (30 + speed) * delta;
-        sprite.setPosition((camera.position.x - camera.viewportWidth / 2) + x, startY);
-        if (sprite.getX() + sprite.getWidth() <= camera.position.x - camera.viewportWidth / 2) dead = true;
+    public void update(float delta, float speed) {
+        position.x -= this.speed * delta;
     }
 
-    public void render(SpriteBatch batch) {
-        sprite.draw(batch);
+    public void render(SpriteBatch batch, OrthographicCamera camera) {
+        batch.draw(TextureManager.instance.getTexture(texture), position.x, position.y, size.x, size.y);
+        if (position.x + size.x <= camera.position.x - camera.viewportWidth * 0.5f) dead = true;
     }
 
 }

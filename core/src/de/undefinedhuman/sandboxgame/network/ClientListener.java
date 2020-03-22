@@ -88,8 +88,10 @@ public class ClientListener extends Listener {
 
             if (o instanceof WorldPacket) {
 
+                // TODO Add maxHeight
+
                 WorldPacket packet = (WorldPacket) o;
-                World.instance = new World(packet.worldName, packet.width, packet.height, 0);
+                World.instance = new World(packet.worldName, 50, packet.width, packet.height, 0);
                 EntityManager.instance.init();
 //                LoadingScreen.instance.worldLoaded = true;
 

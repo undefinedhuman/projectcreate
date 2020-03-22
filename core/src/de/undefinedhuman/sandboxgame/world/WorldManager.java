@@ -2,13 +2,14 @@ package de.undefinedhuman.sandboxgame.world;
 
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.collision.CollisionManager;
+import de.undefinedhuman.sandboxgame.engine.items.type.blocks.Block;
+import de.undefinedhuman.sandboxgame.engine.items.type.tools.Pickaxe;
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.EntityManager;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.item.drop.DropItemManager;
-import de.undefinedhuman.sandboxgame.engine.items.type.blocks.Block;
-import de.undefinedhuman.sandboxgame.engine.items.type.tools.Pickaxe;
 import de.undefinedhuman.sandboxgame.network.ClientManager;
 import de.undefinedhuman.sandboxgame.network.utils.PacketUtils;
 import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
@@ -18,6 +19,8 @@ import de.undefinedhuman.sandboxgame.utils.Tools;
 public class WorldManager {
 
     public static WorldManager instance;
+
+    // TODO Refactor
 
     private boolean canPlace, canDestroy, oldLayer;
     private float currentDurability = 0, destroyTime = 0, placeTime = 0, placeDuration = 0.05f;
@@ -78,7 +81,7 @@ public class WorldManager {
             Block block = (Block) ItemManager.instance.getItem(id);
             // TODO Look into playercenter
             Vector2 blockPos = Tools.convertToWorldCoords(Tools.getWorldPos(GameManager.gameCamera, Mouse.getMouseCoords())),
-                    playerCenter = Tools.convertToWorldCoords(new Vector2().add(GameManager.instance.player.transform.getPosition()).add(GameManager.instance.player.transform.getCenter()));
+                    playerCenter = Tools.convertToWorldCoords(GameManager.instance.player.transform.getCenterPosition());
 
             Block currentBlock = (Block) ItemManager.instance.getItem(getBlock(true, blockPos));
 
@@ -289,7 +292,7 @@ public class WorldManager {
 
     public void destroyBlock(Vector2 blockPos, boolean main, boolean send) {
 
-        DropItemManager.instance.addDropItem(getBlock(main, blockPos), 1, new Vector2(blockPos.x * 16 - 8, blockPos.y * 16 - 8));
+        DropItemManager.instance.addDropItem(getBlock(main, blockPos), 1, new Vector2(blockPos.x * Variables.BLOCK_SIZE - Variables.BLOCK_SIZE * 0.5f, blockPos.y * Variables.BLOCK_SIZE - Variables.BLOCK_SIZE*0.5f));
         if (send) ClientManager.instance.sendTCP(PacketUtils.createBlockPacket(-1, blockPos.x, blockPos.y, main));
         setBlock(main, blockPos, (byte) 0);
         check3Cells(main ? World.instance.mainLayer : World.instance.backLayer, (int) blockPos.x, (int) blockPos.y);

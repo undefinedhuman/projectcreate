@@ -71,7 +71,7 @@ public class Main extends Game {
 
         EntityManager.instance = new EntityManager();
 
-        World.instance = new World("Main", 1000, 1000, 100);
+        World.instance = new World("Main", 50, 1000, 1000, 100);
         WorldManager.instance = new WorldManager();
 
         ClientManager.instance = new ClientManager();
