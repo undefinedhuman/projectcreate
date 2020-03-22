@@ -1,5 +1,6 @@
 package de.undefinedhuman.sandboxgame.screen.gamescreen;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import de.undefinedhuman.sandboxgame.background.BackgroundManager;
 import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.engine.utils.ManagerList;
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.EntityManager;
 import de.undefinedhuman.sandboxgame.entity.EntityType;
@@ -47,7 +49,6 @@ public class GameManager {
     public Entity player, boss, furnace;
     public Projectile projectile = null;
     private Viewport guiViewport;
-    private float tempCam = 0;
 
     private ManagerList manager;
 
@@ -59,7 +60,8 @@ public class GameManager {
         guiBatch = new SpriteBatch();
 
         manager = new ManagerList();
-        BackgroundManager.instance = new BackgroundManager();
+
+        Gdx.graphics.setVSync(false);
 
         //CraftingInventory craftingInventory = new CraftingInventory();
 
@@ -67,6 +69,7 @@ public class GameManager {
 
     public void init() {
 
+        BackgroundManager.instance = new BackgroundManager();
         BackgroundManager.instance.init();
 
         boss = new Entity(EntityType.ENTITY, new Vector2(360, 360));
@@ -97,7 +100,7 @@ public class GameManager {
         furnace.addComponent(new AnimationComponent(furnace, "Running", animations));
         furnace.addComponent(new CollisionComponent(furnace, 84, 62, new Vector2(22, 0)));
         furnace.addComponent(new InteractionComponent(furnace, 75, Input.Keys.F));
-        furnace.transform.setPosition(800, 800);
+        furnace.transform.setPosition(97 * Variables.BLOCK_SIZE, 50 * Variables.BLOCK_SIZE);
         EntityManager.instance.addEntity(101, furnace);
 
         ((HealthComponent) player.getComponent(ComponentType.HEALTH)).getProfileOffset().set(0, 10);
@@ -147,11 +150,11 @@ public class GameManager {
 
     public void render() {
 
-        //guiViewport.apply();
-        guiBatch.setProjectionMatrix(guiCamera.combined);
-        guiBatch.begin();
-        BackgroundManager.instance.render(guiBatch, guiCamera);
-        guiBatch.end();
+        gameBatch.setColor(Color.WHITE);
+        gameBatch.setProjectionMatrix(gameCamera.combined);
+        gameBatch.begin();
+        BackgroundManager.instance.render(gameBatch, gameCamera);
+        gameBatch.end();
 
         gameBatch.setColor(Color.WHITE);
         gameBatch.setProjectionMatrix(gameCamera.combined);
@@ -164,7 +167,7 @@ public class GameManager {
         if (projectile != null) projectile.render(gameBatch);
         World.instance.renderMainLayer(gameBatch);
 
-        gameBatch.draw(TextureManager.instance.getTexture("tree/Tree.png"), 1000, 16 * 50, 128, 128);
+        gameBatch.draw(TextureManager.instance.getTexture("tree/Tree.png"), 103 * Variables.BLOCK_SIZE, Variables.BLOCK_SIZE * 50, 128, 128);
         gameBatch.end();
 
         guiViewport.apply();
@@ -197,7 +200,7 @@ public class GameManager {
 
     private void updateCamera() {
         if (GameManager.instance.player == null) return;
-        tempCam = gameCamera.viewportHeight * gameCamera.zoom * 0.5f;
+        float tempCam = gameCamera.viewportHeight * gameCamera.zoom * 0.5f;
         gameCamera.position.set(Tools.lerp(gameCamera.position, new Vector3().set(player.transform.getCenterPosition(), 0), 300));
         gameCamera.position.y = Tools.clamp(gameCamera.position.y, tempCam, World.instance.height * 16 - tempCam - 32);
         gameCamera.update();

@@ -3,6 +3,7 @@ package de.undefinedhuman.sandboxgame.world.layer.topLayer;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.world.World;
 
 import java.util.HashMap;
@@ -34,7 +35,7 @@ public class TopLayerManager {
         for (TopLayerTexture texture : topLayerTextures)
             if (texture.left == left && texture.right == right) {
                 World.instance.random.setSeed(World.instance.seed + i);
-                batch.draw(TextureManager.instance.getTexture(texture.textures[World.instance.random.nextInt(texture.textures.length)]), i * 16 + texture.offset.x, j * 16 + texture.offset.y);
+                batch.draw(TextureManager.instance.getTexture(texture.textures[World.instance.random.nextInt(texture.textures.length)]), i * Variables.BLOCK_SIZE + texture.offset.x, j * Variables.BLOCK_SIZE + texture.offset.y);
             }
     }
 

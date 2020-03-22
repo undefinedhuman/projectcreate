@@ -33,9 +33,7 @@ public class RenderSystem extends System {
     public void init(Entity entity) {}
 
     @Override
-    public void update(float delta, Entity entity) {
-
-    }
+    public void update(float delta, Entity entity) {}
 
     @Override
     public void render(SpriteBatch batch) {

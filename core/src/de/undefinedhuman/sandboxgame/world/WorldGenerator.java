@@ -29,7 +29,7 @@ public class WorldGenerator {
     }
 
     private World generateTestWorld(String name, WorldSetting worldSetting, BiomeSetting biomeSetting) {
-        World world = new World(name, worldSetting.getBiomeSize() * (biomeSetting.getSize() + biomeSetting.getTransition()), 2000, 23479356);
+        World world = new World(name, 50, worldSetting.getBiomeSize() * (biomeSetting.getSize() + biomeSetting.getTransition()), 2000, 23479356);
         for (int x = 0; x < world.width; x++) for (int y = 0; y < 50; y++) world.mainLayer.setBlock(x, y, (byte) 3);
         return world;
     }
@@ -39,7 +39,7 @@ public class WorldGenerator {
     }
 
     public World generateWorld(String name, WorldSetting worldSetting, BiomeSetting biomeSetting) {
-        World world = new World(name, worldSetting.getBiomeSize() * (biomeSetting.getSize() + biomeSetting.getTransition()), 2000, 23479356);
+        World world = new World(name, maxHeight, worldSetting.getBiomeSize() * (biomeSetting.getSize() + biomeSetting.getTransition()), 2000, 23479356);
         Biome[] biomes = generateBiomes(worldSetting);
         Noise[] biomeNoise = new Noise[biomes.length];
         Noise caveNoise = Biome.CAVE.getNoise(world.seed);

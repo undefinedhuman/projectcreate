@@ -309,7 +309,7 @@ public class Tools {
     }
 
     public static Vector2 convertToWorldCoords(Vector2 pos) {
-        return new Vector2(pos.x / 16, pos.y / 16);
+        return new Vector2(pos.x / Variables.BLOCK_SIZE, pos.y / Variables.BLOCK_SIZE);
     }
 
     public static float mix(float a, float b, float f) {

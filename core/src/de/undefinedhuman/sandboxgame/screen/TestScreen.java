@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import de.undefinedhuman.sandboxgame.Main;
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.EntityManager;
 import de.undefinedhuman.sandboxgame.entity.ecs.blueprint.BlueprintManager;
@@ -44,7 +45,7 @@ public class TestScreen implements Screen {
 
         Entity player = BlueprintManager.instance.getBlueprint(0).createInstance();
         player.mainPlayer = true;
-        player.transform.setPosition(1000, 800);
+        player.transform.setPosition(100 * Variables.BLOCK_SIZE, 50 * Variables.BLOCK_SIZE);
         player.setWorldID(0);
         GameManager.instance.player = player;
         EntityManager.instance.addEntity(0, player);

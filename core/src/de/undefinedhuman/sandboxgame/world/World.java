@@ -14,14 +14,14 @@ public class World {
     public static World instance;
 
     public String name;
-    public int width, height, seed, blockWidth, blockHeight;
+    public int maxHeight, width, height, seed, blockWidth, blockHeight;
     public WorldLayer mainLayer, backLayer;
     public Random random;
 
     private int maxX, minX, maxY, minY;
     private Color batchColor = new Color();
 
-    public World(String name, int width, int height, int seed) {
+    public World(String name, int maxHeight, int width, int height, int seed) {
 
         this.random = new Random(seed);
         this.mainLayer = new WorldLayer(true, width, height);
@@ -29,6 +29,7 @@ public class World {
 
         this.name = name;
         this.width = width;
+        this.maxHeight = maxHeight * Variables.BLOCK_SIZE;
         this.height = height;
         this.blockWidth = width * Variables.BLOCK_SIZE;
         this.blockHeight = height * Variables.BLOCK_SIZE;
@@ -38,10 +39,10 @@ public class World {
 
     public void computeBounds(OrthographicCamera camera) {
 
-        this.minX = ((int) ((((int) camera.position.x) - camera.zoom * camera.viewportWidth / 2 - 32) / getTileWidth()));
-        this.minY = ((int) ((((int) camera.position.y) - camera.zoom * camera.viewportHeight / 2 - 32) / getTileHeight()));
-        this.maxX = ((int) ((((int) camera.position.x) + camera.zoom * camera.viewportWidth / 2 + 32) / getTileWidth()));
-        this.maxY = ((int) ((((int) camera.position.y) + camera.zoom * camera.viewportHeight / 2 + 32) / getTileHeight()));
+        this.minX = ((int) ((((int) camera.position.x) - camera.zoom * camera.viewportWidth / 2 - Variables.BLOCK_SIZE * 2) / getTileWidth()));
+        this.minY = ((int) ((((int) camera.position.y) - camera.zoom * camera.viewportHeight / 2 - Variables.BLOCK_SIZE * 2) / getTileHeight()));
+        this.maxX = ((int) ((((int) camera.position.x) + camera.zoom * camera.viewportWidth / 2 + Variables.BLOCK_SIZE * 2) / getTileWidth()));
+        this.maxY = ((int) ((((int) camera.position.y) + camera.zoom * camera.viewportHeight / 2 + Variables.BLOCK_SIZE * 2) / getTileHeight()));
 
         if (this.minY < 0) this.minY = 0;
         if (this.maxY > this.height - 2) this.maxY = (this.height - 2);
