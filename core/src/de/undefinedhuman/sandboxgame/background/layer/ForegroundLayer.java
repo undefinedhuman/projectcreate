@@ -1,9 +1,11 @@
-package de.undefinedhuman.sandboxgame.background;
+package de.undefinedhuman.sandboxgame.background.layer;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.sandboxgame.background.BackgroundManager;
+import de.undefinedhuman.sandboxgame.background.Layer;
 import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.world.World;
 

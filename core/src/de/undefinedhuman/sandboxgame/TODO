@@ -1,7 +1,6 @@
-Aktuelle TODO's:
- - Kleines Profile für Gegner bauen in der Mitte des Screens
-
 TODO Event System für alles Block abbauen Block platzieren Particle Spawnen etc.#
+
+TODO FIX GRASS OVERLAY AT THE EDGES AND ENTITIES
 
 TODO's:
  - Profile Class überarbeiten, die health und mana bars noch mit animationen verschönern
@@ -10,6 +9,9 @@ TODO's:
  - SpriteData überarbeiten
  - Editor PositionSettings das laden funktioniert nicht der Daten
  - Evtl das Combat System überarbeiten mehr mit Animationen arbeiten und Positionen
+ - Maybe rewrite the camera to be in its own file
+
+- Kleines Profile für Gegner bauen in der Mitte des Screens
 
 add meteroits into the night sky https://weheartit.com/entry/314129185
 

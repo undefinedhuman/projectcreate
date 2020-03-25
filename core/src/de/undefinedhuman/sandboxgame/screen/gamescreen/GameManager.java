@@ -100,7 +100,7 @@ public class GameManager {
         furnace.addComponent(new AnimationComponent(furnace, "Running", animations));
         furnace.addComponent(new CollisionComponent(furnace, 84, 62, new Vector2(22, 0)));
         furnace.addComponent(new InteractionComponent(furnace, 75, Input.Keys.F));
-        furnace.transform.setPosition(97 * Variables.BLOCK_SIZE, 50 * Variables.BLOCK_SIZE);
+        furnace.transform.setPosition(0, 50 * Variables.BLOCK_SIZE);
         EntityManager.instance.addEntity(101, furnace);
 
         ((HealthComponent) player.getComponent(ComponentType.HEALTH)).getProfileOffset().set(0, 10);
@@ -154,11 +154,6 @@ public class GameManager {
         gameBatch.setProjectionMatrix(gameCamera.combined);
         gameBatch.begin();
         BackgroundManager.instance.render(gameBatch, gameCamera);
-        gameBatch.end();
-
-        gameBatch.setColor(Color.WHITE);
-        gameBatch.setProjectionMatrix(gameCamera.combined);
-        gameBatch.begin();
         manager.render(gameBatch, gameCamera);
         World.instance.computeBounds(gameCamera);
         //World.instance.renderBackLayer(gameBatch);
