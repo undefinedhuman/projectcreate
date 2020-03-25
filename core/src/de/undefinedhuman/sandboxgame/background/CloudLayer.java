@@ -14,25 +14,20 @@ public class CloudLayer extends Layer {
     private ArrayList<Cloud> clouds = new ArrayList<>();
 
     private int yOffset;
-    private Random random;
-    private float speedFactor;
+    private Random random = new Random();
 
-    public CloudLayer(int yOffset, float speedFactor) {
+    public CloudLayer(int yOffset) {
         this.yOffset = yOffset;
-        this.speedFactor = speedFactor;
-        this.random = new Random();
         this.random.setSeed(World.instance.seed + yOffset * 100);
     }
 
     @Override
     public void init() {
-        int cloudSize = random.nextInt(3);
-        for(int i = 0; i < cloudSize; i++) {
+        for(int i = 0; i < 100; i++) {
             clouds.add(new Cloud(
-                    BackgroundManager.cloudTextures[random.nextInt(BackgroundManager.cloudTextures.length)],
                     new Vector2(random.nextInt(Gdx.graphics.getBackBufferWidth()), World.instance.maxHeight + yOffset + random.nextInt(60) - 30),
                     5 + random.nextInt(10),
-                    speedFactor));
+                    0));
         }
     }
 

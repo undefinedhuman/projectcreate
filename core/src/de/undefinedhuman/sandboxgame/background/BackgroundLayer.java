@@ -6,18 +6,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
-import de.undefinedhuman.sandboxgame.utils.Tools;
 
 public class BackgroundLayer extends Layer {
 
-    private float currentX, time = 0, blendFactor, localTime = 0;
+    private float currentX, localTime = 0, blendFactor;
     private Vector2 initialSize, size;
     private int currentTime = 1, nextTime = 2;
-
-    // batch.draw(TextureManager.instance.getTexture(texture), (camera != null ? camera.position.x - camera.viewportWidth / 2 : 0) + renderX, World.instance.maxHeight - size.y * 0.5f, size.x, size.y);
-
-    // TODO add birds to the background https://cdna.artstation.com/p/assets/images/images/009/694/598/original/paulo-dos-reis-21eswli.gif?1520372543
-    // https://www.youtube.com/watch?v=PNZhQHn4eL8
 
     public BackgroundLayer(Vector2 size) {
         this.initialSize = size;
@@ -36,24 +30,22 @@ public class BackgroundLayer extends Layer {
     @Override
     public void update(float delta, float speed) {
 
-        time += delta;
         localTime += delta;
-        localTime %= Variables.HOUR_LENGTH * 12;
 
         int currentDuration = Time.valueOf(currentTime).duration;
-
         int transition = Variables.HOUR_LENGTH / 2;
-        if (time <= currentDuration - transition) blendFactor = 0;
+
+        if (localTime <= currentDuration - transition) blendFactor = 0;
         else {
-            if (time >= currentDuration) {
+            if (localTime >= currentDuration) {
                 currentTime %= (currentTime + 1) & Time.values().length;
-                time = 0;
+                localTime = 0;
             }
-            blendFactor = (time % transition) / transition;
+            blendFactor = (localTime % transition) / transition;
         }
 
         if (speed == 0) return;
-        currentX = Tools.clamp(currentX + speed * delta, -size.x, 0);
+        currentX -= speed * delta;
         currentX = currentX >= 0 ? -size.x : currentX <= -size.x ? 0 : currentX;
 
     }
@@ -79,10 +71,6 @@ public class BackgroundLayer extends Layer {
         batch.setColor(1, 1, 1, blendFactor);
         if(camera != null) batch.draw(TextureManager.instance.getTexture(Time.valueOf(id).texture), (camera.position.x - camera.viewportWidth * 0.5f) + renderX, (camera.position.y - camera.viewportHeight * 0.5f), size.x, size.y);
         else batch.draw(TextureManager.instance.getTexture(Time.valueOf(id).texture), 0 + renderX, 0, size.x, size.y);
-    }
-
-    public int getTime() {
-        return (int) localTime;
     }
 
 }

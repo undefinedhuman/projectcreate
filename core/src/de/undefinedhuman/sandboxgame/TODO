@@ -1,6 +1,8 @@
 Aktuelle TODO's:
  - Kleines Profile für Gegner bauen in der Mitte des Screens
 
+TODO Event System für alles Block abbauen Block platzieren Particle Spawnen etc.#
+
 TODO's:
  - Profile Class überarbeiten, die health und mana bars noch mit animationen verschönern
  - Profile Component
@@ -40,6 +42,8 @@ Planets:
    -> Planeten Preview stellen die Biome des Planetens dar, Die erdklumpen aus dem einen großen asset pack werden als material genutzt um biome zu bestimmen.
    -> Jeder SPieler kann mehrere Planeten oder monde keine ahnung erzeugen mit verschiedenen biomen, biome tenmpkates zu nem npc bringen mit coolen menu wo man die biome packen kann etc.
 
+
+    // Galaxie http://prntscr.com/rku4k1
 
     // Tress should be huge, crafting screens each recipe item should get a preview (animated for for example structures), normal player characters can be enemys.
     // Fishes there should some small friendly fishes (different type), also some small animals like frogs, birds, schnecken etc. but there should also be some bigger animals most of them should be, aggressive

@@ -468,4 +468,8 @@ public class Tools {
         return "p" + (offsetY * 2 + (Variables.SLOT_SIZE * row + Variables.SLOT_SPACE * (row - 1)));
     }
 
+    public static int floorBackgroundSpeed(float speed) {
+        return speed < -0.001f ? -1 : speed > 0.001f ? 1 : 0;
+    }
+
 }

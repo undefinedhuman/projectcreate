@@ -10,14 +10,11 @@ public class Noise {
     private float amplitude, roughness;
 
     public Noise(int octaves, float amplitude, float roughness) {
-
         this.random = new Random();
-
         this.seed = random.nextInt(10000);
         this.octaves = octaves;
         this.amplitude = amplitude;
         this.roughness = roughness;
-
     }
 
     public float gradient(float x, float y, float maxY) {
@@ -45,22 +42,18 @@ public class Noise {
     }
 
     public float getInterpolatedNoise(float x, float y) {
-
         int intX = (int) x, intY = (int) y;
         float fracX = x - intX, fracY = y - intY;
         float v1 = getSmoothNoise(intX, intY), v2 = getSmoothNoise(intX + 1, intY), v3 = getSmoothNoise(intX, intY + 1), v4 = getSmoothNoise(intX + 1, intY + 1);
         float i1 = cosInterpolation(v1, v2, fracX), i2 = cosInterpolation(v3, v4, fracX);
         return cosInterpolation(i1, i2, fracY);
-
     }
 
     private float getSmoothNoise(int x, int y) {
-
         float corners = (getNoise(x - 1, y - 1) + getNoise(x + 1, y - 1) + getNoise(x - 1, y + 1) + getNoise(x + 1, y + 1)) / 16f;
         float sides = (getNoise(x - 1, y) + getNoise(x + 1, y) + getNoise(x, y - 1) + getNoise(x, y + 1)) / 8f;
         float center = getNoise(x, y) / 4f;
         return corners + sides + center;
-
     }
 
     private float cosInterpolation(float a, float b, float blend) {
