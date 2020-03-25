@@ -1,19 +1,18 @@
 package de.undefinedhuman.sandboxgame.editor.entity;
 
-import me.gentlexd.sandboxeditor.entity.components.animation.AnimationComponent;
-import me.gentlexd.sandboxeditor.entity.components.arm.LeftArmComponent;
-import me.gentlexd.sandboxeditor.entity.components.arm.RightArmComponent;
-import me.gentlexd.sandboxeditor.entity.components.arm.ShoulderComponent;
-import me.gentlexd.sandboxeditor.entity.components.collision.CollisionComponent;
-import me.gentlexd.sandboxeditor.entity.components.combat.CombatComponent;
-import me.gentlexd.sandboxeditor.entity.components.effect.RegenerationComponent;
-import me.gentlexd.sandboxeditor.entity.components.equip.EquipComponent;
-import me.gentlexd.sandboxeditor.entity.components.eye.EyeComponent;
-import me.gentlexd.sandboxeditor.entity.components.health.HealthComponent;
-import me.gentlexd.sandboxeditor.entity.components.mouse.AngleComponent;
-import me.gentlexd.sandboxeditor.entity.components.movement.MovementComponent;
-import me.gentlexd.sandboxeditor.entity.components.name.NameComponent;
-import me.gentlexd.sandboxeditor.entity.components.sprite.SpriteComponent;
+import de.undefinedhuman.sandboxgame.editor.entity.components.animation.AnimationComponent;
+import de.undefinedhuman.sandboxgame.editor.entity.components.arm.LeftArmComponent;
+import de.undefinedhuman.sandboxgame.editor.entity.components.arm.RightArmComponent;
+import de.undefinedhuman.sandboxgame.editor.entity.components.arm.ShoulderComponent;
+import de.undefinedhuman.sandboxgame.editor.entity.components.collision.CollisionComponent;
+import de.undefinedhuman.sandboxgame.editor.entity.components.combat.CombatComponent;
+import de.undefinedhuman.sandboxgame.editor.entity.components.effect.RegenerationComponent;
+import de.undefinedhuman.sandboxgame.editor.entity.components.equip.EquipComponent;
+import de.undefinedhuman.sandboxgame.editor.entity.components.eye.EyeComponent;
+import de.undefinedhuman.sandboxgame.editor.entity.components.health.HealthComponent;
+import de.undefinedhuman.sandboxgame.editor.entity.components.mouse.AngleComponent;
+import de.undefinedhuman.sandboxgame.editor.entity.components.movement.MovementComponent;
+import de.undefinedhuman.sandboxgame.editor.entity.components.sprite.SpriteComponent;
 
 import javax.swing.*;
 

@@ -12,6 +12,10 @@ public class Variables {
     public static final int BLOCK_SIZE = 16;
     public static final int HOUR_LENGTH = 10;
 
+    // Background
+    public static final int CLOUD_HEIGHT_OFFSET = 30;
+    public static final int CLOUD_BASE_SPEED = 8;
+
     // Gui
     public static final int SLOT_SIZE = 24;
     public static final int ITEM_SIZE = 16;
