@@ -1,6 +1,8 @@
 TODO Event System für alles Block abbauen Block platzieren Particle Spawnen etc.#
 
 TODO FIX GRASS OVERLAY AT THE EDGES AND ENTITIES
+TODO ADD EventSystem for all sorts of events (block breaking/placing, entity dead/hurt move, etc.)
+TODO ADD Gameobject class that extends transform and has update render etc., entity drop item etc. should inhertie from that class
 
 TODO's:
  - Profile Class überarbeiten, die health und mana bars noch mit animationen verschönern

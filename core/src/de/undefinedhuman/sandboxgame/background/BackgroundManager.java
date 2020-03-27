@@ -2,10 +2,12 @@ package de.undefinedhuman.sandboxgame.background;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.sandboxgame.background.birds.BirdLayer;
 import de.undefinedhuman.sandboxgame.background.clouds.CloudLayer;
-import de.undefinedhuman.sandboxgame.background.layer.BackgroundLayer;
-import de.undefinedhuman.sandboxgame.background.layer.ForegroundLayer;
+import de.undefinedhuman.sandboxgame.background.layers.BackgroundLayer;
+import de.undefinedhuman.sandboxgame.background.layers.ForegroundLayer;
 import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
@@ -20,22 +22,25 @@ public class BackgroundManager extends Manager {
 
     public static BackgroundManager instance;
 
-    private Layer[] layers;
     public float scale = 0, worldWidth;
+
+    private Layer[] layers;
     private float foreGroundWidth = 688;
 
-    public String[] cloudTextures = new String[] { "background/clouds/cloud1.png", "background/clouds/cloud2.png", "background/clouds/cloud3.png", "background/clouds/cloud4.png", "background/clouds/cloud5.png", "background/clouds/cloud6.png", "background/clouds/cloud7.png", "background/clouds/cloud8.png" };
+    public String[] cloudTextures = new String[Variables.CLOUD_COUNT];
+    public TextureRegion[][] birdTexture;
 
     public BackgroundManager() {
         if (instance == null) instance = this;
         worldWidth = World.instance.mainLayer.width * Variables.BLOCK_SIZE;
         layers = new Layer[] {
-                new BackgroundLayer(new Vector2(640, 313)),
+                new BackgroundLayer(new Vector2(640, 300)),
                 new CloudLayer(175, 0.25f),
                 new ForegroundLayer("background/foreground/Mountain-1.png", new Vector2(foreGroundWidth, 127), 0.25f, 135f),
                 new CloudLayer(100, 0.5f),
                 new ForegroundLayer("background/foreground/Mountain-2.png", new Vector2(foreGroundWidth, 162), 0.5f, 75f),
                 new CloudLayer(65, 0.75f),
+                new BirdLayer(200),
                 new ForegroundLayer("background/foreground/Pine-1.png", new Vector2(foreGroundWidth, 148), 0.75f, -10f),
                 new ForegroundLayer("background/foreground/Pine-2.png", new Vector2(foreGroundWidth, 199), 1f, -75f)
         };
@@ -43,6 +48,8 @@ public class BackgroundManager extends Manager {
 
     @Override
     public void init() {
+        birdTexture = TextureManager.instance.getTexture("background/Bird.png").split(Variables.BIRD_WIDTH, Variables.BIRD_HEIGHT);
+        for(int i = 0; i < Variables.CLOUD_COUNT; i++) cloudTextures[i] = "background/clouds/Cloud " + i + ".png";
         TextureManager.instance.addTexture(cloudTextures);
         Time.load();
         for(Layer layer : layers) layer.init();
@@ -77,7 +84,9 @@ public class BackgroundManager extends Manager {
     @Override
     public void delete() {
         for(Layer layer : layers) layer.delete();
+        birdTexture = null;
         TextureManager.instance.removeTexture(cloudTextures);
+        TextureManager.instance.removeTexture("background/Bird.png");
         Time.delete();
     }
 

@@ -13,10 +13,16 @@ import de.undefinedhuman.sandboxgame.world.World;
 
 public class Transform implements NetworkComponent {
 
+    // TODO Refactor
+
     private Entity entity;
     private Vector2 position = new Vector2(), size = new Vector2();
     private ChunkPosition currentChunk = new ChunkPosition(), tempChunk = new ChunkPosition();
     private int chunkID = 0;
+
+    public Transform(Vector2 size) {
+        this.size.set(size);
+    }
 
     public Transform(Entity entity, Vector2 size) {
         this.entity = entity;
@@ -42,7 +48,7 @@ public class Transform implements NetworkComponent {
     }
 
     private void checkWorld() {
-
+        if(entity == null) return;
         if (position.x < 0.0F || position.x >= World.instance.blockWidth) {
             float b = (position.x < 0f ? 1f : -1f);
             position.x = position.x + b * World.instance.blockWidth;

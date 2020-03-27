@@ -25,7 +25,8 @@ public class CloudLayer extends Layer {
 
     @Override
     public void init() {
-        for(int i = 0; i < World.instance.blockWidth / 100; i++) {
+        int cloudCount = World.instance.blockWidth / 125;
+        for(int i = 0; i < cloudCount; i++) {
             clouds.add(new Cloud(
                     BackgroundManager.instance.cloudTextures[Tools.random.nextInt(BackgroundManager.instance.cloudTextures.length)],
                     new Vector2(Tools.random.nextInt(World.instance.blockWidth), World.instance.maxHeight + yOffset + Tools.random.nextInt(Variables.CLOUD_HEIGHT_OFFSET*2) - Variables.CLOUD_HEIGHT_OFFSET),

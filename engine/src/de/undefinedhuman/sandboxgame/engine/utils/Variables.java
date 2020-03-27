@@ -14,7 +14,14 @@ public class Variables {
 
     // Background
     public static final int CLOUD_HEIGHT_OFFSET = 30;
-    public static final int CLOUD_BASE_SPEED = 8;
+    public static final int CLOUD_BASE_SPEED = 6;
+    public static final int CLOUD_COUNT = 5;
+
+    public static final int BIRD_WIDTH = 19;
+    public static final int BIRD_HEIGHT = 64;
+    public static final int BIRD_SPEED = 64;
+    public static final int BIRD_HEIGHT_OFFSET = 50;
+    public static final float BIRD_ANIMATION_SPEED = 0.0875f;
 
     // Gui
     public static final int SLOT_SIZE = 24;

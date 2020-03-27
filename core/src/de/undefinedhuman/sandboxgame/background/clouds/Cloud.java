@@ -23,7 +23,7 @@ public class Cloud {
         this.texture = texture;
         this.position.set(startPos);
         this.speedMultiplier = speedMultiplier;
-        this.baseSpeed = Variables.CLOUD_BASE_SPEED * Tools.random.nextInt(4);
+        this.baseSpeed = Variables.CLOUD_BASE_SPEED * (Tools.random.nextInt(8) + 1);
     }
 
     public void resize(int width, int height) {
@@ -40,7 +40,7 @@ public class Cloud {
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         Color batchColor = batch.getColor();
         batch.setColor(1, 1, 1, alpha);
-        batch.draw(TextureManager.instance.getTexture(texture), (camera.position.x - camera.viewportWidth * 0.5f) + position.x, position.y, size.x, size.y);
+        batch.draw(TextureManager.instance.getTexture(texture), (int) ((camera.position.x - camera.viewportWidth * 0.5f) + position.x), position.y, size.x, size.y);
         batch.setColor(batchColor);
     }
 

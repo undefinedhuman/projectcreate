@@ -1,4 +1,4 @@
-package de.undefinedhuman.sandboxgame.background.layer;
+package de.undefinedhuman.sandboxgame.background.layers;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
