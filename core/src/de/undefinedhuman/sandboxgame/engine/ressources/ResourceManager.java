@@ -9,7 +9,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.file.FileReader;
+import de.undefinedhuman.sandboxgame.engine.file.FsFile;
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.file.Paths;
 import de.undefinedhuman.sandboxgame.engine.items.Item;
@@ -17,8 +19,9 @@ import de.undefinedhuman.sandboxgame.engine.items.ItemType;
 import de.undefinedhuman.sandboxgame.engine.items.type.blocks.Block;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
+import de.undefinedhuman.sandboxgame.engine.settings.Setting;
+import de.undefinedhuman.sandboxgame.engine.utils.Tools;
 import de.undefinedhuman.sandboxgame.entity.EntityType;
-import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
 import de.undefinedhuman.sandboxgame.entity.ecs.blueprint.Blueprint;
 
 import java.util.HashMap;
@@ -82,7 +85,23 @@ public class ResourceManager {
 
     public static Blueprint loadBlueprint(int id) {
 
-        FileHandle file = loadFile(Paths.ENTITY_FOLDER, id + "/settings.txt");
+        HashMap<String, LineSplitter> settingsList = Tools.loadSettings(reader);
+        for(Setting setting : entitySettings.getSettings()) setting.loadSetting(reader.getParentDirectory(), settingsList);
+
+        int size = reader.getNextInt();
+        reader.nextLine();
+        for(int i = 0; i < size; i++) {
+            ComponentType type = ComponentType.valueOf(reader.getNextString());
+            if(componentList.contains(type.name())) return;
+            componentList.addElement(type.name());
+            reader.nextLine();
+            components.put(type, type.load(reader));
+        }
+
+        HashMap<String, LineSplitter> settingsList = Tools.loadSettings(reader);
+        for(Setting setting : entitySettings.getSettings()) setting.loadSetting(reader.getParentDirectory(), settingsList);
+
+        FsFile file = new FsFile(Paths.ENTITY_FOLDER, id + "settings.entity", false);
         FileReader reader = new FileReader(file, true);
         reader.nextLine();
         EntityType type = EntityType.valueOf(reader.getNextString());
@@ -92,7 +111,7 @@ public class ResourceManager {
         Blueprint blueprint = new Blueprint(id, type, size);
         for (int i = 0; i < componentSize; i++) {
             reader.nextLine();
-            blueprint.addComponentBlueprint(ComponentType.load(reader.getNextString(), reader, id));
+            blueprint.addComponentBlueprint(ComponentType.load(reader.getNextString(), reader));
         }
         reader.close();
         return blueprint;
@@ -115,7 +134,7 @@ public class ResourceManager {
             reader.nextLine();
             settings.put(reader.getNextString(), new LineSplitter(reader.nextLine(), true, ";"));
         }
-        Item item = type.load(type, id, settings);
+        Item item = type.load(reader, type, id, settings);
         reader.close();
         settings.clear();
         if(item == null) return null;

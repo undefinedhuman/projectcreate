@@ -14,22 +14,23 @@ import java.util.ArrayList;
 public class BirdLayer extends Layer {
 
     private Color color;
-
     private ArrayList<Bird> birds = new ArrayList<>();
     private int yOffset;
+    private float speedMultiplier;
 
-    public BirdLayer(Color color, int yOffset) {
+    public BirdLayer(Color color, int yOffset, float speedMultiplier) {
         this.color = color;
         this.yOffset = yOffset;
+        this.speedMultiplier = speedMultiplier;
     }
 
     @Override
     public void init() {
-        int birdCount = World.instance.blockWidth/(World.instance.width*2), xOffset = World.instance.blockWidth/birdCount;
+        int birdCount = Tools.calculateRandomValue((World.instance.blockWidth/(World.instance.width*2))/3), xOffset = Tools.calculateRandomValue(World.instance.blockWidth/birdCount/2);
         for(int i = 0; i < birdCount; i++) {
-            int tempBirdCount = Tools.random.nextInt(2);
-            for(int j = 0; j < tempBirdCount; j++)
-                birds.add(new Bird(new Vector2(i * xOffset, World.instance.maxHeight + yOffset + Tools.random.nextInt(Variables.BIRD_HEIGHT_OFFSET * 2) - Variables.BIRD_HEIGHT_OFFSET)));
+            int groupCount = Tools.random.nextInt(3) + 3;
+            for(int j = 0; j < groupCount; j++)
+                birds.add(new Bird(new Vector2(i * xOffset + (int) (j * Variables.BIRD_WIDTH * 1.5f), World.instance.maxHeight + yOffset + Tools.random.nextInt(Variables.BIRD_HEIGHT_OFFSET * 2) - Variables.BIRD_HEIGHT_OFFSET), speedMultiplier));
         }
     }
 
@@ -39,15 +40,14 @@ public class BirdLayer extends Layer {
     }
 
     public void update(float delta, float speed) {
-        for(Bird bird : birds) bird.update(delta, speed);
+        for(Bird bird : birds) bird.update(delta);
     }
 
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
-        Color batchColor = batch.getColor();
         batch.setColor(color);
         for(Bird bird : birds) bird.render(batch, camera);
-        batch.setColor(batchColor);
+        batch.setColor(Color.WHITE);
     }
 
     @Override

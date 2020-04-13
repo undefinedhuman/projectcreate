@@ -4,25 +4,25 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.Main;
-import de.undefinedhuman.sandboxgame.entity.Entity;
-import de.undefinedhuman.sandboxgame.entity.EntityManager;
-import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
-import de.undefinedhuman.sandboxgame.entity.ecs.System;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.animation.AnimationComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.arm.RightArmComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.arm.ShoulderComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.collision.CollisionComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.combat.CombatComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.equip.EquipComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.mouse.AngleComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.sprite.SpriteComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.sprite.SpriteData;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.stats.health.HealthComponent;
-import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
+import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
+import de.undefinedhuman.sandboxgame.engine.entity.components.animation.AnimationComponent;
+import de.undefinedhuman.sandboxgame.engine.entity.components.arm.RightArmComponent;
+import de.undefinedhuman.sandboxgame.engine.entity.components.arm.ShoulderComponent;
+import de.undefinedhuman.sandboxgame.engine.entity.components.collision.CollisionComponent;
+import de.undefinedhuman.sandboxgame.engine.entity.components.combat.CombatComponent;
+import de.undefinedhuman.sandboxgame.engine.entity.components.equip.EquipComponent;
+import de.undefinedhuman.sandboxgame.engine.entity.components.mouse.AngleComponent;
+import de.undefinedhuman.sandboxgame.engine.entity.components.sprite.SpriteComponent;
+import de.undefinedhuman.sandboxgame.engine.entity.components.sprite.SpriteData;
+import de.undefinedhuman.sandboxgame.engine.entity.components.stats.health.HealthComponent;
 import de.undefinedhuman.sandboxgame.engine.items.Item;
-import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.engine.items.ItemType;
 import de.undefinedhuman.sandboxgame.engine.items.type.weapons.Sword;
+import de.undefinedhuman.sandboxgame.entity.Entity;
+import de.undefinedhuman.sandboxgame.entity.EntityManager;
+import de.undefinedhuman.sandboxgame.entity.ecs.System;
+import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
+import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
@@ -32,7 +32,9 @@ public class ArmSystem extends System {
 
     public static ArmSystem instance;
 
-    public ArmSystem() {}
+    public ArmSystem() {
+        if (instance == null) instance = this;
+    }
 
     @Override
     public void init(Entity entity) {}
@@ -51,19 +53,19 @@ public class ArmSystem extends System {
 
             if ((rightArmComponent = (RightArmComponent) entity.getComponent(ComponentType.RIGHTARM)) != null && (equipComponent = (EquipComponent) entity.getComponent(ComponentType.EQUIP)) != null && (shoulderComponent = (ShoulderComponent) entity.getComponent(ComponentType.SHOULDER)) != null && (animationComponent = (AnimationComponent) entity.getComponent(ComponentType.ANIMATION)) != null) {
 
-                SpriteData data = spriteComponent.getSpriteData(rightArmComponent.getSelectedTexture());
+                SpriteData data = spriteComponent.getSpriteDataValue(rightArmComponent.getSelectedTexture());
                 Vector2 mousePos = entity.mainPlayer ? Tools.getWorldCoordsOfMouse(GameManager.gameCamera) : angleComponent.mousePos;
                 Vector2 shoulderPos = new Vector2();
 
                 if (entity.mainPlayer) {
 
                     if (!angleComponent.isTurned) {
-                        shoulderPos.x = (entity.transform.getPosition().x + (entity.transform.getSize().x / 2 + rightArmComponent.shoulderPosOffset.x));
+                        shoulderPos.x = (entity.getPosition().x + (entity.getSize().x / 2 + rightArmComponent.shoulderPosOffset.x));
                     } else {
-                        shoulderPos.x = (entity.transform.getPosition().x + entity.transform.getSize().x - (entity.transform.getSize().x / 2 + rightArmComponent.shoulderPosOffset.x));
+                        shoulderPos.x = (entity.getPosition().x + entity.getSize().x - (entity.getSize().x / 2 + rightArmComponent.shoulderPosOffset.x));
                     }
 
-                    shoulderPos.y = (entity.transform.getPosition().y + entity.transform.getSize().y / 2 + rightArmComponent.shoulderPosOffset.y);
+                    shoulderPos.y = (entity.getPosition().y + entity.getSize().y / 2 + rightArmComponent.shoulderPosOffset.y);
 
                     float angle = new Vector2(mousePos.x - shoulderPos.x, mousePos.y - shoulderPos.y).angle() + (angleComponent.isTurned ? 0 : 180);
                     angle += angleComponent.isTurned ? 95 : -95;
@@ -88,13 +90,13 @@ public class ArmSystem extends System {
 
                 boolean selected = Tools.isItemSelected(entity);
 
-                Vector2 shoulderPosition = shoulderComponent.getShoulderPos(animationComponent.getCurrentAnimationFrameID());
+                Vector2 shoulderPosition = shoulderComponent.getShoulderPos(animationComponent.getAnimationFrameIndex());
 
-                spriteComponent.getSpriteData(rightArmComponent.getTextureName()).setVisible(!selected);
-                spriteComponent.getSpriteData(rightArmComponent.getSelectedTexture()).setVisible(selected);
+                spriteComponent.getSpriteDataValue(rightArmComponent.getTextureName()).setVisible(!selected);
+                spriteComponent.getSpriteDataValue(rightArmComponent.getSelectedTexture()).setVisible(selected);
 
                 if (!selected) return;
-                data.setOrigin((angleComponent.isTurned ? shoulderPosition.x + 1 : entity.transform.getSize().x - shoulderPosition.x - 1), shoulderPosition.y);
+                data.setOrigin((angleComponent.isTurned ? shoulderPosition.x + 1 : entity.getSize().x - shoulderPosition.x - 1), shoulderPosition.y);
                 data.setPositionOffset(angleComponent.isTurned ? 1 : -1, 0);
                 data.setRotation(angleComponent.angle);
 
@@ -139,21 +141,17 @@ public class ArmSystem extends System {
                     combatComponent.currentDamage -= Main.delta * sword.damage.getFloat() * 24 / 30;
                     currentAngle = Tools.swordLerpTurned(angleComponentAngle, 0, 24, !isTurned);
 
-                    ArrayList<Entity> probablyHitEntity = EntityManager.instance.getEntityInRangeForCollision(combatEntity.transform.getPosition(), 200);
+                    ArrayList<Entity> probablyHitEntity = EntityManager.instance.getEntityInRangeForCollision(combatEntity.getPosition(), 200);
 
                     for (Entity entity : probablyHitEntity) {
 
-                        if (entity.hasComponents(ComponentType.TRANSFORM, ComponentType.COLLISION, ComponentType.HEALTH) && entity != combatEntity && !combatComponent.touchedEntityList.contains(entity)) {
+                        if (!entity.hasComponents(ComponentType.COLLISION, ComponentType.HEALTH)
+                                || entity == combatEntity && !combatComponent.touchedEntityList.contains(entity)) continue;
 
-                            SpriteData data = ((SpriteComponent) combatEntity.getComponent(ComponentType.SPRITE)).getSpriteData("ItemHitbox");
-                            if (Tools.collideSAT(data.getSprite(), ((CollisionComponent) entity.getComponent(ComponentType.COLLISION)).getVertices(entity.transform.getPosition()))) {
-
-                                ((HealthComponent) entity.getComponent(ComponentType.HEALTH)).damage(sword.damage.getFloat());
-                                combatComponent.touchedEntityList.add(entity);
-
-                            }
-
-                        }
+                        SpriteData data = ((SpriteComponent) combatEntity.getComponent(ComponentType.SPRITE)).getSpriteDataValue("Item Hitbox");
+                        if (!Tools.collideSAT(data.getSprite(), ((CollisionComponent) entity.getComponent(ComponentType.COLLISION)).getVertices(entity.getPosition()))) continue;
+                        ((HealthComponent) entity.getComponent(ComponentType.HEALTH)).damage(sword.damage.getFloat());
+                        combatComponent.touchedEntityList.add(entity);
 
                     }
                 }
@@ -173,8 +171,7 @@ public class ArmSystem extends System {
 
             }
 
-            if (combatComponent.currentDamage > sword.damage.getFloat() * 1.5f)
-                combatComponent.currentDamage = sword.damage.getFloat() * 1.5f;
+            combatComponent.currentDamage = Math.min(combatComponent.currentDamage, sword.damage.getFloat() * 1.5f);
 
         }
 

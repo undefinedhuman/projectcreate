@@ -1,5 +1,6 @@
 package de.undefinedhuman.sandboxgame.engine.items;
 
+import de.undefinedhuman.sandboxgame.engine.file.FileReader;
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.items.type.Armor.Armor;
 import de.undefinedhuman.sandboxgame.engine.items.type.Armor.Helmet;
@@ -32,14 +33,13 @@ public enum ItemType {
         return previewTexture;
     }
 
-    public Item load(ItemType type, int id, HashMap<String, LineSplitter> settings) {
+    // TODO Maybe refactor to type and ID gets loaded as well and not set
+
+    public Item load(FileReader reader, ItemType type, int id, HashMap<String, LineSplitter> settings) {
         Item item = null;
         try { item = this.item.getClass().newInstance(); } catch (InstantiationException | IllegalAccessException e) { Log.info(e.getMessage()); }
         if (item == null) return null;
-        for(Setting setting : item.getSettings()) {
-            if(!settings.containsKey(setting.getKey())) continue;
-            setting.load(settings);
-        }
+        for(Setting setting : item.getSettings()) setting.loadSetting(reader.getParentDirectory(), settings);
         item.id = id;
         item.type = type;
         return item;

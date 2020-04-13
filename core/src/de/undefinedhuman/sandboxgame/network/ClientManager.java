@@ -3,11 +3,11 @@ package de.undefinedhuman.sandboxgame.network;
 import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Listener;
+import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
+import de.undefinedhuman.sandboxgame.engine.entity.components.mouse.AngleComponent;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
 import de.undefinedhuman.sandboxgame.entity.Entity;
-import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.mouse.AngleComponent;
 import de.undefinedhuman.sandboxgame.inventory.InvItem;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
 import de.undefinedhuman.sandboxgame.network.packets.PacketManager;
@@ -41,27 +41,19 @@ public class ClientManager extends Manager {
             }
         });
 
-        playerUpdateTimer60 = new Timer(0.015f, true) {
-            @Override
-            public void action() {
-                Entity player = GameManager.instance.player;
-                ((AngleComponent) player.getComponent(ComponentType.ANGLE)).mousePos = Tools.getWorldCoordsOfMouse(GameManager.gameCamera);
-                ComponentPacket packet = PacketUtils.createComponentPacket(player, ComponentType.ANGLE, ComponentType.TRANSFORM);
-                ClientManager.instance.sendUDP(packet);
-            }
-        };
+        playerUpdateTimer60 = new Timer(0.015f, true, () -> {
+            Entity player = GameManager.instance.player;
+            ((AngleComponent) player.getComponent(ComponentType.ANGLE)).mousePos = Tools.getWorldCoordsOfMouse(GameManager.gameCamera);
+            ComponentPacket packet = PacketUtils.createComponentPacket(player, ComponentType.ANGLE);
+            ClientManager.instance.sendUDP(packet);
+        });
 
-        playerUpdateTimer10 = new Timer(0.1f, true) {
-            @Override
-            public void action() {
-
-                Entity player = GameManager.instance.player;
-                InvItem item = InventoryManager.instance.getSelector().getSelectedInvItem();
-                ComponentPacket packet = PacketUtils.createComponentPacket(player, ComponentType.EQUIP);
-                ClientManager.instance.sendUDP(packet);
-
-            }
-        };
+        playerUpdateTimer10 = new Timer(0.1f, true, () -> {
+            Entity player = GameManager.instance.player;
+            InvItem item = InventoryManager.instance.getSelector().getSelectedInvItem();
+            ComponentPacket packet = PacketUtils.createComponentPacket(player, ComponentType.EQUIP);
+            ClientManager.instance.sendUDP(packet);
+        });
 
     }
 

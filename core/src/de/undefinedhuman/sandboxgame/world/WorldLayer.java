@@ -5,9 +5,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Base64Coder;
+import de.undefinedhuman.sandboxgame.engine.items.type.blocks.Block;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
-import de.undefinedhuman.sandboxgame.engine.items.type.blocks.Block;
 import de.undefinedhuman.sandboxgame.world.layer.topLayer.TopLayerManager;
 import de.undefinedhuman.sandboxgame.world.layer.topLayer.TopLayerType;
 
@@ -53,7 +53,7 @@ public class WorldLayer {
 
     private int getPositionX(int x) {
         if (x < 0) x = (width + x);
-        else if (x > width - 1) x = (x - width);
+        else if (x >= width) x = (x - width);
         return x;
     }
 
@@ -117,10 +117,8 @@ public class WorldLayer {
     public byte getBlock(int x, int y) {
 
         if (y < height - 1 && y >= 0) {
-
             if ((x < 0) || (x >= this.width)) x = getPositionX(x);
             return this.blocks[x][y];
-
         }
 
         return 0;

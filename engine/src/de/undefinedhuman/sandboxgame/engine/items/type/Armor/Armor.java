@@ -3,7 +3,7 @@ package de.undefinedhuman.sandboxgame.engine.items.type.Armor;
 import de.undefinedhuman.sandboxgame.engine.items.Item;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
 import de.undefinedhuman.sandboxgame.engine.settings.SettingType;
-import de.undefinedhuman.sandboxgame.engine.settings.StringArraySetting;
+import de.undefinedhuman.sandboxgame.engine.settings.types.StringArraySetting;
 
 public class Armor extends Item {
 

@@ -13,15 +13,15 @@ public class FileReader {
 
     private LineSplitter splitter;
     private BufferedReader reader;
-
+    private FsFile file;
     private boolean base;
-    private String separator, fileName;
+    private String separator;
 
     public FileReader(FileHandle file, boolean base) {
         this.reader = new BufferedReader(file.reader());
         this.base = base;
         this.separator = Variables.SEPARATOR;
-        this.fileName = file.name();
+        this.file = new FsFile(file.file().getPath(), false);
     }
 
     public FileReader(FsFile file, boolean base) {
@@ -30,9 +30,9 @@ public class FileReader {
 
     public FileReader(FsFile file, boolean base, String separator) {
         this.reader = FileUtils.getBufferedReader(file);
+        this.file = file;
         this.base = base;
         this.separator = separator;
-        this.fileName = file.getName();
     }
 
     public String nextLine() {
@@ -46,29 +46,26 @@ public class FileReader {
     public int getNextInt() {
         return splitter.getNextInt();
     }
-
     public float getNextFloat() {
         return splitter.getNextFloat();
     }
-
     public long getNextLong() {
         return splitter.getNextLong();
     }
-
     public Vector2 getNextVector2() {
         return splitter.getNextVector2();
     }
-
     public Vector3 getNextVector3() {
         return splitter.getNextVector3();
     }
-
     public double getNextDouble() {
         return splitter.getNextDouble();
     }
-
     public boolean getNextBoolean() {
         return splitter.getNextBoolean();
+    }
+    public String getNextString() {
+        return splitter.getNextString();
     }
 
     public String getData() {
@@ -77,17 +74,13 @@ public class FileReader {
         return builder.toString();
     }
 
+    public LineSplitter getRemainingRawData() { return new LineSplitter(splitter.getRemainingRawData(), base, separator); }
     public boolean isEndOfLine() {
         return !splitter.hasMoreValues();
     }
 
-    public String getNextString() {
-        return splitter.getNextString();
-    }
-
-    public int getID() {
-        String[] data = fileName.split("-");
-        return Integer.parseInt(data[0]);
+    public FsFile getParentDirectory() {
+        return new FsFile(file.getFile().getParentFile().getPath(), true);
     }
 
     public void close() {

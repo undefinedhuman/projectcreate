@@ -3,52 +3,34 @@ package de.undefinedhuman.sandboxgame.entity;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
+import de.undefinedhuman.sandboxgame.engine.utils.math.Vector2i;
 import de.undefinedhuman.sandboxgame.entity.chunk.Chunk;
-import de.undefinedhuman.sandboxgame.entity.chunk.ChunkPosition;
 import de.undefinedhuman.sandboxgame.entity.ecs.System;
 import de.undefinedhuman.sandboxgame.entity.ecs.system.*;
 import de.undefinedhuman.sandboxgame.world.World;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 
 public class EntityManager {
 
     public static EntityManager instance;
-    public ChunkPosition chunkSize = new ChunkPosition();
+    public Vector2i chunkSize = new Vector2i();
     private Chunk[][] chunks;
-    private HashMap<Integer, Entity> entities;
-    private ArrayList<Entity> players;
-    private ArrayList<Integer> entitiesToRemove;
-    private ArrayList<System> systems;
+    private HashMap<Integer, Entity> entities = new HashMap<>();
+    private ArrayList<Entity> players = new ArrayList<>();
+    private ArrayList<Integer> entitiesToRemove = new ArrayList<>();
+    private ArrayList<System> systems = new ArrayList<>();
 
     public EntityManager() {
-
-        players = new ArrayList<>();
-        entities = new HashMap<>();
-        entitiesToRemove = new ArrayList<>();
-        systems = new ArrayList<>();
-        AngleSystem.instance = new AngleSystem();
-        systems.add(AngleSystem.instance);
-        AnimationSystem.instance = new AnimationSystem();
-        systems.add(AnimationSystem.instance);
-        ArmSystem.instance = new ArmSystem();
-        systems.add(ArmSystem.instance);
-        InteractionSystem.instance = new InteractionSystem();
-        systems.add(InteractionSystem.instance);
-        EquipSystem.instance = new EquipSystem();
-        systems.add(EquipSystem.instance);
-        MovementSystem.instance = new MovementSystem();
-        systems.add(MovementSystem.instance);
-        RenderSystem.instance = new RenderSystem();
-        systems.add(RenderSystem.instance);
-
+        addSystems(new AngleSystem(), new AnimationSystem(), new ArmSystem(), new InteractionSystem(), new EquipSystem(), new MovementSystem(), new RenderSystem());
     }
 
     public void init() {
         clearEntities();
-        chunkSize.setPosition(World.instance.width / Variables.CHUNK_SIZE, World.instance.height / Variables.CHUNK_SIZE);
+        chunkSize.set(World.instance.width / Variables.CHUNK_SIZE, World.instance.height / Variables.CHUNK_SIZE);
         chunks = new Chunk[chunkSize.x][chunkSize.y];
         for (int i = 0; i < chunkSize.x; i++) {
             for (int j = 0; j < chunkSize.y; j++) {
@@ -66,7 +48,7 @@ public class EntityManager {
     public void addEntity(int id, Entity entity) {
         RenderSystem.dirty = true;
         this.entities.put(id, entity);
-        this.chunks[entity.transform.getChunkPosition().x][entity.transform.getChunkPosition().y].addEntity(id, entity);
+        this.chunks[entity.getChunkPosition().x][entity.getChunkPosition().y].addEntity(id, entity);
         initSystems(entity);
     }
 
@@ -100,7 +82,7 @@ public class EntityManager {
             RenderSystem.dirty = true;
             for (int i : entitiesToRemove) {
                 Entity entity = entities.get(i);
-                chunks[entity.transform.getChunkPosition().x][entity.transform.getChunkPosition().y].removeEntity(i);
+                chunks[entity.getChunkPosition().x][entity.getChunkPosition().y].removeEntity(i);
                 entities.remove(i);
             }
             entitiesToRemove.clear();
@@ -123,13 +105,17 @@ public class EntityManager {
     public ArrayList<Entity> getEntityInRangeForCollision(Vector2 pos, float range) {
         ArrayList<Entity> entitiesInRange = new ArrayList<>();
         for (Entity entity : entities.values())
-            if (new Vector2().set(entity.transform.getPosition()).sub(pos).len() <= range)
+            if (new Vector2().set(entity.getPosition()).sub(pos).len() <= range)
                 entitiesInRange.add(entity);
         return entitiesInRange;
     }
 
     public Collection<Entity> getEntitiesForCollision() {
         return entities.values();
+    }
+
+    private void addSystems(System... systems) {
+        this.systems.addAll(Arrays.asList(systems));
     }
 
 }

@@ -10,9 +10,11 @@ public class LineSplitter {
     private String[] data;
 
     private boolean base;
+    private String separator;
 
     public LineSplitter(String string, boolean base, String separator) {
         this.data = string.split(separator);
+        this.separator = separator;
         this.base = base;
     }
 
@@ -68,7 +70,13 @@ public class LineSplitter {
 
     public String getData() {
         StringBuilder builder = new StringBuilder();
-        while (hasMoreValues()) builder.append(getNextData()).append(";");
+        while (hasMoreValues()) builder.append(getNextData()).append(separator);
+        return builder.toString();
+    }
+
+    public String getRemainingRawData() {
+        StringBuilder builder = new StringBuilder();
+        while(hasMoreValues()) builder.append(this.data[pointer++]).append(separator);
         return builder.toString();
     }
 

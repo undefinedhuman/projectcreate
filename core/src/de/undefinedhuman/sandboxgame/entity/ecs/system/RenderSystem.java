@@ -4,14 +4,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
+import de.undefinedhuman.sandboxgame.engine.entity.components.collision.CollisionComponent;
+import de.undefinedhuman.sandboxgame.engine.entity.components.sprite.SpriteComponent;
+import de.undefinedhuman.sandboxgame.engine.entity.components.sprite.SpriteData;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.EntityManager;
-import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
 import de.undefinedhuman.sandboxgame.entity.ecs.System;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.collision.CollisionComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.sprite.SpriteComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.sprite.SpriteData;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
 import java.util.ArrayList;
@@ -20,17 +20,22 @@ import java.util.HashMap;
 public class RenderSystem extends System {
 
     public static RenderSystem instance;
-
     public static boolean dirty = true;
 
-    private HashMap<Integer, ArrayList<SpriteData>> tempSpriteData;
+    private HashMap<Integer, ArrayList<SpriteData>> currentSpriteData;
 
     public RenderSystem() {
-        tempSpriteData = new HashMap<>();
+        if (instance == null) instance = this;
+        currentSpriteData = new HashMap<>();
     }
 
     @Override
-    public void init(Entity entity) {}
+    public void init(Entity entity) {
+        SpriteComponent spriteComponent;
+        if((spriteComponent = (SpriteComponent) entity.getComponent(ComponentType.SPRITE)) == null) return;
+        for(SpriteData data : spriteComponent.getSpriteDataValue()) data.entity = entity;
+
+    }
 
     @Override
     public void update(float delta, Entity entity) {}
@@ -40,8 +45,8 @@ public class RenderSystem extends System {
 
         if (dirty) setTempSpriteData();
 
-        for (Integer renderLevel : tempSpriteData.keySet())
-            for (SpriteData data : tempSpriteData.get(renderLevel))
+        for (Integer renderLevel : currentSpriteData.keySet())
+            for (SpriteData data : currentSpriteData.get(renderLevel))
                 if (data.isVisible()) {
                     updateSpriteData(data);
                     data.getSprite().draw(batch, data.getAlpha());
@@ -50,7 +55,7 @@ public class RenderSystem extends System {
         if (Variables.renderHitboxes) for (Entity entity : EntityManager.instance.getEntities().values()) {
             CollisionComponent collisionComponent = (CollisionComponent) entity.getComponent(ComponentType.COLLISION);
             if (collisionComponent != null)
-                Tools.drawRect(batch, entity.transform.getPosition().x + collisionComponent.getOffset().x, entity.transform.getPosition().y + collisionComponent.getOffset().y, collisionComponent.getWidth(), collisionComponent.getHeight(), new Color(0.41568628f, 0.3529412f, 0.8039216f, 0.4f));
+                Tools.drawRect(batch, entity.getPosition().x + collisionComponent.getOffset().x, entity.getPosition().y + collisionComponent.getOffset().y, collisionComponent.getSize().x, collisionComponent.getSize().y, new Color(0.41568628f, 0.3529412f, 0.8039216f, 0.4f));
         }
 
     }
@@ -79,9 +84,9 @@ public class RenderSystem extends System {
     }
 
     private void setTempSpriteData() {
-        for (ArrayList<SpriteData> spriteArray : tempSpriteData.values()) spriteArray.clear();
-        tempSpriteData.clear();
-        for (Entity entity : EntityManager.instance.getEntities().values()) setSpriteData(entity, tempSpriteData);
+        for (ArrayList<SpriteData> spriteArray : currentSpriteData.values()) spriteArray.clear();
+        currentSpriteData.clear();
+        for (Entity entity : EntityManager.instance.getEntities().values()) setSpriteData(entity, currentSpriteData);
         dirty = false;
     }
 
@@ -92,17 +97,18 @@ public class RenderSystem extends System {
         sprite.setRotation(data.getRotation());
         sprite.setColor(data.getColor());
 
-        Vector2 pos = data.entity.transform.getPosition();
-        sprite.setBounds(pos.x + data.getPositionOffset().x + data.getTurnedOffset().x, pos.y + data.getPositionOffset().y + data.getTurnedOffset().y, data.getSize().x != 0 ? data.getSize().x : data.entity.transform.getSize().x, data.getSize().y != 0 ? data.getSize().y : data.entity.transform.getSize().y);
+        Vector2 pos = data.entity.getPosition();
+        sprite.setBounds(pos.x + data.getPositionOffset().x + data.getTurnedOffset().x, pos.y + data.getPositionOffset().y + data.getTurnedOffset().y, data.getSize().x != 0 ? data.getSize().x : data.entity.getSize().x, data.getSize().y != 0 ? data.getSize().y : data.entity.getSize().y);
         sprite.setFlip(data.getScale().x == -1, false);
 
     }
 
     private void setSpriteData(Entity entity, HashMap<Integer, ArrayList<SpriteData>> tempSpriteData) {
 
+        if(!entity.hasComponent(ComponentType.SPRITE)) return;
         SpriteComponent spriteComponent = (SpriteComponent) entity.getComponent(ComponentType.SPRITE);
 
-        for (SpriteData data : spriteComponent.getSpriteData()) {
+        for (SpriteData data : spriteComponent.getSpriteDataValue()) {
             int renderLevel = data.getRenderLevel();
             if (tempSpriteData.containsKey(renderLevel)) tempSpriteData.get(renderLevel).add(data);
             else {

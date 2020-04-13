@@ -1,15 +1,16 @@
-TODO Event System für alles Block abbauen Block platzieren Particle Spawnen etc.#
-
+TODO ADD TEXTURE SETTING TO EDITOR
 TODO FIX GRASS OVERLAY AT THE EDGES AND ENTITIES
 TODO ADD EventSystem for all sorts of events (block breaking/placing, entity dead/hurt move, etc.)
-TODO ADD Gameobject class that extends transform and has update render etc., entity drop item etc. should inhertie from that class
+TODO ADD GameObject class that extends transform and has update render etc., entity drop item etc. should inhertie from that class
+TODO REFACTOR ENTITY CHUNK SYSTEM
+TODO REFACTOR SO HITBOX TEXTURE USE BLANK TEXTURE
+TODO REFACTOR Sprite COMPONENT/DATA
+TODO REFACTOR ANIMATION COMPONENT TO USE EXCLUDED LAYERS AND NOT INCLUDED
+TODO Profile Component Refactor
 
 TODO's:
  - Profile Class überarbeiten, die health und mana bars noch mit animationen verschönern
  - Profile Component
- - Combat Component wieder im Editor hinzufügen
- - SpriteData überarbeiten
- - Editor PositionSettings das laden funktioniert nicht der Daten
  - Evtl das Combat System überarbeiten mehr mit Animationen arbeiten und Positionen
  - Maybe rewrite the camera to be in its own file
 

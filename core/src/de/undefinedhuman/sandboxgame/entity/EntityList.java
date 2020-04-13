@@ -1,7 +1,7 @@
 package de.undefinedhuman.sandboxgame.entity;
 
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
+import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,7 +59,7 @@ public class EntityList {
 
         for (Integer id : entitiesForCollision) {
             Entity entity = entities.get(id);
-            float entityDis = new Vector2(entity.transform.getPosition()).sub(pos).len();
+            float entityDis = new Vector2(entity.getPosition()).sub(pos).len();
             if (entityDis <= range) entitiesInRange.add(entity);
         }
 

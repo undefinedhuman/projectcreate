@@ -2,16 +2,16 @@ package de.undefinedhuman.sandboxgame.entity.ecs.system;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.sandboxgame.entity.Entity;
-import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
-import de.undefinedhuman.sandboxgame.entity.ecs.System;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.animation.AnimationComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.arm.ShoulderComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.equip.EquipComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.mouse.AngleComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.sprite.SpriteComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.sprite.SpriteData;
+import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
+import de.undefinedhuman.sandboxgame.engine.entity.components.animation.AnimationComponent;
+import de.undefinedhuman.sandboxgame.engine.entity.components.arm.ShoulderComponent;
+import de.undefinedhuman.sandboxgame.engine.entity.components.equip.EquipComponent;
+import de.undefinedhuman.sandboxgame.engine.entity.components.mouse.AngleComponent;
+import de.undefinedhuman.sandboxgame.engine.entity.components.sprite.SpriteComponent;
+import de.undefinedhuman.sandboxgame.engine.entity.components.sprite.SpriteData;
 import de.undefinedhuman.sandboxgame.engine.items.Item;
+import de.undefinedhuman.sandboxgame.entity.Entity;
+import de.undefinedhuman.sandboxgame.entity.ecs.System;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 
 public class EquipSystem extends System {
@@ -46,7 +46,7 @@ public class EquipSystem extends System {
             if (equipID != -1) {
 
                 Item item = ItemManager.instance.getItem(equipID);
-                Vector2 weaponOffset = equipComponent.getCurrentOffset(animationComponent.getCurrentAnimationFrameID()), shoulderPosition = shoulderComponent.getShoulderPos(animationComponent.getCurrentAnimationFrameID()), shoulderOffset = shoulderComponent.getShoulderOffset(animationComponent.getCurrentAnimationFrameID());
+                Vector2 weaponOffset = equipComponent.getCurrentOffset(animationComponent.getAnimationFrameIndex()), shoulderPosition = shoulderComponent.getShoulderPos(animationComponent.getAnimationFrameIndex()), shoulderOffset = shoulderComponent.getShoulderOffset(animationComponent.getAnimationFrameIndex());
 
                 switch (item.type) {
 
@@ -54,9 +54,9 @@ public class EquipSystem extends System {
                     case PICKAXE:
                     case STAFF:
                     case BOW:
-                        setSpriteData(spriteComponent, "Item", angleComponent.isTurned ? shoulderPosition.x + weaponOffset.x - 10 : entity.transform.getWidth() - shoulderPosition.x - weaponOffset.x + 10, shoulderPosition.y + weaponOffset.y - 4,
+                        setSpriteData(spriteComponent, "Item", angleComponent.isTurned ? shoulderPosition.x + weaponOffset.x - 10 : entity.getWidth() - shoulderPosition.x - weaponOffset.x + 10, shoulderPosition.y + weaponOffset.y - 4,
                                 angleComponent.isTurned ? -weaponOffset.x + 12 : weaponOffset.x - 12, -weaponOffset.y + 6, angleComponent.angle + (angleComponent.isTurned ? -45 : 45));
-                        setSpriteData(spriteComponent, "ItemHitbox", angleComponent.isTurned ? 4 : entity.transform.getSize().x - 4, 19, (angleComponent.isTurned ? 50 - weaponOffset.x : -50 + weaponOffset.x), 21 - weaponOffset.y, angleComponent.angle);
+                        setSpriteData(spriteComponent, "ItemHitbox", angleComponent.isTurned ? 4 : entity.getSize().x - 4, 19, (angleComponent.isTurned ? 50 - weaponOffset.x : -50 + weaponOffset.x), 21 - weaponOffset.y, angleComponent.angle);
                         break;
                     default:
                         setSpriteData(spriteComponent, "Item", angleComponent.isTurned ? 7 : 9, 26, 47 + (angleComponent.isTurned ? -weaponOffset.x : 10 + weaponOffset.x), 14 - weaponOffset.y, angleComponent.angle);
@@ -74,14 +74,14 @@ public class EquipSystem extends System {
     public void render(SpriteBatch batch) {}
 
     private void setSpriteData(SpriteComponent spriteComponent, String dataName, float originX, float originY, float posOffsetX, float posOffsetY, float rotation) {
-        SpriteData data = spriteComponent.getSpriteData(dataName);
+        SpriteData data = spriteComponent.getSpriteDataValue(dataName);
         data.setOrigin(originX, originY);
         data.setPositionOffset((int) posOffsetX, (int) posOffsetY);
         data.setRotation(rotation);
     }
 
     private void setVisible(SpriteComponent component, String... data) {
-        for (String s : data) component.getSpriteData(s).setVisible(false);
+        for (String s : data) component.getSpriteDataValue(s).setVisible(false);
     }
 
 }

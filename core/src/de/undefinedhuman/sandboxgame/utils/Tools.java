@@ -11,14 +11,12 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
 import de.undefinedhuman.sandboxgame.Main;
-import de.undefinedhuman.sandboxgame.engine.file.FileUtils;
-import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
+import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
+import de.undefinedhuman.sandboxgame.engine.entity.components.equip.EquipComponent;
 import de.undefinedhuman.sandboxgame.engine.file.Paths;
 import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.entity.Entity;
-import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.equip.EquipComponent;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
@@ -31,10 +29,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Random;
 
-public class Tools {
+public class Tools extends de.undefinedhuman.sandboxgame.engine.utils.Tools {
 
     public static boolean isMac = System.getProperty("os.name").contains("OS X");
     public static boolean isWindows = System.getProperty("os.name").contains("Windows");
@@ -259,12 +256,6 @@ public class Tools {
         return df.format(cal.getTime());
     }
 
-    public static TextureRegion fixBleeding(TextureRegion region) {
-        float fix = 0.1f, x = region.getRegionX(), y = region.getRegionY(), width = region.getRegionWidth(), height = region.getRegionHeight(), invTexWidth = 1f / region.getTexture().getWidth(), invTexHeight = 1f / region.getTexture().getHeight();
-        region.setRegion((x + fix) * invTexWidth, (y + fix) * invTexHeight, (x + width - fix) * invTexWidth, (y + height - fix) * invTexHeight);
-        return region;
-    }
-
     public static boolean ctrl() {
         if (isMac) return Gdx.input.isKeyPressed(Input.Keys.SYM);
         else
@@ -292,22 +283,6 @@ public class Tools {
         return keycode == Input.Keys.SHIFT_LEFT || keycode == Input.Keys.SHIFT_RIGHT;
     }
 
-    public static float clamp(float val, float min, float max) {
-        return Math.max(min, Math.min(max, val));
-    }
-
-    public static int clamp(int val, int min, int max) {
-        return Math.max(min, Math.min(max, val));
-    }
-
-    public static boolean isInRange(int val, int min, int max) {
-        return val >= min && val <= max;
-    }
-
-    public static boolean isInRange(float val, float min, float max) {
-        return val >= min && val <= max;
-    }
-
     public static Vector2 convertToWorldCoords(Vector2 pos) {
         return new Vector2(pos.x / Variables.BLOCK_SIZE, pos.y / Variables.BLOCK_SIZE);
     }
@@ -333,60 +308,6 @@ public class Tools {
     public static Vector2 getScaledSize(Vector2 baseScale, Vector2 maxScale) {
         double widthRatio = maxScale.x / baseScale.x, heightRatio = maxScale.y / maxScale.y, ratio = Math.min(widthRatio, heightRatio);
         return new Vector2((int) (baseScale.x * ratio), (int) (baseScale.y * ratio));
-    }
-
-    public static String[] loadStringArray(HashMap<String, LineSplitter> settings, String name, String defaultValue) {
-
-        if (settings.containsKey(name)) {
-
-            LineSplitter s = settings.get(name);
-            String[] strings = new String[s.getNextInt()];
-            for (int i = 0; i < strings.length; i++) strings[i] = s.getNextString();
-            return strings;
-
-        }
-
-        return new String[0];
-
-    }
-
-    public static int loadInt(HashMap<String, LineSplitter> settings, String name, Object defaultValue) {
-        return Integer.parseInt(loadString(settings, name, String.valueOf(defaultValue)));
-    }
-
-    public static String loadString(HashMap<String, LineSplitter> settings, String name, String defaultValue) {
-        if (settings.containsKey(name)) return settings.get(name).getNextString();
-        return defaultValue;
-    }
-
-    public static double loadDouble(HashMap<String, LineSplitter> settings, String name, Object defaultValue) {
-        return Double.parseDouble(loadString(settings, name, String.valueOf(defaultValue)));
-    }
-
-    public static Vector2 loadVector2(HashMap<String, LineSplitter> settings, String name, Vector2 defaultValue) {
-        return new Vector2(loadFloat(settings, name, defaultValue.x), loadFloat(settings, name, defaultValue.y));
-    }
-
-    public static float loadFloat(HashMap<String, LineSplitter> settings, String name, Object defaultValue) {
-        return Float.parseFloat(loadString(settings, name, String.valueOf(defaultValue)));
-    }
-
-    public static Vector2[] loadVector2Array(HashMap<String, LineSplitter> settings, String name, Vector2 defaultValue) {
-        if (settings.containsKey(name)) {
-            LineSplitter s = settings.get(name);
-            Vector2[] vectors = new Vector2[s.getNextInt()];
-            for (int i = 0; i < vectors.length; i++) vectors[i] = s.getNextVector2();
-            return vectors;
-        }
-        return new Vector2[0];
-    }
-
-    public static Vector3 loadVector3(HashMap<String, LineSplitter> settings, String name, Vector3 defaultValue) {
-        return new Vector3(loadFloat(settings, name, defaultValue.x), loadFloat(settings, name, defaultValue.y), loadFloat(settings, name, defaultValue.z));
-    }
-
-    public static boolean loadBoolean(HashMap<String, LineSplitter> settings, String name, Object defaultValue) {
-        return FileUtils.readBoolean(loadString(settings, name, String.valueOf(defaultValue)));
     }
 
     public static String capitalizeFirstLetter(String original) {
@@ -469,11 +390,15 @@ public class Tools {
     }
 
     public static int loop(int currentIndex, int maxLength) {
-        return ++currentIndex == maxLength ? 0 : currentIndex;
+        return currentIndex == maxLength ? 0 : currentIndex;
     }
 
     public static int floorBackgroundSpeed(float speed) {
         return speed < 0f ? -1 : speed > 0 ? 1 : 0;
+    }
+
+    public static int calculateRandomValue(int value) {
+        return Tools.random.nextInt(value) + value;
     }
 
 }

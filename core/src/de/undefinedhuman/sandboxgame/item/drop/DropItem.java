@@ -53,7 +53,7 @@ public class DropItem {
 
         } else {
 
-            float dist = Math.abs(getCenter().dst(target.transform.getCenterPosition()));
+            float dist = Math.abs(getCenter().dst(target.getCenterPosition()));
 
             if (dist < 100) {
 
@@ -65,7 +65,7 @@ public class DropItem {
 
                 } else {
 
-                    difference.set(new Vector2(getCenter()).sub(target.transform.getCenterPosition()));
+                    difference.set(new Vector2(getCenter()).sub(target.getCenterPosition()));
                     offset.set(difference.x >= 0 ? 60 : -60, difference.y >= 0 ? 60 : -60);
                     velocity.set(velocity.x - (1 / (difference.x + offset.x)) * 300 * 300 * delta, velocity.y - (1 / (difference.y + offset.y)) * 200 * 300 * delta);
                     velocity.scl(1 - 1f * delta);
@@ -83,7 +83,7 @@ public class DropItem {
 
     private Entity getNewTarget() {
         for (Entity player : EntityManager.instance.getPlayers())
-            if (Math.abs(player.transform.getCenterPosition().dst(getCenter())) < 80) return player;
+            if (Math.abs(player.getCenterPosition().dst(getCenter())) < 80) return player;
         return null;
     }
 

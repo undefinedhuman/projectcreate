@@ -25,11 +25,11 @@ public class CloudLayer extends Layer {
 
     @Override
     public void init() {
-        int cloudCount = World.instance.blockWidth / 125;
+        int cloudCount = World.instance.blockWidth/200;
         for(int i = 0; i < cloudCount; i++) {
             clouds.add(new Cloud(
                     BackgroundManager.instance.cloudTextures[Tools.random.nextInt(BackgroundManager.instance.cloudTextures.length)],
-                    new Vector2(Tools.random.nextInt(World.instance.blockWidth), World.instance.maxHeight + yOffset + Tools.random.nextInt(Variables.CLOUD_HEIGHT_OFFSET*2) - Variables.CLOUD_HEIGHT_OFFSET),
+                    new Vector2(Tools.random.nextInt(World.instance.blockWidth), World.instance.maxHeight + yOffset + Tools.random.nextInt(Variables.CLOUD_HEIGHT_OFFSET * 2) - Variables.CLOUD_HEIGHT_OFFSET),
                     speedMultiplier));
         }
     }
@@ -41,7 +41,7 @@ public class CloudLayer extends Layer {
 
     public void update(float delta, float speed) {
         for(Cloud cloud : clouds) {
-            cloud.update(delta, speed);
+            cloud.update(delta);
             if(cloud.alpha <= 0f) cloudsToRemove.add(cloud);
         }
         clouds.removeAll(cloudsToRemove);

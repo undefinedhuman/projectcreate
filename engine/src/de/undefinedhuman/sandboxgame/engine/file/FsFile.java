@@ -9,9 +9,12 @@ import java.io.IOException;
 public class FsFile {
 
     private String name, path;
+    private File file;
     private boolean isDirectory;
 
-    private File file;
+    public FsFile(File file, String fileName, boolean isDirectory) {
+        this(file.getPath() + fileName, isDirectory);
+    }
 
     public FsFile(Paths path, String fileName, boolean isDirectory) {
         this(path.getPath() + fileName, isDirectory);

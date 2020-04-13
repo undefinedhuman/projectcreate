@@ -1,9 +1,9 @@
 package de.undefinedhuman.sandboxgame.entity.chunk;
 
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.EntityType;
-import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,7 +37,7 @@ public class Chunk {
     public ArrayList<Entity> getEntityInRangeForCollision(Vector2 pos, float range) {
         ArrayList<Entity> entitiesInRange = new ArrayList<>();
         for (Entity entity : entitiesForCollision)
-            if (distanceVector.set(entity.transform.getPosition()).sub(pos).len() <= range)
+            if (distanceVector.set(entity.getPosition()).sub(pos).len() <= range)
                 entitiesInRange.add(entity);
         return entitiesInRange;
     }

@@ -1,9 +1,15 @@
 package de.undefinedhuman.sandboxgame.entity.ecs.blueprint;
 
 
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
+import de.undefinedhuman.sandboxgame.engine.file.FileReader;
+import de.undefinedhuman.sandboxgame.engine.file.Paths;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.engine.ressources.ResourceManager;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
+import de.undefinedhuman.sandboxgame.entity.EntityType;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
 import java.util.Arrays;
@@ -62,6 +68,25 @@ public class BlueprintManager extends Manager {
     public Blueprint getBlueprint(int id) {
         if (hasBlueprint(id) || loadBlueprints(id)) return blueprints.get(id);
         return hasBlueprint(0) ? getBlueprint(0) : null;
+    }
+
+    public static Blueprint loadBlueprint(int id) {
+
+        FileHandle file = ResourceManager.loadFile(Paths.ENTITY_FOLDER, id + "/settings.txt");
+        FileReader reader = new FileReader(file, true);
+        reader.nextLine();
+        EntityType type = EntityType.valueOf(reader.getNextString());
+        reader.getNextString();
+        Vector2 size = reader.getNextVector2();
+        int componentSize = reader.getNextInt();
+        Blueprint blueprint = new Blueprint(id, type, size);
+        for (int i = 0; i < componentSize; i++) {
+            reader.nextLine();
+            blueprint.addComponentBlueprint(ComponentType.load(reader.getNextString(), reader));
+        }
+        reader.close();
+        return blueprint;
+
     }
 
 }

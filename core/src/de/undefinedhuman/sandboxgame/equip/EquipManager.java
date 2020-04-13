@@ -1,15 +1,15 @@
 package de.undefinedhuman.sandboxgame.equip;
 
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.sandboxgame.entity.Entity;
-import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.equip.EquipComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.sprite.SpriteComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.sprite.SpriteData;
+import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
+import de.undefinedhuman.sandboxgame.engine.entity.components.equip.EquipComponent;
+import de.undefinedhuman.sandboxgame.engine.entity.components.sprite.SpriteComponent;
+import de.undefinedhuman.sandboxgame.engine.entity.components.sprite.SpriteData;
 import de.undefinedhuman.sandboxgame.engine.items.Item;
-import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.engine.items.ItemType;
 import de.undefinedhuman.sandboxgame.engine.items.type.Armor.Armor;
+import de.undefinedhuman.sandboxgame.entity.Entity;
+import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.network.ClientManager;
 import de.undefinedhuman.sandboxgame.network.utils.PacketUtils;
 import de.undefinedhuman.sandboxgame.utils.Tools;
@@ -44,14 +44,14 @@ public class EquipManager {
     }
 
     private void setSpriteData(SpriteComponent spriteComponent, String dataName, String texture, Vector2 size, boolean visible) {
-        SpriteData data = spriteComponent.getSpriteData(dataName);
+        SpriteData data = spriteComponent.getSpriteDataValue(dataName);
         if (texture != null) data.setTexture(texture);
         data.setVisible(visible);
         data.setSize(size.x, size.y);
     }
 
     private void setVisible(SpriteComponent component, boolean visible, String... data) {
-        for (String s : data) component.getSpriteData(s).setVisible(visible);
+        for (String s : data) component.getSpriteDataValue(s).setVisible(visible);
     }
 
     public void unEquipItemNetwork(Entity entity, int id, boolean armor) {

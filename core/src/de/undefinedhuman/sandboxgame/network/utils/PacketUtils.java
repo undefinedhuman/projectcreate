@@ -1,11 +1,11 @@
 package de.undefinedhuman.sandboxgame.network.utils;
 
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.EntityManager;
-import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
 import de.undefinedhuman.sandboxgame.equip.EquipManager;
 import de.undefinedhuman.sandboxgame.network.packets.entity.ComponentPacket;
 import de.undefinedhuman.sandboxgame.network.packets.inventory.EquipPacket;

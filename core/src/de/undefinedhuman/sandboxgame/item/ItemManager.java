@@ -2,17 +2,17 @@ package de.undefinedhuman.sandboxgame.item;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
+import de.undefinedhuman.sandboxgame.engine.entity.components.animation.AnimationComponent;
+import de.undefinedhuman.sandboxgame.engine.entity.components.arm.ShoulderComponent;
+import de.undefinedhuman.sandboxgame.engine.entity.components.equip.EquipComponent;
+import de.undefinedhuman.sandboxgame.engine.entity.components.mouse.AngleComponent;
 import de.undefinedhuman.sandboxgame.engine.items.Item;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.engine.ressources.ResourceManager;
 import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
 import de.undefinedhuman.sandboxgame.entity.Entity;
-import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.animation.AnimationComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.arm.ShoulderComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.equip.EquipComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.mouse.AngleComponent;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
 import de.undefinedhuman.sandboxgame.projectiles.Projectile;
 import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
@@ -110,8 +110,8 @@ public class ItemManager extends Manager {
                             EquipComponent equipComponent = (EquipComponent) player.getComponent(ComponentType.EQUIP);
                             ShoulderComponent shoulderComponent = (ShoulderComponent) player.getComponent(ComponentType.SHOULDER);
                             AngleComponent angleComponent = (AngleComponent) player.getComponent(ComponentType.ANGLE);
-                            Vector2 weaponPosition = equipComponent.getCurrentPosition(animationComponent.getCurrentAnimationFrameID()), shoulderPosition = shoulderComponent.getShoulderPos(animationComponent.getCurrentAnimationFrameID()),
-                                    shoulderOffset = shoulderComponent.getShoulderOffset(animationComponent.getCurrentAnimationFrameID());
+                            Vector2 weaponPosition = equipComponent.getCurrentPosition(animationComponent.getAnimationFrameIndex()), shoulderPosition = shoulderComponent.getShoulderPos(animationComponent.getAnimationFrameIndex()),
+                                    shoulderOffset = shoulderComponent.getShoulderOffset(animationComponent.getAnimationFrameIndex());
 
                             /*Vector2 launcherOffset = new Vector2(weaponPosition).sub(shoulderPosition);
                             launcherOffset.x = Math.abs(launcherOffset.x);
@@ -124,7 +124,7 @@ public class ItemManager extends Manager {
 
                             Vector2 cannonCoord = new Vector2(weaponPosition).sub(shoulderPosition);
                             cannonCoord.setAngle(((angleComponent.angle + 251) % 360) + (angleComponent.isTurned ? 0 : 39.5f));
-                            Vector2 spawnPosition = new Vector2(player.transform.getPosition()).add(shoulderPosition).add((angleComponent.isTurned ? 0 : 12), 0).sub(0, 2).add(cannonCoord);
+                            Vector2 spawnPosition = new Vector2(player.getPosition()).add(shoulderPosition).add((angleComponent.isTurned ? 0 : 12), 0).sub(0, 2).add(cannonCoord);
 
                             Vector2 angle = new Vector2(weaponPosition).sub(shoulderPosition);
                             angle.setAngle((angleComponent.angle + 270) % 360);

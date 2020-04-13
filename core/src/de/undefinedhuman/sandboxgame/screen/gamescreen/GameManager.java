@@ -1,12 +1,9 @@
 package de.undefinedhuman.sandboxgame.screen.gamescreen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -16,20 +13,7 @@ import de.undefinedhuman.sandboxgame.engine.utils.ManagerList;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.EntityManager;
-import de.undefinedhuman.sandboxgame.entity.EntityType;
-import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
 import de.undefinedhuman.sandboxgame.entity.ecs.blueprint.BlueprintManager;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.animation.AnimationComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.animation.AnimationParam;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.collision.CollisionComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.combat.CombatComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.interaction.InteractionComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.movement.MovementComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.name.NameComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.sprite.SpriteComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.sprite.SpriteParam;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.stats.health.HealthComponent;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.stats.mana.ManaComponent;
 import de.undefinedhuman.sandboxgame.gui.GuiManager;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
@@ -39,14 +23,12 @@ import de.undefinedhuman.sandboxgame.utils.Tools;
 import de.undefinedhuman.sandboxgame.world.World;
 import de.undefinedhuman.sandboxgame.world.WorldManager;
 
-import java.util.HashMap;
-
 public class GameManager {
 
     public static GameManager instance;
     public static OrthographicCamera gameCamera, guiCamera;
     public SpriteBatch gameBatch, guiBatch;
-    public Entity player, boss, furnace;
+    public Entity player;
     public Projectile projectile = null;
     private Viewport guiViewport;
 
@@ -71,41 +53,6 @@ public class GameManager {
 
         BackgroundManager.instance = new BackgroundManager();
         BackgroundManager.instance.init();
-
-        boss = new Entity(EntityType.ENTITY, new Vector2(360, 360));
-        boss.addComponent(new HealthComponent(boss, 1000, new Vector2(0, 120)));
-        HashMap<String, SpriteParam> sprites = new HashMap<>();
-        sprites.put("Main", new SpriteParam("Abomination.png", 100, new Vector2(48, 1)));
-        boss.addComponent(new SpriteComponent(boss, sprites));
-        HashMap<String, AnimationParam> animations = new HashMap<>();
-        animations.put("Idle", new AnimationParam(new String[] {"Main"}, new Vector2(1, 6), 0.1f, Animation.PlayMode.LOOP));
-        animations.put("Attack", new AnimationParam(new String[] {"Main"}, new Vector2(7, 21), 0.1f, Animation.PlayMode.LOOP));
-        animations.put("Run", new AnimationParam(new String[] {"Main"}, new Vector2(25, 32), 0.05f, Animation.PlayMode.LOOP));
-        animations.put("Hurt", new AnimationParam(new String[] {"Main"}, new Vector2(34, 36), 0.1f, Animation.PlayMode.NORMAL));
-        animations.put("Die", new AnimationParam(new String[] {"Main"}, new Vector2(37, 45), 0.1f, Animation.PlayMode.NORMAL));
-        boss.addComponent(new AnimationComponent(boss, "Idle", animations));
-        boss.addComponent(new NameComponent(boss, "Abomination"));
-        boss.addComponent(new CollisionComponent(boss, 102, 178, new Vector2(120, 10)));
-        boss.addComponent(new MovementComponent(boss, 250, 250, 1000));
-        boss.transform.setPosition(100, 6600);
-        //EntityManager.instance.addEntity(100, boss);
-
-        furnace = new Entity(EntityType.SCENERY, new Vector2(128, 128));
-        sprites = new HashMap<>();
-        sprites.put("Main", new SpriteParam("props/Furnace.png", -1, new Vector2(7, 1)));
-        furnace.addComponent(new SpriteComponent(furnace, sprites));
-        animations = new HashMap<>();
-        animations.put("Idle", new AnimationParam(new String[] {"Main"}, new Vector2(0, 0), 0, Animation.PlayMode.NORMAL));
-        animations.put("Running", new AnimationParam(new String[] {"Main"}, new Vector2(2, 7), 0.09f, Animation.PlayMode.LOOP));
-        furnace.addComponent(new AnimationComponent(furnace, "Running", animations));
-        furnace.addComponent(new CollisionComponent(furnace, 84, 62, new Vector2(22, 0)));
-        furnace.addComponent(new InteractionComponent(furnace, 75, Input.Keys.F));
-        furnace.transform.setPosition(0, 50 * Variables.BLOCK_SIZE);
-        EntityManager.instance.addEntity(101, furnace);
-
-        ((HealthComponent) player.getComponent(ComponentType.HEALTH)).getProfileOffset().set(0, 10);
-        player.addComponent(new ManaComponent(player, 100));
-        player.addComponent(new CombatComponent(player));
 
         loadManager();
 
@@ -196,7 +143,7 @@ public class GameManager {
     private void updateCamera() {
         if (GameManager.instance.player == null) return;
         float tempCam = gameCamera.viewportHeight * gameCamera.zoom * 0.5f;
-        gameCamera.position.set(Tools.lerp(gameCamera.position, new Vector3().set(player.transform.getCenterPosition(), 0), 300));
+        gameCamera.position.set(Tools.lerp(gameCamera.position, new Vector3().set(player.getCenterPosition(), 0), 300));
         gameCamera.position.y = Tools.clamp(gameCamera.position.y, tempCam, World.instance.height * 16 - tempCam - 32);
         gameCamera.update();
     }

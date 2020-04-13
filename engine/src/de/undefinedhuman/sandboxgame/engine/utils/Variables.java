@@ -13,14 +13,14 @@ public class Variables {
     public static final int HOUR_LENGTH = 10;
 
     // Background
-    public static final int CLOUD_HEIGHT_OFFSET = 30;
-    public static final int CLOUD_BASE_SPEED = 6;
     public static final int CLOUD_COUNT = 5;
+    public static final int CLOUD_HEIGHT_OFFSET = 30;
+    public static final float CLOUD_BASE_SPEED = 0.1f;
 
     public static final int BIRD_WIDTH = 19;
     public static final int BIRD_HEIGHT = 64;
     public static final int BIRD_SPEED = 64;
-    public static final int BIRD_HEIGHT_OFFSET = 50;
+    public static final int BIRD_HEIGHT_OFFSET = 32;
     public static final float BIRD_ANIMATION_SPEED = 0.0875f;
 
     // Gui
@@ -29,4 +29,7 @@ public class Variables {
     public static final int SLOT_SPACE = 2;
     public static final int SELECTED_AMOUNT = 2;
     public static final int HOTBAR_OFFSET = 6;
+
+    // Editor
+    public static final int PLAYER_TEXTURE_OFFSET_WIDTH = 64;
 }

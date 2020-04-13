@@ -2,12 +2,12 @@ package de.undefinedhuman.sandboxgame.network;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
+import de.undefinedhuman.sandboxgame.engine.entity.components.movement.MovementComponent;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.EntityManager;
-import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
 import de.undefinedhuman.sandboxgame.entity.ecs.blueprint.BlueprintManager;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.movement.MovementComponent;
 import de.undefinedhuman.sandboxgame.network.packets.LoginPacket;
 import de.undefinedhuman.sandboxgame.network.packets.ServerClosedPacket;
 import de.undefinedhuman.sandboxgame.network.packets.entity.AddEntityPacket;

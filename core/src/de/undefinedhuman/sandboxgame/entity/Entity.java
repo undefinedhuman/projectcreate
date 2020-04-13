@@ -1,61 +1,79 @@
 package de.undefinedhuman.sandboxgame.entity;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.sandboxgame.engine.base.GameObject;
+import de.undefinedhuman.sandboxgame.engine.entity.Component;
+import de.undefinedhuman.sandboxgame.engine.entity.ComponentList;
+import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.file.LineWriter;
-import de.undefinedhuman.sandboxgame.entity.ecs.Component;
-import de.undefinedhuman.sandboxgame.entity.ecs.ComponentList;
-import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
+import de.undefinedhuman.sandboxgame.engine.utils.math.Vector2i;
 import de.undefinedhuman.sandboxgame.entity.ecs.blueprint.Blueprint;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.transform.Transform;
 import de.undefinedhuman.sandboxgame.network.components.NetworkComponent;
+import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
+import de.undefinedhuman.sandboxgame.world.World;
 
-public class Entity implements NetworkComponent {
+public class Entity extends GameObject implements NetworkComponent {
 
     public boolean mainPlayer = false;
-    public Transform transform;
     private int blueprintID, worldID;
     private EntityType type;
-    private Blueprint blueprint;
     private ComponentList components;
 
-    public Entity(EntityType type, Vector2 size) {
-        this(type, size, 0);
-    }
+    private Vector2i currentChunk = new Vector2i(), tempChunk = new Vector2i();
+    private int chunkID = 0;
 
-    public Entity(EntityType type, Vector2 size, int id) {
-        this.blueprintID = id;
-        this.type = type;
-        components = new ComponentList();
-        transform = new Transform(this, size);
+    public Entity(Vector2 size, EntityType type) {
+        this(size, type, 0);
     }
 
     public Entity(Blueprint blueprint, Vector2 size) {
-        this.blueprint = blueprint;
-        this.type = blueprint.getType();
-        this.blueprintID = blueprint.getID();
-        components = new ComponentList();
-        transform = new Transform(this, size);
+        this(size, blueprint.getType(), blueprint.getID());
     }
 
+    public Entity(Vector2 size, EntityType type, int id) {
+        super(size);
+        this.blueprintID = id;
+        this.type = type;
+        components = new ComponentList();
+    }
+
+    @Override
     public void init() {
         for (Component component : components.getComponents()) component.init();
+    }
+
+    @Override
+    public void resize(int width, int height) {}
+
+    @Override
+    public void update(float delta) {}
+
+    @Override
+    public void render(SpriteBatch batch, OrthographicCamera camera) {}
+
+    @Override
+    public void renderUI(SpriteBatch batch, OrthographicCamera camera) {}
+
+    @Override
+    public void delete() {
+        components.delete();
     }
 
     public void setComponents(ComponentList list) {
         this.components = list;
     }
 
-    public Blueprint getBlueprint() {
-        return blueprint;
-    }
-
-    public EntityType getType() {
-        return type;
-    }
-
     public void addComponent(Component component) {
         this.components.addComponent(component);
+    }
+
+    public Component getComponent(ComponentType type) {
+        if (hasComponent(type)) return components.getComponent(type);
+        return null;
     }
 
     public boolean hasComponents(ComponentType... types) {
@@ -68,8 +86,54 @@ public class Entity implements NetworkComponent {
         return components.hasComponent(type);
     }
 
-    // TODO Update to network components methods
+    public EntityType getType() {
+        return type;
+    }
 
+    public int getBlueprintID() {
+        return blueprintID;
+    }
+
+    public int getWorldID() {
+        return worldID;
+    }
+
+    public void setWorldID(int worldID) {
+        this.worldID = worldID;
+    }
+
+    @Override
+    public void setPosition(float x, float y) {
+        super.setPosition(x, y);
+        checkWorld();
+    }
+
+    private void checkWorld() {
+        if(position.x < 0 || position.x >= World.instance.blockWidth) {
+            float b = (position.x < 0f ? 1f : -1f);
+            position.x = position.x + b * World.instance.blockWidth;
+            if (mainPlayer) {
+                GameManager.gameCamera.position.set(GameManager.gameCamera.position.x + b * World.instance.blockWidth, GameManager.gameCamera.position.y, GameManager.gameCamera.position.z);
+                GameManager.gameCamera.update();
+            }
+        }
+        tempChunk.set(((int) position.x / Variables.BLOCK_SIZE) / Variables.CHUNK_SIZE, ((int) position.y / Variables.BLOCK_SIZE) / Variables.CHUNK_SIZE);
+        if (tempChunk.x != currentChunk.x || tempChunk.y != currentChunk.y) {
+            EntityManager.instance.getChunk(currentChunk.x, currentChunk.y).removeEntity(worldID);
+            EntityManager.instance.getChunk(tempChunk.x, tempChunk.y).addEntity(worldID, this);
+            currentChunk.set(tempChunk.x, tempChunk.y);
+        }
+    }
+
+    public Vector2i getChunkPosition() {
+        return currentChunk;
+    }
+
+    public int getChunkID() {
+        return tempChunk.x + EntityManager.instance.chunkSize.x * tempChunk.y;
+    }
+
+    // TODO Update to network components methods
     public void receive(String s) {
         LineSplitter lineSplitter = new LineSplitter(s, true, ";");
         int componentsNumber = lineSplitter.getNextInt();
@@ -86,27 +150,6 @@ public class Entity implements NetworkComponent {
             getComponent(type).send(writer);
         }
         return writer.getData();
-    }
-
-    public Component getComponent(ComponentType type) {
-        if (hasComponent(type)) return components.getComponent(type);
-        return null;
-    }
-
-    public int getBlueprintID() {
-        return blueprintID;
-    }
-
-    public int getWorldID() {
-        return worldID;
-    }
-
-    public void setWorldID(int worldID) {
-        this.worldID = worldID;
-    }
-
-    public Transform getTransform() {
-        return transform;
     }
 
     @Override

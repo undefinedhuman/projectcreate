@@ -10,8 +10,8 @@ import java.io.IOException;
 
 public class FileWriter {
 
+    private FsFile file;
     private String separator;
-
     private BufferedWriter writer;
     private boolean base;
 
@@ -22,6 +22,7 @@ public class FileWriter {
     public FileWriter(FsFile file, boolean base, String separator) {
         this.separator = separator;
         this.base = base;
+        this.file = file;
         writer = FileUtils.getBufferedWriter(file);
     }
 
@@ -47,21 +48,19 @@ public class FileWriter {
         return writeFloat(vector.x).writeFloat(vector.y);
     }
 
+    public FsFile getParentDirectory() {
+        return new FsFile(file.getFile().getParentFile().getPath(), true);
+    }
+
     public FileWriter writeValue(Object v) {
-        try {
-            writer.write(base ? Base64Coder.encodeString(String.valueOf(v)) + this.separator : v + this.separator);
-        } catch (IOException ex) {
-            Log.instance.crash(ex.getMessage());
-        }
+        try { writer.write(base ? Base64Coder.encodeString(String.valueOf(v)) + this.separator : v + this.separator);
+        } catch (IOException ex) { Log.instance.crash(ex.getMessage()); }
         return this;
     }
 
     public FileWriter nextLine() {
-        try {
-            writer.newLine();
-        } catch (IOException ex) {
-            Log.instance.crash(ex.getMessage());
-        }
+        try { writer.newLine();
+        } catch (IOException ex) { Log.instance.crash(ex.getMessage()); }
         return this;
     }
 

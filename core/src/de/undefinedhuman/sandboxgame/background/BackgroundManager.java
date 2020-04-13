@@ -1,5 +1,6 @@
 package de.undefinedhuman.sandboxgame.background;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -8,12 +9,12 @@ import de.undefinedhuman.sandboxgame.background.birds.BirdLayer;
 import de.undefinedhuman.sandboxgame.background.clouds.CloudLayer;
 import de.undefinedhuman.sandboxgame.background.layers.BackgroundLayer;
 import de.undefinedhuman.sandboxgame.background.layers.ForegroundLayer;
+import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
+import de.undefinedhuman.sandboxgame.engine.entity.components.movement.MovementComponent;
 import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.entity.Entity;
-import de.undefinedhuman.sandboxgame.entity.ecs.ComponentType;
-import de.undefinedhuman.sandboxgame.entity.ecs.components.movement.MovementComponent;
 import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 import de.undefinedhuman.sandboxgame.world.World;
@@ -22,7 +23,7 @@ public class BackgroundManager extends Manager {
 
     public static BackgroundManager instance;
 
-    public float scale = 0, worldWidth;
+    public float scale = 0, worldWidth, speed = 250;
 
     private Layer[] layers;
     private float foreGroundWidth = 688;
@@ -35,14 +36,14 @@ public class BackgroundManager extends Manager {
         worldWidth = World.instance.mainLayer.width * Variables.BLOCK_SIZE;
         layers = new Layer[] {
                 new BackgroundLayer(new Vector2(640, 300)),
-                new CloudLayer(175, 0.25f),
-                new ForegroundLayer("background/foreground/Mountain-1.png", new Vector2(foreGroundWidth, 127), 0.25f, 135f),
-                new CloudLayer(100, 0.5f),
-                new ForegroundLayer("background/foreground/Mountain-2.png", new Vector2(foreGroundWidth, 162), 0.5f, 75f),
-                new CloudLayer(65, 0.75f),
-                new BirdLayer(200),
-                new ForegroundLayer("background/foreground/Pine-1.png", new Vector2(foreGroundWidth, 148), 0.75f, -10f),
-                new ForegroundLayer("background/foreground/Pine-2.png", new Vector2(foreGroundWidth, 199), 1f, -75f)
+                new CloudLayer(200, 0.25f),
+                new ForegroundLayer("background/foreground/Mountain 1.png", new Vector2(foreGroundWidth, 127), 0.25f, 135f),
+                new CloudLayer(125, 0.5f),
+                new ForegroundLayer("background/foreground/Mountain 2.png", new Vector2(foreGroundWidth, 162), 0.5f, 75f),
+                new CloudLayer(85, 0.75f),
+                new ForegroundLayer("background/foreground/Pine 1.png", new Vector2(foreGroundWidth, 148), 0.75f, -10f),
+                new BirdLayer(Color.valueOf("#1b2d2d"), 96, 0.75f),
+                new ForegroundLayer("background/foreground/Pine 2.png", new Vector2(foreGroundWidth, 199), 1f, -75f)
         };
     }
 
@@ -66,18 +67,16 @@ public class BackgroundManager extends Manager {
     @Override
     public void update(float delta) {
         layers[0].update(delta, Variables.HOUR_LENGTH);
-        float speed = 250;
-        if(GameManager.instance.player != null) {
-            Entity player = GameManager.instance.player;
-            speed = Tools.floorBackgroundSpeed(lastX - player.transform.getX()) * ((MovementComponent) player.getComponent(ComponentType.MOVEMENT)).getSpeed();
-            lastX = player.transform.getX();
+        Entity player = GameManager.instance.player;
+        if(player != null) {
+            speed = Tools.floorBackgroundSpeed(lastX - player.getX()) * ((MovementComponent) player.getComponent(ComponentType.MOVEMENT)).getSpeed();
+            lastX = player.getX();
         }
         for(int i = 1; i < layers.length; i++) layers[i].update(delta, speed);
     }
 
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
-        // batch.draw(TextureManager.instance.getTexture("background/foreground/Sun.png"), camera.position.x + camera.viewportWidth * 0.5f, );
         for(Layer layer : layers) layer.render(batch, camera);
     }
 

@@ -6,18 +6,19 @@ import de.undefinedhuman.sandboxgame.engine.file.Paths;
 import de.undefinedhuman.sandboxgame.engine.items.Item;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
 import de.undefinedhuman.sandboxgame.engine.settings.SettingType;
+import de.undefinedhuman.sandboxgame.engine.settings.types.BooleanSetting;
 
 public class Block extends Item {
 
     public Setting
             durability = new Setting(SettingType.Int, "Durability", 0),
             dropID = new Setting(SettingType.Int, "DropID", 0),
-            unbreakable = new Setting(SettingType.Bool, "Unbreakable", false),
-            collide = new Setting(SettingType.Bool, "Collide", false),
-            hasStates = new Setting(SettingType.Bool, "HasStates", true),
-            isFull = new Setting(SettingType.Bool, "IsFull", true),
-            canBePlacedInBackLayer = new Setting(SettingType.Bool, "Back Layer", false),
-            needBack = new Setting(SettingType.Bool, "NeedBack", false),
+            unbreakable = new BooleanSetting("Unbreakable", false),
+            collide = new BooleanSetting("Collide", false),
+            hasStates = new BooleanSetting("HasStates", true),
+            isFull = new BooleanSetting("IsFull", true),
+            canBePlacedInBackLayer = new BooleanSetting("Back Layer", false),
+            needBack = new BooleanSetting("NeedBack", false),
             atlasName = new Setting(SettingType.String, "Atlas", "Dirt");
 
     private String atlasPath;

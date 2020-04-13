@@ -81,7 +81,7 @@ public class WorldManager {
             Block block = (Block) ItemManager.instance.getItem(id);
             // TODO Look into playercenter
             Vector2 blockPos = Tools.convertToWorldCoords(Tools.getWorldPos(GameManager.gameCamera, Mouse.getMouseCoords())),
-                    playerCenter = Tools.convertToWorldCoords(GameManager.instance.player.transform.getCenterPosition());
+                    playerCenter = Tools.convertToWorldCoords(GameManager.instance.player.getCenterPosition());
 
             Block currentBlock = (Block) ItemManager.instance.getItem(getBlock(true, blockPos));
 
@@ -260,7 +260,7 @@ public class WorldManager {
         if (canDestroy) {
 
             Pickaxe pickaxe = (Pickaxe) InventoryManager.instance.getSelector().getSelectedItem();
-            Vector2 blockPos = Tools.convertToWorldCoords(Tools.getWorldPos(GameManager.gameCamera, Mouse.getMouseCoords())), playerCenter = Tools.convertToWorldCoords(new Vector2().add(GameManager.instance.player.transform.getPosition()).add(GameManager.instance.player.transform.getCenter()));
+            Vector2 blockPos = Tools.convertToWorldCoords(Tools.getWorldPos(GameManager.gameCamera, Mouse.getMouseCoords())), playerCenter = Tools.convertToWorldCoords(new Vector2().add(GameManager.instance.player.getPosition()).add(GameManager.instance.player.getCenter()));
             Block currentBlock = (Block) ItemManager.instance.getItem(getBlock(main, blockPos));
 
             if (currentBlock.id != 0 && isInRange(blockPos, playerCenter, pickaxe.range.getInt()) && !currentBlock.unbreakable.getBoolean()) {

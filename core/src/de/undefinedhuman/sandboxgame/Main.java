@@ -31,28 +31,33 @@ import de.undefinedhuman.sandboxgame.world.layer.topLayer.TopLayerManager;
 
 public class Main extends Game {
 
-    // TODO Split the game and engine code so server and game can share things like the log, lamguage, items, entities, etc.
-
     public static Main instance;
 
     public static float delta;
     public static int guiScale = 1;
 
     private ManagerList managerList;
-
     private Timer timer;
 
     public Main() {
         instance = this;
         managerList = new ManagerList();
         managerList.addManager(new Log(), new SettingsManager(), new ConfigManager(), new LanguageManager(), new TextureManager(), new SoundManager(), new FontManager(), new Inputs(), new GuiManager(), new BlueprintManager(), new ItemManager());
-        timer = new Timer(1, true) {
-            @Override
-            public void action() {
-                Window.instance.update();
-            }
-        };
+        timer = new Timer(1, true, () -> Window.instance.update());
     }
+
+    /*
+    Hair;Hair.png;3;16.0;1.0;
+    Legs;Legs.png;2;16.0;1.0;
+    RightArm;Front Arm.png;6;16.0;1.0;
+    Head;Head.png;3;16.0;1.0;
+    ItemHitbox;Unknown.png;0;0.0;0.0;
+    SelectedArm;Front Arm S.png;6;16.0;1.0;
+    Eye;Eyes.png;3;16.0;1.0;
+    Item;Unknown.png;5;0.0;0.0;
+    LeftArm;Back Arm.png;1;16.0;1.0;
+    Body;Body.png;2;16.0;1.0;
+     */
 
     @Override
     public void create() {
