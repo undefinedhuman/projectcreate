@@ -4,8 +4,8 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.file.FileReader;
 import de.undefinedhuman.sandboxgame.engine.file.Paths;
-import de.undefinedhuman.sandboxgame.engine.ressources.ResourceManager;
-import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
+import de.undefinedhuman.sandboxgame.engine.resources.ResourceManager;
+import de.undefinedhuman.sandboxgame.engine.resources.texture.TextureManager;
 
 public enum GuiTemplate {
 

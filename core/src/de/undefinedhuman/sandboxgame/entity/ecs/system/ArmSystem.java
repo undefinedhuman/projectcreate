@@ -23,7 +23,6 @@ import de.undefinedhuman.sandboxgame.entity.EntityManager;
 import de.undefinedhuman.sandboxgame.entity.ecs.System;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
-import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
 import java.util.ArrayList;
@@ -49,61 +48,46 @@ public class ArmSystem extends System {
         ShoulderComponent shoulderComponent;
         AnimationComponent animationComponent;
 
-        if ((spriteComponent = (SpriteComponent) entity.getComponent(ComponentType.SPRITE)) != null && (angleComponent = (AngleComponent) entity.getComponent(ComponentType.ANGLE)) != null) {
+        if ((spriteComponent = (SpriteComponent) entity.getComponent(ComponentType.SPRITE)) == null
+                || (angleComponent = (AngleComponent) entity.getComponent(ComponentType.ANGLE)) == null
+                || (rightArmComponent = (RightArmComponent) entity.getComponent(ComponentType.RIGHTARM)) == null
+                || (equipComponent = (EquipComponent) entity.getComponent(ComponentType.EQUIP)) == null
+                || (shoulderComponent = (ShoulderComponent) entity.getComponent(ComponentType.SHOULDER)) == null
+                || (animationComponent = (AnimationComponent) entity.getComponent(ComponentType.ANIMATION)) == null) return;
 
-            if ((rightArmComponent = (RightArmComponent) entity.getComponent(ComponentType.RIGHTARM)) != null && (equipComponent = (EquipComponent) entity.getComponent(ComponentType.EQUIP)) != null && (shoulderComponent = (ShoulderComponent) entity.getComponent(ComponentType.SHOULDER)) != null && (animationComponent = (AnimationComponent) entity.getComponent(ComponentType.ANIMATION)) != null) {
+        SpriteData data = spriteComponent.getSpriteDataValue(rightArmComponent.getSelectedTexture());
+        Vector2 mousePos = angleComponent.mousePos;
+        Vector2 shoulderPosition = new Vector2(shoulderComponent.getShoulderPos(animationComponent.getAnimationFrameIndex()));
+        shoulderPosition.set((angleComponent.isTurned ? shoulderPosition.x : entity.getSize().x - shoulderPosition.x), shoulderPosition.y);
 
-                SpriteData data = spriteComponent.getSpriteDataValue(rightArmComponent.getSelectedTexture());
-                Vector2 mousePos = entity.mainPlayer ? Tools.getWorldCoordsOfMouse(GameManager.gameCamera) : angleComponent.mousePos;
-                Vector2 shoulderPos = new Vector2();
+        if (entity.mainPlayer) {
+            float angle = new Vector2(mousePos).sub(shoulderPosition).sub(entity.getPosition()).angle() + (angleComponent.isTurned ? 0 : 180);
+            angle += angleComponent.isTurned ? 95 : -95;
 
-                if (entity.mainPlayer) {
+            if (InventoryManager.instance.getSelector().getSelectedInvItem() != null) {
+                Item item = ItemManager.instance.getItem(InventoryManager.instance.getSelector().getSelectedItemID());
+                boolean hasSword = (item.type == ItemType.SWORD);
+                CombatComponent combatComponent = (CombatComponent) entity.getComponent(ComponentType.COMBAT);
+                calculateShake(rightArmComponent, item);
 
-                    if (!angleComponent.isTurned) {
-                        shoulderPos.x = (entity.getPosition().x + (entity.getSize().x / 2 + rightArmComponent.shoulderPosOffset.x));
-                    } else {
-                        shoulderPos.x = (entity.getPosition().x + entity.getSize().x - (entity.getSize().x / 2 + rightArmComponent.shoulderPosOffset.x));
-                    }
+                if (hasSword && combatComponent != null)
+                    angle = animationSword(entity, equipComponent, combatComponent, angleComponent.isTurned, angleComponent.angle, angle, (Sword) item);
+                if (combatComponent != null)
+                    if (combatComponent.currentDamage < 0 || !hasSword) combatComponent.currentDamage = 0;
 
-                    shoulderPos.y = (entity.getPosition().y + entity.getSize().y / 2 + rightArmComponent.shoulderPosOffset.y);
-
-                    float angle = new Vector2(mousePos.x - shoulderPos.x, mousePos.y - shoulderPos.y).angle() + (angleComponent.isTurned ? 0 : 180);
-                    angle += angleComponent.isTurned ? 95 : -95;
-
-                    if (InventoryManager.instance.getSelector().getSelectedInvItem() != null) {
-
-                        Item item = ItemManager.instance.getItem(InventoryManager.instance.getSelector().getSelectedItemID());
-                        boolean hasSword = (item.type == ItemType.SWORD);
-                        CombatComponent combatComponent = (CombatComponent) entity.getComponent(ComponentType.COMBAT);
-                        calculateShake(rightArmComponent, item);
-
-                        if (hasSword && combatComponent != null)
-                            angle = animationSword(entity, equipComponent, combatComponent, angleComponent.isTurned, angleComponent.angle, angle, (Sword) item);
-                        if (combatComponent != null)
-                            if (combatComponent.currentDamage < 0 || !hasSword) combatComponent.currentDamage = 0;
-
-                        angleComponent.angle = angle + rightArmComponent.shakeAngle;
-
-                    }
-
-                }
-
-                boolean selected = Tools.isItemSelected(entity);
-
-                Vector2 shoulderPosition = shoulderComponent.getShoulderPos(animationComponent.getAnimationFrameIndex());
-
-                spriteComponent.getSpriteDataValue(rightArmComponent.getTextureName()).setVisible(!selected);
-                spriteComponent.getSpriteDataValue(rightArmComponent.getSelectedTexture()).setVisible(selected);
-
-                if (!selected) return;
-                data.setOrigin((angleComponent.isTurned ? shoulderPosition.x + 1 : entity.getSize().x - shoulderPosition.x - 1), shoulderPosition.y);
-                data.setPositionOffset(angleComponent.isTurned ? 1 : -1, 0);
-                data.setRotation(angleComponent.angle);
-
+                angleComponent.angle = angle + rightArmComponent.shakeAngle;
             }
 
         }
 
+        boolean selected = Tools.isItemSelected(entity);
+
+        spriteComponent.getSpriteDataValue(rightArmComponent.getTextureName()).setVisible(!selected);
+        spriteComponent.getSpriteDataValue(rightArmComponent.getSelectedTexture()).setVisible(selected);
+
+        if (!selected) return;
+        data.setOrigin(shoulderPosition);
+        data.setRotation(angleComponent.angle);
     }
 
     @Override

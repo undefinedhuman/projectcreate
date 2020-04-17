@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.background.BackgroundManager;
 import de.undefinedhuman.sandboxgame.background.Layer;
-import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
+import de.undefinedhuman.sandboxgame.engine.resources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.world.World;
 
 public class ForegroundLayer extends Layer {

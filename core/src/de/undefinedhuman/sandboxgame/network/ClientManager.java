@@ -43,7 +43,7 @@ public class ClientManager extends Manager {
 
         playerUpdateTimer60 = new Timer(0.015f, true, () -> {
             Entity player = GameManager.instance.player;
-            ((AngleComponent) player.getComponent(ComponentType.ANGLE)).mousePos = Tools.getWorldCoordsOfMouse(GameManager.gameCamera);
+            ((AngleComponent) player.getComponent(ComponentType.ANGLE)).mousePos = Tools.getMouseCoordsInWorldSpace(GameManager.gameCamera);
             ComponentPacket packet = PacketUtils.createComponentPacket(player, ComponentType.ANGLE);
             ClientManager.instance.sendUDP(packet);
         });

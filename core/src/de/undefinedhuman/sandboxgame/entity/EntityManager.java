@@ -25,6 +25,7 @@ public class EntityManager {
     private ArrayList<System> systems = new ArrayList<>();
 
     public EntityManager() {
+        if(instance == null) instance = this;
         addSystems(new AngleSystem(), new AnimationSystem(), new ArmSystem(), new InteractionSystem(), new EquipSystem(), new MovementSystem(), new RenderSystem());
     }
 

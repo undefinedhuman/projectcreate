@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.background.BackgroundManager;
 import de.undefinedhuman.sandboxgame.engine.base.GameObject;
-import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
+import de.undefinedhuman.sandboxgame.engine.resources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 import de.undefinedhuman.sandboxgame.world.World;
@@ -22,14 +22,12 @@ public class Cloud extends GameObject {
     public Cloud(String texture, Vector2 startPos, float speedMultiplier) {
         this.texture = texture;
         this.speedMultiplier = speedMultiplier;
-
+        this.baseSpeed = Variables.CLOUD_BASE_SPEED * (Tools.random.nextInt(8) + 1);
         this.position.set(startPos);
     }
 
     @Override
-    public void init() {
-        this.baseSpeed = Variables.CLOUD_BASE_SPEED * (Tools.random.nextInt(8) + 1);
-    }
+    public void init() {}
 
     @Override
     public void resize(int width, int height) {

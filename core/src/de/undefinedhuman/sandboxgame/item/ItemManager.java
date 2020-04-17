@@ -9,8 +9,8 @@ import de.undefinedhuman.sandboxgame.engine.entity.components.equip.EquipCompone
 import de.undefinedhuman.sandboxgame.engine.entity.components.mouse.AngleComponent;
 import de.undefinedhuman.sandboxgame.engine.items.Item;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
-import de.undefinedhuman.sandboxgame.engine.ressources.ResourceManager;
-import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
+import de.undefinedhuman.sandboxgame.engine.resources.ResourceManager;
+import de.undefinedhuman.sandboxgame.engine.resources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;

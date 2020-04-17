@@ -174,7 +174,7 @@ public class GuiTransform {
     }
 
     public boolean isClicked(OrthographicCamera camera) {
-        Vector2 coords = Tools.getWorldCoordsOfMouse(camera);
+        Vector2 coords = Tools.getMouseCoordsInWorldSpace(camera);
         return (coords.x >= position.x && coords.x <= position.x + scale.x) && (coords.y >= position.y && coords.y <= position.y + scale.y);
     }
 

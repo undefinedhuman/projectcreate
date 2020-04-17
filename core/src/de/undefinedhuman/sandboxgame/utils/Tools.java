@@ -14,7 +14,7 @@ import de.undefinedhuman.sandboxgame.Main;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.entity.components.equip.EquipComponent;
 import de.undefinedhuman.sandboxgame.engine.file.Paths;
-import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
+import de.undefinedhuman.sandboxgame.engine.resources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.gui.Gui;
@@ -60,7 +60,7 @@ public class Tools extends de.undefinedhuman.sandboxgame.engine.utils.Tools {
         return new Vector2(worldCoords.x, worldCoords.y);
     }
 
-    public static Vector2 getWorldCoordsOfMouse(OrthographicCamera cam) {
+    public static Vector2 getMouseCoordsInWorldSpace(OrthographicCamera cam) {
         return getWorldPos(cam, Gdx.input.getX(), Gdx.input.getY());
     }
 

@@ -15,11 +15,10 @@ public class LanguageManager extends Manager {
 
     public static LanguageManager instance;
 
-    private HashMap<String, String> languageList;
+    private HashMap<String, String> languageList = new HashMap<>();
     private String languageName;
 
     public LanguageManager() {
-        languageList = new HashMap<>();
         if (instance == null) instance = this;
     }
 

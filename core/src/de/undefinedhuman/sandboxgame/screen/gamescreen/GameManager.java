@@ -8,9 +8,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import de.undefinedhuman.sandboxgame.background.BackgroundManager;
-import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.engine.utils.ManagerList;
-import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.EntityManager;
 import de.undefinedhuman.sandboxgame.entity.ecs.blueprint.BlueprintManager;
@@ -108,8 +106,6 @@ public class GameManager {
         DropItemManager.instance.render(gameBatch);
         if (projectile != null) projectile.render(gameBatch);
         World.instance.renderMainLayer(gameBatch);
-
-        gameBatch.draw(TextureManager.instance.getTexture("tree/Tree.png"), 103 * Variables.BLOCK_SIZE, Variables.BLOCK_SIZE * 50, 128, 128);
         gameBatch.end();
 
         guiViewport.apply();
@@ -143,7 +139,7 @@ public class GameManager {
     private void updateCamera() {
         if (GameManager.instance.player == null) return;
         float tempCam = gameCamera.viewportHeight * gameCamera.zoom * 0.5f;
-        gameCamera.position.set(Tools.lerp(gameCamera.position, new Vector3().set(player.getCenterPosition(), 0), 300));
+        gameCamera.position.set(new Vector3(player.getCenterPosition(), 0));
         gameCamera.position.y = Tools.clamp(gameCamera.position.y, tempCam, World.instance.height * 16 - tempCam - 32);
         gameCamera.update();
     }

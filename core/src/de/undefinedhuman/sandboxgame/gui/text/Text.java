@@ -8,8 +8,8 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Align;
 import de.undefinedhuman.sandboxgame.Main;
-import de.undefinedhuman.sandboxgame.engine.ressources.font.Font;
-import de.undefinedhuman.sandboxgame.engine.ressources.font.FontManager;
+import de.undefinedhuman.sandboxgame.engine.resources.font.Font;
+import de.undefinedhuman.sandboxgame.engine.resources.font.FontManager;
 import de.undefinedhuman.sandboxgame.gui.GuiComponent;
 import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.Constraint;
@@ -28,7 +28,7 @@ public class Text extends GuiComponent {
     public Text(Object text) {
         super();
         this.text = String.valueOf(text);
-        this.font = FontManager.instance.getFont(fontType);
+        this.font = FontManager.instance.getFont(fontType, Main.guiScale);
         lineLength = new PixelConstraint(0).setGui(this).setAxis(Axis.WIDTH);
         calcScale = false;
     }

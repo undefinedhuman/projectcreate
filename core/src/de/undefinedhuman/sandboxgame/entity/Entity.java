@@ -7,6 +7,7 @@ import de.undefinedhuman.sandboxgame.engine.base.GameObject;
 import de.undefinedhuman.sandboxgame.engine.entity.Component;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentList;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
+import de.undefinedhuman.sandboxgame.engine.entity.EntityType;
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.file.LineWriter;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;

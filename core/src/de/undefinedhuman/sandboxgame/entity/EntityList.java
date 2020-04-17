@@ -2,6 +2,7 @@ package de.undefinedhuman.sandboxgame.entity;
 
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
+import de.undefinedhuman.sandboxgame.engine.entity.EntityType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,13 +44,13 @@ public class EntityList {
 
     public ArrayList<Entity> getPlayers() {
         ArrayList<Entity> players = new ArrayList<>();
-        for (Entity entity : entities.values()) if (entity.getType() == EntityType.PLAYER) players.add(entity);
+        for (Entity entity : entities.values()) if (entity.getType() == EntityType.Player) players.add(entity);
         return players;
     }
 
     public ArrayList<Integer> getPlayersID() {
         ArrayList<Integer> players = new ArrayList<>();
-        for (int id : entities.keySet()) if (entities.get(id).getType() == EntityType.PLAYER) players.add(id);
+        for (int id : entities.keySet()) if (entities.get(id).getType() == EntityType.Player) players.add(id);
         return players;
     }
 

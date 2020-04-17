@@ -27,6 +27,7 @@ public class SpriteData {
     }
 
     public void setAnimationBounds(Vector2 regionSize) {
+        if(!isAnimated) return;
         this.row = (int) (regionSize.x == 0 ? 1 : regionSize.x);
         this.col = (int) (regionSize.y == 0 ? 1 : regionSize.y);
         this.hasRegion = true;

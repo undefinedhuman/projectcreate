@@ -40,7 +40,7 @@ public class Panel extends Setting {
     @Override
     protected void addValueMenuComponents(JPanel panel, Vector2 position) {
         objectPanel = new JPanel(null);
-        objectPanel.setBounds((int) position.x - 175, (int) position.y + 160, 370, 200);
+        objectPanel.setBounds((int) position.x - 175, (int) position.y + 190, 370, panelObject.settings.getSettings().size() * 25);
         objectPanel.setBackground(Color.WHITE);
         objectPanel.setOpaque(true);
 
@@ -77,7 +77,7 @@ public class Panel extends Setting {
         });
 
         objectScrollPane = new JScrollPane(objectSelectionList);
-        objectScrollPane.setBounds((int) position.x - 175, (int) position.y + 90, 370, 60);
+        objectScrollPane.setBounds((int) position.x - 175, (int) position.y + 90, 370, 90);
 
         panel.add(objectScrollPane);
         panel.add(objectPanel);

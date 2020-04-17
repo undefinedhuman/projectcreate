@@ -73,7 +73,10 @@ public class TextureSetting extends Setting {
             loadTexture(parentDir.getPath() + Variables.FILE_SEPARATOR + getString());
             if(texture == null) loadTexture("Unknown.png");
         } catch (Exception e) { Log.instance.crash(e.getMessage()); }
-        if(TextureManager.instance != null) TextureManager.instance.addTexture();
+        if(TextureManager.instance != null) {
+            setValue(parentDir.getPath() + Variables.FILE_SEPARATOR + getString());
+            TextureManager.instance.addTexture(getString());
+        }
     }
 
     private void loadTexture(String path) throws IOException {

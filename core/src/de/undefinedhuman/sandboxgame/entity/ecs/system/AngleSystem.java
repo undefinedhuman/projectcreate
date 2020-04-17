@@ -28,36 +28,32 @@ public class AngleSystem extends System {
         AngleComponent angleComponent;
         SpriteComponent spriteComponent;
 
-        if ((angleComponent = (AngleComponent) entity.getComponent(ComponentType.ANGLE)) != null) {
+        if ((angleComponent = (AngleComponent) entity.getComponent(ComponentType.ANGLE)) == null) return;
 
-            if (entity.mainPlayer) {
+        if (entity.mainPlayer) {
+            angleComponent.mousePos = Tools.getMouseCoordsInWorldSpace(GameManager.gameCamera);
 
-                Vector2 mousePos = Tools.getWorldCoordsOfMouse(GameManager.gameCamera);
+            float angle = angleComponent.angle;
+            boolean turned = angleComponent.isTurned,
+                    mouse = angleComponent.mousePos.x < entity.getPosition().x + entity.getSize().x / 2;
 
-                float angle = angleComponent.angle;
-                boolean turned = angleComponent.isTurned, mouse = mousePos.x < entity.getPosition().x + entity.getSize().x / 2;
+            angleComponent.angle = mouse ? (turned ? -(angle) : angle) : (!turned ? -(angle) : angle);
+            angleComponent.isTurned = !mouse;
 
-                angleComponent.angle = mouse ? (turned ? -(angle) : angle) : (!turned ? -(angle) : angle);
-                angleComponent.isTurned = !(mousePos.x < entity.getPosition().x + entity.getSize().x / 2);
-
-                angleComponent.angle = Tools.angleCrop(angleComponent.angle);
-
-            }
-
-            if ((spriteComponent = (SpriteComponent) entity.getComponent(ComponentType.SPRITE)) != null)
-                for (SpriteData data : spriteComponent.getSpriteDataValue())
-                    data.setScale(new Vector2(angleComponent.isTurned ? Math.abs(data.getScale().x) : -Math.abs(data.getScale().x), data.getScale().y));
-
+            angleComponent.angle = Tools.angleCrop(angleComponent.angle);
         }
 
+        if ((spriteComponent = (SpriteComponent) entity.getComponent(ComponentType.SPRITE)) == null) return;
+        for (SpriteData data : spriteComponent.getSpriteDataValue())
+            data.setScale(new Vector2(angleComponent.isTurned ? Math.abs(data.getScale().x) : -Math.abs(data.getScale().x), data.getScale().y));
+
+
     }
 
     @Override
-    public void render(SpriteBatch batch) {
-    }
+    public void render(SpriteBatch batch) { }
 
     @Override
-    public void render(SpriteBatch batch, Entity entity) {
-    }
+    public void render(SpriteBatch batch, Entity entity) { }
 
 }

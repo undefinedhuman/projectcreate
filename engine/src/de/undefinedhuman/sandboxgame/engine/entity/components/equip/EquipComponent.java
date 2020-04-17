@@ -5,7 +5,10 @@ import de.undefinedhuman.sandboxgame.engine.entity.Component;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.file.LineWriter;
+import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.engine.utils.Tools;
+
+import java.util.Arrays;
 
 public class EquipComponent extends Component {
 
@@ -13,11 +16,12 @@ public class EquipComponent extends Component {
     private Vector2[] itemOffsets, itemPositions;
     private String[] invisibleSprites;
 
-    public EquipComponent(String itemLayer, String armLayer, String hitboxLayer, String[] invisibleSprites, Vector2[] itemOffsets, Vector2[] itemPositions) {
+    public EquipComponent(String[] invisibleSprites, Vector2[] itemOffsets, Vector2[] itemPositions) {
         for (int i = 0; i < itemIDs.length; i++) itemIDs[0] = -1;
         this.itemOffsets = itemOffsets;
         this.itemPositions = itemPositions;
         this.invisibleSprites = invisibleSprites;
+        Log.info(Arrays.toString(invisibleSprites));
         this.type = ComponentType.EQUIP;
     }
 

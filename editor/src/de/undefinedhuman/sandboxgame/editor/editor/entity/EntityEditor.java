@@ -6,6 +6,7 @@ import de.undefinedhuman.sandboxgame.editor.editor.Editor;
 import de.undefinedhuman.sandboxgame.editor.engine.ressources.ResourceManager;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentBlueprint;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
+import de.undefinedhuman.sandboxgame.engine.entity.EntityType;
 import de.undefinedhuman.sandboxgame.engine.file.*;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
@@ -18,6 +19,7 @@ import de.undefinedhuman.sandboxgame.engine.utils.Tools;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class EntityEditor extends Editor {
@@ -37,11 +39,6 @@ public class EntityEditor extends Editor {
         super(container);
         components = new HashMap<>();
         addComponentComboBox();
-
-        FsFile file = new FsFile("0/settings.entity", false);
-        FileReader reader = file.getFileReader(true);
-        while(reader.nextLine() != null) Log.info(reader.getData());
-        reader.close();
 
         entitySettings.addSettings(
                 new Setting(SettingType.Int, "ID", 0),
@@ -108,23 +105,19 @@ public class EntityEditor extends Editor {
     @Override
     public void load() {
 
-        componentList.clear();
-        components.clear();
-        Tools.removeSettings(settingsPanel);
-
         FileHandle[] entityDirs = ResourceManager.loadDir(Paths.ENTITY_FOLDER).list();
-        String[] ids = new String[entityDirs.length];
+        ArrayList<String> ids = new ArrayList<>();
 
-        for(int i = 0; i < ids.length; i++) {
-            if(!entityDirs[i].isDirectory()) continue;
-            FileReader reader = new FileReader(new FsFile(Paths.ENTITY_FOLDER, entityDirs[i].name() + "/settings.entity", false), true);
+        for (FileHandle entityDir : entityDirs) {
+            if (!entityDir.isDirectory()) continue;
+            FileReader reader = new FileReader(new FsFile(Paths.ENTITY_FOLDER, entityDir.name() + "/settings.entity", false), true);
             reader.nextLine();
             HashMap<String, LineSplitter> settings = Tools.loadSettings(reader);
-            ids[i] = entityDirs[i].name() + "-" + settings.get("Name").getNextString();
+            ids.add(entityDir.name() + "-" + settings.get("Name").getNextString());
             reader.close();
         }
 
-        final JFrame chooseWindow = new JFrame("Load entity");
+        JFrame chooseWindow = new JFrame("Load entity");
         chooseWindow.setSize(480,150);
         chooseWindow.setLocationRelativeTo(null);
         chooseWindow.setResizable(false);
@@ -135,20 +128,24 @@ public class EntityEditor extends Editor {
         JButton button = new JButton("Load Entity");
         button.setBounds(90, 70, 300, 25);
 
-        final JComboBox<String> comboBox = new JComboBox<>(ids);
+        JComboBox<String> comboBox = new JComboBox<>(ids.toArray(new String[0]));
         comboBox.setBounds(90, 35, 300, 25);
 
         button.addActionListener(a -> {
             if(comboBox.getSelectedItem() == null) return;
+
+            componentList.clear();
+            components.clear();
+            Tools.removeSettings(settingsPanel);
 
             FileReader reader = new FileReader(ResourceManager.loadFile(Paths.ENTITY_FOLDER, Integer.parseInt(((String) comboBox.getSelectedItem()).split("-")[0]) + "/settings.entity"), true);
             reader.nextLine();
             HashMap<String, LineSplitter> settingsList = Tools.loadSettings(reader);
             for(Setting setting : entitySettings.getSettings()) setting.loadSetting(reader.getParentDirectory(), settingsList);
 
-            int size = reader.getNextInt();
+            int componentSize = reader.getNextInt();
             reader.nextLine();
-            for(int i = 0; i < size; i++) {
+            for(int i = 0; i < componentSize; i++) {
                 ComponentType type = ComponentType.valueOf(reader.getNextString());
                 if(componentList.contains(type.name())) return;
                 componentList.addElement(type.name());

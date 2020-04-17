@@ -1,15 +1,14 @@
 package de.undefinedhuman.sandboxgame.entity.ecs.blueprint;
 
-
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.file.FileReader;
+import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.file.Paths;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
-import de.undefinedhuman.sandboxgame.engine.ressources.ResourceManager;
+import de.undefinedhuman.sandboxgame.engine.resources.ResourceManager;
+import de.undefinedhuman.sandboxgame.engine.settings.Setting;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
-import de.undefinedhuman.sandboxgame.entity.EntityType;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
 import java.util.Arrays;
@@ -35,7 +34,7 @@ public class BlueprintManager extends Manager {
     public boolean loadBlueprints(Integer... ids) {
         boolean loaded = false;
         for (int id : ids) {
-            if (!hasBlueprint(id)) blueprints.put(id, ResourceManager.loadBlueprint(id));
+            if (!hasBlueprint(id)) blueprints.put(id, loadBlueprint(id));
             loaded |= hasBlueprint(id);
         }
         if (loaded)
@@ -71,22 +70,21 @@ public class BlueprintManager extends Manager {
     }
 
     public static Blueprint loadBlueprint(int id) {
-
-        FileHandle file = ResourceManager.loadFile(Paths.ENTITY_FOLDER, id + "/settings.txt");
+        Blueprint blueprint = new Blueprint();
+        FileHandle file = ResourceManager.loadFile(Paths.ENTITY_FOLDER, id + "/settings.entity");
         FileReader reader = new FileReader(file, true);
         reader.nextLine();
-        EntityType type = EntityType.valueOf(reader.getNextString());
-        reader.getNextString();
-        Vector2 size = reader.getNextVector2();
+        HashMap<String, LineSplitter> settingsList = Tools.loadSettings(reader);
+        for(Setting setting : blueprint.entitySettings.getSettings()) setting.loadSetting(reader.getParentDirectory(), settingsList);
         int componentSize = reader.getNextInt();
-        Blueprint blueprint = new Blueprint(id, type, size);
+        reader.nextLine();
         for (int i = 0; i < componentSize; i++) {
+            ComponentType type = ComponentType.valueOf(reader.getNextString());
             reader.nextLine();
-            blueprint.addComponentBlueprint(ComponentType.load(reader.getNextString(), reader));
+            blueprint.addComponentBlueprint(type.load(reader));
         }
         reader.close();
         return blueprint;
-
     }
 
 }

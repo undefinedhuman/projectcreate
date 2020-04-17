@@ -1,6 +1,6 @@
 package de.undefinedhuman.sandboxgame.background;
 
-import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
+import de.undefinedhuman.sandboxgame.engine.resources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 
 public enum Time {

@@ -30,7 +30,7 @@ public class EquipBlueprint extends ComponentBlueprint {
 
     @Override
     public Component createInstance(HashMap<ComponentType, ComponentParam> params) {
-        return new EquipComponent(itemLayer.getString(), armLayer.getString(), hitboxLayer.getString(), invisibleLayers.getStringArray(),  itemOffsets.getVector2Array(), itemPositions.getVector2Array());
+        return new EquipComponent(invisibleLayers.getStringArray(), itemOffsets.getVector2Array(), itemPositions.getVector2Array());
     }
 
     @Override

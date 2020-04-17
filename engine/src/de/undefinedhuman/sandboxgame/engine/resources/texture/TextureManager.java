@@ -13,10 +13,9 @@ public class TextureManager extends Manager {
 
     public static TextureManager instance;
 
-    private HashMap<String, TextureValue> textures;
+    private HashMap<String, TextureValue> textures = new HashMap<>();
 
     public TextureManager() {
-        textures = new HashMap<>();
         if (instance == null) instance = this;
     }
 

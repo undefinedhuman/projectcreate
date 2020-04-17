@@ -11,7 +11,7 @@ import de.undefinedhuman.sandboxgame.background.layers.BackgroundLayer;
 import de.undefinedhuman.sandboxgame.background.layers.ForegroundLayer;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.entity.components.movement.MovementComponent;
-import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
+import de.undefinedhuman.sandboxgame.engine.resources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.entity.Entity;
@@ -23,7 +23,7 @@ public class BackgroundManager extends Manager {
 
     public static BackgroundManager instance;
 
-    public float scale = 0, worldWidth, speed = 250;
+    public float scale = 0, worldWidth, speed = 250f;
 
     private Layer[] layers;
     private float foreGroundWidth = 688;

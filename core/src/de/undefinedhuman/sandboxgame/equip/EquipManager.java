@@ -35,7 +35,7 @@ public class EquipManager {
         equipComponent.setItemID(armor ? getItemIndex(item.type) : 0, id);
         setSpriteData(spriteComponent, armor ? Tools.capitalizeFirstLetter(item.type.name()) : "Item", item.useIconAsHandTexture.getBoolean() ? item.iconTexture.getString() : item.itemTexture.getString(), item.useIconAsHandTexture.getBoolean() ? new Vector2(16, 16) : new Vector2(120, 74), true);
         if (armor) setVisible(spriteComponent, false, ((Armor) item).inVisibleSprites.getStringArray());
-        else setSpriteData(spriteComponent, "ItemHitbox", null, new Vector2(0, 0), false);
+        else setSpriteData(spriteComponent, "Item Hitbox", null, new Vector2(0, 0), false);
     }
 
     private int getItemIndex(ItemType type) {

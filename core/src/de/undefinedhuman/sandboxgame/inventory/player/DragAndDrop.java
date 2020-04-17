@@ -171,7 +171,7 @@ public class DragAndDrop {
 
     public void render(SpriteBatch batch, OrthographicCamera camera) {
 
-        Vector2 mousePosition = Tools.getWorldCoordsOfMouse(camera);
+        Vector2 mousePosition = Tools.getMouseCoordsInWorldSpace(camera);
 
         if (moving && (currentItem.getID() != 0 && currentItem.getAmount() != 0)) {
             currentItem.setPosition((int) (mousePosition.x - currentItem.getScale().x / 2), (int) (mousePosition.y - currentItem.getScale().y / 2));

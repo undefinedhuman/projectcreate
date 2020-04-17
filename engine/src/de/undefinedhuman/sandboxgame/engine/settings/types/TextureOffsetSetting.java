@@ -42,7 +42,7 @@ public class TextureOffsetSetting extends Setting {
             @Override
             public void mouseClicked(MouseEvent arg0) {
                 JFileChooser chooser = new JFileChooser();
-                chooser.setCurrentDirectory(new FsFile("Unknown.png", false).getFile());
+                chooser.setCurrentDirectory(new FsFile("editor/", false).getFile());
                 chooser.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));
 
                 int returnVal = chooser.showOpenDialog(null);

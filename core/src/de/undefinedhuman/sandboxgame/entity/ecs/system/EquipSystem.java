@@ -56,7 +56,7 @@ public class EquipSystem extends System {
                     case BOW:
                         setSpriteData(spriteComponent, "Item", angleComponent.isTurned ? shoulderPosition.x + weaponOffset.x - 10 : entity.getWidth() - shoulderPosition.x - weaponOffset.x + 10, shoulderPosition.y + weaponOffset.y - 4,
                                 angleComponent.isTurned ? -weaponOffset.x + 12 : weaponOffset.x - 12, -weaponOffset.y + 6, angleComponent.angle + (angleComponent.isTurned ? -45 : 45));
-                        setSpriteData(spriteComponent, "ItemHitbox", angleComponent.isTurned ? 4 : entity.getSize().x - 4, 19, (angleComponent.isTurned ? 50 - weaponOffset.x : -50 + weaponOffset.x), 21 - weaponOffset.y, angleComponent.angle);
+                        setSpriteData(spriteComponent, "Item Hitbox", angleComponent.isTurned ? 4 : entity.getSize().x - 4, 19, (angleComponent.isTurned ? 50 - weaponOffset.x : -50 + weaponOffset.x), 21 - weaponOffset.y, angleComponent.angle);
                         break;
                     default:
                         setSpriteData(spriteComponent, "Item", angleComponent.isTurned ? 7 : 9, 26, 47 + (angleComponent.isTurned ? -weaponOffset.x : 10 + weaponOffset.x), 14 - weaponOffset.y, angleComponent.angle);

@@ -8,9 +8,9 @@ import de.undefinedhuman.sandboxgame.engine.config.ConfigManager;
 import de.undefinedhuman.sandboxgame.engine.config.SettingsManager;
 import de.undefinedhuman.sandboxgame.engine.language.LanguageManager;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
-import de.undefinedhuman.sandboxgame.engine.ressources.SoundManager;
-import de.undefinedhuman.sandboxgame.engine.ressources.font.FontManager;
-import de.undefinedhuman.sandboxgame.engine.ressources.texture.TextureManager;
+import de.undefinedhuman.sandboxgame.engine.resources.SoundManager;
+import de.undefinedhuman.sandboxgame.engine.resources.font.FontManager;
+import de.undefinedhuman.sandboxgame.engine.resources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.engine.utils.ManagerList;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.engine.window.Window;
@@ -45,19 +45,6 @@ public class Main extends Game {
         managerList.addManager(new Log(), new SettingsManager(), new ConfigManager(), new LanguageManager(), new TextureManager(), new SoundManager(), new FontManager(), new Inputs(), new GuiManager(), new BlueprintManager(), new ItemManager());
         timer = new Timer(1, true, () -> Window.instance.update());
     }
-
-    /*
-    Hair;Hair.png;3;16.0;1.0;
-    Legs;Legs.png;2;16.0;1.0;
-    RightArm;Front Arm.png;6;16.0;1.0;
-    Head;Head.png;3;16.0;1.0;
-    ItemHitbox;Unknown.png;0;0.0;0.0;
-    SelectedArm;Front Arm S.png;6;16.0;1.0;
-    Eye;Eyes.png;3;16.0;1.0;
-    Item;Unknown.png;5;0.0;0.0;
-    LeftArm;Back Arm.png;1;16.0;1.0;
-    Body;Body.png;2;16.0;1.0;
-     */
 
     @Override
     public void create() {

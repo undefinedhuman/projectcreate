@@ -2,8 +2,8 @@ package de.undefinedhuman.sandboxgame.entity.chunk;
 
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
+import de.undefinedhuman.sandboxgame.engine.entity.EntityType;
 import de.undefinedhuman.sandboxgame.entity.Entity;
-import de.undefinedhuman.sandboxgame.entity.EntityType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,14 +19,14 @@ public class Chunk {
     public void addEntity(int id, Entity entity) {
         this.entities.put(id, entity);
         if (entity.hasComponent(ComponentType.COLLISION)) entitiesForCollision.add(entity);
-        if (entity.getType() == EntityType.PLAYER) players.add(entity);
+        if (entity.getType() == EntityType.Player) players.add(entity);
     }
 
     public void removeEntity(int id) {
         if (!entities.containsKey(id)) return;
         Entity entity = entities.get(id);
         if (entity.hasComponent(ComponentType.COLLISION)) entitiesForCollision.remove(entity);
-        if (entity.getType() == EntityType.PLAYER) players.remove(entity);
+        if (entity.getType() == EntityType.Player) players.remove(entity);
         this.entities.remove(id);
     }
 

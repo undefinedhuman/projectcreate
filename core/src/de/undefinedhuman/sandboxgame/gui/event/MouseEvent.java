@@ -12,7 +12,7 @@ public class MouseEvent extends Event {
 
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
-        Vector2 pos = Tools.getWorldCoordsOfMouse(camera);
+        Vector2 pos = Tools.getMouseCoordsInWorldSpace(camera);
         this.guiComponent.setPosition((int) pos.x, (int) pos.y);
     }
 
