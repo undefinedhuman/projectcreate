@@ -50,7 +50,7 @@ public class WorldManager {
             if (InventoryManager.instance.getSelector().getSelectedItem() instanceof Pickaxe) {
 
                 Pickaxe pickaxe = (Pickaxe) InventoryManager.instance.getSelector().getSelectedItem();
-                if (oldPickaxeID == pickaxe.id) {
+                if (oldPickaxeID == pickaxe.id.getInt()) {
 
                     this.destroyTime += delta;
                     if (destroyTime > pickaxe.speed.getFloat()) canDestroy = true;
@@ -89,7 +89,7 @@ public class WorldManager {
 
                 if (main) {
 
-                    if (currentBlock.id == 0) {
+                    if (currentBlock.id.getInt() == 0) {
 
                         boolean canBePlaced = true;
                         for (Entity entity : EntityManager.instance.getEntitiesForCollision())
@@ -109,7 +109,7 @@ public class WorldManager {
 
                     }
 
-                } else if (getBlock(false, blockPos) == 0 && block.canBePlacedInBackLayer.getBoolean() && (isBlockInRange(false, blockPos) || (currentBlock.id != 0 && currentBlock.collide.getBoolean())))
+                } else if (getBlock(false, blockPos) == 0 && block.canBePlacedInBackLayer.getBoolean() && (isBlockInRange(false, blockPos) || (currentBlock.id.getInt() != 0 && currentBlock.collide.getBoolean())))
                     placeBlock(false, blockPos, (byte) id, true);
 
             }
@@ -252,7 +252,7 @@ public class WorldManager {
     }
 
     public boolean isTransparent(Block b) {
-        return b != null && (b.id == 0 || !b.isFull.getBoolean());
+        return b != null && (b.id.getInt() == 0 || !b.isFull.getBoolean());
     }
 
     public void destroyBlock(boolean main) {
@@ -263,7 +263,7 @@ public class WorldManager {
             Vector2 blockPos = Tools.convertToWorldCoords(Tools.getWorldPos(GameManager.gameCamera, Mouse.getMouseCoords())), playerCenter = Tools.convertToWorldCoords(new Vector2().add(GameManager.instance.player.getPosition()).add(GameManager.instance.player.getCenter()));
             Block currentBlock = (Block) ItemManager.instance.getItem(getBlock(main, blockPos));
 
-            if (currentBlock.id != 0 && isInRange(blockPos, playerCenter, pickaxe.range.getInt()) && !currentBlock.unbreakable.getBoolean()) {
+            if (currentBlock.id.getInt() != 0 && isInRange(blockPos, playerCenter, pickaxe.range.getInt()) && !currentBlock.unbreakable.getBoolean()) {
 
                 if ((oldBreakPos == null || oldBreakPos != blockPos) || oldLayer != main) {
 

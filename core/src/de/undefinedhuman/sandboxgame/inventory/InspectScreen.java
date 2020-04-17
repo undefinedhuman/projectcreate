@@ -19,7 +19,7 @@ public class InspectScreen extends Gui {
 
         super(GuiTemplate.SMALL_PANEL);
         setScale(Tools.getInventoryWidth(GuiTemplate.SMALL_PANEL, 5), Tools.getInventoryHeight(GuiTemplate.SMALL_PANEL, 10));
-        Item item = new ItemManager().getItem(13);
+        Item item = new ItemManager().getItem(2);
         previewImage = new Gui(item.previewTexture.getString());
         previewImage.set("r0.5", "r0.85", "p32", "p32").setCentered();
         addChild(previewImage);

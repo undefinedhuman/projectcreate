@@ -5,6 +5,8 @@ import java.awt.*;
 
 public abstract class Editor {
 
+    private Container container;
+
     protected JPanel mainPanel, settingsPanel;
 
     public Editor(Container container) {
@@ -16,7 +18,6 @@ public abstract class Editor {
 
     private JScrollPane addPanel(JPanel panel, String name, Dimension panelSize, int x, int y) {
         panel.setPreferredSize(panelSize);
-
         JScrollPane scrollPane = new JScrollPane(panel);
         scrollPane.setBounds(x, y, 460, 620);
         scrollPane.setBorder(BorderFactory.createTitledBorder(name));

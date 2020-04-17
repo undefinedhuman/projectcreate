@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Base64Coder;
 import de.undefinedhuman.sandboxgame.engine.items.type.blocks.Block;
+import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.world.layer.topLayer.TopLayerManager;
@@ -37,18 +38,9 @@ public class WorldLayer {
     }
 
     public byte getBlock(Vector2 pos) {
-
-        if (pos.y < height - 1 && pos.y >= 0) {
-
-            if ((pos.x < 0) || (pos.x >= this.width)) {
-                pos.x = getPositionX((int) pos.x);
-                return this.blocks[(int) pos.x][(int) pos.y];
-            } else return this.blocks[(int) pos.x][(int) pos.y];
-
-        }
-
-        return 0;
-
+        if (pos.y >= height - 1 && pos.y < 0) return 0;
+        if ((pos.x < 0) || (pos.x >= this.width)) pos.x = getPositionX((int) pos.x);
+        return this.blocks[(int) pos.x][(int) pos.y];
     }
 
     private int getPositionX(int x) {
@@ -99,15 +91,15 @@ public class WorldLayer {
 
         Block block = (Block) ItemManager.instance.getItem(getBlock(i, j));
 
-        if (block != null && block.id != 0) {
+        if (block != null && block.id.getInt() != 0) {
 
             TextureRegion texture = block.blockTextures[getState(i, j)][getRot(i, j)];
 
-            color.set(1 * col.r, 1 * col.g, 1 * col.b, 1f);// TODO Tools.getShadowColor(i, j);
+            color.set(1 * col.r, 1 * col.g, 1 * col.b, 1f);
             batch.setColor(color);
             batch.draw(texture, i * Variables.BLOCK_SIZE, j * Variables.BLOCK_SIZE, Variables.BLOCK_SIZE * 0.5f, Variables.BLOCK_SIZE * 0.5f, Variables.BLOCK_SIZE, Variables.BLOCK_SIZE, 1, 1, 0);
 
-            if (block.id == 3 && getBlock(i, j + 1) == 0)
+            if (block.id.getInt() == 3 && getBlock(i, j + 1) == 0)
                 TopLayerManager.instance.render(batch, i, j, TopLayerType.GRASS, getBlock(i - 1, j) != 0, getBlock(i + 1, j) != 0);
 
         }

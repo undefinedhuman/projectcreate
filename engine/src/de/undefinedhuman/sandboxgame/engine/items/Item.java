@@ -1,41 +1,35 @@
 package de.undefinedhuman.sandboxgame.engine.items;
 
-import de.undefinedhuman.sandboxgame.engine.file.Paths;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
 import de.undefinedhuman.sandboxgame.engine.settings.SettingType;
 import de.undefinedhuman.sandboxgame.engine.settings.SettingsList;
 import de.undefinedhuman.sandboxgame.engine.settings.types.BooleanSetting;
+import de.undefinedhuman.sandboxgame.engine.settings.types.SelectionSetting;
+import de.undefinedhuman.sandboxgame.engine.settings.types.TextureSetting;
 
 import java.util.ArrayList;
 
 public class Item {
 
     public Setting
+            id = new Setting(SettingType.Int, "ID", 0),
             name = new Setting(SettingType.String, "Name", "Unknown"),
             desc = new Setting(SettingType.String, "Description", "Unknown"),
-            itemTexture = new Setting(SettingType.String, "Texture", "Unknown.png"),
-            iconTexture = new Setting(SettingType.String, "Icon", "Unknown.png"),
-            previewTexture = new Setting(SettingType.String, "Preview", "Unknown.png"),
+            itemTexture = new TextureSetting("Texture", "Unknown.png"),
+            iconTexture = new TextureSetting("Icon", "Unknown.png"),
+            previewTexture = new TextureSetting("Preview", "Unknown.png"),
             useIconAsHandTexture = new BooleanSetting("UseIconInHand", false),
             maxAmount = new Setting(SettingType.Int, "MaxAmount", 999),
             isStackable = new BooleanSetting("Stackable", true),
             canShake = new BooleanSetting("Shake", true),
-            rarity = new Setting(SettingType.Rarity, "Rarity", Rarity.RARE.name());
+            rarity = new SelectionSetting("Rarity", Rarity.values());
 
-    public int id;
     public ItemType type;
     protected SettingsList settings = new SettingsList();
 
     public Item() {
-        settings.addSettings(name, desc, itemTexture, iconTexture, previewTexture, useIconAsHandTexture, maxAmount, isStackable, canShake, rarity);
+        settings.addSettings(id, name, desc, itemTexture, iconTexture, previewTexture, useIconAsHandTexture, maxAmount, isStackable, canShake, rarity);
         this.type = ItemType.ITEM;
-    }
-
-    public String[] getTextures() {
-        this.itemTexture.setValue(Paths.ITEM_PATH.getPath() + id + "/" + itemTexture.getString());
-        this.iconTexture.setValue(Paths.ITEM_PATH.getPath() + id + "/" + iconTexture.getString());
-        this.previewTexture.setValue(Paths.ITEM_PATH.getPath() + id + "/" + previewTexture.getString());
-        return new String[] { itemTexture.getString(), iconTexture.getString(), previewTexture.getString() };
     }
 
     public void init() { }

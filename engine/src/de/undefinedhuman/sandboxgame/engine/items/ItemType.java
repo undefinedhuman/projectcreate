@@ -1,7 +1,5 @@
 package de.undefinedhuman.sandboxgame.engine.items;
 
-import de.undefinedhuman.sandboxgame.engine.file.FileReader;
-import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.items.type.Armor.Armor;
 import de.undefinedhuman.sandboxgame.engine.items.type.Armor.Helmet;
 import de.undefinedhuman.sandboxgame.engine.items.type.blocks.Block;
@@ -11,9 +9,6 @@ import de.undefinedhuman.sandboxgame.engine.items.type.weapons.Bow;
 import de.undefinedhuman.sandboxgame.engine.items.type.weapons.Sword;
 import de.undefinedhuman.sandboxgame.engine.items.type.weapons.Weapon;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
-import de.undefinedhuman.sandboxgame.engine.settings.Setting;
-
-import java.util.HashMap;
 
 public enum ItemType {
 
@@ -33,15 +28,12 @@ public enum ItemType {
         return previewTexture;
     }
 
-    // TODO Maybe refactor to type and ID gets loaded as well and not set
-
-    public Item load(FileReader reader, ItemType type, int id, HashMap<String, LineSplitter> settings) {
-        Item item = null;
-        try { item = this.item.getClass().newInstance(); } catch (InstantiationException | IllegalAccessException e) { Log.info(e.getMessage()); }
-        if (item == null) return null;
-        for(Setting setting : item.getSettings()) setting.loadSetting(reader.getParentDirectory(), settings);
-        item.id = id;
-        item.type = type;
-        return item;
+    public Item createInstance() {
+        Item newItemInstance = null;
+        try { newItemInstance = this.item.getClass().newInstance();
+        } catch (InstantiationException | IllegalAccessException e) { Log.info(e.getMessage()); }
+        newItemInstance.type = this;
+        return newItemInstance;
     }
+
 }

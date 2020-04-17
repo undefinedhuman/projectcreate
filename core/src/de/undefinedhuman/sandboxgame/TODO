@@ -1,24 +1,14 @@
-TODO ADD TEXTURE SETTING TO EDITOR
-TODO FIX GRASS OVERLAY AT THE EDGES AND ENTITIES
-TODO ADD EventSystem for all sorts of events (block breaking/placing, entity dead/hurt move, etc.)
-TODO ADD GameObject class that extends transform and has update render etc., entity drop item etc. should inhertie from that class
-TODO REFACTOR ENTITY CHUNK SYSTEM
-TODO REFACTOR SO HITBOX TEXTURE USE BLANK TEXTURE
 TODO REFACTOR Sprite COMPONENT/DATA
-TODO REFACTOR ANIMATION COMPONENT TO USE EXCLUDED LAYERS AND NOT INCLUDED
-TODO Profile Component Refactor
+TODO REFACTOR ENTITY CHUNK SYSTEM
+TODO ADD EventSystem for all sorts of events (block breaking/placing, entity dead/hurt move, etc.)
 
-TODO's:
- - Profile Class überarbeiten, die health und mana bars noch mit animationen verschönern
- - Profile Component
- - Evtl das Combat System überarbeiten mehr mit Animationen arbeiten und Positionen
- - Maybe rewrite the camera to be in its own file
+TODO Profile Component Refactor / Maybe include animations for the status bars / different Types of profiles, "player, boss, small enemy"
+TODO FIX GRASS OVERLAY AT THE EDGES AND ENTITIES
 
-- Kleines Profile für Gegner bauen in der Mitte des Screens
+TODO Think about reworking the combat systems
 
-add meteroits into the night sky https://weheartit.com/entry/314129185
-
-Add birds to the foreground https://i.pinimg.com/originals/ce/82/43/ce82438a3f7715f074159645de1ff49b.gif
+TODO Add Meteorites into the night scene, also some moving stars etc. maybe stars move in circle https://weheartit.com/entry/314129185
+TODO Add small birds to the world that fly away if the player comes close https://i.pinimg.com/originals/ce/82/43/ce82438a3f7715f074159645de1ff49b.gif
 
 Combat System:
  - Verschiedene Materialien, für jede Waffe.
@@ -33,6 +23,7 @@ Drop Items:
  - Chunks einführen
 
 Crystal:
+ - Armor hat nur sehr geringe Base Werte damit man viel individualiseren kann bzw. viel Grind gibt
  - Crystal geben Boost oder extra Effekte wenn man z.b. einen Mertoriten Crystal hat und diesen aktiviert und man dann einen Enemy hittet kommt ein Meteroit.
  - Man kann Crystals equippen z.b. eine Level 1 Starter Waffe kann kein Crystal die Level 100 3 Crystals.
 
@@ -111,17 +102,16 @@ Font Manager:
 
 Bugs:
  - Licht Bug an den Rändern der Welt entfernen.
- - Drop items Render Bug an den Rändern der Welt entfernen
  - Die Blocks Checks also check3Cells am boden der Welt fixen.
  - Load Music Function einbauen das ein "Unknown" also ein Standard Sound geladen wird wie bei den Texturen.
  - Splashscreen Resize Methode anpassen
  - Light Manager Default Height also die Höhe an der das Limit der World genertation ist.
  - In größer Höhe funktoniert die Lauf animation nicht vernünftig
  - Arrow spawnt wenn man nach rechts läuft aber nach links schaut nicht richtig
- - Window Resize kann den SPieler verschieben z.B. unter Spieler ist eine Höhle und dann kann der Spieler dahin "tpt" werden
+ - Window Resize kann den Spieler verschieben z.B. unter Spieler ist eine Höhle und dann kann der Spieler dahin "tpt" werden
 
-      * Wenn ein Spieler nAFK ist kann er angeklickt werden mit AFK Info und er hat Sleep als Z Z Z Partikel über sich und die Augen zu
-      * Notifications überarbeiten ;D
+      * Wenn ein Spieler AFK ist kann er angeklickt werden mit AFK Info und er hat Sleep als Z Z Z Partikel über sich und die Augen zu
+      * Notifications überarbeiten
       * Achievment System & Settings! Achievments werden in einer ART Scroll Panel dargestellt es existieren 4-5 Elemente an Achievments und dann gibts Pfeile um immer ein nues anzeiogen zu lassen wie Starbound Charakter Auswahl!
       * Effects Progess Bar die sich in der Zeit immer verringert udn links am Rand angezeigt wird
       * Unter Name und Health etc

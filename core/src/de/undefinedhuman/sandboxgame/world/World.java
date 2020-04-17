@@ -69,7 +69,7 @@ public class World {
         for (int i = this.minX; i <= maxX; i++)
             for (int j = this.minY; j <= maxY; j++) {
                 Block block = (Block) ItemManager.instance.getItem(World.instance.mainLayer.getBlock(i, j));
-                if (block.id == 0 || mainLayer.getState(i, j) != 0 || !block.isFull.getBoolean())
+                if (block.id.getInt() == 0 || mainLayer.getState(i, j) != 0 || !block.isFull.getBoolean())
                     backLayer.renderBlock(batch, batchColor.set(0.45f, 0.45f, 0.45f, 1), i, j);
             }
     }

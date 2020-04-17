@@ -19,7 +19,6 @@ public class InvItem extends Gui {
     }
 
     public InvItem(int id, int amount) {
-
         super(ItemManager.instance.getItem(id).iconTexture.getString());
         set("r0.5", "r0.5", "p" + Variables.ITEM_SIZE, "p" + Variables.ITEM_SIZE).setCentered();
 

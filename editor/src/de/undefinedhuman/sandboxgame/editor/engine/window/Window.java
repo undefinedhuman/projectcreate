@@ -6,6 +6,7 @@ import de.undefinedhuman.sandboxgame.editor.Main;
 import de.undefinedhuman.sandboxgame.editor.editor.Editor;
 import de.undefinedhuman.sandboxgame.editor.editor.EditorType;
 import de.undefinedhuman.sandboxgame.editor.editor.entity.EntityEditor;
+import de.undefinedhuman.sandboxgame.editor.editor.item.ItemEditor;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
 
 import javax.swing.*;
@@ -81,7 +82,7 @@ public class Window extends JFrame {
         container.setLayout(null);
         switch (type) {
             case ITEM:
-                // editor = new ItemEditor(container);
+                editor = new ItemEditor(container);
                 break;
             case ENTITY:
                 editor = new EntityEditor(container);

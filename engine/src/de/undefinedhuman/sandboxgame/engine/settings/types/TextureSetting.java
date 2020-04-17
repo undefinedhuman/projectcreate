@@ -88,4 +88,9 @@ public class TextureSetting extends Setting {
         if(textureLabel != null) textureLabel.setIcon(new ImageIcon(texture));
     }
 
+    @Override
+    protected void delete() {
+        if(TextureManager.instance != null) TextureManager.instance.removeTexture(getString());
+    }
+
 }

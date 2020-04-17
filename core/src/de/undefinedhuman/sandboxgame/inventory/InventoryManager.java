@@ -58,7 +58,7 @@ public class InventoryManager extends Manager {
     @Override
     public void init() {
         super.init();
-        addTempItems(selector, 1, 8, 9, 10, 11);
+        addTempItems(selector, 1, 2);
         addTempItems(inventory, ItemManager.instance.getItems().keySet());
         selector.setSelected(0);
     }

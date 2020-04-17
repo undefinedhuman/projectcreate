@@ -17,9 +17,7 @@ public class SoundManager extends Manager {
     }
 
     @Override
-    public void init() {
-        addSound("sounds/dirtSound.wav");
-    }
+    public void init() {}
 
     public void addSound(String... names) {
         for (String s : names) if (!hasSound(s)) sounds.put(s, ResourceManager.loadSound(s));

@@ -1,21 +1,16 @@
 package de.undefinedhuman.sandboxgame.item;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
-import de.undefinedhuman.sandboxgame.engine.entity.components.animation.AnimationComponent;
-import de.undefinedhuman.sandboxgame.engine.entity.components.arm.ShoulderComponent;
-import de.undefinedhuman.sandboxgame.engine.entity.components.equip.EquipComponent;
-import de.undefinedhuman.sandboxgame.engine.entity.components.mouse.AngleComponent;
+import de.undefinedhuman.sandboxgame.engine.file.FileReader;
+import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
+import de.undefinedhuman.sandboxgame.engine.file.Paths;
 import de.undefinedhuman.sandboxgame.engine.items.Item;
+import de.undefinedhuman.sandboxgame.engine.items.ItemType;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.engine.resources.ResourceManager;
-import de.undefinedhuman.sandboxgame.engine.resources.texture.TextureManager;
+import de.undefinedhuman.sandboxgame.engine.settings.Setting;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
-import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
-import de.undefinedhuman.sandboxgame.projectiles.Projectile;
-import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 import de.undefinedhuman.sandboxgame.world.WorldManager;
 
@@ -36,17 +31,18 @@ public class ItemManager extends Manager {
     @Override
     public void init() {
         super.init();
-        addItems(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13);
+        addItems(0, 1, 2);
     }
 
     public boolean addItems(int... ids) {
         boolean loaded = false;
         for (int id : ids) {
-            if (!hasItem(id) && ResourceManager.existItem(id)) items.put(id, ResourceManager.loadItem(id));
-            loaded |= hasItem(id);
+            if (hasItem(id) || !ResourceManager.existItem(id)) continue;
+            items.put(id, loadItem(id));
+            loaded = true;
         }
-        if (loaded)
-            Log.info("Texture" + Tools.appendSToString(ids.length) + " loaded successfully: " + Arrays.toString(ids));
+        if(loaded)
+            Log.info("Item" + Tools.appendSToString(ids.length) + " loaded successfully: " + Arrays.toString(ids));
         return loaded;
     }
 
@@ -56,10 +52,7 @@ public class ItemManager extends Manager {
 
     @Override
     public void delete() {
-        for (Item item : items.values()) {
-            TextureManager.instance.removeTexture(item.getTextures());
-            item.delete();
-        }
+        for (Item item : items.values()) item.delete();
         items.clear();
     }
 
@@ -85,63 +78,33 @@ public class ItemManager extends Manager {
     }
 
     public void useItem(int id) {
-
+        if(!InventoryManager.instance.canUseItem()) return;
         Item item = ItemManager.instance.getItem(id);
-
-        if (item != null) {
-
-            boolean mouseLeft = Gdx.input.isButtonPressed(0), mouseRight = Gdx.input.isButtonPressed(1);
-
-            Entity player = GameManager.instance.player;
-
-            if (InventoryManager.instance.canUseItem()) {
-
-                switch (item.type) {
-
-                    case BLOCK:
-                        if (mouseLeft || mouseRight) WorldManager.instance.placeBlock(mouseLeft);
-                        break;
-                    case PICKAXE:
-                        if (mouseLeft || mouseRight) WorldManager.instance.destroyBlock(mouseLeft);
-                        break;
-                    case BOW:
-                        if (mouseLeft) {
-                            AnimationComponent animationComponent = (AnimationComponent) player.getComponent(ComponentType.ANIMATION);
-                            EquipComponent equipComponent = (EquipComponent) player.getComponent(ComponentType.EQUIP);
-                            ShoulderComponent shoulderComponent = (ShoulderComponent) player.getComponent(ComponentType.SHOULDER);
-                            AngleComponent angleComponent = (AngleComponent) player.getComponent(ComponentType.ANGLE);
-                            Vector2 weaponPosition = equipComponent.getCurrentPosition(animationComponent.getAnimationFrameIndex()), shoulderPosition = shoulderComponent.getShoulderPos(animationComponent.getAnimationFrameIndex()),
-                                    shoulderOffset = shoulderComponent.getShoulderOffset(animationComponent.getAnimationFrameIndex());
-
-                            /*Vector2 launcherOffset = new Vector2(weaponPosition).sub(shoulderPosition);
-                            launcherOffset.x = Math.abs(launcherOffset.x);
-                            launcherOffset.y = Math.abs(launcherOffset.y);
-                            launcherOffset.setAngle(angleComponent.isTurned ? (angleComponent.angle % 360) : (angleComponent.angle % 360));
-
-                            Vector2 cannonCoord = new Vector2(player.getPosition()).add(shoulderPosition).sub(launcherOffset);
-                            Vector2 shoulderToCannonCoord = new Vector2(cannonCoord).sub(shoulderPosition);
-                            shoulderToCannonCoord.setLength(100);*/
-
-                            Vector2 cannonCoord = new Vector2(weaponPosition).sub(shoulderPosition);
-                            cannonCoord.setAngle(((angleComponent.angle + 251) % 360) + (angleComponent.isTurned ? 0 : 39.5f));
-                            Vector2 spawnPosition = new Vector2(player.getPosition()).add(shoulderPosition).add((angleComponent.isTurned ? 0 : 12), 0).sub(0, 2).add(cannonCoord);
-
-                            Vector2 angle = new Vector2(weaponPosition).sub(shoulderPosition);
-                            angle.setAngle((angleComponent.angle + 270) % 360);
-                            angle.setLength(100);
-                            //angle.setAngle((angleComponent.angle + 250) % 360);
-
-                            GameManager.instance.projectile = new Projectile(player, spawnPosition, angle.x * 7, angle.y * 7);
-
-                        }
-                        break;
-
-                }
-
-            }
-
+        if (item == null) return;
+        boolean mouseLeft = Gdx.input.isButtonPressed(0), mouseRight = Gdx.input.isButtonPressed(1);
+        switch (item.type) {
+            case BLOCK:
+                if (mouseLeft || mouseRight) WorldManager.instance.placeBlock(mouseLeft);
+                break;
+            case PICKAXE:
+                if (mouseLeft || mouseRight) WorldManager.instance.destroyBlock(mouseLeft);
+                break;
         }
+    }
 
+    private Item loadItem(int id) {
+        FileReader reader = new FileReader(ResourceManager.loadFile(Paths.ITEM_PATH, id + "/settings.item"), true);
+        reader.nextLine();
+        ItemType type = ItemType.valueOf(reader.getNextString());
+        reader.nextLine();
+        HashMap<String, LineSplitter> settings = Tools.loadSettings(reader);
+        Item item = type.createInstance();
+        if(item == null) return null;
+        for(Setting setting : item.getSettings()) setting.loadSetting(reader.getParentDirectory(), settings);
+        item.init();
+        reader.close();
+        settings.clear();
+        return item;
     }
 
 }
