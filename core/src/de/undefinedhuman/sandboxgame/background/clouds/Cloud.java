@@ -17,11 +17,12 @@ public class Cloud extends GameObject {
     public float alpha = 1f;
 
     private String texture;
-    private float speedMultiplier, baseSpeed, alphaMultiplier = 0f;
+    private float speedMultiplier, baseSpeed, alphaMultiplier = 0f, brightness;
 
-    public Cloud(String texture, Vector2 startPos, float speedMultiplier) {
+    public Cloud(String texture, Vector2 startPos, float speedMultiplier, float brightness) {
         this.texture = texture;
         this.speedMultiplier = speedMultiplier;
+        this.brightness = brightness;
         this.baseSpeed = Variables.CLOUD_BASE_SPEED * (Tools.random.nextInt(8) + 1);
         this.position.set(startPos);
     }
@@ -46,14 +47,11 @@ public class Cloud extends GameObject {
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         if(!Tools.isInRange(position.x, -size.x, camera.viewportWidth+size.x)) return;
         Color batchColor = batch.getColor();
-        batch.setColor(1, 1, 1, alpha);
+        batch.setColor(brightness, brightness, brightness, alpha);
         TextureRegion region = Tools.fixBleeding(TextureManager.instance.getTexture(texture));
         batch.draw(region, (camera.position.x - camera.viewportWidth * 0.5f) + position.x, position.y, size.x, size.y);
         batch.setColor(batchColor);
     }
-
-    @Override
-    public void renderUI(SpriteBatch batch, OrthographicCamera camera) {}
 
     @Override
     public void delete() {}

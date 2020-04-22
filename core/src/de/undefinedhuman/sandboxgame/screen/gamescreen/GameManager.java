@@ -1,14 +1,12 @@
 package de.undefinedhuman.sandboxgame.screen.gamescreen;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import de.undefinedhuman.sandboxgame.background.BackgroundManager;
+import de.undefinedhuman.sandboxgame.engine.camera.CameraManager;
 import de.undefinedhuman.sandboxgame.engine.utils.ManagerList;
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.EntityManager;
 import de.undefinedhuman.sandboxgame.entity.ecs.blueprint.BlueprintManager;
@@ -25,25 +23,23 @@ public class GameManager {
 
     public static GameManager instance;
     public static OrthographicCamera gameCamera, guiCamera;
-    public SpriteBatch gameBatch, guiBatch;
+    public SpriteBatch batch;
     public Entity player;
     public Projectile projectile = null;
-    private Viewport guiViewport;
 
     private ManagerList manager;
 
     public GameManager() {
         gameCamera = new OrthographicCamera();
         guiCamera = new OrthographicCamera();
-        guiViewport = new ScreenViewport(guiCamera);
-        gameBatch = new SpriteBatch();
-        guiBatch = new SpriteBatch();
+
+        batch = new SpriteBatch();
 
         manager = new ManagerList();
 
-        Gdx.graphics.setVSync(false);
-
         //CraftingInventory craftingInventory = new CraftingInventory();
+
+        CameraManager.instance = new CameraManager();
 
     }
 
@@ -58,16 +54,14 @@ public class GameManager {
 
     public void resize(int width, int height) {
 
-        BackgroundManager.instance.resize(width, height);
+        guiCamera.setToOrtho(false, width, height);
+        gameCamera.setToOrtho(false, width/Variables.GAME_CAMERA_ZOOM, height/ Variables.GAME_CAMERA_ZOOM);
+
+        CameraManager.instance.resize(width, height);
+
         manager.resize(width, height);
 
-        guiCamera.setToOrtho(false, width, height);
-        guiViewport.update(width, height);
-        guiCamera.update();
-
-        gameCamera.viewportWidth = 1280;
-        gameCamera.viewportHeight = ((float) height / (float) width) * 1280;
-        gameCamera.update();
+        BackgroundManager.instance.resize(width, height);
 
         GuiManager.instance.resize(width, height);
         InventoryManager.instance.resize(width, height);
@@ -80,6 +74,8 @@ public class GameManager {
         //ClientManager.instance.update(delta);
         BackgroundManager.instance.update(delta);
         manager.update(delta);
+
+        CameraManager.instance.update(delta);
 
         if (projectile != null) projectile.update(delta);
 
@@ -95,26 +91,22 @@ public class GameManager {
 
     public void render() {
 
-        gameBatch.setColor(Color.WHITE);
-        gameBatch.setProjectionMatrix(gameCamera.combined);
-        gameBatch.begin();
-        BackgroundManager.instance.render(gameBatch, gameCamera);
-        manager.render(gameBatch, gameCamera);
+        batch.setProjectionMatrix(gameCamera.combined);
+        batch.begin();
+        BackgroundManager.instance.render(batch, gameCamera);
         World.instance.computeBounds(gameCamera);
         //World.instance.renderBackLayer(gameBatch);
-        EntityManager.instance.render(gameBatch);
-        DropItemManager.instance.render(gameBatch);
-        if (projectile != null) projectile.render(gameBatch);
-        World.instance.renderMainLayer(gameBatch);
-        gameBatch.end();
+        EntityManager.instance.render(batch);
+        DropItemManager.instance.render(batch);
+        if (projectile != null) projectile.render(batch);
+        World.instance.renderMainLayer(batch);
+        batch.end();
 
-        guiViewport.apply();
-        guiBatch.setProjectionMatrix(guiCamera.combined);
-        guiBatch.begin();
-        manager.renderGui(guiBatch, guiCamera);
-        GuiManager.instance.renderGui(guiBatch, guiCamera);
-        InventoryManager.instance.render(guiBatch, guiCamera);
-        guiBatch.end();
+        batch.setProjectionMatrix(guiCamera.combined);
+        batch.begin();
+        GuiManager.instance.renderGui(batch, guiCamera);
+        InventoryManager.instance.render(batch, guiCamera);
+        batch.end();
 
     }
 
@@ -138,9 +130,10 @@ public class GameManager {
 
     private void updateCamera() {
         if (GameManager.instance.player == null) return;
-        float tempCam = gameCamera.viewportHeight * gameCamera.zoom * 0.5f;
+        float cameraYBounds = gameCamera.viewportHeight * gameCamera.zoom * 0.5f;
         gameCamera.position.set(new Vector3(player.getCenterPosition(), 0));
-        gameCamera.position.y = Tools.clamp(gameCamera.position.y, tempCam, World.instance.height * 16 - tempCam - 32);
+        // If lerp gets added again, make sure, that if the player gets teleported to the other side of the world the camera sets with him, otherwise there will be some kind of laggy movement
+        gameCamera.position.y = Tools.clamp(gameCamera.position.y, cameraYBounds, World.instance.height * Variables.BLOCK_SIZE - cameraYBounds - Variables.BLOCK_SIZE*2);
         gameCamera.update();
     }
 

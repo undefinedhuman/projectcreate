@@ -28,7 +28,6 @@ public class SettingsManager extends Manager {
                 maxFps = new Setting(SettingType.Int, "maxFps", 0),
                 fullScreen = new BooleanSetting("fullScreen", false),
                 language = new Setting(SettingType.String, "language", "eu_DE"),
-                renderHitbox = new BooleanSetting("renderHitBox", false),
                 firstRun = new BooleanSetting("firstRun", false),
                 guiScale = new Setting(SettingType.Int, "guiScale", 5));
     }

@@ -41,12 +41,9 @@ public class Bird extends GameObject {
 
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
-        if(!Tools.isInRange(position.x, -size.x, camera.viewportWidth+size.x)) return;
+        if (!Tools.isInRange(position.x, -size.x, camera.viewportWidth + size.x)) return;
         batch.draw(BackgroundManager.instance.birdTexture[0][currentIndex], (int) ((camera.position.x - camera.viewportWidth * 0.5f) + position.x), position.y, size.x, size.y);
     }
-
-    @Override
-    public void renderUI(SpriteBatch batch, OrthographicCamera camera) {}
 
     @Override
     public void delete() {}

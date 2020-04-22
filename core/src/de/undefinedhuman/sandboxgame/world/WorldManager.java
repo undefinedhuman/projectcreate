@@ -20,7 +20,7 @@ public class WorldManager {
 
     public static WorldManager instance;
 
-    // TODO Refactor
+    // TODO Refactor ABER GANZ DRINGEND
 
     private boolean canPlace, canDestroy, oldLayer;
     private float currentDurability = 0, destroyTime = 0, placeTime = 0, placeDuration = 0.05f;
@@ -157,102 +157,20 @@ public class WorldManager {
     }
 
     public void check3Cells(WorldLayer layer, int x, int y) {
-        checkCell(layer, x, y);
         for (int i = -1; i <= 1; i++) for (int j = -1; j <= 1; j++) checkCell(layer, x + i, y + j);
     }
 
     private void checkCell(WorldLayer layer, int x, int y) {
-
-        Block middle = (Block) ItemManager.instance.getItem(layer.getBlock(x, y)), left = (Block) ItemManager.instance.getItem(layer.getBlock(x - 1, y)), right = (Block) ItemManager.instance.getItem(layer.getBlock(x + 1, y)), above = (Block) ItemManager.instance.getItem(layer.getBlock(x, y + 1)), below = (Block) ItemManager.instance.getItem(layer.getBlock(x, y - 1));
-
-        int mask = (isTransparent(left) ? 0b0001 : 0) | (isTransparent(right) ? 0b0010 : 0) | (isTransparent(above) ? 0b0100 : 0) | (isTransparent(below) ? 0b1000 : 0);
-
-        if (!isTransparent(middle)) {
-
-            // Rand Texturen
-            if (mask == 0b0100) {
-                layer.setState(x, y, 4);
-                layer.setRot(x, y, 0);
-            }
-            if (mask == 0b0010) {
-                layer.setState(x, y, 4);
-                layer.setRot(x, y, 1);
-            }
-            if (mask == 0b1000) {
-                layer.setState(x, y, 4);
-                layer.setRot(x, y, 2);
-            }
-            if (mask == 0b0001) {
-                layer.setState(x, y, 4);
-                layer.setRot(x, y, 3);
-            }
-            // Rand Texturen ENDE
-
-            // Eck Texturen
-            if (mask == 0b0101) {
-                layer.setState(x, y, 5);
-                layer.setRot(x, y, 0);
-            }
-            if (mask == 0b0110) {
-                layer.setState(x, y, 5);
-                layer.setRot(x, y, 1);
-            }
-            if (mask == 0b1010) {
-                layer.setState(x, y, 5);
-                layer.setRot(x, y, 2);
-            }
-            if (mask == 0b1001) {
-                layer.setState(x, y, 5);
-                layer.setRot(x, y, 3);
-            }
-            // Eck Texturen ENDE
-
-            // 1 Seitige Texturen
-            if (mask == 0b0111) {
-                layer.setState(x, y, 2);
-                layer.setRot(x, y, 0);
-            }
-            if (mask == 0b1110) {
-                layer.setState(x, y, 2);
-                layer.setRot(x, y, 1);
-            }
-            if (mask == 0b1011) {
-                layer.setState(x, y, 2);
-                layer.setRot(x, y, 2);
-            }
-            if (mask == 0b1101) {
-                layer.setState(x, y, 2);
-                layer.setRot(x, y, 3);
-            }
-            // 1 Seitige Texturen ENDE
-
-            // 2 Seitige Texturen
-            if (mask == 0b0011) {
-                layer.setState(x, y, 3);
-                layer.setRot(x, y, 0);
-            }
-            if (mask == 0b1100) {
-                layer.setState(x, y, 3);
-                layer.setRot(x, y, 1);
-            }
-            // 2 Seitige Texturen ENDE
-
-            if (mask == 0b1111) {
-                layer.setState(x, y, 1);
-                layer.setRot(x, y, 0);
-            }
-            if (mask == 0b0000) {
-                layer.setState(x, y, 0);
-                layer.setRot(x, y, 0);
-            }
-
-
-        }
-
+        if(isTransparent(layer.getBlock(x, y))) return;
+        layer.setState(x, y, isTransparent(layer, x-1, y, 1) +
+                             isTransparent(layer, x, y+1, 2) +
+                             isTransparent(layer, x+1, y, 4) +
+                             isTransparent(layer, x, y-1, 8));
     }
 
-    public boolean isTransparent(Block b) {
-        return b != null && (b.id.getInt() == 0 || !b.isFull.getBoolean());
+    public int isTransparent(WorldLayer layer, int x, int y, int value) {
+        Block block = (Block) ItemManager.instance.getItem(layer.getBlock(x, y));
+        return !(block != null && (block.id.getInt() == 0 || !block.isFull.getBoolean())) ? value : 0;
     }
 
     public void destroyBlock(boolean main) {
@@ -300,8 +218,8 @@ public class WorldManager {
     }
 
     public void checkMap(WorldLayer layer) {
-        for (int i = 0; i < World.instance.width; i++)
-            for (int j = 0; j < World.instance.height; j++) if (layer.getBlock(i, j) != 0) checkCell(layer, i, j);
+        for (int i = 0; i < layer.width; i++)
+            for (int j = 0; j < layer.height; j++) if (layer.getBlock(i, j) != 0) checkCell(layer, i, j);
     }
 
     public boolean isTransparent(byte b) {

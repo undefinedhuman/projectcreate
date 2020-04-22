@@ -1,7 +1,6 @@
 package de.undefinedhuman.sandboxgame.entity.ecs.system;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.Main;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
@@ -36,9 +35,6 @@ public class ArmSystem extends System {
     }
 
     @Override
-    public void init(Entity entity) {}
-
-    @Override
     public void update(float delta, Entity entity) {
 
         SpriteComponent spriteComponent;
@@ -55,7 +51,7 @@ public class ArmSystem extends System {
                 || (shoulderComponent = (ShoulderComponent) entity.getComponent(ComponentType.SHOULDER)) == null
                 || (animationComponent = (AnimationComponent) entity.getComponent(ComponentType.ANIMATION)) == null) return;
 
-        SpriteData data = spriteComponent.getSpriteDataValue(rightArmComponent.getSelectedTexture());
+        SpriteData data = spriteComponent.getSpriteData(rightArmComponent.getSelectedTexture());
         Vector2 mousePos = angleComponent.mousePos;
         Vector2 shoulderPosition = new Vector2(shoulderComponent.getShoulderPos(animationComponent.getAnimationFrameIndex()));
         shoulderPosition.set((angleComponent.isTurned ? shoulderPosition.x : entity.getSize().x - shoulderPosition.x), shoulderPosition.y);
@@ -82,16 +78,13 @@ public class ArmSystem extends System {
 
         boolean selected = Tools.isItemSelected(entity);
 
-        spriteComponent.getSpriteDataValue(rightArmComponent.getTextureName()).setVisible(!selected);
-        spriteComponent.getSpriteDataValue(rightArmComponent.getSelectedTexture()).setVisible(selected);
+        spriteComponent.getSpriteData(rightArmComponent.getTextureName()).setVisible(!selected);
+        spriteComponent.getSpriteData(rightArmComponent.getSelectedTexture()).setVisible(selected);
 
         if (!selected) return;
         data.setOrigin(shoulderPosition);
         data.setRotation(angleComponent.angle);
     }
-
-    @Override
-    public void render(SpriteBatch batch) {}
 
     private void calculateShake(RightArmComponent component, Item item) {
 
@@ -132,7 +125,7 @@ public class ArmSystem extends System {
                         if (!entity.hasComponents(ComponentType.COLLISION, ComponentType.HEALTH)
                                 || entity == combatEntity && !combatComponent.touchedEntityList.contains(entity)) continue;
 
-                        SpriteData data = ((SpriteComponent) combatEntity.getComponent(ComponentType.SPRITE)).getSpriteDataValue("Item Hitbox");
+                        SpriteData data = ((SpriteComponent) combatEntity.getComponent(ComponentType.SPRITE)).getSpriteData("Item Hitbox");
                         if (!Tools.collideSAT(data.getSprite(), ((CollisionComponent) entity.getComponent(ComponentType.COLLISION)).getVertices(entity.getPosition()))) continue;
                         ((HealthComponent) entity.getComponent(ComponentType.HEALTH)).damage(sword.damage.getFloat());
                         combatComponent.touchedEntityList.add(entity);

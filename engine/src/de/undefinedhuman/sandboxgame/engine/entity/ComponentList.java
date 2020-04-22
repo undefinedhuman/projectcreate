@@ -34,6 +34,7 @@ public class ComponentList {
     }
 
     public void delete() {
+        for(Component component : components.values()) component.delete();
         components.clear();
     }
 

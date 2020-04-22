@@ -9,7 +9,17 @@ import de.undefinedhuman.sandboxgame.utils.Tools;
 
 public class SidePanel extends Gui {
 
-    private String[] textures = new String[] {"gui/Inventory Icon.png", "gui/preview/equip/Chestplate-Preview.png", "Unknown.png", "Unknown.png", "Unknown.png", "Unknown.png", "Unknown.png", "Unknown.png", "Unknown.png", "Unknown.png"};
+    private String[] textures = new String[] {
+            "gui/Inventory Icon.png",
+            "gui/preview/equip/Chestplate-Preview.png",
+            "gui/Locked-Icon.png",
+            "gui/Locked-Icon.png",
+            "gui/Locked-Icon.png",
+            "gui/Locked-Icon.png",
+            "gui/Locked-Icon.png",
+            "gui/Locked-Icon.png",
+            "gui/Locked-Icon.png",
+            "gui/Locked-Icon.png"};
 
     public SidePanel() {
 

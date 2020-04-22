@@ -1,6 +1,5 @@
 package de.undefinedhuman.sandboxgame.engine.entity.components.sprite;
 
-import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.entity.Component;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentBlueprint;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentParam;
@@ -10,17 +9,16 @@ import de.undefinedhuman.sandboxgame.engine.file.FileWriter;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
 import de.undefinedhuman.sandboxgame.engine.settings.SettingType;
 import de.undefinedhuman.sandboxgame.engine.settings.panels.Panel;
-import de.undefinedhuman.sandboxgame.engine.settings.types.Vector2Setting;
 
 import java.util.HashMap;
 
 public class SpriteBlueprint extends ComponentBlueprint {
 
-    private Setting animationBounds = new Vector2Setting("Animation Bounds", new Vector2());
+    private Setting frameCount = new Setting(SettingType.Int, "Frame Count", 1);
     private Panel spriteLayers = new Panel(SettingType.Sprite, "Sprite Layers", new SpriteLayer());
 
     public SpriteBlueprint() {
-        settings.addSettings(animationBounds, spriteLayers);
+        settings.addSettings(frameCount, spriteLayers);
         this.type = ComponentType.SPRITE;
     }
 
@@ -40,7 +38,7 @@ public class SpriteBlueprint extends ComponentBlueprint {
     public Component createInstance(HashMap<ComponentType, ComponentParam> params) {
         HashMap<String, SpriteLayer> spriteParams = new HashMap<>();
         for(String key : spriteLayers.getObjects().keySet()) spriteParams.put(key, (SpriteLayer) spriteLayers.getObjects().get(key));
-        return new SpriteComponent(animationBounds.getVector2(), spriteParams);
+        return new SpriteComponent(frameCount.getInt(), spriteParams);
     }
 
 }

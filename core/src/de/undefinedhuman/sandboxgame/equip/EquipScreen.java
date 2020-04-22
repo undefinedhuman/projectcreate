@@ -14,9 +14,9 @@ import de.undefinedhuman.sandboxgame.utils.Tools;
 public class EquipScreen extends Gui implements InvTarget {
 
     private EquipSlot[] slots = new EquipSlot[4];
-    private Vector2[] offset = new Vector2[] {new Vector2(0, 102), new Vector2(0, 68), new Vector2(-26, 40), new Vector2(0, -4)};
+    private Vector2[] offset = new Vector2[] {new Vector2(0, 100), new Vector2(0, 68), new Vector2(-26, 40), new Vector2(0, -4)};
     private String[] texture = new String[] {"gui/preview/equip/Helmet-Preview.png", "gui/preview/equip/Chestplate-Preview.png", "gui/preview/equip/Arms-Preview.png", "gui/preview/equip/Boots-Preview.png"};
-    private ItemType[] type = new ItemType[] {ItemType.HELMET, ItemType.ARMOR, ItemType.ARMOR, ItemType.ARMOR};
+    private ItemType[] type = new ItemType[] { ItemType.HELMET, ItemType.ARMOR, ItemType.ARMOR, ItemType.ARMOR };
 
     public EquipScreen() {
         super(GuiTemplate.SMALL_PANEL);

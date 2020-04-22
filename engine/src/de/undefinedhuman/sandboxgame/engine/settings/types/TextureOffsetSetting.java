@@ -84,11 +84,11 @@ public class TextureOffsetSetting extends Setting {
 
     private Vector2[] calculateVectors(BufferedImage currentImage) {
         BufferedImage image = Tools.scaleNearest(currentImage, 0.5f);
-        int size = image.getWidth() / Variables.PLAYER_TEXTURE_OFFSET_WIDTH;
+        int size = image.getWidth() / Variables.TEXTURE_OFFSET_PLAYER;
         Vector2[] vectors = new Vector2[size];
 
-        for(int i = 0; i < size; i++) for(int x = 0; x < Variables.PLAYER_TEXTURE_OFFSET_WIDTH; x++) for(int y = 0; y < image.getHeight(); y++) {
-            if(new Color(image.getRGB(i * Variables.PLAYER_TEXTURE_OFFSET_WIDTH + x, image.getHeight() - 1 - y)).getRed() != 255) continue;
+        for(int i = 0; i < size; i++) for(int x = 0; x < Variables.TEXTURE_OFFSET_PLAYER; x++) for(int y = 0; y < image.getHeight(); y++) {
+            if(new Color(image.getRGB(i * Variables.TEXTURE_OFFSET_PLAYER + x, image.getHeight() - 1 - y)).getRed() != 255) continue;
             vectors[i] = new Vector2(x * 2, y * 2);
             if(i != 0 && offset) vectors[i] = new Vector2(vectors[0].x - vectors[i].x, vectors[0].y - vectors[i].y);
             break;

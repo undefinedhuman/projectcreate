@@ -11,6 +11,7 @@ public class TextureValue {
     private TextureRegion texture;
 
     public TextureValue(Texture texture) {
+        texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         this.texture = Tools.fixBleeding(new TextureRegion(texture));
     }
 
@@ -18,16 +19,15 @@ public class TextureValue {
         usages++;
     }
 
-    public TextureRegion get() {
+    public TextureRegion getTexture() {
         return texture;
     }
 
     public void remove() {
         usages--;
-        if (usages <= 0) {
-            delete();
-            remove = true;
-        }
+        if (usages > 0) return;
+        delete();
+        remove = true;
     }
 
     public void delete() {

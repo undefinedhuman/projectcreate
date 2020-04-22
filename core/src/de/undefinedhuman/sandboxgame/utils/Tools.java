@@ -235,12 +235,6 @@ public class Tools extends de.undefinedhuman.sandboxgame.engine.utils.Tools {
         else return (int) f - 1;
     }
 
-    public static float angleCrop(float angle) {
-        while (angle < 0) angle += 360;
-        while (angle > 360) angle -= 360;
-        return angle;
-    }
-
     public static void screenshot() {
         byte[] pixels = ScreenUtils.getFrameBufferPixels(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), true);
         for (int i = 4; i < pixels.length; i += 4) pixels[i - 1] = (byte) 255;

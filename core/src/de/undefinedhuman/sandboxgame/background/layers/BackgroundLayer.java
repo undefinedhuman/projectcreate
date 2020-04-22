@@ -8,6 +8,7 @@ import de.undefinedhuman.sandboxgame.background.Layer;
 import de.undefinedhuman.sandboxgame.background.Time;
 import de.undefinedhuman.sandboxgame.engine.resources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
+import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
 
 public class BackgroundLayer extends Layer {
 
@@ -25,7 +26,7 @@ public class BackgroundLayer extends Layer {
 
     @Override
     public void resize(int width, int height) {
-        float ratio = ((float) height / (float) width) * 1280f / initialSize.y;
+        float ratio = GameManager.gameCamera.viewportHeight / initialSize.y;
         this.size = new Vector2(initialSize.x * ratio, initialSize.y * ratio);
     }
 
@@ -57,10 +58,8 @@ public class BackgroundLayer extends Layer {
         Color batchColor = batch.getColor();
         float renderX = currentX;
         do {
-            // TODO Create actual transition images for the other day times
-            // renderLayer(batch, camera, currentTime, renderX, 1 - blendFactor);
-            // renderLayer(batch, camera, (currentTime + 1) % Time.values().length, renderX, blendFactor);
-            renderLayer(batch, camera, 0, renderX, 1);
+            renderLayer(batch, camera, currentTime, renderX, 1 - blendFactor);
+            renderLayer(batch, camera, (currentTime + 1) % Time.values().length, renderX, blendFactor);
             renderX += size.x;
         } while (renderX <= camera.viewportWidth);
         batch.setColor(batchColor);

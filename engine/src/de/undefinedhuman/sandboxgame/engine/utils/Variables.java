@@ -1,16 +1,20 @@
 package de.undefinedhuman.sandboxgame.engine.utils;
 
+import com.badlogic.gdx.graphics.Color;
+
 public class Variables {
     // Engine
-    public static final float deltaMultiplier = 1.0f;
+    public static final float GAME_CAMERA_ZOOM = 2.5f;
+    public static final float DELTA_MULTIPLIER = 1.0f;
     public static final String SEPARATOR = ";", FILE_SEPARATOR = "/";
     public static final String DEFAULT_LANGUAGE = "eu_DE";
-    public static final boolean renderHitboxes = false;
+    public static final boolean RENDER_HITBOXES = false;
+    public static final Color HITBOX_COLOR = new Color(0.41568628f, 0.3529412f, 0.8039216f, 0.4f);
 
     // World
     public static final int CHUNK_SIZE = 20;
     public static final int BLOCK_SIZE = 16;
-    public static final int HOUR_LENGTH = 10;
+    public static final int HOUR_LENGTH = 1000;
 
     // Background
     public static final int CLOUD_COUNT = 5;
@@ -31,5 +35,5 @@ public class Variables {
     public static final int HOTBAR_OFFSET = 6;
 
     // Editor
-    public static final int PLAYER_TEXTURE_OFFSET_WIDTH = 64;
+    public static final int TEXTURE_OFFSET_PLAYER = 64;
 }

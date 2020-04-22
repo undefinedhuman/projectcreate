@@ -1,7 +1,5 @@
 package de.undefinedhuman.sandboxgame.entity.ecs.system;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.entity.components.mouse.AngleComponent;
 import de.undefinedhuman.sandboxgame.engine.entity.components.sprite.SpriteComponent;
@@ -20,11 +18,7 @@ public class AngleSystem extends System {
     }
 
     @Override
-    public void init(Entity entity) {}
-
-    @Override
     public void update(float delta, Entity entity) {
-
         AngleComponent angleComponent;
         SpriteComponent spriteComponent;
 
@@ -32,28 +26,14 @@ public class AngleSystem extends System {
 
         if (entity.mainPlayer) {
             angleComponent.mousePos = Tools.getMouseCoordsInWorldSpace(GameManager.gameCamera);
-
-            float angle = angleComponent.angle;
-            boolean turned = angleComponent.isTurned,
-                    mouse = angleComponent.mousePos.x < entity.getPosition().x + entity.getSize().x / 2;
-
-            angleComponent.angle = mouse ? (turned ? -(angle) : angle) : (!turned ? -(angle) : angle);
-            angleComponent.isTurned = !mouse;
-
-            angleComponent.angle = Tools.angleCrop(angleComponent.angle);
+            boolean turned = angleComponent.mousePos.x < entity.getCenterPosition().x;
+            angleComponent.angle = ((turned ? -1 : 1) * angleComponent.angle) % 360;
+            angleComponent.isTurned = !turned;
         }
 
         if ((spriteComponent = (SpriteComponent) entity.getComponent(ComponentType.SPRITE)) == null) return;
-        for (SpriteData data : spriteComponent.getSpriteDataValue())
-            data.setScale(new Vector2(angleComponent.isTurned ? Math.abs(data.getScale().x) : -Math.abs(data.getScale().x), data.getScale().y));
-
-
+        for (SpriteData data : spriteComponent.getSpriteData())
+            data.setTurned(angleComponent.isTurned);
     }
-
-    @Override
-    public void render(SpriteBatch batch) { }
-
-    @Override
-    public void render(SpriteBatch batch, Entity entity) { }
 
 }

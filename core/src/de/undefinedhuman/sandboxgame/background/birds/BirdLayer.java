@@ -16,12 +16,14 @@ public class BirdLayer extends Layer {
     private Color color;
     private ArrayList<Bird> birds = new ArrayList<>();
     private int yOffset;
-    private float speedMultiplier;
+    private float speedMultiplier, brightness;
 
-    public BirdLayer(Color color, int yOffset, float speedMultiplier) {
+    public BirdLayer(Color color, int yOffset, float speedMultiplier, float brightness) {
         this.color = color;
+        this.color.mul(brightness, brightness, brightness, 1f);
         this.yOffset = yOffset;
         this.speedMultiplier = speedMultiplier;
+        this.brightness = brightness;
     }
 
     @Override

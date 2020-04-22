@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Base64Coder;
 import de.undefinedhuman.sandboxgame.engine.items.type.blocks.Block;
-import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.world.layer.topLayer.TopLayerManager;
@@ -23,7 +22,6 @@ public class WorldLayer {
     public boolean isMain;
 
     public byte[][] blocks;
-    public byte[][] rot;
     public byte[][] state;
 
     private Color color = new Color();
@@ -33,7 +31,6 @@ public class WorldLayer {
         this.width = width;
         this.height = height;
         blocks = new byte[this.width][this.height];
-        rot = new byte[this.width][this.height];
         state = new byte[this.width][this.height];
     }
 
@@ -76,28 +73,19 @@ public class WorldLayer {
 
     }
 
-    public void setRot(int x, int y, int rot) {
-
-        if (!(y <= 0 || y >= height)) {
-
-            if ((x < 0) || (x >= width)) x = getPositionX(x);
-            if (this.rot[x][y] != rot) this.rot[x][y] = (byte) rot;
-
-        }
-
-    }
-
     public void renderBlock(SpriteBatch batch, Color col, int i, int j) {
 
         Block block = (Block) ItemManager.instance.getItem(getBlock(i, j));
 
         if (block != null && block.id.getInt() != 0) {
 
-            TextureRegion texture = block.blockTextures[getState(i, j)][getRot(i, j)];
+            TextureRegion texture = block.blockTextures[getState(i, j)];
+
+            // TODO Refactor this color thing
 
             color.set(1 * col.r, 1 * col.g, 1 * col.b, 1f);
             batch.setColor(color);
-            batch.draw(texture, i * Variables.BLOCK_SIZE, j * Variables.BLOCK_SIZE, Variables.BLOCK_SIZE * 0.5f, Variables.BLOCK_SIZE * 0.5f, Variables.BLOCK_SIZE, Variables.BLOCK_SIZE, 1, 1, 0);
+            batch.draw(texture, (int) (i * Variables.BLOCK_SIZE), (int) (j * Variables.BLOCK_SIZE), Variables.BLOCK_SIZE, Variables.BLOCK_SIZE, Variables.BLOCK_SIZE, Variables.BLOCK_SIZE, 1, 1, 0);
 
             if (block.id.getInt() == 3 && getBlock(i, j + 1) == 0)
                 TopLayerManager.instance.render(batch, i, j, TopLayerType.GRASS, getBlock(i - 1, j) != 0, getBlock(i + 1, j) != 0);
@@ -122,17 +110,6 @@ public class WorldLayer {
         x = getPositionX(x);
         if (y < height - 1 && y > 0) {
             return this.state[x][y];
-        } else {
-            return 0;
-        }
-
-    }
-
-    public byte getRot(int x, int y) {
-
-        x = getPositionX(x);
-        if (y < height - 1 && y > 0) {
-            return this.rot[x][y];
         } else {
             return 0;
         }

@@ -6,6 +6,7 @@ import de.undefinedhuman.sandboxgame.engine.resources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
 import de.undefinedhuman.sandboxgame.engine.settings.SettingType;
 import de.undefinedhuman.sandboxgame.engine.settings.types.BooleanSetting;
+import de.undefinedhuman.sandboxgame.engine.utils.Tools;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 
 public class Block extends Item {
@@ -20,7 +21,7 @@ public class Block extends Item {
             canBePlacedInBackLayer = new BooleanSetting("Place in Back", false),
             needBack = new BooleanSetting("Need Back", false);
 
-    public TextureRegion[][] blockTextures;
+    public TextureRegion[] blockTextures;
 
     public Block() {
         super();
@@ -31,7 +32,8 @@ public class Block extends Item {
     @Override
     public void init() {
         if(id.getInt() == 0) return;
-        blockTextures = TextureManager.instance.getTexture(itemTexture.getString()).split(Variables.BLOCK_SIZE, Variables.BLOCK_SIZE);
+        blockTextures = TextureManager.instance.getTexture(itemTexture.getString()).split(Variables.BLOCK_SIZE, Variables.BLOCK_SIZE)[0];
+        for(int i = 0; i < blockTextures.length; i++) blockTextures[i] = Tools.fixBleeding(blockTextures[i]);
     }
 
 }

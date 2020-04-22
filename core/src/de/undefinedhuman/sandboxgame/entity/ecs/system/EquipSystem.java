@@ -1,6 +1,5 @@
 package de.undefinedhuman.sandboxgame.entity.ecs.system;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.entity.components.animation.AnimationComponent;
@@ -10,6 +9,7 @@ import de.undefinedhuman.sandboxgame.engine.entity.components.mouse.AngleCompone
 import de.undefinedhuman.sandboxgame.engine.entity.components.sprite.SpriteComponent;
 import de.undefinedhuman.sandboxgame.engine.entity.components.sprite.SpriteData;
 import de.undefinedhuman.sandboxgame.engine.items.Item;
+import de.undefinedhuman.sandboxgame.engine.items.ItemType;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.ecs.System;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
@@ -39,49 +39,49 @@ public class EquipSystem extends System {
         AnimationComponent animationComponent;
         ShoulderComponent shoulderComponent;
 
-        if ((spriteComponent = (SpriteComponent) entity.getComponent(ComponentType.SPRITE)) != null && (equipComponent = (EquipComponent) entity.getComponent(ComponentType.EQUIP)) != null && (angleComponent = (AngleComponent) entity.getComponent(ComponentType.ANGLE)) != null && (shoulderComponent = (ShoulderComponent) entity.getComponent(ComponentType.SHOULDER)) != null && (animationComponent = (AnimationComponent) entity.getComponent(ComponentType.ANIMATION)) != null) {
+        if ((spriteComponent = (SpriteComponent) entity.getComponent(ComponentType.SPRITE)) == null
+                || (equipComponent = (EquipComponent) entity.getComponent(ComponentType.EQUIP)) == null
+                || (angleComponent = (AngleComponent) entity.getComponent(ComponentType.ANGLE)) == null
+                || (shoulderComponent = (ShoulderComponent) entity.getComponent(ComponentType.SHOULDER)) == null
+                || (animationComponent = (AnimationComponent) entity.getComponent(ComponentType.ANIMATION)) == null) return;
 
-            int equipID = equipComponent.itemIDs[0];
+        int equipID = equipComponent.itemIDs[0];
 
-            if (equipID != -1) {
+        if (equipID == -1) return;
+        Item item = ItemManager.instance.getItem(equipID);
+        Vector2 weaponOffset = equipComponent.getCurrentOffset(animationComponent.getAnimationFrameIndex()),
+                shoulderPosition = shoulderComponent.getShoulderPos(animationComponent.getAnimationFrameIndex());
 
-                Item item = ItemManager.instance.getItem(equipID);
-                Vector2 weaponOffset = equipComponent.getCurrentOffset(animationComponent.getAnimationFrameIndex()), shoulderPosition = shoulderComponent.getShoulderPos(animationComponent.getAnimationFrameIndex()), shoulderOffset = shoulderComponent.getShoulderOffset(animationComponent.getAnimationFrameIndex());
+        boolean turned = angleComponent.isTurned;
 
-                switch (item.type) {
-
-                    case SWORD:
-                    case PICKAXE:
-                    case STAFF:
-                    case BOW:
-                        setSpriteData(spriteComponent, "Item", angleComponent.isTurned ? shoulderPosition.x + weaponOffset.x - 10 : entity.getWidth() - shoulderPosition.x - weaponOffset.x + 10, shoulderPosition.y + weaponOffset.y - 4,
-                                angleComponent.isTurned ? -weaponOffset.x + 12 : weaponOffset.x - 12, -weaponOffset.y + 6, angleComponent.angle + (angleComponent.isTurned ? -45 : 45));
-                        setSpriteData(spriteComponent, "Item Hitbox", angleComponent.isTurned ? 4 : entity.getSize().x - 4, 19, (angleComponent.isTurned ? 50 - weaponOffset.x : -50 + weaponOffset.x), 21 - weaponOffset.y, angleComponent.angle);
-                        break;
-                    default:
-                        setSpriteData(spriteComponent, "Item", angleComponent.isTurned ? 7 : 9, 26, 47 + (angleComponent.isTurned ? -weaponOffset.x : 10 + weaponOffset.x), 14 - weaponOffset.y, angleComponent.angle);
-                        break;
-
-                }
-
-            }
-
+        if (item.type == ItemType.BLOCK) {
+            setSpriteData(spriteComponent, "Item",
+                    8,
+                    30,
+                    50 + (turned ? -1 : 1) * weaponOffset.x + (turned ? 0 : 13),
+                    10 - weaponOffset.y,
+                    angleComponent.angle);
+        } else {
+            setSpriteData(spriteComponent, "Item",
+                    (turned ? 0 : entity.getWidth()) + (turned ? 1 : -1) * (shoulderPosition.x + weaponOffset.x - 13),
+                    shoulderPosition.y + weaponOffset.y - 3,
+                    (turned ? -1 : 1) * (weaponOffset.x - 13),
+                    -weaponOffset.y + 3,
+                    angleComponent.angle + (turned ? -45 : 45));
+            // setSpriteData(spriteComponent, "Item Hitbox", angleComponent.isTurned ? 4 : entity.getSize().x - 4, 19, (angleComponent.isTurned ? 50 - weaponOffset.x : -50 + weaponOffset.x), 21 - weaponOffset.y, angleComponent.angle);
         }
 
     }
 
-    @Override
-    public void render(SpriteBatch batch) {}
-
-    private void setSpriteData(SpriteComponent spriteComponent, String dataName, float originX, float originY, float posOffsetX, float posOffsetY, float rotation) {
-        SpriteData data = spriteComponent.getSpriteDataValue(dataName);
+    private void setSpriteData(SpriteComponent spriteComponent, String dataName, float originX, float originY, float offsetX, float offsetY, float rotation) {
+        SpriteData data = spriteComponent.getSpriteData(dataName);
         data.setOrigin(originX, originY);
-        data.setPositionOffset((int) posOffsetX, (int) posOffsetY);
+        data.setPositionOffset(offsetX, offsetY);
         data.setRotation(rotation);
     }
 
     private void setVisible(SpriteComponent component, String... data) {
-        for (String s : data) component.getSpriteDataValue(s).setVisible(false);
+        for (String s : data) component.getSpriteData(s).setVisible(false);
     }
 
 }

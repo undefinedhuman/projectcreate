@@ -11,16 +11,17 @@ import de.undefinedhuman.sandboxgame.world.World;
 
 public class ForegroundLayer extends Layer {
 
-    private float currentX, speedFactor, yOffset;
+    private float currentX, speedFactor, yOffset, brightness;
     private Vector2 initialSize, size;
 
     private String texture;
 
-    public ForegroundLayer(String texture, Vector2 size, float speedFactor, float yOffset) {
+    public ForegroundLayer(String texture, Vector2 size, float speedFactor, float yOffset, float brightness) {
         this.initialSize = size;
         this.texture = texture;
         this.speedFactor = speedFactor;
         this.yOffset = yOffset;
+        this.brightness = brightness;
         currentX = -size.x;
     }
 
@@ -45,6 +46,7 @@ public class ForegroundLayer extends Layer {
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         if(camera == null) return;
         Color batchColor = batch.getColor();
+        batch.setColor(brightness, brightness, brightness, 75f);
         float renderX = currentX;
         do {
             batch.draw(TextureManager.instance.getTexture(texture), (camera.position.x - camera.viewportWidth * 0.5f) + renderX, World.instance.maxHeight + yOffset * BackgroundManager.instance.scale, size.x, size.y);

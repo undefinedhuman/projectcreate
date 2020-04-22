@@ -52,7 +52,7 @@ public class ClientListener extends Listener {
             AddPlayerPacket packet = (AddPlayerPacket) o;
             Entity player = BlueprintManager.instance.getBlueprint(0).createInstance();
             player.mainPlayer = true;
-            player.receive(packet.playerInfo);
+            // player.receive(packet.playerInfo);
             player.setWorldID(packet.worldID);
             GameManager.instance.player = player;
             EntityManager.instance.addEntity(packet.worldID, player);
@@ -69,7 +69,7 @@ public class ClientListener extends Listener {
 
                 AddEntityPacket packet = (AddEntityPacket) o;
                 Entity entity = BlueprintManager.instance.getBlueprint(packet.blueprintID).createInstance();
-                entity.receive(packet.entityInfo);
+                // entity.receive(packet.entityInfo);
                 entity.setWorldID(packet.worldID);
                 EntityManager.instance.addEntity(packet.worldID, entity);
 

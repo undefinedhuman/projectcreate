@@ -1,25 +1,33 @@
-TODO REFACTOR Sprite COMPONENT/DATA
 TODO REFACTOR ENTITY CHUNK SYSTEM
 TODO ADD EventSystem for all sorts of events (block breaking/placing, entity dead/hurt move, etc.)
+TODO FIX PLAYER MOVEMENT
+
+TODO ADD Entity Render Layer, maybe do it with entity types PLAYER > DYNAMIC > STATIC
 
 TODO Profile Component Refactor / Maybe include animations for the status bars / different Types of profiles, "player, boss, small enemy"
 TODO FIX GRASS OVERLAY AT THE EDGES AND ENTITIES
 
-TODO Think about reworking the combat systems
+TODO Think about reworking the combat systems / add hitboxes back in
 
 TODO Add Meteorites into the night scene, also some moving stars etc. maybe stars move in circle https://weheartit.com/entry/314129185
 TODO Add small birds to the world that fly away if the player comes close https://i.pinimg.com/originals/ce/82/43/ce82438a3f7715f074159645de1ff49b.gif
+
+TODO Add Settings Menu, for Variables.GAME_CAMERA_ZOOM Bounds [1.5f ... 3f], step 0.5f because otherwise the pixel glitch gets back if it is for example 2.2
+
+TODO I think at the beginning there is a bug with the collision of the player with the blocks, that is also why the background keeps moving
 
 Combat System:
  - Verschiedene Materialien, für jede Waffe.
  - Waffen haben verschiedene Attacken.
  - Jede Waffe hat ein Level.
  - Waffen können verschiedene Effekte/Enchantments haben die bekommen dann auch Ränder wie hier https://www.gamedevmarket.net/asset/pixel-art-fantasy-iconset-24x24-2181/
+ - Shields should have some kind of mana or stamina value which sets when hold up and gets lower when take damage, not block any damage just lower the damage in the beginning
+   and then if gets lowered by the player it regenerates, with some cooldown
 
 Drop Items:
+ - When finding Items, make them unique everytime, make them contain different type of abilitys, different stats, maybe make them levelable so you find a weapon and don't instantly know what to expect
  - Drop Items sollen je nach Seltenheit ein Licht Effekt bekommen.
  - Drop Items brauchen eine Pick Up Sound
- - an den Rändern der Welt die Drop Items fixen das auch die von 6500 bis z.b. 50 angezeigt werden
  - Chunks einführen
 
 Crystal:
@@ -91,7 +99,7 @@ Entity:
 
 World:
  - Kleine Höhlen irgendwie 4 * 6 groß mit kleiner Kiste in der Mitte
- - In kleinen Pberwelt Höhlen Säulen einfpgen im Hintergrund siehe Starbound oder dieses Block Pack
+ - In kleinen Oberwelt Höhlen Säulen einfpgen im Hintergrund siehe Starbound oder dieses Block Pack
    -> Und kleine Säulen also 4 * 10 auf der Oberfläche nach oben einbauen
 
 Drop Items:
@@ -101,21 +109,18 @@ Font Manager:
  - Es gibt eine Default Liste mit Fonts z.B. Title, Normal, Hover, jede Anwendung die eine Font braucht bekommt eine eigene Instanz in einer Liste mit eigener Scale etc.
 
 Bugs:
- - Licht Bug an den Rändern der Welt entfernen.
- - Die Blocks Checks also check3Cells am boden der Welt fixen.
- - Load Music Function einbauen das ein "Unknown" also ein Standard Sound geladen wird wie bei den Texturen.
- - Splashscreen Resize Methode anpassen
- - Light Manager Default Height also die Höhe an der das Limit der World genertation ist.
- - In größer Höhe funktoniert die Lauf animation nicht vernünftig
- - Arrow spawnt wenn man nach rechts läuft aber nach links schaut nicht richtig
- - Window Resize kann den Spieler verschieben z.B. unter Spieler ist eine Höhle und dann kann der Spieler dahin "tpt" werden
-
-      * Wenn ein Spieler AFK ist kann er angeklickt werden mit AFK Info und er hat Sleep als Z Z Z Partikel über sich und die Augen zu
-      * Notifications überarbeiten
-      * Achievment System & Settings! Achievments werden in einer ART Scroll Panel dargestellt es existieren 4-5 Elemente an Achievments und dann gibts Pfeile um immer ein nues anzeiogen zu lassen wie Starbound Charakter Auswahl!
-      * Effects Progess Bar die sich in der Zeit immer verringert udn links am Rand angezeigt wird
-      * Unter Name und Health etc
-      * Changelog programmieren mit Time View und Latest Löschen und neu anlegen auf der Website aufrufbar mit jedem nueen Upload wird eine neue Version und ein neuer Changelog erwartet beim Upload programm!
-      * Death Screen
-      * Shop Gold System Katergorien anhand der ItemTypes. Alles sortieren etc.
-      * Shop System Item werdenauf Seiten verlagert und dann Arraylist mit Pfeilen unten im GUI zum weiter klicken im Shop was items an geht dann kaufen mit Details Screen
+ - Lightning is off at the edges of the world
+ - Block check doesn't work properly at the bottom of the world
+ - Splashscreen resize should be enabled
+ - Light Manager Default Height should be the height of the world generator
+ - At higher Y Values the run animation doesn't work properly (weird)
+ - Arrow Spawning when facing into different dir doesn't spawn at the correct position
+ - Resizing the Window could result into teleport the player into an cave
+ - Wenn ein Spieler AFK ist kann er angeklickt werden mit AFK Info und er hat Sleep als Z Z Z Partikel über sich und die Augen zu
+ - Achievment System & Settings! Achievments werden in einer ART Scroll Panel dargestellt es existieren 4-5 Elemente an Achievments und dann gibts Pfeile um immer ein nues anzeiogen zu lassen wie Starbound Charakter Auswahl!
+ - Effects Progess Bar die sich in der Zeit immer verringert udn links am Rand angezeigt wird
+ - Unter Name und Health etc
+ - Changelog programmieren mit Time View und Latest Löschen und neu anlegen auf der Website aufrufbar mit jedem nueen Upload wird eine neue Version und ein neuer Changelog erwartet beim Upload programm!
+ - Death Screen
+ - Shop Gold System Katergorien anhand der ItemTypes. Alles sortieren etc.
+ - Shop System Item werdenauf Seiten verlagert und dann Arraylist mit Pfeilen unten im GUI zum weiter klicken im Shop was items an geht dann kaufen mit Details Screen

@@ -31,6 +31,8 @@ public class WorldGenerator {
     private World generateTestWorld(String name, WorldSetting worldSetting, BiomeSetting biomeSetting) {
         World world = new World(name, 50, worldSetting.getBiomeSize() * (biomeSetting.getSize() + biomeSetting.getTransition()), 2000, 23479356);
         for (int x = 0; x < world.width; x++) for (int y = 0; y < 50; y++) world.mainLayer.setBlock(x, y, (byte) 1);
+        WorldManager.instance.checkMap(world.backLayer);
+        WorldManager.instance.checkMap(world.mainLayer);
         return world;
     }
 

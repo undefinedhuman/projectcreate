@@ -21,7 +21,7 @@ public class PacketUtils {
         ComponentPacket packet = new ComponentPacket();
         packet.worldID = GameManager.instance.player.getWorldID();
         packet.worldName = World.instance.name;
-        packet.data = entity.send(types);
+        // packet.data = entity.send(types);
         return packet;
 
     }

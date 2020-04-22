@@ -18,7 +18,6 @@ public abstract class GameObject extends Transform {
     public abstract void resize(int width, int height);
     public abstract void update(float delta);
     public abstract void render(SpriteBatch batch, OrthographicCamera camera);
-    public abstract void renderUI(SpriteBatch batch, OrthographicCamera camera);
     public abstract void delete();
 
 }

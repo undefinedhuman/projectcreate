@@ -2,7 +2,6 @@ package de.undefinedhuman.sandboxgame.entity.ecs.system;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.entity.components.interaction.InteractionComponent;
@@ -21,12 +20,13 @@ public class InteractionSystem extends System {
 
     public InteractionSystem() {
         if (instance == null) instance = this;
-        helpText = new Text("");
-        GuiManager.instance.addGui(helpText.setGuiScale(1f).setPosition("r0.5", "p50").setCentered().setVisible(true));
     }
 
     @Override
-    public void init(Entity entity) {}
+    public void init(Entity entity) {
+        helpText = new Text("");
+        GuiManager.instance.addGui(helpText.setGuiScale(1f).setPosition("r0.5", "p50").setCentered().setVisible(true));
+    }
 
     @Override
     public void update(float delta, Entity entity) {
@@ -53,11 +53,6 @@ public class InteractionSystem extends System {
                 interactionComponent.pressed = false;
 
         }
-
-    }
-
-    @Override
-    public void render(SpriteBatch batch) {
 
     }
 

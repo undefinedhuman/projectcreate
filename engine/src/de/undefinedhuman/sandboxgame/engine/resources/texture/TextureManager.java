@@ -56,8 +56,7 @@ public class TextureManager extends Manager {
     }
 
     public TextureRegion getTexture(String name) {
-        TextureValue value = textures.get(name);
-        if (value != null || addTexture(name)) return textures.get(name).get();
+        if (hasTexture(name) || addTexture(name)) return textures.get(name).getTexture();
         return hasTexture("Unknown.png") && !name.equals("Unknown.png") ? getTexture("Unknown.png") : null;
     }
 

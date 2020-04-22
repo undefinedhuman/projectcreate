@@ -1,53 +1,60 @@
 package de.undefinedhuman.sandboxgame.engine.entity.components.sprite;
 
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.sandboxgame.engine.entity.Component;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.file.LineWriter;
 
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.*;
 
 public class SpriteComponent extends Component {
 
     private HashMap<String, SpriteData> spriteData;
+    private SortedMap<Integer, ArrayList<SpriteData>> orderedSpriteData = new TreeMap<>();
 
-    public SpriteComponent(Vector2 animationBounds, HashMap<String, SpriteLayer> params) {
-
+    public SpriteComponent(int animationBounds, HashMap<String, SpriteLayer> params) {
         this.spriteData = new HashMap<>();
         for (String name : params.keySet()) {
-
-            SpriteLayer param = params.get(name);
-            SpriteData data = new SpriteData(param.texture.getString());
-            data.setAnimated(param.isAnimated.getBoolean());
-            data.setRenderLevel(param.renderLevel.getInt());
-            if (animationBounds.x != 0 && animationBounds.y != 0) data.setAnimationBounds(animationBounds);
+            SpriteLayer layer = params.get(name);
+            SpriteData data = new SpriteData(layer.texture.getString(), layer.isAnimated.getBoolean() ? animationBounds : 1, layer.renderLevel.getInt());
             spriteData.put(name, data);
-
         }
         this.type = ComponentType.SPRITE;
-
     }
 
-    public String getTexture(String key) {
-        return spriteData.get(key).getTexture();
+    @Override
+    public void init() {
+        for(SpriteData data : spriteData.values()) {
+            int renderLevel = data.getRenderLevel();
+            if (orderedSpriteData.containsKey(renderLevel)) orderedSpriteData.get(renderLevel).add(data);
+            else {
+                ArrayList<SpriteData> spriteData = new ArrayList<>();
+                spriteData.add(data);
+                orderedSpriteData.put(renderLevel, spriteData);
+            }
+        }
     }
 
-    public SpriteData getSpriteDataValue(String key) {
+    public Collection<SpriteData> getSpriteData() {
+        return spriteData.values();
+    }
+    public SpriteData getSpriteData(String key) {
         return spriteData.get(key);
     }
 
-    public void setSpriteData(String name, SpriteData data) {
-        this.spriteData.put(name, data);
+    public void render(SpriteBatch batch) {
+        for(int renderLevel : orderedSpriteData.keySet()) {
+            ArrayList<SpriteData> spriteData = orderedSpriteData.get(renderLevel);
+            for(SpriteData data : spriteData) data.render(batch);
+        }
     }
 
-    public Collection<SpriteData> getSpriteDataValue() {
-        return spriteData.values();
-    }
-
-    public HashMap<String, SpriteData> getSpriteData() {
-        return spriteData;
+    @Override
+    public void delete() {
+        orderedSpriteData.clear();
+        for(SpriteData data : spriteData.values()) data.delete();
+        spriteData.clear();
     }
 
     @Override

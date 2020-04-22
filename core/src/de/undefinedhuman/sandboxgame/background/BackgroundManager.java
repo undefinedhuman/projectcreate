@@ -1,11 +1,9 @@
 package de.undefinedhuman.sandboxgame.background;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.sandboxgame.background.birds.BirdLayer;
 import de.undefinedhuman.sandboxgame.background.clouds.CloudLayer;
 import de.undefinedhuman.sandboxgame.background.layers.BackgroundLayer;
 import de.undefinedhuman.sandboxgame.background.layers.ForegroundLayer;
@@ -36,14 +34,13 @@ public class BackgroundManager extends Manager {
         worldWidth = World.instance.mainLayer.width * Variables.BLOCK_SIZE;
         layers = new Layer[] {
                 new BackgroundLayer(new Vector2(640, 300)),
-                new CloudLayer(200, 0.25f),
-                new ForegroundLayer("background/foreground/Mountain 1.png", new Vector2(foreGroundWidth, 127), 0.25f, 135f),
-                new CloudLayer(125, 0.5f),
-                new ForegroundLayer("background/foreground/Mountain 2.png", new Vector2(foreGroundWidth, 162), 0.5f, 75f),
-                new CloudLayer(85, 0.75f),
-                new ForegroundLayer("background/foreground/Pine 1.png", new Vector2(foreGroundWidth, 148), 0.75f, -10f),
-                new BirdLayer(Color.valueOf("#1b2d2d"), 96, 0.75f),
-                new ForegroundLayer("background/foreground/Pine 2.png", new Vector2(foreGroundWidth, 199), 1f, -75f)
+                new CloudLayer(200, 0.25f, 0.55f),
+                new ForegroundLayer("background/foreground/Mountain 1.png", new Vector2(foreGroundWidth, 127), 0.25f, 135f, 0.55f),
+                new CloudLayer(125, 0.5f, 0.7f),
+                new ForegroundLayer("background/foreground/Mountain 2.png", new Vector2(foreGroundWidth, 162), 0.5f, 75f, 0.7f),
+                new CloudLayer(85, 0.75f, 0.85f),
+                new ForegroundLayer("background/foreground/Pine 1.png", new Vector2(foreGroundWidth, 148), 0.75f, -10f, 0.85f),
+                new ForegroundLayer("background/foreground/Pine 2.png", new Vector2(foreGroundWidth, 199), 1f, -75f, 1f)
         };
     }
 
@@ -66,7 +63,7 @@ public class BackgroundManager extends Manager {
 
     @Override
     public void update(float delta) {
-        layers[0].update(delta, Variables.HOUR_LENGTH);
+        layers[0].update(delta, 5f);
         Entity player = GameManager.instance.player;
         if(player != null) {
             speed = Tools.floorBackgroundSpeed(lastX - player.getX()) * ((MovementComponent) player.getComponent(ComponentType.MOVEMENT)).getSpeed();

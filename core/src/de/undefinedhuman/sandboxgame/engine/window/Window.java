@@ -21,6 +21,7 @@ public class Window {
         config.height = 720;
         config.backgroundFPS = 0;
         config.foregroundFPS = 0;
+        config.useHDPI = true;
         return config;
     }
 

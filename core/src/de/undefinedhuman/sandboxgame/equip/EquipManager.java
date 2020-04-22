@@ -33,9 +33,9 @@ public class EquipManager {
         EquipComponent equipComponent = (EquipComponent) entity.getComponent(ComponentType.EQUIP);
         Item item = ItemManager.instance.getItem(id);
         equipComponent.setItemID(armor ? getItemIndex(item.type) : 0, id);
-        setSpriteData(spriteComponent, armor ? Tools.capitalizeFirstLetter(item.type.name()) : "Item", item.useIconAsHandTexture.getBoolean() ? item.iconTexture.getString() : item.itemTexture.getString(), item.useIconAsHandTexture.getBoolean() ? new Vector2(16, 16) : new Vector2(120, 74), true);
+        setSpriteData(spriteComponent, armor ? Tools.capitalizeFirstLetter(item.type.name()) : "Item", item.useIconAsHandTexture.getBoolean() ? item.iconTexture.getString() : item.itemTexture.getString(), item.useIconAsHandTexture.getBoolean() ? new Vector2(16, 16) : new Vector2(128, 64), true);
         if (armor) setVisible(spriteComponent, false, ((Armor) item).inVisibleSprites.getStringArray());
-        else setSpriteData(spriteComponent, "Item Hitbox", null, new Vector2(0, 0), false);
+        else setSpriteData(spriteComponent, "Item Hitbox", null, new Vector2(0, 0), true);
     }
 
     private int getItemIndex(ItemType type) {
@@ -43,15 +43,15 @@ public class EquipManager {
         return -1;
     }
 
-    private void setSpriteData(SpriteComponent spriteComponent, String dataName, String texture, Vector2 size, boolean visible) {
-        SpriteData data = spriteComponent.getSpriteDataValue(dataName);
+    private void setSpriteData(SpriteComponent spriteComponent, String spriteDataName, String texture, Vector2 size, boolean visible) {
+        SpriteData data = spriteComponent.getSpriteData(spriteDataName);
         if (texture != null) data.setTexture(texture);
         data.setVisible(visible);
-        data.setSize(size.x, size.y);
+        data.setSize(size);
     }
 
-    private void setVisible(SpriteComponent component, boolean visible, String... data) {
-        for (String s : data) component.getSpriteDataValue(s).setVisible(visible);
+    private void setVisible(SpriteComponent component, boolean visible, String... spriteDataNames) {
+        for (String spriteDataName : spriteDataNames) component.getSpriteData(spriteDataName).setVisible(visible);
     }
 
     public void unEquipItemNetwork(Entity entity, int id, boolean armor) {

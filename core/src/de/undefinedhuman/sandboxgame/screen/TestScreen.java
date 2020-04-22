@@ -11,7 +11,6 @@ import de.undefinedhuman.sandboxgame.Main;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.EntityManager;
 import de.undefinedhuman.sandboxgame.entity.ecs.blueprint.BlueprintManager;
-import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
 import de.undefinedhuman.sandboxgame.screen.gamescreen.GameScreen;
 import de.undefinedhuman.sandboxgame.world.World;
@@ -27,8 +26,6 @@ public class TestScreen implements Screen {
     private OrthographicCamera camera;
     private Viewport viewport;
     private SpriteBatch batch;
-
-    private Gui gui;
 
     @Override
     public void show() {

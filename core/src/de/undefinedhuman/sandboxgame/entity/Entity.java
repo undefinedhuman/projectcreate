@@ -14,18 +14,16 @@ import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.engine.utils.math.Vector2i;
 import de.undefinedhuman.sandboxgame.entity.ecs.blueprint.Blueprint;
 import de.undefinedhuman.sandboxgame.network.components.NetworkComponent;
-import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
 import de.undefinedhuman.sandboxgame.world.World;
 
 public class Entity extends GameObject implements NetworkComponent {
 
     public boolean mainPlayer = false;
-    private int blueprintID, worldID;
+    private int blueprintID, worldID, chunkID;
     private EntityType type;
     private ComponentList components;
 
-    private Vector2i currentChunk = new Vector2i(), tempChunk = new Vector2i();
-    private int chunkID = 0;
+    private Vector2i chunkPosition = new Vector2i(), tempChunkPosition = new Vector2i();
 
     public Entity(Vector2 size, EntityType type) {
         this(size, type, 0);
@@ -55,9 +53,6 @@ public class Entity extends GameObject implements NetworkComponent {
 
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {}
-
-    @Override
-    public void renderUI(SpriteBatch batch, OrthographicCamera camera) {}
 
     @Override
     public void delete() {
@@ -106,51 +101,27 @@ public class Entity extends GameObject implements NetworkComponent {
     @Override
     public void setPosition(float x, float y) {
         super.setPosition(x, y);
-        checkWorld();
+        updateWorldPosition();
+        updateChunkPosition();
     }
 
-    private void checkWorld() {
-        if(position.x < 0 || position.x >= World.instance.blockWidth) {
-            float b = (position.x < 0f ? 1f : -1f);
-            position.x = position.x + b * World.instance.blockWidth;
-            if (mainPlayer) {
-                GameManager.gameCamera.position.set(GameManager.gameCamera.position.x + b * World.instance.blockWidth, GameManager.gameCamera.position.y, GameManager.gameCamera.position.z);
-                GameManager.gameCamera.update();
-            }
-        }
-        tempChunk.set(((int) position.x / Variables.BLOCK_SIZE) / Variables.CHUNK_SIZE, ((int) position.y / Variables.BLOCK_SIZE) / Variables.CHUNK_SIZE);
-        if (tempChunk.x != currentChunk.x || tempChunk.y != currentChunk.y) {
-            EntityManager.instance.getChunk(currentChunk.x, currentChunk.y).removeEntity(worldID);
-            EntityManager.instance.getChunk(tempChunk.x, tempChunk.y).addEntity(worldID, this);
-            currentChunk.set(tempChunk.x, tempChunk.y);
-        }
+    private void updateWorldPosition() {
+        if(position.x > 0 && position.x < World.instance.blockWidth) return;
+        position.x = position.x + (position.x < 0f ? 1f : -1f) * World.instance.blockWidth;
+    }
+
+    private void updateChunkPosition() {
+        tempChunkPosition.set(position).div(Variables.BLOCK_SIZE).div(Variables.CHUNK_SIZE);
+        int newChunkID = tempChunkPosition.x + EntityManager.instance.chunkSize.x * tempChunkPosition.y;
+        if(newChunkID == chunkID) return;
+        EntityManager.instance.getChunk(tempChunkPosition.x, tempChunkPosition.y).removeEntity(worldID);
+        EntityManager.instance.getChunk(tempChunkPosition.x, tempChunkPosition.y).addEntity(worldID, this);
+        chunkPosition.set(tempChunkPosition);
+        chunkID = newChunkID;
     }
 
     public Vector2i getChunkPosition() {
-        return currentChunk;
-    }
-
-    public int getChunkID() {
-        return tempChunk.x + EntityManager.instance.chunkSize.x * tempChunk.y;
-    }
-
-    // TODO Update to network components methods
-    public void receive(String s) {
-        LineSplitter lineSplitter = new LineSplitter(s, true, ";");
-        int componentsNumber = lineSplitter.getNextInt();
-        for (int i = 0; i < componentsNumber; i++) {
-            components.getComponent(ComponentType.valueOf(lineSplitter.getNextString())).receive(lineSplitter);
-        }
-    }
-
-    public String send(ComponentType... types) {
-        LineWriter writer = new LineWriter(true);
-        writer.writeInt(types.length);
-        for (ComponentType type : types) {
-            writer.writeString(type.name());
-            getComponent(type).send(writer);
-        }
-        return writer.getData();
+        return chunkPosition;
     }
 
     @Override

@@ -45,10 +45,10 @@ public class InventoryManager extends Manager {
         inspectScreen = new InspectScreen();
         inspectScreen.setVisible(false);
         equipScreen = new EquipScreen();
-        equipScreen.setTitle(GuiTemplate.SLOT, "Equip", Font.Normal, Color.WHITE);
+        equipScreen.setTitle("Equip", Font.Title, Color.WHITE);
         equipScreen.setVisible(false);
         inventory = new Inventory(10, 5);
-        inventory.setTitle(GuiTemplate.SLOT, "Inventory", Font.Normal, Color.WHITE);
+        inventory.setTitle("Inventory", Font.Title, Color.WHITE);
         inventory.setVisible(false);
 
         dragAndDrop.addTarget(inventory, selector, equipScreen);

@@ -1,7 +1,6 @@
 package de.undefinedhuman.sandboxgame.entity.ecs.system;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.collision.CollisionManager;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
@@ -22,9 +21,6 @@ public class MovementSystem extends System {
     public MovementSystem() {
         if (instance == null) instance = this;
     }
-
-    @Override
-    public void init(Entity entity) { }
 
     @Override
     public void update(float delta, Entity entity) {
@@ -77,9 +73,6 @@ public class MovementSystem extends System {
         }
 
     }
-
-    @Override
-    public void render(SpriteBatch batch) {}
 
     private void updateHitBoxPos(Vector2 pos, CollisionComponent collisionComponent) {
         Vector2 position = new Vector2(pos.x + collisionComponent.getOffset().x, pos.y + collisionComponent.getOffset().y);

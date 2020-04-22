@@ -6,12 +6,12 @@ import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 public enum Time {
 
     DAY("background/layer/Background.png", Variables.HOUR_LENGTH),
-    SUNRISE("background/Sunrise.png", Variables.HOUR_LENGTH),
-    MIDDAY("background/Day.png", Variables.HOUR_LENGTH * 4),
-    SUNSET("background/Evening.png", Variables.HOUR_LENGTH),
-    EVENING("background/Night.png", Variables.HOUR_LENGTH),
-    MIDNIGHT("background/Midnight.png", Variables.HOUR_LENGTH * 4),
-    MORNING("background/Night.png", Variables.HOUR_LENGTH);
+    SUNRISE("background/layer/Background.png", Variables.HOUR_LENGTH),
+    MIDDAY("background/layer/Background.png", Variables.HOUR_LENGTH * 4),
+    SUNSET("background/layer/Background.png", Variables.HOUR_LENGTH),
+    EVENING("background/layer/Background.png", Variables.HOUR_LENGTH),
+    MIDNIGHT("background/layer/Background.png", Variables.HOUR_LENGTH * 4),
+    MORNING("background/layer/Background.png", Variables.HOUR_LENGTH);
 
     public String texture;
     public int duration;

@@ -16,11 +16,12 @@ public class CloudLayer extends Layer {
     private ArrayList<Cloud> clouds = new ArrayList<>(), cloudsToRemove = new ArrayList<>();
 
     private int yOffset;
-    private float speedMultiplier;
+    private float speedMultiplier, brightness;
 
-    public CloudLayer(int yOffset, float speedMultiplier) {
+    public CloudLayer(int yOffset, float speedMultiplier, float brightness) {
         this.yOffset = yOffset;
         this.speedMultiplier = speedMultiplier;
+        this.brightness = brightness;
     }
 
     @Override
@@ -30,7 +31,7 @@ public class CloudLayer extends Layer {
             clouds.add(new Cloud(
                     BackgroundManager.instance.cloudTextures[Tools.random.nextInt(BackgroundManager.instance.cloudTextures.length)],
                     new Vector2(Tools.random.nextInt(World.instance.blockWidth), World.instance.maxHeight + yOffset + Tools.random.nextInt(Variables.CLOUD_HEIGHT_OFFSET * 2) - Variables.CLOUD_HEIGHT_OFFSET),
-                    speedMultiplier));
+                    speedMultiplier, brightness));
         }
     }
 
