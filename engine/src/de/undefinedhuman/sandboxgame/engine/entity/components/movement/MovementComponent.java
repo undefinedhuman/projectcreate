@@ -5,77 +5,65 @@ import de.undefinedhuman.sandboxgame.engine.entity.Component;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.file.LineWriter;
+import de.undefinedhuman.sandboxgame.engine.utils.math.Vector2i;
 
 public class MovementComponent extends Component {
 
-    public Vector2 velocity;
-    public boolean moveRight = false, moveLeft = false, beginHike = false;
-    public boolean canJump = false;
+    public Vector2 velocity = new Vector2();
+    public Vector2i previousSlopeTile = new Vector2i();
+    public boolean canJump = false, isJumping = false, isOnSlope = false;
 
-    private float speed, jumpSpeed, gravity;
+    private float jumpTans, speed, jumpSpeed, gravity;
+    private int direction = 0;
 
-    public MovementComponent(float speed, float jumpSpeed, float gravity) {
+    public MovementComponent(float speed, float jumpSpeed, float gravity, float jumpTans) {
         this.speed = speed;
         this.jumpSpeed = jumpSpeed;
         this.gravity = gravity;
-        this.velocity = new Vector2(0, 0);
+        this.jumpTans = jumpTans;
         this.type = ComponentType.MOVEMENT;
-    }
-
-    public float getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(float speed) {
-        this.speed = speed;
-    }
-
-    public float getJumpSpeed() {
-        return jumpSpeed;
-    }
-
-    public void setJumpSpeed(float jumpSpeed) {
-        this.jumpSpeed = jumpSpeed;
     }
 
     public float getGravity() {
         return gravity;
     }
-
-    public void setGravity(float gravity) {
-        this.gravity = gravity;
+    public float getSpeed() {
+        return speed;
     }
-
-    public boolean jump() {
-        if (!this.canJump) return false;
-        this.velocity.y = (jumpSpeed * 2.3F);
-        setCanJump(false);
-        return true;
+    public float getJumpTans() {
+        return jumpTans;
+    }
+    public float getCurrentSpeed() {
+        return direction * speed;
     }
 
     public void setCanJump(boolean canJump) {
         this.canJump = canJump;
+        if(canJump && isJumping) isJumping = false;
     }
-
-    public void forceJump() {
-        this.velocity.y = (jumpSpeed * 2.3F);
-        setCanJump(false);
+    
+    public boolean jump() {
+        if (!this.canJump) return false;
+        setJump();
+        return true;
+    }
+    public void setJump() {
+        this.velocity.y = jumpSpeed;
+        this.canJump = false;
+        this.isJumping = true;
+    }
+    public void move(boolean left, boolean right) {
+        direction = left ? -1 : right ? 1 : 0;
     }
 
     @Override
     public void receive(LineSplitter splitter) {
-        move(splitter.getNextBoolean(), splitter.getNextBoolean());
-    }
-
-    public void move(boolean left, boolean right) {
-        this.moveLeft = left;
-        this.moveRight = right;
+        this.direction = splitter.getNextInt();
     }
 
     @Override
     public void send(LineWriter writer) {
-        writer.writeBoolean(moveLeft);
-        writer.writeBoolean(moveRight);
+        writer.writeInt(direction);
     }
 
 }

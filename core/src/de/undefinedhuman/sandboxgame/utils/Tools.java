@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
 import de.undefinedhuman.sandboxgame.Main;
+import de.undefinedhuman.sandboxgame.engine.camera.CameraManager;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.entity.components.equip.EquipComponent;
 import de.undefinedhuman.sandboxgame.engine.file.Paths;
@@ -20,7 +21,6 @@ import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
-import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
 import de.undefinedhuman.sandboxgame.world.Noise;
 import de.undefinedhuman.sandboxgame.world.WorldLayer;
 import de.undefinedhuman.sandboxgame.world.layer.LayerTransition;
@@ -36,6 +36,7 @@ public class Tools extends de.undefinedhuman.sandboxgame.engine.utils.Tools {
     public static boolean isMac = System.getProperty("os.name").contains("OS X");
     public static boolean isWindows = System.getProperty("os.name").contains("Windows");
     public static boolean isLinux = System.getProperty("os.name").contains("Linux");
+
     public static Random random = new Random();
 
     private static Noise noise = new Noise(2, 1.7f, 0.4f);
@@ -66,7 +67,7 @@ public class Tools extends de.undefinedhuman.sandboxgame.engine.utils.Tools {
 
     public static Vector2 convertToWorldCoords(float x, float y) {
         Vector3 worldCoords = new Vector3(x, y, 0.0F);
-        GameManager.gameCamera.unproject(worldCoords);
+        CameraManager.gameCamera.unproject(worldCoords);
         return new Vector2((int) (worldCoords.x / Variables.BLOCK_SIZE), (int) (worldCoords.y / Variables.BLOCK_SIZE));
     }
 
@@ -91,19 +92,6 @@ public class Tools extends de.undefinedhuman.sandboxgame.engine.utils.Tools {
         float angle = (float) Math.toDegrees(Math.atan2(target.y - base.y, target.x - base.x));
         if (angle < 0.0F) angle += 360.0F;
         return angle;
-    }
-
-    public static boolean isDifferentEnough(float a, float b, float c, float d, float e) {
-        if (Math.abs(a - b) > 0.02F) {
-            return true;
-        }
-        if (Math.abs(a - c) > 0.02F) {
-            return true;
-        }
-        if (Math.abs(a - d) > 0.02F) {
-            return true;
-        }
-        return Math.abs(a - e) > 0.02F;
     }
 
     public static float lerp(float a, float b, float f) {
@@ -151,52 +139,9 @@ public class Tools extends de.undefinedhuman.sandboxgame.engine.utils.Tools {
         return getResult(x, y, speed);
     }
 
-    public static Vector2[] getPoints(Vector2 position, Vector2 size, float angle, Vector2 center) {
-        Vector2[] points = new Vector2[4];
-        points[0] = position;
-        points[1] = new Vector2(position).add(size.x, 0);
-        points[2] = new Vector2(position).add(0, size.y);
-        points[3] = new Vector2(position).add(size);
-        for (Vector2 point : points) Tools.rotatePoint(point, center, angle);
-        return points;
-    }
-
-    public static Vector2 rotatePoint(Vector2 point, Vector2 center, float angle) {
-        float s = (float) Math.sin(angle), c = (float) Math.cos(angle);
-        Vector2 temp = new Vector2(point).sub(center);
-        Vector2 newPoint = new Vector2(temp.x * c - temp.y * s, temp.x * s + temp.y * c);
-        point = new Vector2(newPoint).add(center);
-        return point;
-    }
-
     public static void drawRect(SpriteBatch batch, float x, float y, float w, float h, Color color) {
         Color batchColor = batch.getColor();
         batch.setColor(color);
-        batch.draw(TextureManager.instance.getTexture("blank.png"), x, y, w, h);
-        batch.setColor(batchColor);
-    }
-
-    public static void drawRect(SpriteBatch batch, Texture texture, float x, float y, float w, float h) {
-        batch.draw(texture, x, y, w, h);
-    }
-
-    public static void drawRect(SpriteBatch batch, Texture texture, float x, float y, float w, float h, Color color) {
-        Color batchColor = batch.getColor();
-        batch.setColor(color);
-        batch.draw(texture, x, y, w, h);
-        batch.setColor(batchColor);
-    }
-
-    public static void drawRect(SpriteBatch batch, Texture texture, float x, float y, float w, float h, Color color, float alpha) {
-        Color batchColor = batch.getColor();
-        batch.setColor(color.r, color.g, color.b, alpha);
-        batch.draw(TextureManager.instance.getTexture("blank.png"), x, y, w, h);
-        batch.setColor(batchColor);
-    }
-
-    public static void drawRect(SpriteBatch batch, Texture texture, float x, float y, float w, float h, float alpha) {
-        Color batchColor = batch.getColor();
-        batch.setColor(batchColor.r, batchColor.g, batchColor.b, alpha);
         batch.draw(TextureManager.instance.getTexture("blank.png"), x, y, w, h);
         batch.setColor(batchColor);
     }
@@ -210,12 +155,12 @@ public class Tools extends de.undefinedhuman.sandboxgame.engine.utils.Tools {
 
     public static Vector2[] getVertices(Sprite texture) {
         float[] vertices = texture.getVertices();
-        Vector2[] vec = new Vector2[4];
-        vec[0] = new Vector2(vertices[SpriteBatch.X1], vertices[SpriteBatch.Y1]);
-        vec[1] = new Vector2(vertices[SpriteBatch.X2], vertices[SpriteBatch.Y2]);
-        vec[2] = new Vector2(vertices[SpriteBatch.X3], vertices[SpriteBatch.Y3]);
-        vec[3] = new Vector2(vertices[SpriteBatch.X4], vertices[SpriteBatch.Y4]);
-        return vec;
+        return new Vector2[] {
+                new Vector2(vertices[SpriteBatch.X1], vertices[SpriteBatch.Y1]),
+                new Vector2(vertices[SpriteBatch.X2], vertices[SpriteBatch.Y2]),
+                new Vector2(vertices[SpriteBatch.X3], vertices[SpriteBatch.Y3]),
+                new Vector2(vertices[SpriteBatch.X4], vertices[SpriteBatch.Y4])
+        };
     }
 
     private static boolean collideAxis(Vector2[] pointsA, Vector2[] pointsB, Axis axis) {
@@ -225,9 +170,9 @@ public class Tools extends de.undefinedhuman.sandboxgame.engine.utils.Tools {
     }
 
     private static Vector2[] projectPointsOnAxis(Axis axis, Vector2[] vectors) {
-        Vector2[] fvec = new Vector2[vectors.length];
-        for (int i = 0; i < fvec.length; i++) fvec[i] = axis.projectPoint(vectors[i]);
-        return fvec;
+        Vector2[] vecs = new Vector2[vectors.length];
+        for (int i = 0; i < vecs.length; i++) vecs[i] = axis.projectPoint(vectors[i]);
+        return vecs;
     }
 
     public static int floor(float f) {

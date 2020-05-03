@@ -17,7 +17,7 @@ public abstract class Component implements NetworkComponent {
     public void init() {}
     public void delete() {}
 
-    public abstract void receive(LineSplitter splitter);
-    public abstract void send(LineWriter writer);
+    public void receive(LineSplitter splitter) {}
+    public void send(LineWriter writer) {}
 
 }

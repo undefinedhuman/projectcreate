@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.collision.CollisionManager;
+import de.undefinedhuman.sandboxgame.engine.entity.EntityType;
 import de.undefinedhuman.sandboxgame.engine.resources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.EntityManager;
@@ -81,8 +82,10 @@ public class DropItem {
 
     }
 
+    // TODO Refactor also make target choosing server sided
+
     private Entity getNewTarget() {
-        for (Entity player : EntityManager.instance.getPlayers())
+        for (Entity player : EntityManager.instance.getEntityByType(EntityType.Player))
             if (Math.abs(player.getCenterPosition().dst(getCenter())) < 80) return player;
         return null;
     }

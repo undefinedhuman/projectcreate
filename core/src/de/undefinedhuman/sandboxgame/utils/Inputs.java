@@ -133,16 +133,10 @@ public class Inputs extends Manager implements InputProcessor {
     @Override
     public boolean scrolled(int amount) {
 
-        if (!InventoryManager.instance.isInventoryOpened()) {
-
-            int selected = InventoryManager.instance.getSelector().getSelected() + amount, selectorLength = InventoryManager.instance.getSelector().getInv()[0].length;
-            if (selected >= selectorLength) selected = 0;
-            if (selected < 0) selected = selectorLength - 1;
-            InventoryManager.instance.getSelector().setSelected(selected);
-
-        }
-
-        return false;
+        if (InventoryManager.instance.isInventoryOpened()) return false;
+        int selected = InventoryManager.instance.getSelector().getSelected() + amount, selectorLength = InventoryManager.instance.getSelector().getInv()[0].length;
+        InventoryManager.instance.getSelector().setSelected((selectorLength + selected) % selectorLength);
+        return true;
 
     }
 

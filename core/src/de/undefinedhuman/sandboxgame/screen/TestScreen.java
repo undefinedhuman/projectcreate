@@ -41,10 +41,20 @@ public class TestScreen implements Screen {
 
         Entity player = BlueprintManager.instance.getBlueprint(0).createInstance();
         player.mainPlayer = true;
-        player.setPosition(1600, 800);
+        player.setPosition(160, 800);
         player.setWorldID(0);
         GameManager.instance.player = player;
         EntityManager.instance.addEntity(0, player);
+
+        Entity furnace = BlueprintManager.instance.getBlueprint(1).createInstance();
+        furnace.setPosition(3100, 800);
+        furnace.setWorldID(1);
+        EntityManager.instance.addEntity(1, furnace);
+
+        Entity furnace2 = BlueprintManager.instance.getBlueprint(1).createInstance();
+        furnace2.setPosition(100, 800);
+        furnace2.setWorldID(2);
+        EntityManager.instance.addEntity(2, furnace2);
 
         Main.instance.setScreen(GameScreen.instance);
 

@@ -15,32 +15,28 @@ import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
 import de.undefinedhuman.sandboxgame.utils.Tools;
-import de.undefinedhuman.sandboxgame.world.World;
 
 public class BackgroundManager extends Manager {
 
     public static BackgroundManager instance;
 
-    public float scale = 0, worldWidth, speed = 250f;
-
-    private Layer[] layers;
-    private float foreGroundWidth = 688;
-
     public String[] cloudTextures = new String[Variables.CLOUD_COUNT];
     public TextureRegion[][] birdTexture;
+    public float scale, speed;
+
+    private Layer[] layers;
 
     public BackgroundManager() {
         if (instance == null) instance = this;
-        worldWidth = World.instance.mainLayer.width * Variables.BLOCK_SIZE;
         layers = new Layer[] {
                 new BackgroundLayer(new Vector2(640, 300)),
                 new CloudLayer(200, 0.25f, 0.55f),
-                new ForegroundLayer("background/foreground/Mountain 1.png", new Vector2(foreGroundWidth, 127), 0.25f, 135f, 0.55f),
+                new ForegroundLayer("background/foreground/Mountain 1.png", new Vector2(Variables.BASE_BACKGROUND_WIDTH, 127), 0.25f, 135f, 0.55f),
                 new CloudLayer(125, 0.5f, 0.7f),
-                new ForegroundLayer("background/foreground/Mountain 2.png", new Vector2(foreGroundWidth, 162), 0.5f, 75f, 0.7f),
+                new ForegroundLayer("background/foreground/Mountain 2.png", new Vector2(Variables.BASE_BACKGROUND_WIDTH, 162), 0.5f, 75f, 0.7f),
                 new CloudLayer(85, 0.75f, 0.85f),
-                new ForegroundLayer("background/foreground/Pine 1.png", new Vector2(foreGroundWidth, 148), 0.75f, -10f, 0.85f),
-                new ForegroundLayer("background/foreground/Pine 2.png", new Vector2(foreGroundWidth, 199), 1f, -75f, 1f)
+                new ForegroundLayer("background/foreground/Pine 1.png", new Vector2(Variables.BASE_BACKGROUND_WIDTH, 148), 0.75f, -10f, 0.85f),
+                new ForegroundLayer("background/foreground/Pine 2.png", new Vector2(Variables.BASE_BACKGROUND_WIDTH, 199), 1f, -75f, 1f)
         };
     }
 
@@ -55,7 +51,7 @@ public class BackgroundManager extends Manager {
 
     @Override
     public void resize(int width, int height) {
-        this.scale = Math.max((int) ((float) height / foreGroundWidth), 1);
+        this.scale = Math.max((int) ((float) height / Variables.BASE_BACKGROUND_WIDTH), 1);
         for(Layer layer : layers) layer.resize(width, height);
     }
 
@@ -65,10 +61,9 @@ public class BackgroundManager extends Manager {
     public void update(float delta) {
         layers[0].update(delta, 5f);
         Entity player = GameManager.instance.player;
-        if(player != null) {
-            speed = Tools.floorBackgroundSpeed(lastX - player.getX()) * ((MovementComponent) player.getComponent(ComponentType.MOVEMENT)).getSpeed();
-            lastX = player.getX();
-        }
+        if(player == null) return;
+        speed = Tools.floorBackgroundSpeed(lastX - player.getX()) * ((MovementComponent) player.getComponent(ComponentType.MOVEMENT)).getSpeed();
+        lastX = player.getX();
         for(int i = 1; i < layers.length; i++) layers[i].update(delta, speed);
     }
 
@@ -80,9 +75,9 @@ public class BackgroundManager extends Manager {
     @Override
     public void delete() {
         for(Layer layer : layers) layer.delete();
-        birdTexture = null;
         TextureManager.instance.removeTexture(cloudTextures);
         TextureManager.instance.removeTexture("background/Bird.png");
+        birdTexture = new TextureRegion[0][0];
         Time.delete();
     }
 

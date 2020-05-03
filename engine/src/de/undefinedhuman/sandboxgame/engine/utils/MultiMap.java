@@ -18,24 +18,34 @@ public class MultiMap<K, V> {
         else map.put(key, new ArrayList<>(Arrays.asList(values)));
     }
 
+    public ArrayList<V> get(K key) {
+        if(!hasKey(key)) return null;
+        return map.get(key);
+    }
+
     public void remove(K key) {
         if(!hasKey(key)) return;
         map.remove(key);
     }
 
-    private boolean hasKey(K key) {
+    public void remove(K key, V value) {
+        if(!hasKey(key)) return;
+        map.get(key).remove(value);
+    }
+
+    public boolean hasValue(K key, V value) {
+        if(!hasKey(key)) return false;
+        return get(key).contains(value);
+    }
+
+    public boolean hasKey(K key) {
         return map.containsKey(key);
     }
 
-    public ArrayList<V> getAllValues() {
+    public ArrayList<V> values() {
         ArrayList<V> values = new ArrayList<>();
         for(ArrayList<V> valueArray : map.values()) values.addAll(valueArray);
         return values;
-    }
-
-    public ArrayList<V> getValues(K key) {
-        if(!hasKey(key)) return null;
-        return map.get(key);
     }
 
     public HashMap<K, ArrayList<V>> getMap() {

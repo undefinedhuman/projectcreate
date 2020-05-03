@@ -52,30 +52,12 @@ public class Main extends Game {
         setScreen(TestScreen.instance);
     }
 
-    private void initScreens() {
-
-        EntityManager.instance = new EntityManager();
-
-        TestScreen.instance = new TestScreen();
-        GameScreen.instance = new GameScreen();
-
-        EquipManager.instance = new EquipManager();
-        InventoryManager.instance = new InventoryManager();
-
-        World.instance = new World("Main", 50, 1000, 1000, 100);
-        WorldManager.instance = new WorldManager();
-
-        ClientManager.instance = new ClientManager();
-
-        TopLayerManager.instance = new TopLayerManager();
-        TopLayerManager.instance.load();
-    }
-
     @Override
-    public void dispose() {
-        super.dispose();
-        managerList.delete();
-        Window.instance.delete();
+    public void resize(int width, int height) {
+        int guiSetting = SettingsManager.instance.guiScale.getInt();
+        guiScale = guiSetting == 5 ? Math.max(width / 640, 1) : guiSetting;
+        managerList.resize(width, height);
+        super.resize(width, height);
     }
 
     @Override
@@ -98,16 +80,34 @@ public class Main extends Game {
     }
 
     @Override
-    public void resize(int width, int height) {
-        int guiSetting = SettingsManager.instance.guiScale.getInt();
-        guiScale = guiSetting == 5 ? Math.max(width / 640, 1) : guiSetting;
-        managerList.resize(width, height);
-        super.resize(width, height);
+    public void dispose() {
+        super.dispose();
+        managerList.delete();
+        Window.instance.delete();
     }
 
     private void clear() {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
+    }
+
+    private void initScreens() {
+
+        EntityManager.instance = new EntityManager();
+
+        TestScreen.instance = new TestScreen();
+        GameScreen.instance = new GameScreen();
+
+        EquipManager.instance = new EquipManager();
+        InventoryManager.instance = new InventoryManager();
+
+        World.instance = new World("Main", 50, 1000, 1000, 100);
+        WorldManager.instance = new WorldManager();
+
+        ClientManager.instance = new ClientManager();
+
+        TopLayerManager.instance = new TopLayerManager();
+        TopLayerManager.instance.load();
     }
 
 }

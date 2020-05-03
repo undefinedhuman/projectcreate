@@ -2,7 +2,6 @@ package de.undefinedhuman.sandboxgame.engine.resources.texture;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import de.undefinedhuman.sandboxgame.engine.utils.Tools;
 
 public class TextureValue {
 
@@ -12,7 +11,7 @@ public class TextureValue {
 
     public TextureValue(Texture texture) {
         texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        this.texture = Tools.fixBleeding(new TextureRegion(texture));
+        this.texture = new TextureRegion(texture);
     }
 
     public void add() {
@@ -25,7 +24,7 @@ public class TextureValue {
 
     public void remove() {
         usages--;
-        if (usages > 0) return;
+        if (--usages > 0) return;
         delete();
         remove = true;
     }

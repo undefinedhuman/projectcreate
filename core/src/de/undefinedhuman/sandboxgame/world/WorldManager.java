@@ -2,7 +2,9 @@ package de.undefinedhuman.sandboxgame.world;
 
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.collision.CollisionManager;
+import de.undefinedhuman.sandboxgame.engine.camera.CameraManager;
 import de.undefinedhuman.sandboxgame.engine.items.type.blocks.Block;
+import de.undefinedhuman.sandboxgame.engine.items.type.blocks.BlockType;
 import de.undefinedhuman.sandboxgame.engine.items.type.tools.Pickaxe;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.entity.Entity;
@@ -75,12 +77,14 @@ public class WorldManager {
 
     public void placeBlock(boolean main) {
 
+        // TODO Rework this one, especially the collision thing
+
         if (canPlace) {
 
             int id = InventoryManager.instance.getSelector().getSelectedItemID();
             Block block = (Block) ItemManager.instance.getItem(id);
             // TODO Look into playercenter
-            Vector2 blockPos = Tools.convertToWorldCoords(Tools.getWorldPos(GameManager.gameCamera, Mouse.getMouseCoords())),
+            Vector2 blockPos = Tools.convertToWorldCoords(Tools.getWorldPos(CameraManager.gameCamera, Mouse.getMouseCoords())),
                     playerCenter = Tools.convertToWorldCoords(GameManager.instance.player.getCenterPosition());
 
             Block currentBlock = (Block) ItemManager.instance.getItem(getBlock(true, blockPos));
@@ -92,7 +96,7 @@ public class WorldManager {
                     if (currentBlock.id.getInt() == 0) {
 
                         boolean canBePlaced = true;
-                        for (Entity entity : EntityManager.instance.getEntitiesForCollision())
+                        for (Entity entity : EntityManager.instance.getEntitiesWithCollision(Tools.calculateBounds(blockPos, new Vector2(0, 0), new Vector2(Variables.BLOCK_SIZE, Variables.BLOCK_SIZE))))
                             if (!CollisionManager.blockCanBePlaced(entity, blockPos, (byte) id)) {
                                 canBePlaced = false;
                                 break;
@@ -100,16 +104,16 @@ public class WorldManager {
 
                         if (canBePlaced) {
 
-                            if (block.needBack.getBoolean() && ((Block) ItemManager.instance.getItem(getBlock(false, blockPos))).collide.getBoolean())
+                            if (block.needBack.getBoolean() && CollisionManager.collide(getBlock(false, blockPos)))
                                 placeBlock(true, blockPos, (byte) id, true);
-                            if (!block.needBack.getBoolean() && (isBlockInRange(true, blockPos) || ((Block) ItemManager.instance.getItem(getBlock(false, blockPos))).collide.getBoolean()))
+                            if (!block.needBack.getBoolean() && (isBlockInRange(true, blockPos) || CollisionManager.collide(getBlock(false, blockPos))))
                                 placeBlock(true, blockPos, (byte) id, true);
 
                         }
 
                     }
 
-                } else if (getBlock(false, blockPos) == 0 && block.canBePlacedInBackLayer.getBoolean() && (isBlockInRange(false, blockPos) || (currentBlock.id.getInt() != 0 && currentBlock.collide.getBoolean())))
+                } else if (getBlock(false, blockPos) == 0 && block.canBePlacedInBackLayer.getBoolean() && (isBlockInRange(false, blockPos) || (currentBlock.id.getInt() != 0 && currentBlock.blockType.getBlockType() != BlockType.Empty)))
                     placeBlock(false, blockPos, (byte) id, true);
 
             }
@@ -118,7 +122,33 @@ public class WorldManager {
 
     }
 
-    private int getBlock(boolean main, Vector2 pos) {
+    public boolean isSlope(int x, int y) {
+        return World.instance.mainLayer.getState(x, y) == 12;
+    }
+
+    public boolean isObstacle(Vector2 pos) {
+        return getBlockType(pos) == BlockType.Block;
+    }
+
+    public boolean isOneWay(Vector2 pos) {
+        return getBlockType(pos) == BlockType.OneWay;
+    }
+
+    public boolean isEmpty(Vector2 pos) {
+        return getBlockType(pos) == BlockType.Empty;
+    }
+
+    public boolean isGround(Vector2 pos) {
+        BlockType type = getBlockType(pos);
+        return type == BlockType.Block || type == BlockType.OneWay;
+    }
+
+    public BlockType getBlockType(Vector2 pos) {
+        if(pos.y < 0 || pos.y >= World.instance.height) return BlockType.Block;
+        return ((Block) ItemManager.instance.getItem(getBlock(true, pos))).blockType.getBlockType();
+    }
+
+    private byte getBlock(boolean main, Vector2 pos) {
         return main ? World.instance.mainLayer.getBlock((int) pos.x, (int) pos.y) : World.instance.backLayer.getBlock((int) pos.x, (int) pos.y);
     }
 
@@ -137,16 +167,8 @@ public class WorldManager {
     }
 
     public boolean isBlockInRange(boolean main, Vector2 position) {
-
-        boolean blockInRange = false;
-        int below = getBlock(main, new Vector2(0, -1).add(position)), above = getBlock(main, new Vector2(0, 1).add(position)), left = getBlock(main, new Vector2(-1, 0).add(position)), right = getBlock(main, new Vector2(1, 0).add(position));
-        if (below != 0 || ((Block) ItemManager.instance.getItem(below)).collide.getBoolean()) blockInRange = true;
-        if (above != 0 || ((Block) ItemManager.instance.getItem(above)).collide.getBoolean() && !blockInRange) blockInRange = true;
-        if (left != 0 || ((Block) ItemManager.instance.getItem(left)).collide.getBoolean() && !blockInRange) blockInRange = true;
-        if (right != 0 || ((Block) ItemManager.instance.getItem(right)).collide.getBoolean() && !blockInRange) blockInRange = true;
-
-        return blockInRange;
-
+        byte below = getBlock(main, new Vector2(0, -1).add(position)), above = getBlock(main, new Vector2(0, 1).add(position)), left = getBlock(main, new Vector2(-1, 0).add(position)), right = getBlock(main, new Vector2(1, 0).add(position));
+        return CollisionManager.collide(below) || CollisionManager.collide(above) || CollisionManager.collide(left) || CollisionManager.collide(right);
     }
 
     private void setBlock(boolean main, Vector2 pos, byte id) {
@@ -178,10 +200,10 @@ public class WorldManager {
         if (canDestroy) {
 
             Pickaxe pickaxe = (Pickaxe) InventoryManager.instance.getSelector().getSelectedItem();
-            Vector2 blockPos = Tools.convertToWorldCoords(Tools.getWorldPos(GameManager.gameCamera, Mouse.getMouseCoords())), playerCenter = Tools.convertToWorldCoords(new Vector2().add(GameManager.instance.player.getPosition()).add(GameManager.instance.player.getCenter()));
+            Vector2 blockPos = Tools.convertToWorldCoords(Tools.getWorldPos(CameraManager.gameCamera, Mouse.getMouseCoords())), playerCenter = Tools.convertToWorldCoords(new Vector2().add(GameManager.instance.player.getPosition()).add(GameManager.instance.player.getCenter()));
             Block currentBlock = (Block) ItemManager.instance.getItem(getBlock(main, blockPos));
 
-            if (currentBlock.id.getInt() != 0 && isInRange(blockPos, playerCenter, pickaxe.range.getInt()) && !currentBlock.unbreakable.getBoolean()) {
+            if (currentBlock.id.getInt() != 0 && isInRange(blockPos, playerCenter, pickaxe.range.getInt()) && currentBlock.durability.getInt() != -1) {
 
                 if ((oldBreakPos == null || oldBreakPos != blockPos) || oldLayer != main) {
 

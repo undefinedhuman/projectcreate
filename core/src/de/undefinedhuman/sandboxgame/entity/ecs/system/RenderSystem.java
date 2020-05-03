@@ -28,11 +28,10 @@ public class RenderSystem extends System {
     @Override
     public void update(float delta, Entity entity) {}
 
-    @Override
-    public void render(SpriteBatch batch, Entity entity) {
+    public void render(SpriteBatch batch, Entity entity, int renderOffset) {
         SpriteComponent spriteComponent;
         if((spriteComponent = (SpriteComponent) entity.getComponent(ComponentType.SPRITE)) == null) return;
-        spriteComponent.render(batch);
+        spriteComponent.render(batch, renderOffset);
 
         CollisionComponent collisionComponent = (CollisionComponent) entity.getComponent(ComponentType.COLLISION);
         if (!Variables.RENDER_HITBOXES || collisionComponent == null) return;

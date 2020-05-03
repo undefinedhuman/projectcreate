@@ -9,6 +9,7 @@ import de.undefinedhuman.sandboxgame.engine.file.FileWriter;
 import de.undefinedhuman.sandboxgame.engine.file.FsFile;
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.items.Rarity;
+import de.undefinedhuman.sandboxgame.engine.items.type.blocks.BlockType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,7 +53,8 @@ public class Setting {
     public Animation.PlayMode getPlayMode() {
         return Animation.PlayMode.valueOf(getString());
     }
-    public EntityType getEntityType() { return (EntityType) EntityType.valueOf(getString()); }
+    public EntityType getEntityType() { return EntityType.valueOf(getString()); }
+    public BlockType getBlockType() { return BlockType.valueOf(getString()); }
 
     public SettingType getType() { return type; }
 

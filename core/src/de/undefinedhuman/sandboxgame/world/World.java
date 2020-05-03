@@ -3,6 +3,7 @@ package de.undefinedhuman.sandboxgame.world;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import de.undefinedhuman.sandboxgame.engine.camera.CameraManager;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.engine.items.type.blocks.Block;
@@ -18,7 +19,6 @@ public class World {
     public WorldLayer mainLayer, backLayer;
     public Random random;
 
-    private int maxX, minX, maxY, minY;
     private Color batchColor = new Color();
 
     public World(String name, int maxHeight, int width, int height, int seed) {
@@ -39,7 +39,7 @@ public class World {
 
     public void computeBounds(OrthographicCamera camera) {
 
-        this.minX = ((int) ((((int) camera.position.x) - camera.zoom * camera.viewportWidth / 2 - Variables.BLOCK_SIZE * 2) / getTileWidth()));
+        /*this.minX = ((int) ((((int) camera.position.x) - camera.zoom * camera.viewportWidth / 2 - Variables.BLOCK_SIZE * 2) / getTileWidth()));
         this.minY = ((int) ((((int) camera.position.y) - camera.zoom * camera.viewportHeight / 2 - Variables.BLOCK_SIZE * 2) / getTileHeight()));
         this.maxX = ((int) ((((int) camera.position.x) + camera.zoom * camera.viewportWidth / 2 + Variables.BLOCK_SIZE * 2) / getTileWidth()));
         this.maxY = ((int) ((((int) camera.position.y) + camera.zoom * camera.viewportHeight / 2 + Variables.BLOCK_SIZE * 2) / getTileHeight()));
@@ -47,7 +47,7 @@ public class World {
         if (this.minY < 0) this.minY = 0;
         if (this.maxY > this.height - 2) this.maxY = (this.height - 2);
         if (minX < -width + 2) minX = -width + 2;
-        if (maxX > width * 2 - 2) maxX = width * 2 - 2;
+        if (maxX > width * 2 - 2) maxX = width * 2 - 2;*/
 
     }
 
@@ -60,14 +60,14 @@ public class World {
     }
 
     public void renderMainLayer(SpriteBatch batch) {
-        // for(int i = 0; i < width; i++) for(int j = 0; j < height; j++) mainLayer.renderBlock(batch, batchColor.set(Color.WHITE), i, j);
-        for (int i = this.minX; i <= maxX; i++)
-            for (int j = this.minY; j <= maxY; j++) mainLayer.renderBlock(batch, batchColor.set(Color.WHITE), i, j);
+        for (int i = CameraManager.instance.blockBounds.x; i <= CameraManager.instance.blockBounds.z; i++)
+            for (int j = CameraManager.instance.blockBounds.y; j <= CameraManager.instance.blockBounds.w; j++)
+                mainLayer.renderBlock(batch, batchColor.set(Color.WHITE), i, j);
     }
 
     public void renderBackLayer(SpriteBatch batch) {
-        for (int i = this.minX; i <= maxX; i++)
-            for (int j = this.minY; j <= maxY; j++) {
+        for (int i = CameraManager.instance.blockBounds.x; i <= CameraManager.instance.blockBounds.z; i++)
+            for (int j = CameraManager.instance.blockBounds.y; j <= CameraManager.instance.blockBounds.w; j++) {
                 Block block = (Block) ItemManager.instance.getItem(World.instance.mainLayer.getBlock(i, j));
                 if (block.id.getInt() == 0 || mainLayer.getState(i, j) != 0 || !block.isFull.getBoolean())
                     backLayer.renderBlock(batch, batchColor.set(0.45f, 0.45f, 0.45f, 1), i, j);

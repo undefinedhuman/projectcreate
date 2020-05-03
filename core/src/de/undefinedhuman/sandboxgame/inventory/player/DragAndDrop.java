@@ -4,13 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.sandboxgame.engine.camera.CameraManager;
 import de.undefinedhuman.sandboxgame.gui.GuiManager;
 import de.undefinedhuman.sandboxgame.inventory.InvItem;
 import de.undefinedhuman.sandboxgame.inventory.InvTarget;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
 import de.undefinedhuman.sandboxgame.inventory.Slot;
 import de.undefinedhuman.sandboxgame.item.drop.DropItemManager;
-import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
 import de.undefinedhuman.sandboxgame.utils.Mouse;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
@@ -85,7 +85,7 @@ public class DragAndDrop {
 
                     if (InventoryManager.instance.overGui()) cancelMoving();
                     else {
-                        DropItemManager.instance.addDropItem(currentItem.getID(), currentItem.getAmount(), Tools.getWorldPos(GameManager.gameCamera, new Vector2(Mouse.getX() - 8, Mouse.getY() - 8)));
+                        DropItemManager.instance.addDropItem(currentItem.getID(), currentItem.getAmount(), Tools.getWorldPos(CameraManager.gameCamera, new Vector2(Mouse.getX() - 8, Mouse.getY() - 8)));
                         removeTempItem();
                     }
 

@@ -43,10 +43,10 @@ public class SpriteComponent extends Component {
         return spriteData.get(key);
     }
 
-    public void render(SpriteBatch batch) {
+    public void render(SpriteBatch batch, int renderOffset) {
         for(int renderLevel : orderedSpriteData.keySet()) {
             ArrayList<SpriteData> spriteData = orderedSpriteData.get(renderLevel);
-            for(SpriteData data : spriteData) data.render(batch);
+            for(SpriteData data : spriteData) data.render(batch, renderOffset);
         }
     }
 

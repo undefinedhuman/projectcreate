@@ -6,6 +6,7 @@ import de.undefinedhuman.sandboxgame.engine.file.FileReader;
 import de.undefinedhuman.sandboxgame.engine.file.FileWriter;
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
+import de.undefinedhuman.sandboxgame.engine.utils.math.Vector4;
 
 import javax.swing.*;
 import java.awt.geom.AffineTransform;
@@ -112,6 +113,14 @@ public class Tools {
         AffineTransformOp scaleOp = new AffineTransformOp(scaleInstance, type);
         scaleOp.filter(before, after);
         return after;
+    }
+
+    public static int getWorldPositionX(float x, float width) {
+        return (int) ((width + x) % width);
+    }
+
+    public static Vector4 calculateBounds(Vector2 position, Vector2 offset, Vector2 size) {
+        return new Vector4(position.x + offset.x, position.y + offset.y, position.x + offset.x + size.x, position.y + offset.y + size.y);
     }
 
 }

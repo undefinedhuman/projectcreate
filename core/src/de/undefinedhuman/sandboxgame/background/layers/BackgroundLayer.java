@@ -6,15 +6,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.background.Layer;
 import de.undefinedhuman.sandboxgame.background.Time;
+import de.undefinedhuman.sandboxgame.engine.camera.CameraManager;
 import de.undefinedhuman.sandboxgame.engine.resources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
-import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
 
 public class BackgroundLayer extends Layer {
 
     private float currentX, localTime = 0, blendFactor;
     private Vector2 initialSize, size;
-    private int currentTime = 1, nextTime = 2;
+    private int currentTime = 1;
 
     public BackgroundLayer(Vector2 size) {
         this.initialSize = size;
@@ -26,7 +26,7 @@ public class BackgroundLayer extends Layer {
 
     @Override
     public void resize(int width, int height) {
-        float ratio = GameManager.gameCamera.viewportHeight / initialSize.y;
+        float ratio = CameraManager.gameCamera.viewportHeight / initialSize.y;
         this.size = new Vector2(initialSize.x * ratio, initialSize.y * ratio);
     }
 

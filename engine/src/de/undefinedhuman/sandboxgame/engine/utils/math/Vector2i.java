@@ -14,6 +14,10 @@ public class Vector2i {
         set(x, y);
     }
 
+    public Vector2i(Vector2 vector) {
+        set(vector);
+    }
+
     public Vector2i set(Vector2 vector) {
         return set((int) vector.x, (int) vector.y);
     }
@@ -32,10 +36,40 @@ public class Vector2i {
         return this;
     }
 
-    public Vector2i div(int scalar) {
-        this.x /= scalar;
-        this.y /= scalar;
+    public Vector2i add(int scalar) {
+        return add(scalar, scalar);
+    }
+
+    public Vector2i add(int x, int y) {
+        this.x += x;
+        this.y += y;
         return this;
+    }
+
+    public Vector2i div(int scalar) {
+        return div(scalar, scalar);
+    }
+
+    public Vector2i div(int x, int y) {
+        this.x /= x;
+        this.y /= y;
+        return this;
+    }
+
+
+    public Vector2i mul(int scalar) {
+        return mul(scalar, scalar);
+    }
+
+    public Vector2i mul(int x, int y) {
+        this.x *= x;
+        this.y *= y;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "[" + x + ", " + y + "]";
     }
 
 }

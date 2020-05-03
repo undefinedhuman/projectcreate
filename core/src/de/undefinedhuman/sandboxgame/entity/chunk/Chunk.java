@@ -1,55 +1,60 @@
 package de.undefinedhuman.sandboxgame.entity.chunk;
 
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import de.undefinedhuman.sandboxgame.collision.CollisionManager;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.entity.EntityType;
+import de.undefinedhuman.sandboxgame.engine.entity.components.collision.CollisionComponent;
+import de.undefinedhuman.sandboxgame.engine.utils.MultiMap;
+import de.undefinedhuman.sandboxgame.engine.utils.math.Vector4;
 import de.undefinedhuman.sandboxgame.entity.Entity;
+import de.undefinedhuman.sandboxgame.entity.ecs.system.RenderSystem;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collection;
 
 public class Chunk {
 
-    private HashMap<Integer, Entity> entities = new HashMap<>();
-    private ArrayList<Entity> entitiesForCollision = new ArrayList<>(), players = new ArrayList<>();
-    private Vector2 distanceVector = new Vector2();
+    private ArrayList<Entity> entitiesForCollision = new ArrayList<>();
+    private MultiMap<EntityType, Entity> entitiesByType = new MultiMap<>();
 
-    public Chunk() { }
+    public void render(SpriteBatch batch, int renderOffset) {
+        for(EntityType type : EntityType.values()) {
+            ArrayList<Entity> entityList = entitiesByType.get(type);
+            if(entityList == null) continue;
+            for(Entity entity : entityList)
+                RenderSystem.instance.render(batch, entity, renderOffset);
+        }
+    }
 
-    public void addEntity(int id, Entity entity) {
-        this.entities.put(id, entity);
+    public void addEntity(Entity entity) {
+        if(entity == null || entitiesByType.hasValue(entity.getType(), entity)) return;
+        this.entitiesByType.add(entity.getType(), entity);
         if (entity.hasComponent(ComponentType.COLLISION)) entitiesForCollision.add(entity);
-        if (entity.getType() == EntityType.Player) players.add(entity);
     }
 
-    public void removeEntity(int id) {
-        if (!entities.containsKey(id)) return;
-        Entity entity = entities.get(id);
+    public void removeEntity(Entity entity) {
+        if(entity == null || !entitiesByType.hasValue(entity.getType(), entity)) return;
         if (entity.hasComponent(ComponentType.COLLISION)) entitiesForCollision.remove(entity);
-        if (entity.getType() == EntityType.Player) players.remove(entity);
-        this.entities.remove(id);
+        entitiesByType.remove(entity.getType(), entity);
     }
 
-    public ArrayList<Entity> getPlayers() {
-        return this.players;
+    public Collection<Entity> getEntitiesByType(EntityType type) {
+        return entitiesByType.get(type);
     }
 
-    public ArrayList<Entity> getEntityInRangeForCollision(Vector2 pos, float range) {
+    public ArrayList<Entity> getEntitiesInRangeForCollision(Vector4 bounds) {
         ArrayList<Entity> entitiesInRange = new ArrayList<>();
         for (Entity entity : entitiesForCollision)
-            if (distanceVector.set(entity.getPosition()).sub(pos).len() <= range)
+            if(CollisionManager.collideAABB(bounds,
+                    ((CollisionComponent) entity.getComponent(ComponentType.COLLISION)).getBounds(entity.getPosition())))
                 entitiesInRange.add(entity);
         return entitiesInRange;
     }
 
-    public ArrayList<Entity> getEntitiesForCollision() {
-        return entitiesForCollision;
-    }
-
     public void delete() {
         entitiesForCollision.clear();
-        players.clear();
-        entities.clear();
+        entitiesByType.clear();
     }
 
 }

@@ -1,12 +1,12 @@
 package de.undefinedhuman.sandboxgame.entity.ecs.system;
 
+import de.undefinedhuman.sandboxgame.engine.camera.CameraManager;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.entity.components.mouse.AngleComponent;
 import de.undefinedhuman.sandboxgame.engine.entity.components.sprite.SpriteComponent;
 import de.undefinedhuman.sandboxgame.engine.entity.components.sprite.SpriteData;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.ecs.System;
-import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
 public class AngleSystem extends System {
@@ -25,7 +25,7 @@ public class AngleSystem extends System {
         if ((angleComponent = (AngleComponent) entity.getComponent(ComponentType.ANGLE)) == null) return;
 
         if (entity.mainPlayer) {
-            angleComponent.mousePos = Tools.getMouseCoordsInWorldSpace(GameManager.gameCamera);
+            angleComponent.mousePos = Tools.getMouseCoordsInWorldSpace(CameraManager.gameCamera);
             boolean turned = angleComponent.mousePos.x < entity.getCenterPosition().x;
             angleComponent.angle = ((turned ? -1 : 1) * angleComponent.angle) % 360;
             angleComponent.isTurned = !turned;

@@ -4,17 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import de.undefinedhuman.sandboxgame.engine.camera.CameraManager;
 import de.undefinedhuman.sandboxgame.engine.resources.font.Font;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
 import de.undefinedhuman.sandboxgame.equip.EquipScreen;
 import de.undefinedhuman.sandboxgame.gui.Gui;
-import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
 import de.undefinedhuman.sandboxgame.inventory.player.DragAndDrop;
 import de.undefinedhuman.sandboxgame.inventory.player.Selector;
 import de.undefinedhuman.sandboxgame.inventory.player.SidePanel;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
-import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
 import java.util.Set;
@@ -199,7 +198,7 @@ public class InventoryManager extends Manager {
     }
 
     public boolean overGui() {
-        return Tools.isOverGuis(GameManager.guiCamera, selector, sidePanel, slots[0], slots[1], slots[2], slots[3]);
+        return Tools.isOverGuis(CameraManager.guiCamera, selector, sidePanel, slots[0], slots[1], slots[2], slots[3]);
     }
 
     public void handleClick(int id) {

@@ -79,10 +79,10 @@ public class SpriteData {
         return renderLevel;
     }
 
-    public void render(SpriteBatch batch) {
+    public void render(SpriteBatch batch, int renderOffset) {
         if(!isVisible) return;
         sprite.setFlip(!turned, false);
-        sprite.setPosition(entity.getX() + positionOffset.x, entity.getY() + positionOffset.y);
+        sprite.setPosition(entity.getX() + positionOffset.x + renderOffset, entity.getY() + positionOffset.y);
         sprite.draw(batch, alpha);
     }
 

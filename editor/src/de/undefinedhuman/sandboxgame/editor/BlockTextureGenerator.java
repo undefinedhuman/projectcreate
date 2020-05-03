@@ -1,5 +1,8 @@
 package de.undefinedhuman.sandboxgame.editor;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.tools.texturepacker.TexturePacker;
+import de.undefinedhuman.sandboxgame.engine.file.FileUtils;
 import de.undefinedhuman.sandboxgame.engine.file.FsFile;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
 
@@ -21,17 +24,55 @@ public class BlockTextureGenerator {
         Log.instance = new Log();
         FsFile baseTextureFile = new FsFile(texturePath, false);
         BufferedImage baseTexture = ImageIO.read(baseTextureFile.getFile());
-        BufferedImage image = new BufferedImage(templateCount * blockWidth, blockWidth, BufferedImage.TYPE_INT_ARGB);
-        BufferedImage icon = new BufferedImage(blockWidth, blockWidth, BufferedImage.TYPE_INT_ARGB);
         BufferedImage templateTexture = ImageIO.read(new FsFile("./assets/editor/template/Block-Template.png", false).getFile());
-        for(int x = 0; x < blockWidth * templateCount; x++)
-            for(int y = 0; y < blockWidth; y++) {
-                int color = templateTexture.getRGB(x, y);
-                if(color == Color.RED.getRGB()) continue;
-                if(color == Color.GREEN.getRGB()) image.setRGB(x, y, borderColor.getRGB());
-                if(color == Color.BLUE.getRGB()) image.setRGB(x, y, baseTexture.getRGB(x%blockWidth, y));
-            }
+        for(int x = 0; x < templateCount; x++) {
+            BufferedImage image = new BufferedImage(blockWidth, blockWidth, BufferedImage.TYPE_INT_ARGB);
+            for(int z = 0; z < blockWidth; z++)
+                for(int y = 0; y < blockWidth; y++) {
+                    int tempX = x * blockWidth + z;
+                    int color = templateTexture.getRGB(tempX, y);
+                    if(color == Color.RED.getRGB()) continue;
+                    if(color == Color.GREEN.getRGB()) image.setRGB(z, y, borderColor.getRGB());
+                    if(color == Color.BLUE.getRGB()) image.setRGB(z, y, baseTexture.getRGB(z, y));
+                }
+            ImageIO.write(image, "png", new FsFile("./assets/editor/" + name + "/" + x + ".png", false).getFile());
+        }
 
+        generateIcon(baseTexture);
+
+        TexturePacker.Settings settings = new TexturePacker.Settings();
+        settings.duplicatePadding = true;
+        settings.maxHeight = 32;
+        settings.paddingX = 2;
+        settings.paddingY = 2;
+        settings.alphaThreshold = 0;
+        settings.filterMin = Texture.TextureFilter.Nearest;
+        settings.filterMag = Texture.TextureFilter.Nearest;
+        settings.edgePadding = true;
+        settings.stripWhitespaceX = true;
+        settings.stripWhitespaceY = true;
+        settings.bleed = true;
+        settings.grid = false;
+        settings.duplicatePadding = true;
+        settings.pot = false;
+        settings.alias = true;
+        settings.ignoreBlankImages = false;
+        settings.debug = false;
+        settings.useIndexes = false;
+        settings.premultiplyAlpha = false;
+        settings.limitMemory = false;
+        TexturePacker.process(settings, "./assets/editor/" + name, "./assets/editor/items/" + name + "/", "Texture");
+
+        FsFile file = new FsFile("./assets/editor/items/" + name + "/Texture.atlas", false);
+        FileUtils.deleteFile(file.getFile());
+
+        FsFile tempDir = new FsFile("./assets/editor/" + name + "/", true);
+        FileUtils.deleteFile(tempDir.getFile());
+
+    }
+
+    private static void generateIcon(BufferedImage baseTexture) throws IOException {
+        BufferedImage icon = new BufferedImage(blockWidth, blockWidth, BufferedImage.TYPE_INT_ARGB);
         BufferedImage iconTemplateTexture = ImageIO.read(new FsFile("./assets/editor/template/Sprite-Template-1.png", false).getFile());
         for(int x = 0; x < blockWidth; x++)
             for(int y = 0; y < blockWidth; y++) {
@@ -41,18 +82,7 @@ public class BlockTextureGenerator {
                 if(color == Color.BLUE.getRGB()) icon.setRGB(x, y, baseTexture.getRGB(x, y));
             }
 
-        ImageIO.write(icon, "png", new FsFile("./assets/editor/" + name + "-Icon.png", false).getFile());
-        ImageIO.write(image, "png", new FsFile("./assets/editor/" + name + ".png", false).getFile());
-
-    }
-
-    private static BufferedImage rotateImage(BufferedImage sourceImage) {
-
-        int width = sourceImage.getWidth(), height = sourceImage.getHeight();
-        BufferedImage newImage = new BufferedImage(width, height, sourceImage.getType());
-        for(int y = 0; y < width; y++) for(int x = 0; x < height; x++) newImage.setRGB(height-y-1, x, sourceImage.getRGB(x, y));
-        return newImage;
-
+        ImageIO.write(icon, "png", new FsFile("./assets/editor/items/" + name + "/" + name + "-Icon.png", false).getFile());
     }
 
 }

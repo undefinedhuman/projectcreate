@@ -107,7 +107,7 @@ public class ClientListener extends Listener {
             if (o instanceof JumpPacket) {
 
                 JumpPacket packet = (JumpPacket) o;
-                ((MovementComponent) EntityManager.instance.getEntity(packet.id).getComponent(ComponentType.MOVEMENT)).forceJump();
+                ((MovementComponent) EntityManager.instance.getEntity(packet.id).getComponent(ComponentType.MOVEMENT)).setJump();
 
             }
 

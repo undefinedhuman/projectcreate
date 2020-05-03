@@ -28,7 +28,7 @@ public class BlueprintManager extends Manager {
     @Override
     public void init() {
         super.init();
-        loadBlueprints(0);
+        loadBlueprints(0, 1);
     }
 
     public boolean loadBlueprints(Integer... ids) {
@@ -75,7 +75,7 @@ public class BlueprintManager extends Manager {
         FileReader reader = new FileReader(file, true);
         reader.nextLine();
         HashMap<String, LineSplitter> settingsList = Tools.loadSettings(reader);
-        for(Setting setting : blueprint.entitySettings.getSettings()) setting.loadSetting(reader.getParentDirectory(), settingsList);
+        for(Setting setting : blueprint.settings.getSettings()) setting.loadSetting(reader.getParentDirectory(), settingsList);
         int componentSize = reader.getNextInt();
         reader.nextLine();
         for (int i = 0; i < componentSize; i++) {

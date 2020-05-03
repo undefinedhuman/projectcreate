@@ -3,6 +3,7 @@ package de.undefinedhuman.sandboxgame.network;
 import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Listener;
+import de.undefinedhuman.sandboxgame.engine.camera.CameraManager;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.entity.components.mouse.AngleComponent;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
@@ -43,7 +44,7 @@ public class ClientManager extends Manager {
 
         playerUpdateTimer60 = new Timer(0.015f, true, () -> {
             Entity player = GameManager.instance.player;
-            ((AngleComponent) player.getComponent(ComponentType.ANGLE)).mousePos = Tools.getMouseCoordsInWorldSpace(GameManager.gameCamera);
+            ((AngleComponent) player.getComponent(ComponentType.ANGLE)).mousePos = Tools.getMouseCoordsInWorldSpace(CameraManager.gameCamera);
             ComponentPacket packet = PacketUtils.createComponentPacket(player, ComponentType.ANGLE);
             ClientManager.instance.sendUDP(packet);
         });

@@ -14,7 +14,8 @@ public class MovementBlueprint extends ComponentBlueprint {
     private Setting
             speed = new Setting(SettingType.Float, "Speed", 0),
             jumpSpeed = new Setting(SettingType.Float, "Jump Speed", 0),
-            gravity = new Setting(SettingType.Float, "Gravity", 0);
+            gravity = new Setting(SettingType.Float, "Gravity", 0),
+            jumpAnimationTransition = new Setting(SettingType.Float, "Jump Transition", 25);
 
     public MovementBlueprint() {
         settings.addSettings(speed, jumpSpeed, gravity);
@@ -23,7 +24,7 @@ public class MovementBlueprint extends ComponentBlueprint {
 
     @Override
     public Component createInstance(HashMap<ComponentType, ComponentParam> params) {
-        return new MovementComponent(speed.getFloat(), jumpSpeed.getFloat(), gravity.getFloat());
+        return new MovementComponent(speed.getFloat(), jumpSpeed.getFloat(), gravity.getFloat(), jumpAnimationTransition.getFloat());
     }
 
     @Override

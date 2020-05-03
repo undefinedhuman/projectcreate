@@ -7,7 +7,6 @@ import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.entity.components.animation.AnimationComponent;
 import de.undefinedhuman.sandboxgame.engine.entity.components.arm.RightArmComponent;
 import de.undefinedhuman.sandboxgame.engine.entity.components.arm.ShoulderComponent;
-import de.undefinedhuman.sandboxgame.engine.entity.components.collision.CollisionComponent;
 import de.undefinedhuman.sandboxgame.engine.entity.components.combat.CombatComponent;
 import de.undefinedhuman.sandboxgame.engine.entity.components.equip.EquipComponent;
 import de.undefinedhuman.sandboxgame.engine.entity.components.mouse.AngleComponent;
@@ -118,18 +117,15 @@ public class ArmSystem extends System {
                     combatComponent.currentDamage -= Main.delta * sword.damage.getFloat() * 24 / 30;
                     currentAngle = Tools.swordLerpTurned(angleComponentAngle, 0, 24, !isTurned);
 
-                    ArrayList<Entity> probablyHitEntity = EntityManager.instance.getEntityInRangeForCollision(combatEntity.getPosition(), 200);
+                    // TODO Make the collision with the hitbox not the entity itself
 
-                    for (Entity entity : probablyHitEntity) {
+                    ArrayList<Entity> entitiesWithCollision = EntityManager.instance.getEntitiesWithCollision(combatEntity);
 
-                        if (!entity.hasComponents(ComponentType.COLLISION, ComponentType.HEALTH)
-                                || entity == combatEntity && !combatComponent.touchedEntityList.contains(entity)) continue;
-
+                    for (Entity entity : entitiesWithCollision) {
+                        if (!entity.hasComponent(ComponentType.HEALTH) || entity == combatEntity && !combatComponent.touchedEntityList.contains(entity)) continue;
                         SpriteData data = ((SpriteComponent) combatEntity.getComponent(ComponentType.SPRITE)).getSpriteData("Item Hitbox");
-                        if (!Tools.collideSAT(data.getSprite(), ((CollisionComponent) entity.getComponent(ComponentType.COLLISION)).getVertices(entity.getPosition()))) continue;
                         ((HealthComponent) entity.getComponent(ComponentType.HEALTH)).damage(sword.damage.getFloat());
                         combatComponent.touchedEntityList.add(entity);
-
                     }
                 }
 

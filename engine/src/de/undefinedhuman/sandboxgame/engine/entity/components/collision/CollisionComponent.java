@@ -3,51 +3,46 @@ package de.undefinedhuman.sandboxgame.engine.entity.components.collision;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.entity.Component;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
-import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
-import de.undefinedhuman.sandboxgame.engine.file.LineWriter;
+import de.undefinedhuman.sandboxgame.engine.utils.math.Vector4;
 
 public class CollisionComponent extends Component {
 
-    private Vector2 size, offset;
+    private Vector2 position = new Vector2(), size = new Vector2(), offset = new Vector2();
+    private Vector2[] bounds = new Vector2[] {
+            new Vector2(),
+            new Vector2(),
+            new Vector2(),
+            new Vector2()
+    };
 
     public CollisionComponent(Vector2 size, Vector2 offset) {
-        this.size = size;
-        this.offset = offset;
+        this.size.set(size);
+        this.offset.set(offset);
         this.type = ComponentType.COLLISION;
     }
 
-    public Vector2 getSize() {
-        return size;
+    public void updateHitbox(Vector2 position) {
+        this.position.set(position).add(offset);
+
+        for(int i = 0; i <= 1; i++)
+            for(int j = 0; j <= 1; j++)
+                bounds[i * 2 + j].set(this.position.x + i * size.x, this.position.y + j * size.y);
     }
 
-    public void setSize(Vector2 size) {
-        this.size = size;
-    }
+    public Vector2 bottomLeft() { return bounds[0]; }
+    public Vector2 upperLeft() { return bounds[1]; }
+    public Vector2 bottomRight() { return bounds[2]; }
+    public Vector2 upperRight() { return bounds[3]; }
 
     public Vector2 getOffset() {
         return offset;
     }
-
-    public void setOffset(Vector2 offset) {
-        this.offset = offset;
+    public Vector2 getSize() {
+        return size;
     }
 
-    public Vector2[] getVertices(Vector2 pos) {
-        Vector2[] vec = new Vector2[4];
-        float x = pos.x + offset.x, y = pos.y + offset.y;
-        vec[0] = new Vector2(x, y);
-        vec[1] = new Vector2(x, y + size.y);
-        vec[3] = new Vector2(x + size.x, y);
-        vec[2] = new Vector2(x + size.x, y + size.y);
-        return vec;
-    }
-
-    @Override
-    public void receive(LineSplitter splitter) {}
-
-    @Override
-    public void send(LineWriter writer) {
-
+    public Vector4 getBounds(Vector2 position) {
+        return new Vector4(position.x + offset.x, position.y + offset.y, position.x + offset.x + size.x, position.y + offset.y + size.y);
     }
 
 }

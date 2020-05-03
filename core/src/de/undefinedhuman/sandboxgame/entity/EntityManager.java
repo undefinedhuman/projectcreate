@@ -1,14 +1,19 @@
 package de.undefinedhuman.sandboxgame.entity;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.sandboxgame.engine.camera.CameraManager;
+import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.entity.EntityType;
+import de.undefinedhuman.sandboxgame.engine.entity.components.collision.CollisionComponent;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.engine.utils.math.Vector2i;
+import de.undefinedhuman.sandboxgame.engine.utils.math.Vector4;
 import de.undefinedhuman.sandboxgame.entity.chunk.Chunk;
 import de.undefinedhuman.sandboxgame.entity.ecs.System;
 import de.undefinedhuman.sandboxgame.entity.ecs.system.*;
+import de.undefinedhuman.sandboxgame.utils.Tools;
 import de.undefinedhuman.sandboxgame.world.World;
 
 import java.util.ArrayList;
@@ -19,19 +24,19 @@ import java.util.HashMap;
 public class EntityManager extends Manager {
 
     public static EntityManager instance;
-    public Vector2i chunkSize = new Vector2i();
+
+    private Vector2i chunkSize = new Vector2i();
     private Chunk[][] chunks;
     private HashMap<Integer, Entity> entities = new HashMap<>();
-    private HashMap<EntityType, ArrayList<Entity>> entitiesByType = new HashMap<>();
     private ArrayList<Integer> entitiesToRemove = new ArrayList<>();
     private ArrayList<System> systems = new ArrayList<>();
 
     public EntityManager() {
-        if(instance == null) instance = this;
+        if (instance == null) instance = this;
         addSystems(new AngleSystem(), new AnimationSystem(), new ArmSystem(), new InteractionSystem(), new EquipSystem(), new MovementSystem(), new RenderSystem());
-        for(EntityType type : EntityType.values()) entitiesByType.put(type, new ArrayList<>());
     }
 
+    @Override
     public void init() {
         clearEntities();
         chunkSize.set(World.instance.width / Variables.CHUNK_SIZE, World.instance.height / Variables.CHUNK_SIZE);
@@ -41,75 +46,86 @@ public class EntityManager extends Manager {
                 chunks[i][j] = new Chunk();
     }
 
-    public void addEntity(int worldID, Entity entity) {
-        if(entity == null) return;
-        this.entities.put(worldID, entity);
-        this.entitiesByType.get(entity.getType()).add(entity);
-        this.chunks[entity.getChunkPosition().x][entity.getChunkPosition().y].addEntity(worldID, entity);
-        initSystems(entity);
-    }
-
-    private void initSystems(Entity entity) {
-        for (System system : systems) system.init(entity);
-    }
-
-    public Entity getEntity(int worldID) {
-        return entities.get(worldID);
-    }
-
-    public void removeEntity(int worldID) {
-        this.entitiesToRemove.add(worldID);
-    }
-
-    public ArrayList<Entity> getPlayers() {
-        return entitiesByType.get(EntityType.Player);
-    }
-
-    public Chunk getChunk(int x, int y) {
-        return chunks[x][y];
-    }
-
+    @Override
     public void update(float delta) {
         for (Entity entity : this.entities.values()) for (System system : systems) system.update(delta, entity);
-        if (entitiesToRemove.size() > 0) {
-            for (int worldID : entitiesToRemove) {
-                Entity entity = entities.get(worldID);
-                entitiesByType.get(entity.getType()).remove(entity);
-                chunks[entity.getChunkPosition().x][entity.getChunkPosition().y].removeEntity(worldID);
-                entities.remove(worldID);
-            }
-            entitiesToRemove.clear();
+        if (entitiesToRemove.size() == 0) return;
+        for (int worldID : entitiesToRemove) {
+            Entity entity = entities.get(worldID);
+            getChunk(entity.getChunkPosition()).removeEntity(entity);
+            entities.remove(worldID);
         }
+        entitiesToRemove.clear();
     }
 
-    public void render(SpriteBatch batch) {
-        for(EntityType type : EntityType.values()) {
-            ArrayList<Entity> entityList = entitiesByType.get(type);
-            for(Entity entity : entityList)
-                render(batch, entity);
-        }
+    @Override
+    public void render(SpriteBatch batch, OrthographicCamera camera) {
+        for (int chunkX = CameraManager.instance.chunkBounds.x; chunkX <= CameraManager.instance.chunkBounds.z; chunkX++)
+            for (int chunkY = CameraManager.instance.chunkBounds.y; chunkY <= CameraManager.instance.chunkBounds.w; chunkY++)
+                chunks[Tools.getWorldPositionX(chunkX, chunkSize.x)][chunkY].render(batch, World.instance.blockWidth * (chunkX < 0 ? -1 : chunkX >= chunkSize.x ? 1 : 0));
     }
 
     public void render(SpriteBatch batch, Entity entity) {
         RenderSystem.instance.render(batch, entity);
     }
 
-    public void delete() {
-        systems.clear();
-        clearEntities();
-        entitiesByType.clear();
+    public void addEntity(int worldID, Entity entity) {
+        if(entity == null) return;
+        this.entities.put(worldID, entity);
+        entity.updateChunkPosition();
+        for (System system : systems) system.init(entity);
     }
 
-    public ArrayList<Entity> getEntityInRangeForCollision(Vector2 pos, float range) {
+    public Entity getEntity(int worldID) {
+        if(!entities.containsKey(worldID)) return null;
+        return entities.get(worldID);
+    }
+
+    public void removeEntity(int worldID) {
+        if(!entities.containsKey(worldID)) return;
+        this.entitiesToRemove.add(worldID);
+    }
+
+    public Chunk getChunk(Vector2i position) {
+        return getChunk(position.x, position.y);
+    }
+
+    public Chunk getChunk(int x, int y) {
+        if(x >= chunks.length || y >= chunks[0].length) return null;
+        return chunks[x][y];
+    }
+
+    public Vector2i getChunkSize() {
+        return chunkSize;
+    }
+
+    public ArrayList<Entity> getEntityByType(EntityType type) {
+        ArrayList<Entity> entities = new ArrayList<>();
+        for(int chunkX = CameraManager.instance.chunkBounds.x; chunkX <= CameraManager.instance.chunkBounds.z; chunkX++)
+            for(int chunkY = CameraManager.instance.chunkBounds.y; chunkY <= CameraManager.instance.chunkBounds.w; chunkY++) {
+                Collection<Entity> entitiesOfChunk = chunks[Tools.getWorldPositionX(chunkX, chunkSize.x)][chunkY].getEntitiesByType(type);
+                if(entitiesOfChunk != null) entities.addAll(entitiesOfChunk);
+            }
+        return entities;
+    }
+
+    public ArrayList<Entity> getEntitiesWithCollision(Entity entity) {
+        CollisionComponent collisionComponent;
+        if((collisionComponent = (CollisionComponent) entity.getComponent(ComponentType.COLLISION)) == null) return new ArrayList<>();
+        return getEntitiesWithCollision(collisionComponent.getBounds(entity.getPosition()));
+    }
+
+    public ArrayList<Entity> getEntitiesWithCollision(Vector4 bounds) {
         ArrayList<Entity> entitiesInRange = new ArrayList<>();
-        for (Entity entity : entities.values())
-            if (new Vector2().set(entity.getPosition()).sub(pos).len() <= range)
-                entitiesInRange.add(entity);
+        for(int chunkX = CameraManager.instance.chunkBounds.x; chunkX <= CameraManager.instance.chunkBounds.z; chunkX++)
+            for(int chunkY = CameraManager.instance.chunkBounds.y; chunkY <= CameraManager.instance.chunkBounds.w; chunkY++)
+                entitiesInRange.addAll(chunks[Tools.getWorldPositionX(chunkX, chunkSize.x)][chunkY].getEntitiesInRangeForCollision(bounds));
         return entitiesInRange;
     }
 
-    public Collection<Entity> getEntitiesForCollision() {
-        return entities.values();
+    public void delete() {
+        systems.clear();
+        clearEntities();
     }
 
     private void addSystems(System... systems) {
@@ -117,7 +133,7 @@ public class EntityManager extends Manager {
     }
 
     private void clearEntities() {
-        for(ArrayList<Entity> entityTypeList : entitiesByType.values()) entityTypeList.clear();
+        chunks = new Chunk[0][0];
         entitiesToRemove.clear();
         entities.clear();
     }

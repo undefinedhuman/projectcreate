@@ -1,20 +1,30 @@
-TODO REFACTOR ENTITY CHUNK SYSTEM
+TODO Physics
+    Add normal tile collision for Blocks
+    Add X/Y positions when colliding, so when colliding with a wall the players gets set to the blocks x/y position
+    Add range collision checking if the velocity is greater then Block Size (to hopefully fix the resize bug)
+
 TODO ADD EventSystem for all sorts of events (block breaking/placing, entity dead/hurt move, etc.)
 TODO FIX PLAYER MOVEMENT
+TODO IMPLEMENT INTERACTION COMPONENT WITH MOUSE SELECTION NOT POSITION AND MAKE SURE IT WORKS ALSO IF THE ITEM IS PLACED AT THE EDGE OF THE WORLD
 
-TODO ADD Entity Render Layer, maybe do it with entity types PLAYER > DYNAMIC > STATIC
+TODO Maybe change camera, entity and block rendered Position to integer
+
+TODO Add utility functions to tools for 4 and 8 neighbor offset which just returns an array of offsets
+TODO Add Layer placement selection to block BOTH, FRONT, BACK
 
 TODO Profile Component Refactor / Maybe include animations for the status bars / different Types of profiles, "player, boss, small enemy"
 TODO FIX GRASS OVERLAY AT THE EDGES AND ENTITIES
 
-TODO Think about reworking the combat systems / add hitboxes back in
+TODO Think about reworking the combat systems / add hitboxes back in MAKE SURE HITBOX DETECTION WORK WITH WRAP WORLD
+    Add Attack Animation, for each attack frame add convex hitboxes to do collision with SAT
 
 TODO Add Meteorites into the night scene, also some moving stars etc. maybe stars move in circle https://weheartit.com/entry/314129185
 TODO Add small birds to the world that fly away if the player comes close https://i.pinimg.com/originals/ce/82/43/ce82438a3f7715f074159645de1ff49b.gif
+TODO ADD PLANETS INTO THE BACKGROUND
 
-TODO Add Settings Menu, for Variables.GAME_CAMERA_ZOOM Bounds [1.5f ... 3f], step 0.5f because otherwise the pixel glitch gets back if it is for example 2.2
+TODO Add Settings Menu, for Variables.GAME_CAMERA_ZOOM Bounds [1f...3f], step 1f because otherwise the pixel glitch gets back if it is for example 2.5
 
-TODO I think at the beginning there is a bug with the collision of the player with the blocks, that is also why the background keeps moving
+TODO Drop Items should not move below 0
 
 Combat System:
  - Verschiedene Materialien, für jede Waffe.
@@ -91,7 +101,6 @@ Multiplayer:
 
 Entity:
  - Spieler Init wenn der ClientManager den gameManager Player setzt davor darf das Player Profile nicht initialisiert werden.
- - Scale System Da z.b. Weapon Offset und Pos etc. ungenau werden
  - EquipSystem Selected Arm Texture dynamisch machen
  - EquipSystem Variablen dynamisch machen.
  - Right Arm Selected Texture entfernen

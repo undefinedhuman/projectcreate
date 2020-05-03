@@ -16,9 +16,9 @@ import java.util.HashMap;
 
 public class Blueprint {
 
-    public SettingsList entitySettings = new SettingsList();
+    public SettingsList settings = new SettingsList();
 
-    private Setting
+    public Setting
             id = new Setting(SettingType.Int, "ID", 0),
             name = new Setting(SettingType.String, "Name", ""),
             size = new Vector2Setting("Size", new Vector2()),
@@ -27,7 +27,7 @@ public class Blueprint {
     private HashMap<ComponentType, ComponentBlueprint> componentBlueprints;
 
     public Blueprint() {
-        entitySettings.addSettings(id, name, size, type);
+        settings.addSettings(id, name, size, type);
         componentBlueprints = new HashMap<>();
     }
 
@@ -36,7 +36,7 @@ public class Blueprint {
         HashMap<ComponentType, ComponentParam> params = new HashMap<>();
         for (ComponentParam p : param) params.put(p.getType(), p);
         for (ComponentBlueprint blueprint : componentBlueprints.values())
-            entity.addComponent(blueprint.createInstance(params));
+            entity.addComponents(blueprint.createInstance(params));
         entity.init();
         return entity;
     }
@@ -48,12 +48,8 @@ public class Blueprint {
         return type.getEntityType();
     }
 
-    public void addComponentBlueprint(ComponentBlueprint blueprint) { componentBlueprints.putIfAbsent(blueprint.getType(), blueprint); }
-    public boolean hasComponent(ComponentType type) {
-        return componentBlueprints.containsKey(type);
-    }
-    public ComponentBlueprint getComponentBlueprint(ComponentType type) {
-        return componentBlueprints.get(type);
+    public void addComponentBlueprint(ComponentBlueprint blueprint) {
+        componentBlueprints.putIfAbsent(blueprint.getType(), blueprint);
     }
 
     public void delete() {

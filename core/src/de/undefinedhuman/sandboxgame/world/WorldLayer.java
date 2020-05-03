@@ -2,7 +2,6 @@ package de.undefinedhuman.sandboxgame.world;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Base64Coder;
 import de.undefinedhuman.sandboxgame.engine.items.type.blocks.Block;
@@ -35,21 +34,17 @@ public class WorldLayer {
     }
 
     public byte getBlock(Vector2 pos) {
-        if (pos.y >= height - 1 && pos.y < 0) return 0;
-        if ((pos.x < 0) || (pos.x >= this.width)) pos.x = getPositionX((int) pos.x);
-        return this.blocks[(int) pos.x][(int) pos.y];
+        if (pos.y < 0 || pos.y >= height) return 0;
+        return this.blocks[(width + getPositionX(pos.x)) % width][(int) pos.y];
     }
 
-    private int getPositionX(int x) {
-        if (x < 0) x = (width + x);
-        else if (x >= width) x = (x - width);
-        return x;
+    private int getPositionX(float x) {
+        return (width + (int) x) % width;
     }
 
     public void setBlock(int x, int y, byte cell) {
         if (y < 0 || y >= height) return;
-        if ((x < 0) || (x >= width)) x = getPositionX(x);
-        if (this.blocks[x][y] != cell) this.blocks[x][y] = cell;
+        blocks[getPositionX(x)][y] = cell;
     }
 
     public WorldLayer setState(int x, int y, int state) {
@@ -79,13 +74,11 @@ public class WorldLayer {
 
         if (block != null && block.id.getInt() != 0) {
 
-            TextureRegion texture = block.blockTextures[getState(i, j)];
-
             // TODO Refactor this color thing
 
             color.set(1 * col.r, 1 * col.g, 1 * col.b, 1f);
             batch.setColor(color);
-            batch.draw(texture, (int) (i * Variables.BLOCK_SIZE), (int) (j * Variables.BLOCK_SIZE), Variables.BLOCK_SIZE, Variables.BLOCK_SIZE, Variables.BLOCK_SIZE, Variables.BLOCK_SIZE, 1, 1, 0);
+            batch.draw(block.blockTextures[getState(i, j)], i * Variables.BLOCK_SIZE, j * Variables.BLOCK_SIZE, Variables.BLOCK_SIZE, Variables.BLOCK_SIZE);
 
             if (block.id.getInt() == 3 && getBlock(i, j + 1) == 0)
                 TopLayerManager.instance.render(batch, i, j, TopLayerType.GRASS, getBlock(i - 1, j) != 0, getBlock(i + 1, j) != 0);
@@ -106,6 +99,8 @@ public class WorldLayer {
     }
 
     public byte getState(int x, int y) {
+
+        if(getBlock(x, y) == 0) return 0;
 
         x = getPositionX(x);
         if (y < height - 1 && y > 0) {

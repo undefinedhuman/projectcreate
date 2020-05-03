@@ -4,11 +4,11 @@ import com.badlogic.gdx.graphics.Color;
 
 public class Variables {
     // Engine
-    public static final float GAME_CAMERA_ZOOM = 2.5f;
+    public static final float GAME_CAMERA_ZOOM = 3f;
     public static final float DELTA_MULTIPLIER = 1.0f;
     public static final String SEPARATOR = ";", FILE_SEPARATOR = "/";
     public static final String DEFAULT_LANGUAGE = "eu_DE";
-    public static final boolean RENDER_HITBOXES = false;
+    public static final boolean RENDER_HITBOXES = true;
     public static final Color HITBOX_COLOR = new Color(0.41568628f, 0.3529412f, 0.8039216f, 0.4f);
 
     // World
@@ -17,6 +17,7 @@ public class Variables {
     public static final int HOUR_LENGTH = 1000;
 
     // Background
+    public static final int BASE_BACKGROUND_WIDTH = 688;
     public static final int CLOUD_COUNT = 5;
     public static final int CLOUD_HEIGHT_OFFSET = 30;
     public static final float CLOUD_BASE_SPEED = 0.1f;
