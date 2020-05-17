@@ -14,12 +14,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 
 public class ItemEditor extends Editor {
 
-    private JComboBox<ItemType> itemComboBox;
-    private Item currentItem;
+    public JComboBox<ItemType> itemComboBox;
+    public Item currentItem;
+
+    public JFrame loadWindow;
+    public JComboBox<String> itemSelection;
+    public JButton loadButton;
 
     public ItemEditor(Container container) {
 
@@ -61,23 +67,26 @@ public class ItemEditor extends Editor {
             reader.close();
         }
 
-        JFrame chooseWindow = new JFrame("Load Item");
-        chooseWindow.setSize(480, 150);
-        chooseWindow.setLocationRelativeTo(null);
-        chooseWindow.setResizable(false);
+        loadWindow = new JFrame("Load Item");
+        loadWindow.setSize(480, 150);
+        loadWindow.setLocationRelativeTo(null);
+        loadWindow.setResizable(false);
 
         JLabel label = new JLabel();
-        chooseWindow.add(label);
+        loadWindow.add(label);
 
-        JButton button = new JButton("Load Item");
-        button.setBounds(90, 70, 300, 25);
+        loadButton = new JButton("Load Item");
+        loadButton.setBounds(90, 70, 300, 25);
 
-        JComboBox<String> comboBox = new JComboBox<>(ids.toArray(new String[0]));
-        comboBox.setBounds(90, 35, 300, 25);
+        String[] idArray = ids.toArray(new String[0]);
+        Arrays.sort(idArray, Comparator.comparing(c -> Integer.valueOf(c.split("-")[0])));
 
-        button.addActionListener(a -> {
-            if(comboBox.getSelectedItem() == null) return;
-            FileReader reader = new FileReader(ResourceManager.loadFile(Paths.ITEM_PATH, Integer.parseInt(((String) comboBox.getSelectedItem()).split("-")[0]) + "/settings.item"), true);
+        itemSelection = new JComboBox<>(idArray);
+        itemSelection.setBounds(90, 35, 300, 25);
+
+        loadButton.addActionListener(a -> {
+            if(itemSelection.getSelectedItem() == null) return;
+            FileReader reader = new FileReader(ResourceManager.loadFile(Paths.ITEM_PATH, Integer.parseInt(((String) itemSelection.getSelectedItem()).split("-")[0]) + "/settings.item"), true);
             reader.nextLine();
             ItemType type = ItemType.valueOf(reader.getNextString());
             if(type == null) return;
@@ -88,14 +97,14 @@ public class ItemEditor extends Editor {
             HashMap<String, LineSplitter> settingsList = Tools.loadSettings(reader);
             for(Setting setting : currentItem.getSettings()) setting.loadSetting(reader.getParentDirectory(), settingsList);
             Tools.addSettings(settingsPanel, currentItem.getSettings());
-            chooseWindow.setVisible(false);
+            loadWindow.setVisible(false);
             reader.close();
 
         });
 
-        label.add(comboBox);
-        label.add(button);
-        chooseWindow.setVisible(true);
+        label.add(itemSelection);
+        label.add(loadButton);
+        loadWindow.setVisible(true);
 
     }
 
@@ -111,8 +120,14 @@ public class ItemEditor extends Editor {
         FileWriter writer = settingsFile.getFileWriter(true);
         writer.writeString(currentItem.type.name());
         writer.nextLine();
-        Tools.saveSetting(writer, currentItem.getSettings());
+        Tools.saveSettings(writer, currentItem.getSettings());
         writer.close();
+    }
+
+    public void reset() {
+        itemComboBox.setSelectedIndex(0);
+        currentItem = null;
+        Tools.removeSettings(settingsPanel);
     }
 
 }

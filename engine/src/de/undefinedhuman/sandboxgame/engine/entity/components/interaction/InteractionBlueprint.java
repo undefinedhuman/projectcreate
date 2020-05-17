@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 public class InteractionBlueprint extends ComponentBlueprint {
 
-    private Setting
+    public Setting
             range = new Setting(SettingType.Int, "Range", 0),
             inputKey = new Setting(SettingType.InputKey, "Input Key", "F");
 

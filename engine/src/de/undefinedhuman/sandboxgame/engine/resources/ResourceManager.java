@@ -32,7 +32,7 @@ public class ResourceManager {
 
 
     public static BitmapFont loadFont(String name) {
-        return loadBitmapFont("gui/font/" + name + ".fnt");
+        return loadBitmapFont(Paths.GUI_PATH.getPath() + "font/" + name + ".fnt");
     }
 
     public static BitmapFont loadBitmapFont(String path) {
@@ -68,7 +68,7 @@ public class ResourceManager {
     }
 
     public static FileHandle loadFile(Paths path, String name) {
-        return Gdx.files.internal(path.getPath() + name);
+        return Gdx.files.internal((path.getPath() + name));
     }
 
     public static boolean existItem(int id) {

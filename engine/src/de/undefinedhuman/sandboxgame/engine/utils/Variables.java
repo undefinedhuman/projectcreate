@@ -11,6 +11,10 @@ public class Variables {
     public static final boolean RENDER_HITBOXES = true;
     public static final Color HITBOX_COLOR = new Color(0.41568628f, 0.3529412f, 0.8039216f, 0.4f);
 
+    // Test
+    public static final long E2E_SLEEP_AMOUNT = 300;
+    public static final float E2E_THRESHOLD = 0.00025f;
+
     // World
     public static final int CHUNK_SIZE = 20;
     public static final int BLOCK_SIZE = 16;

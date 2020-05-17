@@ -3,6 +3,7 @@ package de.undefinedhuman.sandboxgame.engine.file;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Base64Coder;
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 
 public class LineSplitter {
 
@@ -11,6 +12,10 @@ public class LineSplitter {
 
     private boolean base;
     private String separator;
+
+    public LineSplitter(String string, boolean base) {
+        this(string, base, Variables.SEPARATOR);
+    }
 
     public LineSplitter(String string, boolean base, String separator) {
         this.data = string.split(separator);

@@ -2,6 +2,7 @@ package de.undefinedhuman.sandboxgame.item;
 
 import com.badlogic.gdx.Gdx;
 import de.undefinedhuman.sandboxgame.engine.file.FileReader;
+import de.undefinedhuman.sandboxgame.engine.file.FsFile;
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.file.Paths;
 import de.undefinedhuman.sandboxgame.engine.items.Item;
@@ -38,7 +39,7 @@ public class ItemManager extends Manager {
         boolean loaded = false;
         for (int id : ids) {
             if (hasItem(id) || !ResourceManager.existItem(id)) continue;
-            items.put(id, loadItem(id));
+            items.put(id, loadItem(new FsFile(Paths.ITEM_PATH, id + "/settings.item", false)));
             loaded = true;
         }
         if(loaded)
@@ -92,8 +93,8 @@ public class ItemManager extends Manager {
         }
     }
 
-    private Item loadItem(int id) {
-        FileReader reader = new FileReader(ResourceManager.loadFile(Paths.ITEM_PATH, id + "/settings.item"), true);
+    public static Item loadItem(FsFile file) {
+        FileReader reader = file.getFileReader(true);
         reader.nextLine();
         ItemType type = ItemType.valueOf(reader.getNextString());
         reader.nextLine();

@@ -6,6 +6,12 @@ sourceSets.main.java.srcDirs = ["src/"]
 project.ext.mainClassName = "de.undefinedhuman.sandboxgame.desktop.DesktopLauncher"
 project.ext.assetsDir = new File("../assets/");
 
+jar {
+    manifest {
+        attributes 'Main-Class': 'de.undefinedhuman.sandboxgame.desktop.DesktopLauncher'
+    }
+}
+
 task run(dependsOn: classes, type: JavaExec) {
     main = project.mainClassName
     classpath = sourceSets.main.runtimeClasspath

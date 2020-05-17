@@ -11,7 +11,7 @@ import javax.swing.*;
 
 public class BooleanSetting extends Setting {
 
-    private JCheckBox checkBox;
+    public JCheckBox checkBox;
 
     public BooleanSetting(String key, boolean value) {
         super(SettingType.Boolean, key, value);

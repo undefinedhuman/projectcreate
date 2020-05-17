@@ -52,6 +52,19 @@ public class Blueprint {
         componentBlueprints.putIfAbsent(blueprint.getType(), blueprint);
     }
 
+    public ComponentBlueprint getComponentBlueprint(ComponentType type) {
+        if(!hasComponentBlueprints(type)) return null;
+        return componentBlueprints.get(type);
+    }
+
+    public boolean hasComponentBlueprints(ComponentType type) {
+        return componentBlueprints.containsKey(type);
+    }
+
+    public HashMap<ComponentType, ComponentBlueprint> getComponentBlueprints() {
+        return componentBlueprints;
+    }
+
     public void delete() {
         for (ComponentBlueprint blueprint : componentBlueprints.values()) blueprint.delete();
     }

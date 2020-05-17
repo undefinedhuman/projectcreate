@@ -174,7 +174,7 @@ public class EntityEditor extends Editor {
         FsFile settingsFile = new FsFile(entityDir, "/settings.entity", false);
 
         FileWriter writer = settingsFile.getFileWriter(true);
-        Tools.saveSetting(writer, entitySettings.getSettings());
+        Tools.saveSettings(writer, entitySettings.getSettings());
 
         writer.writeInt(components.size());
         writer.nextLine();

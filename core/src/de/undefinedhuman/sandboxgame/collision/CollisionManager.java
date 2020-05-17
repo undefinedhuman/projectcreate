@@ -24,13 +24,13 @@ public class CollisionManager {
         return (bounds1.x < bounds2.z && bounds1.z > bounds2.x && bounds1.y < bounds2.w && bounds1.w > bounds2.y);
     }
 
-    public static int collideHor(Vector2 from, Vector2 towards) {
+    public static int collideHor(Vector2 from, Vector2 towards, boolean withoutSlopes) {
         int     startX = (int) (from.x/Variables.BLOCK_SIZE),
                 endX = (int) ((towards.x-1)/Variables.BLOCK_SIZE),
                 tileY = (int) (from.y/Variables.BLOCK_SIZE);
 
         for(int tileX = startX; tileX <= endX; tileX++)
-            if(WorldManager.instance.isObstacle(new Vector2(tileX, tileY)))
+            if(withoutSlopes ? WorldManager.instance.isObstacleWithOutSlope(tileX, tileY) : WorldManager.instance.isObstacleWithSlope(tileX, tileY))
                 return tileY;
         return Integer.MIN_VALUE;
     }
@@ -40,8 +40,11 @@ public class CollisionManager {
                 endY = (int) (towards.y/Variables.BLOCK_SIZE),
                 tileX = (int) (from.x/Variables.BLOCK_SIZE);
 
-        for(int tileY = startY; tileY <= endY; tileY++)
-            if(WorldManager.instance.isObstacle(new Vector2(tileX, tileY)))
+        if(WorldManager.instance.isObstacleWithOutSlope(tileX, startY))
+            return tileX;
+
+        for(int tileY = startY + 1; tileY <= endY; tileY++)
+            if(WorldManager.instance.isObstacleWithSlope(tileX, tileY))
                 return tileX;
         return Integer.MIN_VALUE;
     }

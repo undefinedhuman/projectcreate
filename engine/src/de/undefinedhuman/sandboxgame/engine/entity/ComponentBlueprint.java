@@ -30,7 +30,7 @@ public abstract class ComponentBlueprint {
     }
 
     public void save(FileWriter writer) {
-        Tools.saveSetting(writer, settings.getSettings());
+        Tools.saveSettings(writer, settings.getSettings());
     }
 
     public ArrayList<Setting> getSettings() {

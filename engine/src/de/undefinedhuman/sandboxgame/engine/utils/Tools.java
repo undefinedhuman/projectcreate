@@ -4,14 +4,17 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.file.FileReader;
 import de.undefinedhuman.sandboxgame.engine.file.FileWriter;
+import de.undefinedhuman.sandboxgame.engine.file.FsFile;
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
 import de.undefinedhuman.sandboxgame.engine.utils.math.Vector4;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +32,7 @@ public class Tools {
         return settings;
     }
 
-    public static void saveSetting(FileWriter writer, List<Setting> settings) {
+    public static void saveSettings(FileWriter writer, List<Setting> settings) {
         writer.writeInt(settings.size());
         writer.nextLine();
         for(Setting setting : settings) {
@@ -122,5 +125,23 @@ public class Tools {
     public static Vector4 calculateBounds(Vector2 position, Vector2 offset, Vector2 size) {
         return new Vector4(position.x + offset.x, position.y + offset.y, position.x + offset.x + size.x, position.y + offset.y + size.y);
     }
+
+    public static boolean isDigit(String text) {
+        try {
+            Integer.parseInt(text);
+            return true;
+        } catch (NumberFormatException ex) {
+            return false;
+        }
+    }
+
+    public static void saveExpectedImage(BufferedImage image, String name) {
+        try {
+            ImageIO.write(image, "png", new FsFile("test/editorUI/" + name + "_Expected.png", false).getFile());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

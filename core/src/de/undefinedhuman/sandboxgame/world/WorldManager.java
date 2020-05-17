@@ -18,6 +18,8 @@ import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
 import de.undefinedhuman.sandboxgame.utils.Mouse;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
+import java.util.HashMap;
+
 public class WorldManager {
 
     public static WorldManager instance;
@@ -29,10 +31,18 @@ public class WorldManager {
     private int oldPickaxeID = 0;
     private Vector2 oldBreakPos;
 
+    private HashMap<Byte, byte[]> slopeHeights = new HashMap<>();
+
     public WorldManager() {
         canPlace = true;
         canDestroy = true;
         oldBreakPos = null;
+        slopeHeights.put((byte) 4, new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 });
+        slopeHeights.put((byte) 1, new byte[] { 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 });
+        slopeHeights.put((byte) 0, new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 8, 7, 6, 5, 4, 3, 2, 1 });
+        slopeHeights.put((byte) 8, new byte[] { 1, 3, 5, 7, 9, 11, 13, 15, 15, 13, 11, 9, 7, 5, 3, 1 });
+        slopeHeights.put((byte) 9, new byte[] { 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 });
+        slopeHeights.put((byte) 12, new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 });
     }
 
     public void update(float delta) {
@@ -122,30 +132,34 @@ public class WorldManager {
 
     }
 
-    public boolean isSlope(int x, int y) {
-        return World.instance.mainLayer.getState(x, y) == 12;
+    public byte isSlope(float worldX, int blockY, byte[] slopes) {
+        int blockX = (int) (worldX / Variables.BLOCK_SIZE);
+        if(getBlock(blockX, blockY) == 0) return -1;
+        byte currentState = World.instance.mainLayer.getState(blockX, blockY);
+        if(!slopeHeights.containsKey(currentState)) return -1;
+        for(byte slope : slopes) if(slope == currentState) return slopeHeights.get(currentState)[(int) (worldX%Variables.BLOCK_SIZE)];
+        return -1;
     }
 
-    public boolean isObstacle(Vector2 pos) {
-        return getBlockType(pos) == BlockType.Block;
+    public boolean isBlock(int x, int y) {
+        return getBlockType(x, y) == BlockType.Block;
     }
 
-    public boolean isOneWay(Vector2 pos) {
-        return getBlockType(pos) == BlockType.OneWay;
+    public boolean isObstacleWithSlope(int x, int y) {
+        return getBlockType(x, y) == BlockType.Block;
     }
 
-    public boolean isEmpty(Vector2 pos) {
-        return getBlockType(pos) == BlockType.Empty;
+    public boolean isObstacleWithOutSlope(int x, int y) {
+        return getBlockType(x, y) == BlockType.Block && !slopeHeights.containsKey(World.instance.mainLayer.getState(x, y));
     }
 
-    public boolean isGround(Vector2 pos) {
-        BlockType type = getBlockType(pos);
-        return type == BlockType.Block || type == BlockType.OneWay;
+    public BlockType getBlockType(int x, int y) {
+        if(y < 0 || y >= World.instance.height) return BlockType.Block;
+        return ((Block) ItemManager.instance.getItem(getBlock(x, y))).blockType.getBlockType();
     }
 
-    public BlockType getBlockType(Vector2 pos) {
-        if(pos.y < 0 || pos.y >= World.instance.height) return BlockType.Block;
-        return ((Block) ItemManager.instance.getItem(getBlock(true, pos))).blockType.getBlockType();
+    private byte getBlock(int x, int y) {
+        return World.instance.mainLayer.getBlock(x, y);
     }
 
     private byte getBlock(boolean main, Vector2 pos) {

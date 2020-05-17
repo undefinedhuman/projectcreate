@@ -91,7 +91,7 @@ public class EntityManager extends Manager {
     }
 
     public Chunk getChunk(int x, int y) {
-        if(x >= chunks.length || y >= chunks[0].length) return null;
+        y = Tools.clamp(y, 0, chunks[0].length);
         return chunks[x][y];
     }
 

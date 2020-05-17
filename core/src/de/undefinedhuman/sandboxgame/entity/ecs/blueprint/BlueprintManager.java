@@ -1,12 +1,11 @@
 package de.undefinedhuman.sandboxgame.entity.ecs.blueprint;
 
-import com.badlogic.gdx.files.FileHandle;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.file.FileReader;
+import de.undefinedhuman.sandboxgame.engine.file.FsFile;
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.file.Paths;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
-import de.undefinedhuman.sandboxgame.engine.resources.ResourceManager;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
 import de.undefinedhuman.sandboxgame.utils.Tools;
@@ -34,7 +33,7 @@ public class BlueprintManager extends Manager {
     public boolean loadBlueprints(Integer... ids) {
         boolean loaded = false;
         for (int id : ids) {
-            if (!hasBlueprint(id)) blueprints.put(id, loadBlueprint(id));
+            if (!hasBlueprint(id)) blueprints.put(id, loadBlueprint(new FsFile(Paths.ENTITY_FOLDER, id + "/settings.entity", false)));
             loaded |= hasBlueprint(id);
         }
         if (loaded)
@@ -69,17 +68,17 @@ public class BlueprintManager extends Manager {
         return hasBlueprint(0) ? getBlueprint(0) : null;
     }
 
-    public static Blueprint loadBlueprint(int id) {
+    public static Blueprint loadBlueprint(FsFile file) {
         Blueprint blueprint = new Blueprint();
-        FileHandle file = ResourceManager.loadFile(Paths.ENTITY_FOLDER, id + "/settings.entity");
-        FileReader reader = new FileReader(file, true);
+        FileReader reader = file.getFileReader(true);
         reader.nextLine();
         HashMap<String, LineSplitter> settingsList = Tools.loadSettings(reader);
         for(Setting setting : blueprint.settings.getSettings()) setting.loadSetting(reader.getParentDirectory(), settingsList);
         int componentSize = reader.getNextInt();
         reader.nextLine();
         for (int i = 0; i < componentSize; i++) {
-            ComponentType type = ComponentType.valueOf(reader.getNextString());
+            String s = reader.getNextString();
+            ComponentType type = ComponentType.valueOf(s);
             reader.nextLine();
             blueprint.addComponentBlueprint(type.load(reader));
         }

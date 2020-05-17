@@ -12,6 +12,9 @@ public class CollisionComponent extends Component {
             new Vector2(),
             new Vector2(),
             new Vector2(),
+            new Vector2(),
+            new Vector2(),
+            new Vector2(),
             new Vector2()
     };
 
@@ -21,18 +24,25 @@ public class CollisionComponent extends Component {
         this.type = ComponentType.COLLISION;
     }
 
-    public void updateHitbox(Vector2 position) {
+    public CollisionComponent updateHitbox(Vector2 position) {
         this.position.set(position).add(offset);
 
         for(int i = 0; i <= 1; i++)
             for(int j = 0; j <= 1; j++)
                 bounds[i * 2 + j].set(this.position.x + i * size.x, this.position.y + j * size.y);
+
+        bounds[4].set(this.position.x + size.x * 0.2f, this.position.y);
+        bounds[5].set(this.position.x + size.x * 0.5f, this.position.y);
+        bounds[6].set(this.position.x + size.x * 0.8f, this.position.y);
+        return this;
     }
 
     public Vector2 bottomLeft() { return bounds[0]; }
     public Vector2 upperLeft() { return bounds[1]; }
     public Vector2 bottomRight() { return bounds[2]; }
     public Vector2 upperRight() { return bounds[3]; }
+
+    public Vector2 bound(int index) { return bounds[index]; }
 
     public Vector2 getOffset() {
         return offset;

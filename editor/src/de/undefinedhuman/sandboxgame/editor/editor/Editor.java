@@ -5,8 +5,6 @@ import java.awt.*;
 
 public abstract class Editor {
 
-    private Container container;
-
     protected JPanel mainPanel, settingsPanel;
 
     public Editor(Container container) {

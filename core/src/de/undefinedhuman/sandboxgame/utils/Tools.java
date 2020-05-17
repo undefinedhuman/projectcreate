@@ -230,15 +230,6 @@ public class Tools extends de.undefinedhuman.sandboxgame.engine.utils.Tools {
         return a * (1 - f) + (b * f);
     }
 
-    public static boolean isDigit(String text) {
-        try {
-            Integer.parseInt(text);
-            return true;
-        } catch (NumberFormatException ex) {
-            return false;
-        }
-    }
-
     public static boolean compareVector(Vector2 a, Vector2 b) {
         if (a == null || b == null) return false;
         return (a.x == b.x) && (a.y == b.y);

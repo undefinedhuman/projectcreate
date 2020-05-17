@@ -17,7 +17,7 @@ public class PanelObject {
     public PanelObject() {}
 
     public void save(FileWriter writer) {
-        Tools.saveSetting(writer, settings.getSettings());
+        Tools.saveSettings(writer, settings.getSettings());
     }
 
     public PanelObject load(FileReader reader) {

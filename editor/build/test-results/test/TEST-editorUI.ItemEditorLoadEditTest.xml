@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="editorUI.ItemEditorLoadEditTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-05-17T21:49:30" hostname="Alexanders-MBP.fritz.box" time="8.647">
+  <properties/>
+  <testcase name="LoadAndEditItem()" classname="editorUI.ItemEditorLoadEditTest" time="8.647"/>
+  <system-out><![CDATA[[17-05-2020 - 23-49-29] [Info] Deleted 0 log files!
+[17-05-2020 - 23-49-29] [Info] Successfully created 17-05-2020 - 23-49-29.txt
+[17-05-2020 - 23-49-29] [Info] Log file successfully created!
+[17-05-2020 - 23-49-32] [Info] Item_Editor_Start - Match - 0% difference! - PASSED
+[17-05-2020 - 23-49-32] [Info] Item_Editor_Press_File_Menu - Match - 0% difference! - PASSED
+[17-05-2020 - 23-49-33] [Info] Item_Editor_Press_Load - Match - 0% difference! - PASSED
+[17-05-2020 - 23-49-33] [Info] Item_Editor_Load_Window - Match - 0% difference! - PASSED
+[17-05-2020 - 23-49-34] [Info] Item_Editor_Load_Window_Select_Test_Item - Match - 0% difference! - PASSED
+[17-05-2020 - 23-49-34] [Info] Item_Editor_After_Test_Item_Load - Match - 0% difference! - PASSED
+[17-05-2020 - 23-49-35] [Info] Item_Editor_Change_Name - Match - 0% difference! - PASSED
+[17-05-2020 - 23-49-35] [Info] Item_Editor_Change_IsStackable_True - Match - 0% difference! - PASSED
+[17-05-2020 - 23-49-36] [Info] Item_Editor_Change_CanShake_False - Match - 0% difference! - PASSED
+[17-05-2020 - 23-49-36] [Info] Item_Editor_Change_Rarity - Match - 0% difference! - PASSED
+[17-05-2020 - 23-49-36] [Info] Successfully deleted: settings.item
+[17-05-2020 - 23-49-36] [Info] Successfully deleted: Unknown.png
+[17-05-2020 - 23-49-36] [Info] Successfully deleted: 32768
+[17-05-2020 - 23-49-36] [Info] Item directory deleted successfully!
+[17-05-2020 - 23-49-36] [Info] Successfully created dir: items/32768
+[17-05-2020 - 23-49-36] [Info] Successfully created settings.item
+[17-05-2020 - 23-49-36] [Info] Successfully created Unknown.png
+[17-05-2020 - 23-49-37] [Info] Item_Editor_After_Save_And_Reset - Match - 0% difference! - PASSED
+[17-05-2020 - 23-49-39] [Info] Item_Editor_After_Loading_Saved_Item - Match - 0% difference! - PASSED
+[17-05-2020 - 23-49-39] [Test] Item Editor - Load and edit Item - E2E - PASSED
+[17-05-2020 - 23-49-39] [Info] Log file successfully saved!
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

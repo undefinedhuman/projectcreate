@@ -1,6 +1,7 @@
 package de.undefinedhuman.sandboxgame.engine.file;
 
 import de.undefinedhuman.sandboxgame.engine.log.Log;
+import de.undefinedhuman.sandboxgame.engine.utils.Tools;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -53,9 +54,14 @@ public class FileUtils {
         if (del) Log.info("Successfully deleted: " + file.getName());
     }
 
+    public static void deleteFile(FsFile file) {
+        deleteFile(file.getFile());
+    }
+
     public static boolean readBoolean(String value) {
         if (value.equalsIgnoreCase("false") || value.equalsIgnoreCase("true")) return Boolean.parseBoolean(value);
-        else return Integer.parseInt(value) == 1;
+        else if(Tools.isDigit(value)) return Integer.parseInt(value) == 1;
+        else return false;
     }
 
     public static int booleanToInt(boolean bool) {

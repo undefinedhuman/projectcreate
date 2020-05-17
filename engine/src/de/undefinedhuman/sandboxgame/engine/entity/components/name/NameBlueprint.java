@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 public class NameBlueprint extends ComponentBlueprint {
 
-    private Setting name = new Setting(SettingType.String, "Name", "");
+    public Setting name = new Setting(SettingType.String, "Name", "");
 
     public NameBlueprint() {
         settings.addSettings(name);

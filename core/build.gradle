@@ -4,7 +4,16 @@ sourceCompatibility = 1.8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 sourceSets.main.java.srcDirs = ["src/"]
+sourceSets.test.java.srcDirs = ["test/"]
 
-eclipse.project {
-    name = appName + "-core"
+project.ext.assetsDir = new File("../assets/")
+
+test {
+    useJUnitPlatform()
+    workingDir = new File("../assets/")
+}
+
+dependencies {
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.2")
 }

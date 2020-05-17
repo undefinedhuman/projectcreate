@@ -11,7 +11,7 @@ import javax.swing.*;
 
 public class SelectionSetting extends Setting {
 
-    private JComboBox<String> selection;
+    public JComboBox<String> selection;
     private String[] values;
 
     public SelectionSetting(String key, Object[] values) {
@@ -34,6 +34,11 @@ public class SelectionSetting extends Setting {
     protected void delete() {
         super.delete();
         values = new String[0];
+    }
+
+    public void setSelected(int i) {
+        if(i < 0 || i >= values.length) return;
+        setValue(values[i]);
     }
 
     @Override

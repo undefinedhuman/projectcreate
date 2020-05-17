@@ -12,7 +12,6 @@ buildscript {
 }
 
 allprojects {
-    apply plugin: "eclipse"
     apply plugin: "idea"
 
     version = '1.0'
@@ -56,6 +55,8 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
+
+        testImplementation 'junit:junit:4.12'
     }
 }
 
@@ -78,6 +79,8 @@ project(":engine") {
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
+
+        testImplementation 'junit:junit:4.12'
     }
 }
 
@@ -90,9 +93,7 @@ project(":editor") {
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-    }
-}
 
-tasks.eclipse.doLast {
-    delete ".project"
+        testImplementation 'junit:junit:4.12'
+    }
 }

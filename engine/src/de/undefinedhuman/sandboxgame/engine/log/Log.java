@@ -40,6 +40,12 @@ public class Log extends Manager {
         createMessage("Info", s.toString());
     }
 
+    public static void test(Object... values) {
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < values.length; i++) s.append(values[i]).append(i < values.length - 1 ? ", " : "");
+        createMessage("Test", s.toString());
+    }
+
     private static void createMessage(String title, Object msg) {
         String message = generateMessage(title, String.valueOf(msg));
         System.out.println(message);

@@ -22,8 +22,10 @@ public class Window extends JFrame {
 
     private ApplicationListener main;
     private LwjglAWTCanvas canvas;
-    private JMenuBar menuBar;
+    public JMenuBar menuBar;
     private Container container;
+
+    public JMenu fileMenu, editorMenu;
 
     public Window() {
 
@@ -32,6 +34,7 @@ public class Window extends JFrame {
         canvas.getCanvas().setBounds(25, 300, 480, 345);
 
         Log.instance = new Log();
+        Log.instance.init();
         setResizable(false);
         setSize(1280, 720);
         container = getContentPane();
@@ -44,7 +47,10 @@ public class Window extends JFrame {
 
         addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosed(WindowEvent e) { System.exit(0); }
+            public void windowClosed(WindowEvent e) {
+                Log.instance.save();
+                System.exit(0);
+            }
         });
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -54,13 +60,13 @@ public class Window extends JFrame {
     private void addMenu() {
         menuBar = new JMenuBar();
 
-        JMenu menuFile = addMenu("File");
-        addMenuItem(menuFile, "Load", e -> editor.load());
-        addMenuItem(menuFile, "Save", e -> editor.save());
+        fileMenu = addMenu("File");
+        addMenuItem(fileMenu, "Load", e -> editor.load());
+        addMenuItem(fileMenu, "Save", e -> editor.save());
 
-        JMenu menuEditor = addMenu("Editor");
-        addMenuItem(menuEditor, "Item", e -> setEditor(EditorType.ITEM));
-        addMenuItem(menuEditor, "Entity", e -> setEditor(EditorType.ENTITY));
+        editorMenu = addMenu("Editor");
+        addMenuItem(editorMenu, "Item", e -> setEditor(EditorType.ITEM));
+        addMenuItem(editorMenu, "Entity", e -> setEditor(EditorType.ENTITY));
 
         setJMenuBar(menuBar);
     }

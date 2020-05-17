@@ -39,7 +39,7 @@ public class FsFile {
     }
 
     private void createNewFile(boolean isDirectory) throws IOException {
-        if (exists()) return;
+        if (file.exists()) return;
         if (!file.getParentFile().exists()) if (!file.getParentFile().mkdirs()) Log.instance.crash();
         if (isDirectory) if (file.mkdir()) Log.info("Successfully created dir: " + file.getPath());
         else Log.instance.crash();

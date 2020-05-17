@@ -24,7 +24,7 @@ public class Setting {
     protected String key;
     protected Object value;
 
-    private JTextField valueField;
+    public JTextField valueField;
     private SettingType type;
 
     public Setting(SettingType type, String key, Object value) {

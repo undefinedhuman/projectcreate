@@ -62,7 +62,7 @@ public class BackgroundManager extends Manager {
         layers[0].update(delta, 5f);
         Entity player = GameManager.instance.player;
         if(player == null) return;
-        speed = Tools.floorBackgroundSpeed(lastX - player.getX()) * ((MovementComponent) player.getComponent(ComponentType.MOVEMENT)).getSpeed();
+        speed = Math.abs(Tools.floorBackgroundSpeed(lastX - player.getX())) * -((MovementComponent) player.getComponent(ComponentType.MOVEMENT)).velocity.x * ((MovementComponent) player.getComponent(ComponentType.MOVEMENT)).getDirection();
         lastX = player.getX();
         for(int i = 1; i < layers.length; i++) layers[i].update(delta, speed);
     }

@@ -5,13 +5,11 @@ import de.undefinedhuman.sandboxgame.engine.entity.Component;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.file.LineWriter;
-import de.undefinedhuman.sandboxgame.engine.utils.math.Vector2i;
 
 public class MovementComponent extends Component {
 
     public Vector2 velocity = new Vector2();
-    public Vector2i previousSlopeTile = new Vector2i();
-    public boolean canJump = false, isJumping = false, isOnSlope = false;
+    public boolean canJump = false, isJumping = false, leftSlope = false, middleSlope = false, rightSlope = false;
 
     private float jumpTans, speed, jumpSpeed, gravity;
     private int direction = 0;
@@ -30,11 +28,11 @@ public class MovementComponent extends Component {
     public float getSpeed() {
         return speed;
     }
+    public int getDirection() {
+        return direction;
+    }
     public float getJumpTans() {
         return jumpTans;
-    }
-    public float getCurrentSpeed() {
-        return direction * speed;
     }
 
     public void setCanJump(boolean canJump) {
