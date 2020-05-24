@@ -19,14 +19,14 @@ public class WorldLayer {
     private static final byte BLOCK_LAYER_ID = 0;
     private static final byte STATE_LAYER_ID = 1;
 
-    public int width, height;
+    public int layerWidth, layerHeight;
     public byte[][][] blockData;
 
     private Color color = new Color();
 
     public WorldLayer(int width, int height) {
-        this.width = width;
-        this.height = height;
+        this.layerWidth = width;
+        this.layerHeight = height;
         blockData = new byte[width][height][2];
     }
 
@@ -63,11 +63,11 @@ public class WorldLayer {
     }
 
     private int calculateXPosition(float x) {
-        return (width + (int) x) % width;
+        return (layerWidth + (int) x) % layerWidth;
     }
 
     private boolean isOutsideYBounds(int y) {
-        return y < 0 || y >= height;
+        return y < 0 || y >= layerHeight;
     }
 
     public void setLayer(String s) {
@@ -79,8 +79,8 @@ public class WorldLayer {
         try {
 
             byte[] temp = new byte[1];
-            for (int x = 0; x < width; x++)
-                for (int y = 0; y < height; y++) {
+            for (int x = 0; x < layerWidth; x++)
+                for (int y = 0; y < layerHeight; y++) {
                     is.read(temp);
                     blockData[x][y][0] = temp[0];
                 }

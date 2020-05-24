@@ -254,8 +254,8 @@ public class WorldManager {
     }
 
     public void checkMap(WorldLayer layer) {
-        for (int i = 0; i < layer.width; i++)
-            for (int j = 0; j < layer.height; j++) if (layer.getBlock(i, j) != 0)
+        for (int i = 0; i < layer.layerWidth; i++)
+            for (int j = 0; j < layer.layerHeight; j++) if (layer.getBlock(i, j) != 0)
                 checkCell(layer, i, j);
     }
 
