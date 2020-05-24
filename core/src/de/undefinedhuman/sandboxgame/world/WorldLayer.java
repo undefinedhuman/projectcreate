@@ -70,29 +70,6 @@ public class WorldLayer {
         return y < 0 || y >= layerHeight;
     }
 
-    public void setLayer(String s) {
-
-        byte[] bytes = Base64Coder.decode(s);
-        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-        InflaterInputStream is = new InflaterInputStream(bais);
-
-        try {
-
-            byte[] temp = new byte[1];
-            for (int x = 0; x < layerWidth; x++)
-                for (int y = 0; y < layerHeight; y++) {
-                    is.read(temp);
-                    blockData[x][y][0] = temp[0];
-                }
-            is.close();
-            bais.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
     public void renderBlock(SpriteBatch batch, Color col, int i, int j) {
 
         Block block = (Block) ItemManager.instance.getItem(getBlock(i, j));
