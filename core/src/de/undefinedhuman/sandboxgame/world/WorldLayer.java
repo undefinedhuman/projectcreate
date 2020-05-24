@@ -17,7 +17,6 @@ import java.util.zip.InflaterInputStream;
 public class WorldLayer {
 
     public int width, height;
-    public boolean isMain;
 
     public byte[][] blocks;
     public byte[][] state;
@@ -25,7 +24,6 @@ public class WorldLayer {
     private Color color = new Color();
 
     public WorldLayer(boolean isMain, int width, int height) {
-        this.isMain = isMain;
         this.width = width;
         this.height = height;
         blocks = new byte[this.width][this.height];
