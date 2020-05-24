@@ -3,16 +3,11 @@ package de.undefinedhuman.sandboxgame.world;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Base64Coder;
 import de.undefinedhuman.sandboxgame.engine.items.type.blocks.Block;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.world.layer.topLayer.TopLayerManager;
 import de.undefinedhuman.sandboxgame.world.layer.topLayer.TopLayerType;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.zip.InflaterInputStream;
 
 public class WorldLayer {
 
@@ -21,8 +16,6 @@ public class WorldLayer {
 
     public int layerWidth, layerHeight;
     public byte[][][] blockData;
-
-    private Color color = new Color();
 
     public WorldLayer(int width, int height) {
         this.layerWidth = width;
@@ -69,6 +62,8 @@ public class WorldLayer {
     private boolean isOutsideYBounds(int y) {
         return y < 0 || y >= layerHeight;
     }
+
+    private Color color = new Color();
 
     public void renderBlock(SpriteBatch batch, Color col, int i, int j) {
 
