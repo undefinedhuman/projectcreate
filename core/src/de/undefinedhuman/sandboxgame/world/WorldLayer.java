@@ -41,7 +41,7 @@ public class WorldLayer {
 
     public void setBlock(int x, int y, byte cell) {
         if(isOutsideYBounds(y)) return;
-        this.blockData[calculateXPosition(x)][y][BLOCK_LAYER_ID] = cell;
+        setBlockData(x, y, BLOCK_LAYER_ID, cell);
     }
 
     public byte getState(int x, int y) {
@@ -51,11 +51,15 @@ public class WorldLayer {
 
     public void setState(int x, int y, byte state) {
         if(isOutsideYBounds(y)) return;
-        this.blockData[calculateXPosition(x)][y][STATE_LAYER_ID] = state;
+        setBlockData(x, y, STATE_LAYER_ID, state);
     }
 
     private byte getBlockData(int x, int y, byte layerID) {
         return this.blockData[calculateXPosition(x)][y][layerID];
+    }
+
+    private void setBlockData(int x, int y, byte layerID, byte data) {
+        this.blockData[calculateXPosition(x)][y][layerID] = data;
     }
 
     private int calculateXPosition(float x) {
