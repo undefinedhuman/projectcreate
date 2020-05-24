@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="file.FileIOTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2020-05-18T07:48:36" hostname="Alexanders-MBP.fritz.box" time="0.125">
+  <properties/>
+  <testcase name="FileExists()" classname="file.FileIOTest" time="0.061"/>
+  <testcase name="FileWritingBase64()" classname="file.FileIOTest" time="0.035"/>
+  <testcase name="FileWriting()" classname="file.FileIOTest" time="0.021"/>
+  <system-out><![CDATA[[18-05-2020 - 09-48-36] [Info] Deleted 0 log files!
+[18-05-2020 - 09-48-36] [Info] Successfully created 18-05-2020 - 09-48-36.txt
+[18-05-2020 - 09-48-36] [Info] Log file successfully created!
+[18-05-2020 - 09-48-36] [Info] Successfully created testIO.file
+[18-05-2020 - 09-48-36] [Test] File IO Exists - PASSED
+[18-05-2020 - 09-48-36] [Test] File IO with Base64 - PASSED
+[18-05-2020 - 09-48-36] [Test] File IO - PASSED
+[18-05-2020 - 09-48-36] [Info] Successfully deleted: testIO.file
+[18-05-2020 - 09-48-36] [Info] Log file successfully saved!
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

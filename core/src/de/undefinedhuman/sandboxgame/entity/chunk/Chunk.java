@@ -20,7 +20,7 @@ public class Chunk {
 
     public void render(SpriteBatch batch, int renderOffset) {
         for(EntityType type : EntityType.values()) {
-            ArrayList<Entity> entityList = entitiesByType.get(type);
+            ArrayList<Entity> entityList = entitiesByType.getValuesWithKey(type);
             if(entityList == null) continue;
             for(Entity entity : entityList)
                 RenderSystem.instance.render(batch, entity, renderOffset);
@@ -29,18 +29,18 @@ public class Chunk {
 
     public void addEntity(Entity entity) {
         if(entity == null || entitiesByType.hasValue(entity.getType(), entity)) return;
-        this.entitiesByType.add(entity.getType(), entity);
+        this.entitiesByType.addValuesWithKey(entity.getType(), entity);
         if (entity.hasComponent(ComponentType.COLLISION)) entitiesForCollision.add(entity);
     }
 
     public void removeEntity(Entity entity) {
         if(entity == null || !entitiesByType.hasValue(entity.getType(), entity)) return;
         if (entity.hasComponent(ComponentType.COLLISION)) entitiesForCollision.remove(entity);
-        entitiesByType.remove(entity.getType(), entity);
+        entitiesByType.removeValue(entity.getType(), entity);
     }
 
     public Collection<Entity> getEntitiesByType(EntityType type) {
-        return entitiesByType.get(type);
+        return entitiesByType.getValuesWithKey(type);
     }
 
     public ArrayList<Entity> getEntitiesInRangeForCollision(Vector4 bounds) {
@@ -54,7 +54,7 @@ public class Chunk {
 
     public void delete() {
         entitiesForCollision.clear();
-        entitiesByType.clear();
+        entitiesByType.clearMap();
     }
 
 }

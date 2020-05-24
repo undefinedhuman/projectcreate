@@ -125,14 +125,14 @@ public class WorldGenerator {
             currentHeight = 400;
             for (int y = 0; y < currentHeight; y++) {
                 currentY = tempY[y];
-                if (currentNoise.select(0.5f, isTransition ? Tools.lerp(currentNoise.gradient(currentX + biomeSetting.getTransition(), y, currentHeight), nextNoise.gradient(nextBiomeID == 0 ? currentX + biomeSetting.getTransition() - world.width : currentX + biomeSetting.getTransition(), y, currentHeight), biomeTransitions[transitionX]) : currentNoise.gradient(currentX + biomeSetting.getTransition(), y, currentHeight)) && caveNoise.select(borderSizes[currentX] * caveHeight[y], caveNoise.fractal(currentX, currentY)))
-                    world.mainLayer.blocks[currentX][currentY] = getBlockID(world.mainLayer, currentX, currentY, borderSizes, biomes[isTransition && currentNoise.select(0.5f, Tools.lerp(0, 1, biomeTransitions[transitionX] + currentNoise.getInterpolatedNoise(currentX, y))) ? nextBiomeID : biomeID], list);
+                if (currentNoise.select(0.5f, isTransition ? Tools.lerp(currentNoise.gradient(currentX + biomeSetting.getTransition(), y, currentHeight), nextNoise.gradient(nextBiomeID == 0 ? currentX + biomeSetting.getTransition() - world.width : currentX + biomeSetting.getTransition(), y, currentHeight), biomeTransitions[transitionX]) : currentNoise.gradient(currentX + biomeSetting.getTransition(), y, currentHeight)) && caveNoise.select(borderSizes[currentX] * caveHeight[y], caveNoise.calculateFractalNoise(currentX, currentY)))
+                    world.mainLayer.blocks[currentX][currentY] = getBlockID(world.mainLayer, currentX, currentY, borderSizes, biomes[isTransition && currentNoise.select(0.5f, Tools.lerp(0, 1, biomeTransitions[transitionX] + currentNoise.calculateInterpolatedNoise(currentX, y))) ? nextBiomeID : biomeID], list);
             }
 
             currentHeight = 800;
             for (int y = 0; y <= currentHeight; y++) {
-                if (caveNoise.select(borderSizes[currentX] * 0.06f, caveNoise.fractal(currentX, y)))
-                    world.mainLayer.blocks[currentX][y] = getBlockID(world.mainLayer, currentX, y, borderSizes, biomes[isTransition && currentNoise.select(0.5f, Tools.lerp(0, 1, biomeTransitions[transitionX] + currentNoise.getInterpolatedNoise(currentX, y))) ? nextBiomeID : biomeID], list);
+                if (caveNoise.select(borderSizes[currentX] * 0.06f, caveNoise.calculateFractalNoise(currentX, y)))
+                    world.mainLayer.blocks[currentX][y] = getBlockID(world.mainLayer, currentX, y, borderSizes, biomes[isTransition && currentNoise.select(0.5f, Tools.lerp(0, 1, biomeTransitions[transitionX] + currentNoise.calculateInterpolatedNoise(currentX, y))) ? nextBiomeID : biomeID], list);
             }
 
         }
@@ -155,7 +155,7 @@ public class WorldGenerator {
         for (Layer layer : biome.getLayerList().getLayers()) if (layer.isMaxY(worldLayer, x, y)) maxLayer = layer;
         byte blockID = maxLayer != null ? maxLayer.blockID : 0;
         if (blockID != 0) for (Shift shift : shiftList.getShifts())
-            if (Tools.contains(blockID, shift.blockFilter) && shift.getNoise().select(shift.threshold, borderSizes[x] * shift.getNoise().fractal(x, y)))
+            if (Tools.contains(blockID, shift.blockFilter) && shift.getNoise().select(shift.threshold, borderSizes[x] * shift.getNoise().calculateFractalNoise(x, y)))
                 blockID = shift.blockID;
         return blockID;
     }

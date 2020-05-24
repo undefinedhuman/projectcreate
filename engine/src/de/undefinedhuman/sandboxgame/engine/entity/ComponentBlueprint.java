@@ -13,7 +13,6 @@ import java.util.HashMap;
 public abstract class ComponentBlueprint {
 
     protected ComponentType type;
-
     protected SettingsList settings = new SettingsList();
 
     public ComponentBlueprint() {}

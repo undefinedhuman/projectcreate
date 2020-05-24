@@ -100,7 +100,7 @@ public class NoiseTest extends JFrame {
                 float dis = new Vector2(x, y).sub(new Vector2(320, 320)).len();
                 if(dis >= 50f) continue;
                 dis = 1f - dis / 50f;
-                float k = noise.select(threshold, (1f - noise.fractal(x, y)) * dis) ? 1 : 0;
+                float k = noise.select(threshold, (1f - noise.calculateFractalNoise(x, y)) * dis) ? 1 : 0;
                 int a = 255, r = (int) (k * 255f), g = (int) (k * 255f), b = (int) (k * 255f);
                 int p = (a << 24) | (r << 16) | (g << 8) | b;
                 img.setRGB(x, y, p);
