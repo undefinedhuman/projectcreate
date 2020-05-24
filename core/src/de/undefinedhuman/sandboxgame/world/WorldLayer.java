@@ -44,14 +44,12 @@ public class WorldLayer {
     }
 
     public byte getState(int x, int y) {
-        if(getBlock(x, y) == 0) return 0;
-        if(isOutsideYBounds(y)) return 0;
+        if(getBlock(x, y) == 0 || isOutsideYBounds(y)) return 0;
         return this.state[calculateXPosition(x)][y];
     }
 
     public void setState(int x, int y, byte state) {
         if(isOutsideYBounds(y)) return;
-        x = calculateXPosition(x);
         this.state[calculateXPosition(x)][y] = state;
     }
 
