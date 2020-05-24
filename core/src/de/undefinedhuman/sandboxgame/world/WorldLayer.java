@@ -39,9 +39,9 @@ public class WorldLayer {
         return getBlockData(x, y, BLOCK_LAYER_ID);
     }
 
-    public void setBlock(int x, int y, byte cell) {
+    public void setBlock(int x, int y, byte block) {
         if(isOutsideYBounds(y)) return;
-        setBlockData(x, y, BLOCK_LAYER_ID, cell);
+        setBlockData(x, y, BLOCK_LAYER_ID, block);
     }
 
     public byte getState(int x, int y) {
