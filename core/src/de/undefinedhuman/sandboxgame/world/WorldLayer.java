@@ -65,18 +65,18 @@ public class WorldLayer {
 
     private Color color = new Color();
 
-    public void renderBlock(SpriteBatch batch, Color color, int x, int j) {
+    public void renderBlock(SpriteBatch batch, Color color, int x, int y) {
 
-        Block block = (Block) ItemManager.instance.getItem(getBlock(x, j));
+        Block block = (Block) ItemManager.instance.getItem(getBlock(x, y));
 
         if (block != null && block.id.getInt() != 0) {
 
             this.color.set(1 * color.r, 1 * color.g, 1 * color.b, 1f);
             batch.setColor(this.color);
-            batch.draw(block.blockTextures[getState(x, j)], x * Variables.BLOCK_SIZE, j * Variables.BLOCK_SIZE, Variables.BLOCK_SIZE, Variables.BLOCK_SIZE);
+            batch.draw(block.blockTextures[getState(x, y)], x * Variables.BLOCK_SIZE, y * Variables.BLOCK_SIZE, Variables.BLOCK_SIZE, Variables.BLOCK_SIZE);
 
-            if (block.id.getInt() == 3 && getBlock(x, j + 1) == 0)
-                TopLayerManager.instance.render(batch, x, j, TopLayerType.GRASS, getBlock(x - 1, j) != 0, getBlock(x + 1, j) != 0);
+            if (block.id.getInt() == 3 && getBlock(x, y + 1) == 0)
+                TopLayerManager.instance.render(batch, x, y, TopLayerType.GRASS, getBlock(x - 1, y) != 0, getBlock(x + 1, y) != 0);
 
         }
 
