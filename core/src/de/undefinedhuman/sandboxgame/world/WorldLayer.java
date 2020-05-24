@@ -35,7 +35,7 @@ public class WorldLayer {
 
     public void setBlock(int x, int y, byte cell) {
 
-        if(y < 0 || y >= height) return;
+        if(isOutsideYBounds(y, height)) return;
 
         if ((x < 0) || (x >= width)) {
 
@@ -51,7 +51,7 @@ public class WorldLayer {
 
     public void setState(int x, int y, byte state) {
 
-        if(y < 0 || y >= height) return;
+        if(isOutsideYBounds(y, height)) return;
 
         if ((x < 0) || (x >= width)) {
 
@@ -71,7 +71,7 @@ public class WorldLayer {
     }
 
     public byte getBlock(int x, int y) {
-        if(y < 0 || y >= height) return 0;
+        if(isOutsideYBounds(y, height)) return 0;
         if ((x < 0) || (x >= this.width)) x = getPositionX(x);
         return this.blocks[x][y];
     }
@@ -79,11 +79,15 @@ public class WorldLayer {
     public byte getState(int x, int y) {
 
         if(getBlock(x, y) == 0) return 0;
-        if(y < 0 || y >= height) return 0;
+        if(isOutsideYBounds(y, height)) return 0;
 
         x = getPositionX(x);
         return this.state[x][y];
 
+    }
+
+    private boolean isOutsideYBounds(int y, int height) {
+        return y < 0 || y >= height;
     }
 
     public void setLayer(String s) {
