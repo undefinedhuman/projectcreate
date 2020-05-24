@@ -36,15 +36,8 @@ public class WorldLayer {
     public void setBlock(int x, int y, byte cell) {
 
         if(isOutsideYBounds(y)) return;
-
-        if ((x < 0) || (x >= width)) {
-
-            x = getPositionX(x);
-            if (this.blocks[x][y] != cell) {
-                this.blocks[x][y] = cell;
-            }
-
-        } else if ((this.blocks[x][y] != cell)) {
+        x = getPositionX(x);
+        if (this.blocks[x][y] != cell) {
             this.blocks[x][y] = cell;
         }
     }
@@ -52,15 +45,8 @@ public class WorldLayer {
     public void setState(int x, int y, byte state) {
 
         if(isOutsideYBounds(y)) return;
-
-        if ((x < 0) || (x >= width)) {
-
-            x = getPositionX(x);
-            if (this.state[x][y] != state) {
-                this.state[x][y] = state;
-            }
-
-        } else if ((this.state[x][y] != state)) {
+        x = getPositionX(x);
+        if (this.state[x][y] != state) {
             this.state[x][y] = state;
         }
 
@@ -72,18 +58,15 @@ public class WorldLayer {
 
     public byte getBlock(int x, int y) {
         if(isOutsideYBounds(y)) return 0;
-        if ((x < 0) || (x >= this.width)) x = getPositionX(x);
+        x = getPositionX(x);
         return this.blocks[x][y];
     }
 
     public byte getState(int x, int y) {
-
         if(getBlock(x, y) == 0) return 0;
         if(isOutsideYBounds(y)) return 0;
-
         x = getPositionX(x);
         return this.state[x][y];
-
     }
 
     private boolean isOutsideYBounds(int y) {
