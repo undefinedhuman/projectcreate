@@ -21,6 +21,9 @@ public class WorldLayer {
 
     private Color color = new Color();
 
+    private static final byte BLOCK_LAYER_ID = 0;
+    private static final byte STATE_LAYER_ID = 1;
+
     public WorldLayer(int width, int height) {
         this.width = width;
         this.height = height;
@@ -33,22 +36,22 @@ public class WorldLayer {
 
     public byte getBlock(int x, int y) {
         if(isOutsideYBounds(y)) return 0;
-        return this.blockData[calculateXPosition(x)][y][0];
+        return this.blockData[calculateXPosition(x)][y][BLOCK_LAYER_ID];
     }
 
     public void setBlock(int x, int y, byte cell) {
         if(isOutsideYBounds(y)) return;
-        this.blockData[calculateXPosition(x)][y][0] = cell;
+        this.blockData[calculateXPosition(x)][y][BLOCK_LAYER_ID] = cell;
     }
 
     public byte getState(int x, int y) {
         if(getBlock(x, y) == 0 || isOutsideYBounds(y)) return 0;
-        return this.blockData[calculateXPosition(x)][y][1];
+        return this.blockData[calculateXPosition(x)][y][STATE_LAYER_ID];
     }
 
     public void setState(int x, int y, byte state) {
         if(isOutsideYBounds(y)) return;
-        this.blockData[calculateXPosition(x)][y][1] = state;
+        this.blockData[calculateXPosition(x)][y][STATE_LAYER_ID] = state;
     }
 
     private int calculateXPosition(float x) {
