@@ -65,14 +65,14 @@ public class WorldLayer {
 
     private Color color = new Color();
 
-    public void renderBlock(SpriteBatch batch, Color col, int i, int j) {
+    public void renderBlock(SpriteBatch batch, Color color, int i, int j) {
 
         Block block = (Block) ItemManager.instance.getItem(getBlock(i, j));
 
         if (block != null && block.id.getInt() != 0) {
 
-            color.set(1 * col.r, 1 * col.g, 1 * col.b, 1f);
-            batch.setColor(color);
+            this.color.set(1 * color.r, 1 * color.g, 1 * color.b, 1f);
+            batch.setColor(this.color);
             batch.draw(block.blockTextures[getState(i, j)], i * Variables.BLOCK_SIZE, j * Variables.BLOCK_SIZE, Variables.BLOCK_SIZE, Variables.BLOCK_SIZE);
 
             if (block.id.getInt() == 3 && getBlock(i, j + 1) == 0)
