@@ -17,16 +17,14 @@ import java.util.zip.InflaterInputStream;
 public class WorldLayer {
 
     public int width, height;
-    public byte[][] blocks;
-    public byte[][] state;
+    public byte[][][] blockData;
 
     private Color color = new Color();
 
     public WorldLayer(int width, int height) {
         this.width = width;
         this.height = height;
-        blocks = new byte[this.width][this.height];
-        state = new byte[this.width][this.height];
+        blockData = new byte[width][height][2];
     }
 
     public byte getBlock(Vector2 pos) {
@@ -35,22 +33,22 @@ public class WorldLayer {
 
     public byte getBlock(int x, int y) {
         if(isOutsideYBounds(y)) return 0;
-        return this.blocks[calculateXPosition(x)][y];
+        return this.blockData[calculateXPosition(x)][y][0];
     }
 
     public void setBlock(int x, int y, byte cell) {
         if(isOutsideYBounds(y)) return;
-        this.blocks[calculateXPosition(x)][y] = cell;
+        this.blockData[calculateXPosition(x)][y][0] = cell;
     }
 
     public byte getState(int x, int y) {
         if(getBlock(x, y) == 0 || isOutsideYBounds(y)) return 0;
-        return this.state[calculateXPosition(x)][y];
+        return this.blockData[calculateXPosition(x)][y][1];
     }
 
     public void setState(int x, int y, byte state) {
         if(isOutsideYBounds(y)) return;
-        this.state[calculateXPosition(x)][y] = state;
+        this.blockData[calculateXPosition(x)][y][1] = state;
     }
 
     private int calculateXPosition(float x) {
@@ -73,7 +71,7 @@ public class WorldLayer {
             for (int x = 0; x < width; x++)
                 for (int y = 0; y < height; y++) {
                     is.read(temp);
-                    blocks[x][y] = temp[0];
+                    blockData[x][y][0] = temp[0];
                 }
             is.close();
             bais.close();

@@ -271,7 +271,7 @@ public class Tools extends de.undefinedhuman.sandboxgame.engine.utils.Tools {
         switch (trans) {
 
             case TOP:
-                return y > maxY && (worldLayer.blocks[x][y + 2] == 0 || worldLayer.blocks[x][y + 1] == 0);
+                return y > maxY && (worldLayer.blockData[x][y + 2][0] == 0 || worldLayer.blockData[x][y + 1][0] == 0);
             case SIN:
                 return y < (maxY + (int) (Math.sin(x * 50) * 5));
             case RANDOM:

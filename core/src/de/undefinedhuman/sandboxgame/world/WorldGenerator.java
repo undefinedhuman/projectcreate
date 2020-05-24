@@ -126,13 +126,13 @@ public class WorldGenerator {
             for (int y = 0; y < currentHeight; y++) {
                 currentY = tempY[y];
                 if (currentNoise.select(0.5f, isTransition ? Tools.lerp(currentNoise.gradient(currentX + biomeSetting.getTransition(), y, currentHeight), nextNoise.gradient(nextBiomeID == 0 ? currentX + biomeSetting.getTransition() - world.width : currentX + biomeSetting.getTransition(), y, currentHeight), biomeTransitions[transitionX]) : currentNoise.gradient(currentX + biomeSetting.getTransition(), y, currentHeight)) && caveNoise.select(borderSizes[currentX] * caveHeight[y], caveNoise.calculateFractalNoise(currentX, currentY)))
-                    world.mainLayer.blocks[currentX][currentY] = getBlockID(world.mainLayer, currentX, currentY, borderSizes, biomes[isTransition && currentNoise.select(0.5f, Tools.lerp(0, 1, biomeTransitions[transitionX] + currentNoise.calculateInterpolatedNoise(currentX, y))) ? nextBiomeID : biomeID], list);
+                    world.mainLayer.setBlock(currentX, currentY, getBlockID(world.mainLayer, currentX, currentY, borderSizes, biomes[isTransition && currentNoise.select(0.5f, Tools.lerp(0, 1, biomeTransitions[transitionX] + currentNoise.calculateInterpolatedNoise(currentX, y))) ? nextBiomeID : biomeID], list));
             }
 
             currentHeight = 800;
             for (int y = 0; y <= currentHeight; y++) {
                 if (caveNoise.select(borderSizes[currentX] * 0.06f, caveNoise.calculateFractalNoise(currentX, y)))
-                    world.mainLayer.blocks[currentX][y] = getBlockID(world.mainLayer, currentX, y, borderSizes, biomes[isTransition && currentNoise.select(0.5f, Tools.lerp(0, 1, biomeTransitions[transitionX] + currentNoise.calculateInterpolatedNoise(currentX, y))) ? nextBiomeID : biomeID], list);
+                    world.mainLayer.setBlock(currentX, y, getBlockID(world.mainLayer, currentX, y, borderSizes, biomes[isTransition && currentNoise.select(0.5f, Tools.lerp(0, 1, biomeTransitions[transitionX] + currentNoise.calculateInterpolatedNoise(currentX, y))) ? nextBiomeID : biomeID], list));
             }
 
         }
