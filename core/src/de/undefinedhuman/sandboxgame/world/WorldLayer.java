@@ -16,13 +16,13 @@ import java.util.zip.InflaterInputStream;
 
 public class WorldLayer {
 
+    private static final byte BLOCK_LAYER_ID = 0;
+    private static final byte STATE_LAYER_ID = 1;
+
     public int width, height;
     public byte[][][] blockData;
 
     private Color color = new Color();
-
-    private static final byte BLOCK_LAYER_ID = 0;
-    private static final byte STATE_LAYER_ID = 1;
 
     public WorldLayer(int width, int height) {
         this.width = width;
@@ -36,7 +36,7 @@ public class WorldLayer {
 
     public byte getBlock(int x, int y) {
         if(isOutsideYBounds(y)) return 0;
-        return this.blockData[calculateXPosition(x)][y][BLOCK_LAYER_ID];
+        return getBlockData(x, y, BLOCK_LAYER_ID);
     }
 
     public void setBlock(int x, int y, byte cell) {
@@ -46,12 +46,16 @@ public class WorldLayer {
 
     public byte getState(int x, int y) {
         if(getBlock(x, y) == 0 || isOutsideYBounds(y)) return 0;
-        return this.blockData[calculateXPosition(x)][y][STATE_LAYER_ID];
+        return getBlockData(x, y, STATE_LAYER_ID);
     }
 
     public void setState(int x, int y, byte state) {
         if(isOutsideYBounds(y)) return;
         this.blockData[calculateXPosition(x)][y][STATE_LAYER_ID] = state;
+    }
+
+    private byte getBlockData(int x, int y, byte layerID) {
+        return this.blockData[calculateXPosition(x)][y][layerID];
     }
 
     private int calculateXPosition(float x) {
