@@ -40,5 +40,5 @@ public class Variables {
     public static final int HOTBAR_OFFSET = 6;
 
     // Editor
-    public static final int TEXTURE_OFFSET_PLAYER = 64;
+    public static final int PLAYER_TEXTURE_OFFSET = 64;
 }

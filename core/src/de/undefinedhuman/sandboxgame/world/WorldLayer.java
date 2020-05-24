@@ -16,7 +16,6 @@ import java.util.zip.InflaterInputStream;
 
 public class WorldLayer {
 
-    // TODO Refactor whole class
     public int width, height;
     public boolean isMain;
 
@@ -33,63 +32,54 @@ public class WorldLayer {
         state = new byte[this.width][this.height];
     }
 
-    public byte getBlock(Vector2 pos) {
-        if (pos.y < 0 || pos.y >= height) return 0;
-        return this.blocks[(width + getPositionX(pos.x)) % width][(int) pos.y];
-    }
-
     private int getPositionX(float x) {
         return (width + (int) x) % width;
     }
 
     public void setBlock(int x, int y, byte cell) {
-        if (y < 0 || y >= height) return;
-        blocks[getPositionX(x)][y] = cell;
+
+        if (!(y < 0 || y >= height)) {
+
+            if ((x < 0) || (x >= width)) {
+
+                x = getPositionX(x);
+                if (this.blocks[x][y] != cell) {
+                    this.blocks[x][y] = cell;
+                }
+
+            } else if ((this.blocks[x][y] != cell)) {
+                this.blocks[x][y] = cell;
+            }
+
+        }
     }
 
-    public WorldLayer setState(int x, int y, int state) {
+    public void setState(int x, int y, byte state) {
 
-        if (!(y <= 0 || y >= height)) {
+        if (!(y < 0 || y >= height)) {
 
             if ((x < 0) || (x >= width)) {
 
                 x = getPositionX(x);
                 if (this.state[x][y] != state) {
-                    this.state[x][y] = (byte) (state);
+                    this.state[x][y] = state;
                 }
 
-            } else if ((this.state[x][y] != (byte) state)) {
-                this.state[x][y] = (byte) (state);
+            } else if ((this.state[x][y] != state)) {
+                this.state[x][y] = state;
             }
 
         }
 
-        return this;
-
     }
 
-    public void renderBlock(SpriteBatch batch, Color col, int i, int j) {
-
-        Block block = (Block) ItemManager.instance.getItem(getBlock(i, j));
-
-        if (block != null && block.id.getInt() != 0) {
-
-            // TODO Refactor this color thing
-
-            color.set(1 * col.r, 1 * col.g, 1 * col.b, 1f);
-            batch.setColor(color);
-            batch.draw(block.blockTextures[getState(i, j)], i * Variables.BLOCK_SIZE, j * Variables.BLOCK_SIZE, Variables.BLOCK_SIZE, Variables.BLOCK_SIZE);
-
-            if (block.id.getInt() == 3 && getBlock(i, j + 1) == 0)
-                TopLayerManager.instance.render(batch, i, j, TopLayerType.GRASS, getBlock(i - 1, j) != 0, getBlock(i + 1, j) != 0);
-
-        }
-
+    public byte getBlock(Vector2 pos) {
+        return this.getBlock((int) pos.x, (int) pos.y);
     }
 
     public byte getBlock(int x, int y) {
 
-        if (y < height - 1 && y >= 0) {
+        if (y < height && y >= 0) {
             if ((x < 0) || (x >= this.width)) x = getPositionX(x);
             return this.blocks[x][y];
         }
@@ -103,7 +93,7 @@ public class WorldLayer {
         if(getBlock(x, y) == 0) return 0;
 
         x = getPositionX(x);
-        if (y < height - 1 && y > 0) {
+        if (y < height && y >= 0) {
             return this.state[x][y];
         } else {
             return 0;
@@ -130,6 +120,23 @@ public class WorldLayer {
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+    }
+
+    public void renderBlock(SpriteBatch batch, Color col, int i, int j) {
+
+        Block block = (Block) ItemManager.instance.getItem(getBlock(i, j));
+
+        if (block != null && block.id.getInt() != 0) {
+
+            color.set(1 * col.r, 1 * col.g, 1 * col.b, 1f);
+            batch.setColor(color);
+            batch.draw(block.blockTextures[getState(i, j)], i * Variables.BLOCK_SIZE, j * Variables.BLOCK_SIZE, Variables.BLOCK_SIZE, Variables.BLOCK_SIZE);
+
+            if (block.id.getInt() == 3 && getBlock(i, j + 1) == 0)
+                TopLayerManager.instance.render(batch, i, j, TopLayerType.GRASS, getBlock(i - 1, j) != 0, getBlock(i + 1, j) != 0);
+
         }
 
     }

@@ -198,10 +198,10 @@ public class WorldManager {
 
     private void checkCell(WorldLayer layer, int x, int y) {
         if(isTransparent(layer.getBlock(x, y))) return;
-        layer.setState(x, y, isTransparent(layer, x-1, y, 1) +
-                             isTransparent(layer, x, y+1, 2) +
-                             isTransparent(layer, x+1, y, 4) +
-                             isTransparent(layer, x, y-1, 8));
+        layer.setState(x, y, (byte) (isTransparent(layer, x-1, y, 1) +
+                                     isTransparent(layer, x, y+1, 2) +
+                                     isTransparent(layer, x+1, y, 4) +
+                                     isTransparent(layer, x, y-1, 8)));
     }
 
     public int isTransparent(WorldLayer layer, int x, int y, int value) {
@@ -255,7 +255,8 @@ public class WorldManager {
 
     public void checkMap(WorldLayer layer) {
         for (int i = 0; i < layer.width; i++)
-            for (int j = 0; j < layer.height; j++) if (layer.getBlock(i, j) != 0) checkCell(layer, i, j);
+            for (int j = 0; j < layer.height; j++) if (layer.getBlock(i, j) != 0)
+                checkCell(layer, i, j);
     }
 
     public boolean isTransparent(byte b) {
