@@ -18,7 +18,7 @@ public class WorldLayerTest {
 
     @BeforeEach
     private void initEach() {
-        layer = new WorldLayer(false, 10, 10);
+        layer = new WorldLayer(10, 10);
         for(int i = 0; i < 10; i++) for(int j = 0; j < 10; j++) {
             layer.blocks[i][j] = (byte) (i + j);
             layer.state[i][j] = (byte) (i + j);

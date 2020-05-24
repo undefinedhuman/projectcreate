@@ -24,8 +24,8 @@ public class World {
     public World(String name, int maxHeight, int width, int height, int seed) {
 
         this.random = new Random(seed);
-        this.mainLayer = new WorldLayer(true, width, height);
-        this.backLayer = new WorldLayer(false, width, height);
+        this.mainLayer = new WorldLayer(width, height);
+        this.backLayer = new WorldLayer(width, height);
 
         this.name = name;
         this.width = width;

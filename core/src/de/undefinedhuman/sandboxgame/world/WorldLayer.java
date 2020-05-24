@@ -23,7 +23,7 @@ public class WorldLayer {
 
     private Color color = new Color();
 
-    public WorldLayer(boolean isMain, int width, int height) {
+    public WorldLayer(int width, int height) {
         this.width = width;
         this.height = height;
         blocks = new byte[this.width][this.height];
