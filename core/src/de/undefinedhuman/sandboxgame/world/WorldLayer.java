@@ -35,37 +35,33 @@ public class WorldLayer {
 
     public void setBlock(int x, int y, byte cell) {
 
-        if (!(y < 0 || y >= height)) {
+        if(y < 0 || y >= height) return;
 
-            if ((x < 0) || (x >= width)) {
+        if ((x < 0) || (x >= width)) {
 
-                x = getPositionX(x);
-                if (this.blocks[x][y] != cell) {
-                    this.blocks[x][y] = cell;
-                }
-
-            } else if ((this.blocks[x][y] != cell)) {
+            x = getPositionX(x);
+            if (this.blocks[x][y] != cell) {
                 this.blocks[x][y] = cell;
             }
 
+        } else if ((this.blocks[x][y] != cell)) {
+            this.blocks[x][y] = cell;
         }
     }
 
     public void setState(int x, int y, byte state) {
 
-        if (!(y < 0 || y >= height)) {
+        if(y < 0 || y >= height) return;
 
-            if ((x < 0) || (x >= width)) {
+        if ((x < 0) || (x >= width)) {
 
-                x = getPositionX(x);
-                if (this.state[x][y] != state) {
-                    this.state[x][y] = state;
-                }
-
-            } else if ((this.state[x][y] != state)) {
+            x = getPositionX(x);
+            if (this.state[x][y] != state) {
                 this.state[x][y] = state;
             }
 
+        } else if ((this.state[x][y] != state)) {
+            this.state[x][y] = state;
         }
 
     }
@@ -75,26 +71,18 @@ public class WorldLayer {
     }
 
     public byte getBlock(int x, int y) {
-
-        if (y < height && y >= 0) {
-            if ((x < 0) || (x >= this.width)) x = getPositionX(x);
-            return this.blocks[x][y];
-        }
-
-        return 0;
-
+        if(y < 0 || y >= height) return 0;
+        if ((x < 0) || (x >= this.width)) x = getPositionX(x);
+        return this.blocks[x][y];
     }
 
     public byte getState(int x, int y) {
 
         if(getBlock(x, y) == 0) return 0;
+        if(y < 0 || y >= height) return 0;
 
         x = getPositionX(x);
-        if (y < height && y >= 0) {
-            return this.state[x][y];
-        } else {
-            return 0;
-        }
+        return this.state[x][y];
 
     }
 
