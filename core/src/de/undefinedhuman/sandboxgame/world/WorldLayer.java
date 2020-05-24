@@ -17,7 +17,6 @@ import java.util.zip.InflaterInputStream;
 public class WorldLayer {
 
     public int width, height;
-
     public byte[][] blocks;
     public byte[][] state;
 
