@@ -37,19 +37,13 @@ public class WorldLayer {
 
         if(isOutsideYBounds(y)) return;
         x = getPositionX(x);
-        if (this.blocks[x][y] != cell) {
-            this.blocks[x][y] = cell;
-        }
+        this.blocks[x][y] = cell;
     }
 
     public void setState(int x, int y, byte state) {
-
         if(isOutsideYBounds(y)) return;
         x = getPositionX(x);
-        if (this.state[x][y] != state) {
-            this.state[x][y] = state;
-        }
-
+        this.state[x][y] = state;
     }
 
     public byte getBlock(Vector2 pos) {
