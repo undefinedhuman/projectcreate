@@ -5,9 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL30;
 import de.undefinedhuman.sandboxgame.engine.config.ConfigManager;
 import de.undefinedhuman.sandboxgame.engine.config.SettingsManager;
-import de.undefinedhuman.sandboxgame.engine.file.FileReader;
-import de.undefinedhuman.sandboxgame.engine.file.FsFile;
-import de.undefinedhuman.sandboxgame.engine.file.Paths;
 import de.undefinedhuman.sandboxgame.engine.language.LanguageManager;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.engine.resources.SoundManager;
@@ -111,13 +108,6 @@ public class Main extends Game {
 
         TopLayerManager.instance = new TopLayerManager();
         TopLayerManager.instance.load();
-
-        FsFile fsFile = new FsFile(Paths.ENTITY_FOLDER, "-1/settings.entity", false);
-        FileReader reader = fsFile.getFileReader(true);
-        while(reader.nextLine() != null) {
-            System.out.println(reader.getData());
-        }
-        reader.close();
     }
 
 }

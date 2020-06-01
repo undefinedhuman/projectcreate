@@ -8,7 +8,6 @@ import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.EntityManager;
 import de.undefinedhuman.sandboxgame.entity.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.sandboxgame.gui.GuiManager;
-import de.undefinedhuman.sandboxgame.gui.text.Text;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.item.drop.DropItemManager;
@@ -25,13 +24,10 @@ public class GameManager {
 
     private ManagerList manager;
 
-    private Text text;
-
     public GameManager() {
         batch = new SpriteBatch();
         CameraManager.instance = new CameraManager();
         manager = new ManagerList();
-        text = new Text("");
         //CraftingInventory craftingInventory = new CraftingInventory();
     }
 
@@ -47,8 +43,6 @@ public class GameManager {
 
         manager.resize(width, height);
 
-        text.resize(width, height);
-
         BackgroundManager.instance.resize(width, height);
 
         GuiManager.instance.resize(width, height);
@@ -61,10 +55,6 @@ public class GameManager {
         //if (!ClientManager.instance.isConnected()) Main.instance.setScreen(MenuScreen.instance);
         //ClientManager.instance.update(delta);
         manager.update(delta);
-
-        text.update(delta);
-        text.setText(player.getPosition().x + ", " + player.getChunkPosition().x);
-        text.setPosition("r0.1f", "r0.9f");
 
         if (projectile != null) projectile.update(delta);
 
@@ -86,7 +76,7 @@ public class GameManager {
         batch.begin();
         BackgroundManager.instance.render(batch, CameraManager.gameCamera);
         World.instance.computeBounds(CameraManager.gameCamera);
-        //World.instance.renderBackLayer(gameBatch);
+        // World.instance.renderBackLayer(gameBatch);
         EntityManager.instance.render(batch, CameraManager.gameCamera);
         DropItemManager.instance.render(batch);
         if (projectile != null) projectile.render(batch);
@@ -95,7 +85,6 @@ public class GameManager {
 
         batch.setProjectionMatrix(CameraManager.guiCamera.combined);
         batch.begin();
-        text.render(batch, CameraManager.guiCamera);
         GuiManager.instance.renderGui(batch, CameraManager.guiCamera);
         InventoryManager.instance.render(batch, CameraManager.guiCamera);
         batch.end();
@@ -105,7 +94,6 @@ public class GameManager {
     public void delete() {
 
         manager.delete();
-        text.delete();
 
         BackgroundManager.instance.delete();
         BlueprintManager.instance.delete();

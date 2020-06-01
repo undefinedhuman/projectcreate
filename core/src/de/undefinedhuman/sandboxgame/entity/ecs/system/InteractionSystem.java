@@ -1,7 +1,6 @@
 package de.undefinedhuman.sandboxgame.entity.ecs.system;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.entity.components.interaction.InteractionComponent;
@@ -35,24 +34,22 @@ public class InteractionSystem extends System {
 
         helpText.setVisible(false);
 
-        if ((interactionComponent = (InteractionComponent) entity.getComponent(ComponentType.INTERACTION)) != null) {
+        if ((interactionComponent = (InteractionComponent) entity.getComponent(ComponentType.INTERACTION)) == null) return;
 
-            if (distanceVector.set(entity.getCenterPosition()).dst(GameManager.instance.player.getCenterPosition()) < interactionComponent.getRange()) {
+        if (distanceVector.set(entity.getCenterPosition()).dst(GameManager.instance.player.getCenterPosition()) < interactionComponent.getRange()) {
 
-                helpText.setVisible(true);
-                helpText.setText("Press " + Input.Keys.toString(interactionComponent.getInputKey()) + " for interaction!");
+            //helpText.setVisible(true);
+            //helpText.setText("Press " + Input.Keys.toString(interactionComponent.getInputKey()) + " for interaction!");
 
-                if (!interactionComponent.pressed && Gdx.input.isKeyPressed(interactionComponent.getInputKey())) {
-                    Log.info("INTERACTION!");
-                    interactionComponent.pressed = true;
-                }
-
+            if (!interactionComponent.pressed && Gdx.input.isKeyPressed(interactionComponent.getInputKey())) {
+                Log.info("INTERACTION!");
+                interactionComponent.pressed = true;
             }
 
-            if (interactionComponent.pressed && !Gdx.input.isKeyPressed(interactionComponent.getInputKey()))
-                interactionComponent.pressed = false;
-
         }
+
+        if (interactionComponent.pressed && !Gdx.input.isKeyPressed(interactionComponent.getInputKey()))
+            interactionComponent.pressed = false;
 
     }
 

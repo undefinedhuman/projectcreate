@@ -11,6 +11,8 @@ import de.undefinedhuman.sandboxgame.world.WorldManager;
 
 public class CollisionManager {
 
+    public static final int NO_COLLISION = Integer.MIN_VALUE;
+
     // TODO
     public static boolean blockCanBePlaced(Entity entity, Vector2 blockPosition, byte cell) {
         return true;
@@ -32,21 +34,21 @@ public class CollisionManager {
         for(int tileX = startX; tileX <= endX; tileX++)
             if(withoutSlopes ? WorldManager.instance.isObstacleWithOutSlope(tileX, tileY) : WorldManager.instance.isObstacleWithSlope(tileX, tileY))
                 return tileY;
-        return Integer.MIN_VALUE;
+        return NO_COLLISION;
     }
 
     public static int collideVer(Vector2 from, Vector2 towards) {
-        int     startY = (int) (from.y/Variables.BLOCK_SIZE),
-                endY = (int) (towards.y/Variables.BLOCK_SIZE),
+        int     fromY = (int) (from.y/Variables.BLOCK_SIZE),
+                towardsY = (int) (towards.y/Variables.BLOCK_SIZE),
                 tileX = (int) (from.x/Variables.BLOCK_SIZE);
 
-        if(WorldManager.instance.isObstacleWithOutSlope(tileX, startY))
+        if(WorldManager.instance.isObstacleWithOutSlope(tileX, fromY))
             return tileX;
 
-        for(int tileY = startY + 1; tileY <= endY; tileY++)
+        for(int tileY = fromY + 1; tileY <= towardsY; tileY++)
             if(WorldManager.instance.isObstacleWithSlope(tileX, tileY))
                 return tileX;
-        return Integer.MIN_VALUE;
+        return NO_COLLISION;
     }
 
 }

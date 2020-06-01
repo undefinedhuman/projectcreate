@@ -3,9 +3,9 @@ package de.undefinedhuman.sandboxgame.engine.base;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.file.LineWriter;
-import de.undefinedhuman.sandboxgame.engine.network.NetworkComponent;
+import de.undefinedhuman.sandboxgame.engine.network.NetworkSerialization;
 
-public class Transform implements NetworkComponent {
+public class Transform implements NetworkSerialization {
 
     protected Vector2 position = new Vector2(), size = new Vector2();
 

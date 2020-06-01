@@ -5,10 +5,11 @@ import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.file.LineWriter;
 
-import java.util.Collection;
 import java.util.HashMap;
 
 public class AnimationComponent extends Component {
+
+    // TODO Refactor so animation time can't go in infinity
 
     private HashMap<String, Animation> animations;
 
@@ -45,11 +46,8 @@ public class AnimationComponent extends Component {
     }
 
     private int getLocalFrameIndex() {
-
         Animation currentParam = getCurrentAnimation();
-
         if (currentParam.getSize() == 1) return -1;
-
         int frameNumber = (int) (animationTime / currentParam.frameTime.getFloat());
         switch (currentParam.playMode.getPlayMode()) {
             case NORMAL:
@@ -62,14 +60,6 @@ public class AnimationComponent extends Component {
 
         return frameNumber;
 
-    }
-
-    public Collection<Animation> getAnimations() {
-        return animations.values();
-    }
-
-    public float getAnimationTime() {
-        return animationTime;
     }
 
     public void addAnimationTime(float delta) {

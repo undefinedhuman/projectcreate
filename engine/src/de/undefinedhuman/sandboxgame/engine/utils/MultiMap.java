@@ -6,11 +6,7 @@ import java.util.HashMap;
 
 public class MultiMap<K, V> {
 
-    private HashMap<K, ArrayList<V>> map;
-
-    public MultiMap() {
-        map = new HashMap<>();
-    }
+    private HashMap<K, ArrayList<V>> map = new HashMap<>();
 
     @SafeVarargs
     public final void addValuesWithKey(K key, V... values) {
@@ -25,6 +21,7 @@ public class MultiMap<K, V> {
 
     public void removeKey(K key) {
         if(!hasKey(key)) return;
+        map.get(key).clear();
         map.remove(key);
     }
 

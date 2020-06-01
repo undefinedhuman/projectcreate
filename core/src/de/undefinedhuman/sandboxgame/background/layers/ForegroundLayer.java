@@ -12,7 +12,7 @@ import de.undefinedhuman.sandboxgame.world.World;
 public class ForegroundLayer extends Layer {
 
     private float currentX, speedFactor, yOffset, brightness;
-    private Vector2 initialSize, size;
+    private Vector2 initialSize, size = new Vector2();
 
     private String texture;
 
@@ -32,13 +32,13 @@ public class ForegroundLayer extends Layer {
 
     @Override
     public void resize(int width, int height) {
-        this.size = new Vector2(initialSize.x * BackgroundManager.instance.scale, initialSize.y * BackgroundManager.instance.scale);
+        this.size.set(initialSize).scl(BackgroundManager.instance.scale);
     }
 
     @Override
     public void update(float delta, float speed) {
         if (speed == 0) return;
-        currentX += (speed * speedFactor) * delta * BackgroundManager.instance.scale;
+        currentX += (speed * speedFactor) * delta;
         currentX = currentX >= 0 ? -size.x : currentX <= -size.x ? 0 : currentX;
     }
 

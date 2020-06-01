@@ -13,17 +13,15 @@ import java.util.ArrayList;
 
 public class BirdLayer extends Layer {
 
-    private Color color;
     private ArrayList<Bird> birds = new ArrayList<>();
+    private Color color = new Color();
     private int yOffset;
-    private float speedMultiplier, brightness;
+    private float speedMultiplier;
 
-    public BirdLayer(Color color, int yOffset, float speedMultiplier, float brightness) {
-        this.color = color;
-        this.color.mul(brightness, brightness, brightness, 1f);
+    public BirdLayer(Color color, int yOffset, float speedMultiplier) {
+        this.color.set(color);
         this.yOffset = yOffset;
         this.speedMultiplier = speedMultiplier;
-        this.brightness = brightness;
     }
 
     @Override
@@ -32,7 +30,7 @@ public class BirdLayer extends Layer {
         for(int i = 0; i < birdCount; i++) {
             int groupCount = Tools.random.nextInt(3) + 3;
             for(int j = 0; j < groupCount; j++)
-                birds.add(new Bird(new Vector2(i * xOffset + (int) (j * Variables.BIRD_WIDTH * 1.5f), World.instance.maxHeight + yOffset + Tools.random.nextInt(Variables.BIRD_HEIGHT_OFFSET * 2) - Variables.BIRD_HEIGHT_OFFSET), speedMultiplier));
+                birds.add(new Bird(new Vector2(i * xOffset + (int) (j * Variables.BIRD_SIZE.x * 1.5f), World.instance.maxHeight + yOffset + Tools.random.nextInt(Variables.BIRD_HEIGHT_OFFSET * 2) - Variables.BIRD_HEIGHT_OFFSET), speedMultiplier));
         }
     }
 

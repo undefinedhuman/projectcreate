@@ -1,6 +1,7 @@
 package de.undefinedhuman.sandboxgame.engine.utils;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
 
 public class Variables {
     // Engine
@@ -8,7 +9,7 @@ public class Variables {
     public static final float DELTA_MULTIPLIER = 1.0f;
     public static final String SEPARATOR = ";", FILE_SEPARATOR = "/";
     public static final String DEFAULT_LANGUAGE = "eu_DE";
-    public static final boolean RENDER_HITBOXES = true;
+    public static final boolean RENDER_HITBOXES = false;
     public static final Color HITBOX_COLOR = new Color(0.41568628f, 0.3529412f, 0.8039216f, 0.4f);
 
     // Test
@@ -24,12 +25,10 @@ public class Variables {
     public static final int BASE_BACKGROUND_WIDTH = 688;
     public static final int CLOUD_COUNT = 5;
     public static final int CLOUD_HEIGHT_OFFSET = 30;
-    public static final float CLOUD_BASE_SPEED = 0.1f;
 
-    public static final int BIRD_WIDTH = 19;
-    public static final int BIRD_HEIGHT = 64;
-    public static final int BIRD_SPEED = 64;
+    public static final Vector2 BIRD_SIZE = new Vector2(19, 64);
     public static final int BIRD_HEIGHT_OFFSET = 32;
+    public static final int BIRD_SPEED = 64;
     public static final float BIRD_ANIMATION_SPEED = 0.0875f;
 
     // Gui

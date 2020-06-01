@@ -143,5 +143,9 @@ public class Tools {
         }
     }
 
+    public static Vector2 getTextureSize(TextureRegion texture) {
+        return new Vector2(texture.getRegionWidth(), texture.getRegionHeight());
+    }
+
 
 }

@@ -2,9 +2,9 @@ package de.undefinedhuman.sandboxgame.engine.entity;
 
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.file.LineWriter;
-import de.undefinedhuman.sandboxgame.engine.network.NetworkComponent;
+import de.undefinedhuman.sandboxgame.engine.network.NetworkSerialization;
 
-public abstract class Component implements NetworkComponent {
+public abstract class Component implements NetworkSerialization {
 
     protected ComponentType type;
 

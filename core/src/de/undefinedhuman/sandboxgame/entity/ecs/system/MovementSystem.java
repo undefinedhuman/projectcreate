@@ -23,11 +23,16 @@ public class MovementSystem extends System {
         if (instance == null) instance = this;
     }
 
-    // TODO Change Background to not use movementComponent.getSpeed() instead use velocity.x
+    // TODO Eck Blöcke funkt. nicht so wirklich geil
 
-    // TODO Add acceleration to x velocity
-    // TODO Provide Collision for above World height and below 0
-    // TODO Alle Blöcke an der Seite brauchen auch slopes also nicht nur der einzelne block nach oben sondern auch die zur seite brauchen slopes aber volle 45 Grad nicht wie oben da wenn man zur seite geht von vollen blöcken
+    // TODO Implement Multiple collision checks for velocitys greater than player width
+
+    // TODO Slope collision auf x achse nur für velX machen also wenn nach recht läuft mach das auch nur für die erste Slop collision halt von unten links nach oben rechts (boundsIndex = 5)
+    // und für die zweite slope collision nach unten immer nur für die anderen slopes machen also falls oben mach den unteren check für (boundsIndex = 4)
+
+    // TODO Für Blöcke bekommen nicht (int) sondern ceil verwenden dafür ecken als collision counten?
+    // TODO Collision für horizontal unten ecken etc als collision werten, bzw. evtl für beide enden verschiedene Collision paare aufstel
+
     // TODO testen falls man voher nicht auf ner slope war und jetzt geht das kein block oberhalb blockiert
 
     @Override
@@ -47,30 +52,36 @@ public class MovementSystem extends System {
 
          //if()
 
-        movementComponent.velocity.x = Tools.clamp(movementComponent.velocity.x + (movementComponent.getDirection() != 0 ? movementComponent.getSpeed() : -movementComponent.getSpeed()) * 5f * delta, 0, movementComponent.getSpeed());
+        movementComponent.velocity.x = movementComponent.getDirection() * movementComponent.getSpeed();
+
+        //movementComponent.velocity.x += ((movementComponent.getDirection() * movementComponent.getSpeed()) - movementComponent.velocity.x) * (movementComponent.getDirection() == 0 ? 0.2f : 0.05f);
+        if(movementComponent.getDirection() == 0 && Tools.isInRange(movementComponent.velocity.x, -5, 5)) movementComponent.velocity.x = 0;
+
+        //movementComponent.velocity.x = Tools.clamp(movementComponent.velocity.x + (movementComponent.getDirection() != 0 ? movementComponent.getSpeed() : -movementComponent.getSpeed()) * 5f * delta, 0, movementComponent.getSpeed());
         movementComponent.velocity.y -= movementComponent.getGravity() * delta;
 
-        animationComponent.setAnimationTimeMultiplier(movementComponent.velocity.x / movementComponent.getSpeed());
+        animationComponent.setAnimationTimeMultiplier(movementComponent.velocity.x != 0 ? Math.abs(movementComponent.velocity.x) / movementComponent.getSpeed() : 1);
 
         currentPosition.set(entity.getPosition());
 
-        float velX = movementComponent.velocity.x * movementComponent.getDirection() * delta;
+        float velX = movementComponent.velocity.x * delta;
         float velY = movementComponent.velocity.y * delta;
         if(velX > Variables.BLOCK_SIZE) velX = Variables.BLOCK_SIZE;
         if(velX < -Variables.BLOCK_SIZE) velX = -Variables.BLOCK_SIZE;
         if(velY < -Variables.BLOCK_SIZE) velY = -Variables.BLOCK_SIZE;
 
-        if(velY < 0) {
+        collisionComponent.updateHitbox(new Vector2(currentPosition).add(velX, 0));
 
-            // TODO Eck Blöcke funkt. nicht so wirklich geil
+        // Check for upper horizontal collision when going on and while being on a slope, don't add x velocity when horizontal collision, wenn der gang frei ist der Spieler also verikal theoretisch auf die Slope drauf kann aber an die Decke stoßen würde
 
-            // TODO Implement Multiple collision checks for velocitys greater than player width
+        if(movementComponent.rightSlope || CollisionManager.collideVer(collisionComponent.bottomRight(), collisionComponent.upperRight()) == CollisionManager.NO_COLLISION) {
+            movementComponent.rightSlope = collisionSlopes(movementComponent, collisionComponent, velX, velY, velX > 0, 6, movementComponent.rightSlope, (byte) 4, (byte) 12);
+        } else movementComponent.rightSlope = false;
 
-            // TODO Slope collision auf x achse nur für velX machen also wenn nach recht läuft mach das auch nur für die erste Slop collision halt von unten links nach oben rechts (boundsIndex = 5)
-            // und für die zweite slope collision nach unten immer nur für die anderen slopes machen also falls oben mach den unteren check für (boundsIndex = 4)
 
-            // TODO Für Blöcke bekommen nicht (int) sondern ceil verwenden dafür ecken als collision counten?
-            // TODO Collision für horizontal unten ecken etc als collision werten, bzw. evtl für beide enden verschiedene Collision paare aufstel
+        /*if(velY < 0) {
+
+            collisionComponent.updateHitbox(currentPosition);
 
             movementComponent.leftSlope = collisionSlopes(movementComponent, collisionComponent, velX, velY, velX < 0, 4, movementComponent.leftSlope, (byte) 1, (byte) 9);
             movementComponent.middleSlope = collisionSlopes(movementComponent, collisionComponent, velX, velY, false, 5, movementComponent.middleSlope, (byte) 0, (byte) 8);
@@ -80,12 +91,14 @@ public class MovementSystem extends System {
             movementComponent.leftSlope = false;
             movementComponent.middleSlope = false;
             movementComponent.rightSlope = false;
-        }
+        }*/
 
-        if(!movementComponent.leftSlope && !movementComponent.middleSlope && !movementComponent.rightSlope) {
+        //if(!movementComponent.leftSlope && !movementComponent.middleSlope && !movementComponent.rightSlope) {
+        if(!movementComponent.rightSlope) {
             collideVertical(collisionComponent, velX);
             collideHorizontal(collisionComponent, movementComponent, velY);
         }
+        //}
 
         entity.setPosition(currentPosition);
 
@@ -101,7 +114,21 @@ public class MovementSystem extends System {
                 null;
     }
 
-    private boolean slopeCollision(MovementComponent movementComponent, Vector2 slopePosition, float velocityX, byte[] slopes) {
+    private boolean slopeCollision(CollisionComponent collisionComponent, MovementComponent movementComponent, Vector2 slopePosition, float velocityX, float velocityY, byte[] slopes) {
+        Vector2i collisionResponse;
+        if((collisionResponse = collideSlope(slopePosition, slopes)) == null) return false;
+        currentPosition.x += velocityX;
+        if(currentPosition.y > collisionResponse.y) {
+            currentPosition.y += velocityY;
+            return true;
+        }
+        currentPosition.y = collisionResponse.y;
+        movementComponent.velocity.y = 0;
+        movementComponent.setCanJump(true);
+        return true;
+    }
+
+    private boolean newSlopeCollision(CollisionComponent collisionComponent, MovementComponent movementComponent, Vector2 slopePosition, float velocityX, float velocityY, byte[] slopes) {
         Vector2i collisionResponse;
         if((collisionResponse = collideSlope(slopePosition, slopes)) == null) return false;
         currentPosition.x += velocityX;
@@ -112,13 +139,14 @@ public class MovementSystem extends System {
     }
 
     private boolean collisionSlopes(MovementComponent movementComponent, CollisionComponent collisionComponent, float velX, float velY, boolean snap, int boundIndex, boolean isOnSlope, byte... slopes) {
+        if(velY >= 0) return false;
         boolean currentIsOnSlope;
-        if(!(currentIsOnSlope = slopeCollision(movementComponent, collisionComponent.updateHitbox(slopePosition.set(currentPosition).add(velX, 0)).bound(boundIndex), velX, slopes))
-                && !(currentIsOnSlope = slopeCollision(movementComponent, collisionComponent.updateHitbox(slopePosition.add(0, velY)).bound(boundIndex), velX, slopes))
+        if(!(currentIsOnSlope = slopeCollision(collisionComponent, movementComponent, collisionComponent.updateHitbox(slopePosition.set(currentPosition).add(velX, 0)).bound(boundIndex), velX, velY, slopes))
+                && !(currentIsOnSlope = slopeCollision(collisionComponent, movementComponent, collisionComponent.updateHitbox(slopePosition.add(0, velY)).bound(boundIndex), velX, velY, slopes))
                 && isOnSlope) {
             if (snap) currentPosition.y = ((int) (slopePosition.y / Variables.BLOCK_SIZE) + 1) * Variables.BLOCK_SIZE;
-            else currentPosition.y = ((int) (slopePosition.y / Variables.BLOCK_SIZE)) * Variables.BLOCK_SIZE;
-            currentIsOnSlope = slopeCollision(movementComponent, collisionComponent.updateHitbox(slopePosition.set(currentPosition).add(velX, 0)).bound(boundIndex), 0, slopes);
+            //else currentPosition.y = ((int) (slopePosition.y / Variables.BLOCK_SIZE)) * Variables.BLOCK_SIZE;
+            currentIsOnSlope = newSlopeCollision(collisionComponent, movementComponent, collisionComponent.updateHitbox(slopePosition.set(currentPosition).add(velX, 0)).bound(boundIndex), 0, 0, slopes);
         }
         return currentIsOnSlope;
     }
@@ -146,6 +174,12 @@ public class MovementSystem extends System {
             movementComponent.velocity.y = 0;
         } else if(velocityY < 0)
             movementComponent.setCanJump(false);
+
+        if(currentPosition.y <= 0) {
+            currentPosition.y = 0; // TODO MAKE OUTER WORLD BLOCKS TO BEDROCK OR ANYTHING ELSE COLLIDABLE
+            movementComponent.setCanJump(true);
+            movementComponent.velocity.y = 0;
+        }
     }
 
     private void animate(AnimationComponent animationComponent, MovementComponent movementComponent) {
