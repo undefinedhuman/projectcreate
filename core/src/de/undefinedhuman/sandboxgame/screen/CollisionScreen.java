@@ -31,11 +31,15 @@ public class CollisionScreen implements Screen {
         Handle Movement/Collision
     } while((velX = velX-8) > 0);*/
 
+    // MAKE Sure Collision Goes from BOTTOM TO TOP
+
     /*
         Collision X -> nur X Response zurückgeben, keine Slope nach oben verschiebung
         Collision Y -> Immer -Y also runterdrücke mitzählen/überschreibe, Slope bzw. normale Blöcke dann hoch tuen
         Collision X/Slopes -> Falls immernoch in einer Slope zur Seite rausdrücken, hier nochmal schauen welche Axis genommen wird, wenn die äußerste Seite des Spielers genommen wird ok, I guess?, wenn die untere schräge kante genommen wird muss das in eine straighte linie konvertiert werden
      */
+
+    private boolean onSlope = false;
 
     @Override
     public void show() {
@@ -158,9 +162,13 @@ public class CollisionScreen implements Screen {
 
                 if(overlap.z > responseValue) {
                     responseValue = overlap.z;
-                    if((hitbox.getState() == 2 || hitbox.getState() == 3) && (displacement.x != 0 && displacement.y != 0))
+                    if((hitbox.getState() == 2 || hitbox.getState() == 3) && (displacement.x != 0 && displacement.y != 0)) {
                         response.set(0, ((displacement.x * displacement.x) / displacement.y) + displacement.y);
-                    else response.set(0, displacement.y);
+                        onSlope = true;
+                    } else {
+                        response.set(0, displacement.y);
+                        if(onSlope) onSlope = false;
+                    }
                 }
 
                 /*if(displacement.y < 0) {
@@ -190,26 +198,33 @@ public class CollisionScreen implements Screen {
 
         Vector2 c1 = new Vector2(player.getPosition()).add(new Vector2(player.getSize()).scl(0.5f));
 
-        for(Hitbox[] hitboxList : world)
-            for(Hitbox hitbox : hitboxList) {
-                if(hitbox == null) continue;
+        for(int j = 0; j < world[0].length; j++) {
+
+            for (Hitbox[] hitboxes : world) {
+
+                Hitbox hitbox = hitboxes[j];
+
+                if (hitbox == null) continue;
                 Vector3 overlap = Hitbox.collideSAT(player, hitbox);
-                if(overlap == null) continue;
+                if (overlap == null) continue;
                 hitbox.setColor(Color.RED);
                 Vector2 normal = new Vector2(overlap.x, overlap.y);
                 Vector2 c2 = new Vector2(hitbox.getPosition()).add(new Vector2(hitbox.getSize()).scl(0.5f));
                 Vector2 c1c2 = new Vector2(c1).sub(c2);
-                if (c1c2.nor().dot(normal) < 0) normal.scl(-1f);
+                if (c1c2.nor().dot(normal) < 0)
+                    normal.scl(-1f);
                 Vector2 displacement = new Vector2(normal).scl(overlap.z + 1);
 
-                if(displacement.y < 0) {
-                    if(overlap.z > responseValue) {
+                if (displacement.y < 0 && onSlope) {
+                    if (overlap.z > responseValue) {
                         responseValue = overlap.z;
                         response.set(0, displacement.y);
                     }
                 }
 
             }
+
+        }
 
         return response;
     }
@@ -231,11 +246,14 @@ public class CollisionScreen implements Screen {
                 Vector2 c2 = new Vector2(hitbox.getPosition()).add(new Vector2(hitbox.getSize()).scl(0.5f));
                 Vector2 c1c2 = new Vector2(c1).sub(c2);
                 if (c1c2.nor().dot(normal) < 0) normal.scl(-1f);
-                Vector2 displacement = new Vector2(normal).scl(overlap.z);
+                Vector2 displacement = new Vector2(normal).scl(overlap.z + 1);
 
-                if(overlap.z > currentResLength && displacement.x != 0) {
-                    currentResLength = overlap.z;
-                    response.set((displacement.y * displacement.y) / displacement.x + displacement.x, 0);
+                if(hitbox.getState() == 3 || hitbox.getState() == 2) {
+                    if(overlap.z > currentResLength && displacement.x != 0) {
+                        currentResLength = overlap.z;
+                        response.set((displacement.y * displacement.y) / displacement.x + displacement.x, 0);
+                        if(onSlope) onSlope = false;
+                    }
                 }
 
             }
