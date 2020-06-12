@@ -12,6 +12,8 @@ import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.engine.utils.math.Vector2i;
 
+import java.util.ArrayList;
+
 public class CollisionScreen implements Screen {
 
     private SpriteBatch batch;
@@ -25,6 +27,8 @@ public class CollisionScreen implements Screen {
 
     private float velocityY = 0;
 
+    // When implementing make sure, blocks outside the world bounds will be hitboxes and not simple if conditions, NOT y < 0 = 0 do full BLOCK Collision
+
     @Override
     public void show() {
         this.camera = new OrthographicCamera();
@@ -32,8 +36,8 @@ public class CollisionScreen implements Screen {
 
         this.player = new Hitbox(500, 600, 100, 200, 0);
 
-        //for(int i = 0; i < 20; i++)
-            //world[i][0] = new Hitbox(i*BLOCK_WIDTH, 0, BLOCK_WIDTH, BLOCK_WIDTH, 1);
+        for(int i = 0; i < 20; i++)
+            world[i][0] = new Hitbox(i*BLOCK_WIDTH, 0, BLOCK_WIDTH, BLOCK_WIDTH, 1);
 
         //                          min(x, max(x, y))
         // -100, 0    -> -100       min(-100, max(-100, 0)) -> min(-100, 0) -> -100
@@ -65,15 +69,18 @@ public class CollisionScreen implements Screen {
         if(Gdx.input.isKeyPressed(Input.Keys.NUM_1)) blockID = 1;
         if(Gdx.input.isKeyPressed(Input.Keys.NUM_2)) blockID = 2;
         if(Gdx.input.isKeyPressed(Input.Keys.NUM_3)) blockID = 3;
+        if(Gdx.input.isKeyPressed(Input.Keys.NUM_4)) blockID = 4;
+        if(Gdx.input.isKeyPressed(Input.Keys.NUM_5)) blockID = 5;
 
         if(Gdx.input.isButtonJustPressed(0)) world[mouseBlockPosition.x][mouseBlockPosition.y] = new Hitbox(mouseBlockPosition.x * BLOCK_WIDTH, mouseBlockPosition.y * BLOCK_WIDTH, BLOCK_WIDTH, BLOCK_WIDTH, blockID);
         if(Gdx.input.isButtonJustPressed(1)) world[mouseBlockPosition.x][mouseBlockPosition.y] = null;
 
-        for(Hitbox[] hitboxList : world)
+        for(Hitbox[] hitboxList : world) {
             for(Hitbox hitbox : hitboxList) {
                 if(hitbox == null) continue;
                 hitbox.setColor(Variables.HITBOX_COLOR);
             }
+        }
 
         if(Gdx.input.isKeyPressed(Input.Keys.D)) player.addPosition(250f * delta, 0);
         if(Gdx.input.isKeyPressed(Input.Keys.A)) player.addPosition(-250f * delta, 0);
@@ -81,8 +88,13 @@ public class CollisionScreen implements Screen {
         Vector2 response = calculateCollisionResponseX();
         player.addPosition(response.x, response.y);
 
-        player.addPosition(0, -250f * delta);
+        velocityY -= 250f * delta;
+        if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) velocityY = 250f;
+        velocityY = Math.max(velocityY, -250f);
+
+        player.addPosition(0, velocityY * delta);
         response = calculateCollisionResponseY();
+        if(!response.isZero() && velocityY > 0) velocityY = 0;
         player.addPosition(0, response.y);
 
         player.getPosition().y = Math.max(player.getPosition().y, 0);
@@ -102,6 +114,10 @@ public class CollisionScreen implements Screen {
 
         float currentResLength = 0;
         Vector2 response = new Vector2(0, 0);
+
+        ArrayList<Vector3> responses = new ArrayList<>();
+
+        Log.info("---");
 
         Vector2 c1 = new Vector2(player.getPosition()).add(new Vector2(player.getSize()).scl(0.5f));
 
@@ -125,6 +141,8 @@ public class CollisionScreen implements Screen {
                 }
 
             }
+
+        Log.info("---");
 
         return response;
     }
@@ -152,7 +170,7 @@ public class CollisionScreen implements Screen {
                     currentResLength = overlap.z;
                     if((hitbox.getState() == 2 || hitbox.getState() == 3) && (displacement.x != 0 && displacement.y != 0))
                         response.y = ((displacement.x * displacement.x) / displacement.y) + displacement.y;
-                    else response.set(displacement.x, displacement.y);
+                    response.set(0, displacement.y);
                 }
 
             }
