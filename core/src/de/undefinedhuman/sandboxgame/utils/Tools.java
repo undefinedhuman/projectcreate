@@ -116,6 +116,17 @@ public class Tools extends de.undefinedhuman.sandboxgame.engine.utils.Tools {
         sprite.draw(batch);
     }
 
+    public static void drawLine(SpriteBatch batch, Vector2 point1, Vector2 point2, int lineWidth, Color color) {
+        Vector2 vec = new Vector2(point2).sub(point1);
+        TextureRegion texture = TextureManager.instance.getTexture("blank.png");
+        Sprite sprite = new Sprite(texture, 0, 0, lineWidth, (int) vec.len());
+        sprite.setColor(color);
+        sprite.setOrigin(0, 0);
+        sprite.setPosition(point1.x, point1.y);
+        sprite.setRotation(vec.angle() - 90);
+        sprite.draw(batch);
+    }
+
     public static float swordLerp(float x, float y, float speed) {
         if (y - x > 180) y -= 360;
         if (x - y > 180) x -= 360;

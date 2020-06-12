@@ -2,7 +2,7 @@ package de.undefinedhuman.sandboxgame;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL30;
+import com.badlogic.gdx.graphics.GL20;
 import de.undefinedhuman.sandboxgame.engine.config.ConfigManager;
 import de.undefinedhuman.sandboxgame.engine.config.SettingsManager;
 import de.undefinedhuman.sandboxgame.engine.language.LanguageManager;
@@ -20,6 +20,7 @@ import de.undefinedhuman.sandboxgame.gui.GuiManager;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.network.ClientManager;
+import de.undefinedhuman.sandboxgame.screen.CollisionScreen;
 import de.undefinedhuman.sandboxgame.screen.TestScreen;
 import de.undefinedhuman.sandboxgame.screen.gamescreen.GameScreen;
 import de.undefinedhuman.sandboxgame.utils.Inputs;
@@ -49,7 +50,8 @@ public class Main extends Game {
     public void create() {
         managerList.init();
         initScreens();
-        setScreen(TestScreen.instance);
+        setScreen(new CollisionScreen());
+        //setScreen(TestScreen.instance);
     }
 
     @Override
@@ -88,7 +90,7 @@ public class Main extends Game {
 
     private void clear() {
         Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
     }
 
     private void initScreens() {

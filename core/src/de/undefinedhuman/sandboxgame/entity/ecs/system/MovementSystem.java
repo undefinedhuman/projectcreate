@@ -46,18 +46,8 @@ public class MovementSystem extends System {
                 || (collisionComponent = (CollisionComponent) entity.getComponent(ComponentType.COLLISION)) == null
                 || (animationComponent = (AnimationComponent) entity.getComponent(ComponentType.ANIMATION)) == null) return;
 
-        // movementComponent.x += Gdx.input.getInputProcessor() == Inputs.instance ? movementComponent.getCurrentSpeed() : 0;
-
-         //+ movementComponent.getDirection() * movementComponent.getSpeed() : movementComponent.velocity.x < 0 ? movementComponent.getSpeed() : -movementComponent.getSpeed();
-
-         //if()
-
-        movementComponent.velocity.x = movementComponent.getDirection() * movementComponent.getSpeed();
-
-        //movementComponent.velocity.x += ((movementComponent.getDirection() * movementComponent.getSpeed()) - movementComponent.velocity.x) * (movementComponent.getDirection() == 0 ? 0.2f : 0.05f);
+        movementComponent.velocity.x += ((movementComponent.getDirection() * movementComponent.getSpeed()) - movementComponent.velocity.x) * 0.2f;
         if(movementComponent.getDirection() == 0 && Tools.isInRange(movementComponent.velocity.x, -5, 5)) movementComponent.velocity.x = 0;
-
-        //movementComponent.velocity.x = Tools.clamp(movementComponent.velocity.x + (movementComponent.getDirection() != 0 ? movementComponent.getSpeed() : -movementComponent.getSpeed()) * 5f * delta, 0, movementComponent.getSpeed());
         movementComponent.velocity.y -= movementComponent.getGravity() * delta;
 
         animationComponent.setAnimationTimeMultiplier(movementComponent.velocity.x != 0 ? Math.abs(movementComponent.velocity.x) / movementComponent.getSpeed() : 1);
@@ -75,6 +65,7 @@ public class MovementSystem extends System {
         // Check for upper horizontal collision when going on and while being on a slope, don't add x velocity when horizontal collision, wenn der gang frei ist der Spieler also verikal theoretisch auf die Slope drauf kann aber an die Decke stoßen würde
 
         if(movementComponent.rightSlope || CollisionManager.collideVer(collisionComponent.bottomRight(), collisionComponent.upperRight()) == CollisionManager.NO_COLLISION) {
+            collisionComponent.updateHitbox(currentPosition);
             movementComponent.rightSlope = collisionSlopes(movementComponent, collisionComponent, velX, velY, velX > 0, 6, movementComponent.rightSlope, (byte) 4, (byte) 12);
         } else movementComponent.rightSlope = false;
 
