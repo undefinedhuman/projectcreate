@@ -183,6 +183,30 @@ public class Hitbox {
             };
         }
 
+        if(state == 7) {
+            return new Vector2[] {
+                    new Vector2(position).add(size.x, size.y/2),
+                    new Vector2(position).add(size.x/2, size.y),
+                    new Vector2(position).add(0, size.y/2)
+            };
+        }
+
+        if(state == 8) {
+            return new Vector2[] {
+                    new Vector2(position).add(0, 0),
+                    new Vector2(position).add(size.x/2, 0),
+                    new Vector2(position).add(0, size.y/2)
+            };
+        }
+
+        if(state == 9) {
+            return new Vector2[] {
+                    new Vector2(position).add(size.x/2, 0),
+                    new Vector2(position).add(size.x, 0),
+                    new Vector2(position).add(size.x/2, size.y/2)
+            };
+        }
+
         return new Vector2[] {
                 new Vector2(position.x + 24, position.y),
                 new Vector2(position.x + size.x - 24, position.y),

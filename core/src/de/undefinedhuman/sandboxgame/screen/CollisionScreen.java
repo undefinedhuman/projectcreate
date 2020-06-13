@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.engine.utils.math.Vector2i;
 
@@ -67,6 +66,7 @@ public class CollisionScreen implements Screen {
         if(Gdx.input.isKeyPressed(Input.Keys.NUM_4)) blockID = 4;
         if(Gdx.input.isKeyPressed(Input.Keys.NUM_5)) blockID = 5;
         if(Gdx.input.isKeyPressed(Input.Keys.NUM_6)) blockID = 6;
+        if(Gdx.input.isKeyPressed(Input.Keys.NUM_7)) blockID = 7;
 
         if(Gdx.input.isButtonJustPressed(0)) world[mouseBlockPosition.x][mouseBlockPosition.y] = new Hitbox(mouseBlockPosition.x * BLOCK_WIDTH, mouseBlockPosition.y * BLOCK_WIDTH, BLOCK_WIDTH, BLOCK_WIDTH, blockID);
         if(Gdx.input.isButtonJustPressed(1)) world[mouseBlockPosition.x][mouseBlockPosition.y] = null;
@@ -119,8 +119,6 @@ public class CollisionScreen implements Screen {
 
         Vector2 c1 = new Vector2(player.getPosition()).add(new Vector2(player.getSize()).scl(0.5f));
 
-        Log.info(world[0].length);
-
         for(int j = 0; j < world[0].length; j++)
 
             for (int i = 0; i < world.length; i++) {
@@ -139,7 +137,7 @@ public class CollisionScreen implements Screen {
 
                 if(overlap.z >= currentResLength) {
                     currentResLength = overlap.z;
-                    if((hitbox.getState() == 2 || hitbox.getState() == 3) && (displacement.x != 0 && displacement.y != 0)) {
+                    if(displacement.x != 0 && displacement.y != 0) {
                         response.set(0, 0);
                     } else response.set(displacement.x, 0);
                 }
@@ -174,7 +172,7 @@ public class CollisionScreen implements Screen {
 
                 if(overlap.z >= responseValue) {
                     responseValue = overlap.z;
-                    if((hitbox.getState() == 2 || hitbox.getState() == 3) && (displacement.y != 0)) {
+                    if(displacement.x != 0 && displacement.y != 0) {
                         onSlope = true;
                         response.set(0, ((displacement.x * displacement.x) / displacement.y) + displacement.y);
                     } else {
