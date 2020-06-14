@@ -28,7 +28,8 @@ public class SAT {
     }
 
     private static Vector2 createProjection(Vector2 axis, Vector2[] vertices) {
-        float min = axis.dot(vertices[0]), max = min;
+        float min = axis.dot(vertices[0]);
+        float max = min;
         for (int i = 1; i < vertices.length; i++) {
             float p = axis.dot(vertices[i]);
             if (p < min) min = p;

@@ -41,7 +41,7 @@ public class Hitbox {
         this.position.set(x, y);
         for(int i = 0; i < verticesLength; i++) {
             Vector2 vertexTemplate = collisionData[VERTICES_TEMPLATE][i];
-            collisionData[VERTICES_CURRENT][i].set(position).add(vertexTemplate.x, vertexTemplate.y);
+            collisionData[VERTICES_CURRENT][i].set(position).add(vertexTemplate);
         }
     }
 

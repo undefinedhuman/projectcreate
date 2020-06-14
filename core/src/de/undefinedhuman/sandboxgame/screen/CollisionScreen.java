@@ -44,11 +44,11 @@ public class CollisionScreen implements Screen {
 
     private Hitbox[] hitboxes = new Hitbox[] {
             null,
-            new Hitbox(new Vector2(BLOCK_SIZE/2f, BLOCK_SIZE/2f), new Vector2[] { new Vector2(0, 0), new Vector2(BLOCK_SIZE, 0), new Vector2(BLOCK_SIZE, BLOCK_SIZE), new Vector2(0, BLOCK_SIZE) }),
-            new Hitbox(new Vector2(BLOCK_SIZE/2f, BLOCK_SIZE/2f), new Vector2[] { new Vector2(0, 0), new Vector2(0, BLOCK_SIZE), new Vector2(BLOCK_SIZE, BLOCK_SIZE) }),
-            new Hitbox(new Vector2(BLOCK_SIZE/2f, BLOCK_SIZE/2f), new Vector2[] { new Vector2(0, BLOCK_SIZE), new Vector2(BLOCK_SIZE, BLOCK_SIZE), new Vector2(BLOCK_SIZE, 0) }),
-            new Hitbox(new Vector2(BLOCK_SIZE/2f, BLOCK_SIZE/2f), new Vector2[] { new Vector2(0, 0), new Vector2(BLOCK_SIZE, 0), new Vector2(0, BLOCK_SIZE) }),
-            new Hitbox(new Vector2(BLOCK_SIZE/2f, BLOCK_SIZE/2f), new Vector2[] { new Vector2(0, 0), new Vector2(BLOCK_SIZE, 0), new Vector2(BLOCK_SIZE, BLOCK_SIZE) })
+            new Hitbox(new Vector2(16, 16), new Vector2[] { new Vector2(0, 0), new Vector2(BLOCK_SIZE, 0), new Vector2(BLOCK_SIZE, BLOCK_SIZE), new Vector2(0, BLOCK_SIZE) }),
+            new Hitbox(new Vector2(16, 16), new Vector2[] { new Vector2(0, 0), new Vector2(0, BLOCK_SIZE), new Vector2(BLOCK_SIZE, BLOCK_SIZE) }),
+            new Hitbox(new Vector2(16, 16), new Vector2[] { new Vector2(0, BLOCK_SIZE), new Vector2(BLOCK_SIZE, BLOCK_SIZE), new Vector2(BLOCK_SIZE, 0) }),
+            new Hitbox(new Vector2(16, 16), new Vector2[] { new Vector2(0, 0), new Vector2(BLOCK_SIZE, 0), new Vector2(0, BLOCK_SIZE) }),
+            new Hitbox(new Vector2(16, 16), new Vector2[] { new Vector2(0, 0), new Vector2(BLOCK_SIZE, 0), new Vector2(BLOCK_SIZE, BLOCK_SIZE) })
     };
 
     @Override
@@ -57,14 +57,14 @@ public class CollisionScreen implements Screen {
         this.batch = new SpriteBatch();
 
         this.player = new Hitbox(500, 600, new Vector2(50, 100), new Vector2[] {
-                new Vector2(24, 0),
-                new Vector2(76, 0),
-                new Vector2(100, 24),
-                new Vector2(100, 176),
-                new Vector2(76, 200),
-                new Vector2(24, 200),
-                new Vector2(0, 176),
-                new Vector2(0, 24)
+                new Vector2(25, 0),
+                new Vector2(75, 0),
+                new Vector2(100, 25),
+                new Vector2(100, 175),
+                new Vector2(75, 200),
+                new Vector2(25, 200),
+                new Vector2(0, 175),
+                new Vector2(0, 25)
         });
 
         for(int i = 0; i < 20; i++)
@@ -130,7 +130,6 @@ public class CollisionScreen implements Screen {
             for(int i = 0; i < world.length; i++) {
 
                 byte state = world[i][j][1];
-
                 if(state == 0) continue;
                 Hitbox hitbox = hitboxes[state];
                 hitbox.update(i * BLOCK_SIZE, j * BLOCK_SIZE);
@@ -165,7 +164,6 @@ public class CollisionScreen implements Screen {
             for(int i = 0; i < world.length; i++) {
 
                 byte state = world[i][j][1];
-
                 if(state == 0) continue;
                 Hitbox hitbox = hitboxes[state];
                 hitbox.update(i * BLOCK_SIZE, j * BLOCK_SIZE);
@@ -205,7 +203,6 @@ public class CollisionScreen implements Screen {
             for(int i = 0; i < world.length; i++) {
 
                 byte state = world[i][j][1];
-
                 if (state == 0) continue;
                 Hitbox hitbox = hitboxes[state];
                 hitbox.update(i * BLOCK_SIZE, j * BLOCK_SIZE);
@@ -251,7 +248,7 @@ public class CollisionScreen implements Screen {
                 Vector2 normal = new Vector2(overlap.x, overlap.y);
                 Vector2 c1c2 = new Vector2(player.getCenter()).sub(hitbox.getCenter());
                 if (c1c2.nor().dot(normal) < 0) normal.scl(-1f);
-                Vector2 displacement = new Vector2(normal).scl(overlap.z);
+                Vector2 displacement = new Vector2(normal).scl(overlap.z + 1);
 
                 //if(hitbox.getState() == 3 || hitbox.getState() == 2) {
                     if(overlap.z > currentResLength && displacement.x != 0) {
