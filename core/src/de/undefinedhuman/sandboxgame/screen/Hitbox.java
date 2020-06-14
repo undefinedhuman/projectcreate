@@ -11,9 +11,27 @@ public class Hitbox {
 
     private Vector2 position = new Vector2(), size = new Vector2();
 
-    private int state = 0;
+    private int state;
 
     private Color color = Variables.HITBOX_COLOR;
+
+    private Vector2[][] hitboxes = new Vector2[][] {
+
+            new Vector2[] {
+                    new Vector2(0, 0),
+                    new Vector2(1, 0),
+                    new Vector2(1, 1),
+                    new Vector2(0, 1)
+            },
+
+            new Vector2[] {
+                    new Vector2(0, -1),
+                    new Vector2(1, 0),
+                    new Vector2(0, 1),
+                    new Vector2(-1, 0)
+            }
+
+    };
 
     public Hitbox(float x, float y, float width, float height, int state) {
         this.position.set(x, y);
@@ -145,78 +163,50 @@ public class Hitbox {
         if(state == 2) {
             return new Vector2[] {
                     new Vector2(position),
-                    new Vector2(position).add(size.x, 0),
                     new Vector2(position).add(0, size.y),
+                    new Vector2(position).add(size)
             };
         }
 
         if(state == 3) {
             return new Vector2[] {
-                    new Vector2(position),
-                    new Vector2(position).add(size.x, 0),
-                    new Vector2(position).add(size)
+                    new Vector2(position).add(0, size.y),
+                    new Vector2(position).add(size),
+                    new Vector2(position).add(size.x, 0)
             };
         }
 
         if(state == 4) {
             return new Vector2[] {
                     new Vector2(position),
-                    new Vector2(position).add(0, size.y),
-                    new Vector2(position).add(size)
+                    new Vector2(position).add(size.x, 0),
+                    new Vector2(position).add(0, size.y)
             };
         }
 
         if(state == 5) {
             return new Vector2[] {
+                    new Vector2(position),
                     new Vector2(position).add(size.x, 0),
-                    new Vector2(position).add(size),
-                    new Vector2(position).add(0, size.y)
+                    new Vector2(position).add(size)
             };
         }
 
-        if(state == 6) {
+        if(state == -1) {
             return new Vector2[] {
-                    new Vector2(position).add(size.x/2, 0),
-                    new Vector2(position).add(size.x, size.y/2),
-                    new Vector2(position).add(size.x/2, size.y),
-                    new Vector2(position).add(0, size.y/2)
+                    new Vector2(position.x + 24, position.y),
+                    new Vector2(position.x + size.x - 24, position.y),
+                    new Vector2(position.x + size.x, position.y + 24),
+                    new Vector2(position.x + size.x, position.y + size.y - 24),
+                    new Vector2(position.x + size.x - 24, position.y + size.y),
+                    new Vector2(position.x + 24, position.y + size.y),
+                    new Vector2(position.x, position.y + size.y - 24),
+                    new Vector2(position.x, position.y + 24)
             };
         }
 
-        if(state == 7) {
-            return new Vector2[] {
-                    new Vector2(position).add(size.x, size.y/2),
-                    new Vector2(position).add(size.x/2, size.y),
-                    new Vector2(position).add(0, size.y/2)
-            };
-        }
+        return null;
 
-        if(state == 8) {
-            return new Vector2[] {
-                    new Vector2(position).add(0, 0),
-                    new Vector2(position).add(size.x/2, 0),
-                    new Vector2(position).add(0, size.y/2)
-            };
-        }
-
-        if(state == 9) {
-            return new Vector2[] {
-                    new Vector2(position).add(size.x/2, 0),
-                    new Vector2(position).add(size.x, 0),
-                    new Vector2(position).add(size.x/2, size.y/2)
-            };
-        }
-
-        return new Vector2[] {
-                new Vector2(position.x + 24, position.y),
-                new Vector2(position.x + size.x - 24, position.y),
-                new Vector2(position.x + size.x, position.y + 24),
-                new Vector2(position.x + size.x, position.y + size.y - 24),
-                new Vector2(position.x + size.x - 24, position.y + size.y),
-                new Vector2(position.x + 24, position.y + size.y),
-                new Vector2(position.x, position.y + size.y - 24),
-                new Vector2(position.x, position.y + 24)
-        };
     }
 
     // Calculate Overlap: Math.min(p1.max, p2.max) - Math.max(p1.min, p2.min);

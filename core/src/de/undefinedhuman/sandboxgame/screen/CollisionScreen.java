@@ -8,23 +8,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.engine.utils.math.Vector2i;
+import de.undefinedhuman.sandboxgame.engine.utils.math.Vector4i;
 
 public class CollisionScreen implements Screen {
 
-    private SpriteBatch batch;
-    private OrthographicCamera camera;
-
-    private Hitbox player;
-
-    private Hitbox[][] world = new Hitbox[20][10];
-
-    private static final int BLOCK_WIDTH = 64;
-
-    private float velocityY = 0;
-
-    // When implementing make sure, blocks outside the world bounds will be hitboxes and not simple if conditions, NOT y < 0 = 0 do full BLOCK Collision
     // Make Blocks turn to Edges and not full hitboxes
     // Limit Player Velocity \/
     /*do {
@@ -39,17 +27,34 @@ public class CollisionScreen implements Screen {
         Collision X/Slopes -> Falls immernoch in einer Slope zur Seite rausdrücken, hier nochmal schauen welche Axis genommen wird, wenn die äußerste Seite des Spielers genommen wird ok, I guess?, wenn die untere schräge kante genommen wird muss das in eine straighte linie konvertiert werden
      */
 
+    private SpriteBatch batch;
+    private OrthographicCamera camera;
+
+    private Hitbox player;
+
+    private byte[][][] world = new byte[40][40][2];
+
+    private static final int BLOCK_WIDTH = 32;
+
+    private float velocityY = 0;
+
     private boolean onSlope = false;
+
+    private byte[] collisionMasks = new byte[] {
+            0, 0, 0, 2, 0, 0, 3, 1, 0, 4, 0, 1, 5, 1, 1, 0
+    };
 
     @Override
     public void show() {
         this.camera = new OrthographicCamera();
         this.batch = new SpriteBatch();
 
-        this.player = new Hitbox(500, 600, 100, 200, 0);
+        this.player = new Hitbox(500, 600, 100, 200, -1);
 
         for(int i = 0; i < 20; i++)
-            world[i][0] = new Hitbox(i*BLOCK_WIDTH, 0, BLOCK_WIDTH, BLOCK_WIDTH, 1);
+            placeHitboxBlock(i, 0);
+
+        checkMap();
 
     }
 
@@ -58,25 +63,10 @@ public class CollisionScreen implements Screen {
     @Override
     public void render(float delta) {
 
-        Vector2i mouseBlockPosition = new Vector2i(Gdx.input.getX()/BLOCK_WIDTH, (Gdx.graphics.getHeight() - Gdx.input.getY())/BLOCK_WIDTH);
+        Vector2i mouseBlockPosition = new Vector2i(Gdx.input.getX()/(BLOCK_WIDTH*2), (Gdx.graphics.getHeight() - Gdx.input.getY())/(BLOCK_WIDTH*2));
 
-        if(Gdx.input.isKeyPressed(Input.Keys.NUM_1)) blockID = 1;
-        if(Gdx.input.isKeyPressed(Input.Keys.NUM_2)) blockID = 2;
-        if(Gdx.input.isKeyPressed(Input.Keys.NUM_3)) blockID = 3;
-        if(Gdx.input.isKeyPressed(Input.Keys.NUM_4)) blockID = 4;
-        if(Gdx.input.isKeyPressed(Input.Keys.NUM_5)) blockID = 5;
-        if(Gdx.input.isKeyPressed(Input.Keys.NUM_6)) blockID = 6;
-        if(Gdx.input.isKeyPressed(Input.Keys.NUM_7)) blockID = 7;
-
-        if(Gdx.input.isButtonJustPressed(0)) world[mouseBlockPosition.x][mouseBlockPosition.y] = new Hitbox(mouseBlockPosition.x * BLOCK_WIDTH, mouseBlockPosition.y * BLOCK_WIDTH, BLOCK_WIDTH, BLOCK_WIDTH, blockID);
-        if(Gdx.input.isButtonJustPressed(1)) world[mouseBlockPosition.x][mouseBlockPosition.y] = null;
-
-        for(Hitbox[] hitboxList : world) {
-            for(Hitbox hitbox : hitboxList) {
-                if(hitbox == null) continue;
-                hitbox.setColor(Variables.HITBOX_COLOR);
-            }
-        }
+        if(Gdx.input.isButtonJustPressed(0)) placeHitboxBlock(mouseBlockPosition.x, mouseBlockPosition.y);
+        if(Gdx.input.isButtonJustPressed(1)) destroyHitboxBLock(mouseBlockPosition.x, mouseBlockPosition.y);
 
         if(Gdx.input.isKeyPressed(Input.Keys.D)) player.addPosition(250f * delta, 0);
         if(Gdx.input.isKeyPressed(Input.Keys.A)) player.addPosition(-250f * delta, 0);
@@ -99,16 +89,17 @@ public class CollisionScreen implements Screen {
         response = calculateSlopeCollision();
         player.addPosition(response.x, 0);
 
-        player.getPosition().y = Math.max(player.getPosition().y, 0);
-
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         player.render(batch);
-        for(Hitbox[] hitboxList : world)
-            for(Hitbox hitbox : hitboxList) {
-                if(hitbox == null) continue;
+        for(int i = 0; i < world.length; i++) {
+            for(int j = 0; j < world[0].length; j++) {
+                byte state = world[i][j][1];
+                if(state == 0) continue;
+                Hitbox hitbox = new Hitbox(i * BLOCK_WIDTH, j * BLOCK_WIDTH, BLOCK_WIDTH, BLOCK_WIDTH, state);
                 hitbox.render(batch);
             }
+        }
         batch.end();
     }
 
@@ -121,11 +112,12 @@ public class CollisionScreen implements Screen {
 
         for(int j = 0; j < world[0].length; j++)
 
-            for (int i = 0; i < world.length; i++) {
+            for(int i = 0; i < world.length; i++) {
 
-                Hitbox hitbox = world[i][j];
+                byte state = world[i][j][1];
 
-                if(hitbox == null) continue;
+                if(state == 0) continue;
+                Hitbox hitbox = new Hitbox(i * BLOCK_WIDTH, j * BLOCK_WIDTH, BLOCK_WIDTH, BLOCK_WIDTH, state);
                 Vector3 overlap = Hitbox.collideSAT(player, hitbox);
                 if(overlap == null) continue;
                 hitbox.setColor(Color.RED);
@@ -156,11 +148,12 @@ public class CollisionScreen implements Screen {
 
         for(int j = 0; j < world[0].length; j++)
 
-            for (Hitbox[] hitboxes : world) {
+            for(int i = 0; i < world.length; i++) {
 
-                Hitbox hitbox = hitboxes[j];
+                byte state = world[i][j][1];
 
-                if(hitbox == null) continue;
+                if(state == 0) continue;
+                Hitbox hitbox = new Hitbox(i * BLOCK_WIDTH, j * BLOCK_WIDTH, BLOCK_WIDTH, BLOCK_WIDTH, state);
                 Vector3 overlap = Hitbox.collideSAT(player, hitbox);
                 if(overlap == null) continue;
                 hitbox.setColor(Color.RED);
@@ -177,7 +170,7 @@ public class CollisionScreen implements Screen {
                         response.set(0, ((displacement.x * displacement.x) / displacement.y) + displacement.y);
                     } else {
                         response.set(0, displacement.y);
-                        // if(onSlope) onSlope = false;
+                        if(onSlope) onSlope = false;
                     }
                 }
 
@@ -198,11 +191,12 @@ public class CollisionScreen implements Screen {
 
         for(int j = 0; j < world[0].length; j++) {
 
-            for (Hitbox[] hitboxes : world) {
+            for(int i = 0; i < world.length; i++) {
 
-                Hitbox hitbox = hitboxes[j];
+                byte state = world[i][j][1];
 
-                if (hitbox == null) continue;
+                if (state == 0) continue;
+                Hitbox hitbox = new Hitbox(i * BLOCK_WIDTH, j * BLOCK_WIDTH, BLOCK_WIDTH, BLOCK_WIDTH, state);
                 Vector3 overlap = Hitbox.collideSAT(player, hitbox);
                 if (overlap == null) continue;
                 hitbox.setColor(Color.RED);
@@ -214,7 +208,7 @@ public class CollisionScreen implements Screen {
                 Vector2 displacement = new Vector2(normal).scl(overlap.z + 1);
 
                 if (displacement.y < 0 && onSlope) {
-                    if (overlap.z >= responseValue) {
+                    if (overlap.z > responseValue) {
                         responseValue = overlap.z;
                         response.set(0, displacement.y);
                     }
@@ -234,8 +228,14 @@ public class CollisionScreen implements Screen {
 
         Vector2 c1 = new Vector2(player.getPosition()).add(new Vector2(player.getSize()).scl(0.5f));
 
-        for(Hitbox[] hitboxList : world)
-            for(Hitbox hitbox : hitboxList) {
+        for(int j = 0; j < world[0].length; j++)
+
+            for(int i = 0; i < world.length; i++) {
+
+                byte state = world[i][j][1];
+                if(state == 0) continue;
+
+                Hitbox hitbox = new Hitbox(i * BLOCK_WIDTH, j * BLOCK_WIDTH, BLOCK_WIDTH, BLOCK_WIDTH, state);
                 if(hitbox == null) continue;
                 Vector3 overlap = Hitbox.collideSAT(player, hitbox);
                 if(overlap == null) continue;
@@ -247,7 +247,7 @@ public class CollisionScreen implements Screen {
                 Vector2 displacement = new Vector2(normal).scl(overlap.z + 1);
 
                 //if(hitbox.getState() == 3 || hitbox.getState() == 2) {
-                    if(overlap.z >= currentResLength && displacement.x != 0) {
+                    if(overlap.z > currentResLength && displacement.x != 0) {
                         currentResLength = overlap.z;
                         response.set((displacement.y * displacement.y) / displacement.x + displacement.x, 0);
                         if(onSlope) onSlope = false;
@@ -264,6 +264,55 @@ public class CollisionScreen implements Screen {
         camera.setToOrtho(false, width, height);
     }
 
+    private void checkMap() {
+        for(int i = 0; i < world.length; i++)
+            for(int j = 0; j < world[0].length; j++)
+                checkCell(i, j);
+    }
+
+    private void checkBlock(int x, int y) {
+        Vector4i bounds = new Vector4i(x*2-1, x*2+2, y*2-1, y*2+2);
+        for(int j = bounds.z; j <= bounds.w; j++)
+            for(int i = bounds.x; i <= bounds.y; i++)
+                checkCell(i, j);
+    }
+
+    private void checkCell(int x, int y) {
+        setCollision(x, y, collisionMasks[getCollisionValue(x-1, y, (byte) 1) + getCollisionValue(x, y+1, (byte) 2) + getCollisionValue(x+1, y, (byte) 4) + getCollisionValue(x, y-1, (byte) 8)]);
+    }
+
+    private byte getCollisionValue(int x, int y, byte value) {
+        return getCollision(x, y) != 0 ? value : 0;
+    }
+
+    private void setCollision(int x, int y, byte state) {
+        if(y < 0 || y >= world[0].length) return;
+        world[(world.length + x) % world.length][y][1] = state;
+    }
+
+    private byte getCollision(int x, int y) {
+        if(y < 0 || y >= world[0].length) return 1;
+        return world[(world.length + x) % world.length][y][0];
+    }
+
+    private void placeHitboxBlock(int blockX, int blockY) {
+        Vector4i bounds = new Vector4i(blockX*2, blockX*2+1, blockY*2, blockY*2+1);
+        for(int x = bounds.x; x <= bounds.y; x++)
+            for(int y = bounds.z; y <= bounds.w; y++) {
+                world[x][y][0] = 1;
+            }
+        checkBlock(blockX, blockY);
+    }
+
+    private void destroyHitboxBLock(int blockX, int blockY) {
+        Vector4i bounds = new Vector4i(blockX*2, blockX*2+1, blockY*2, blockY*2+1);
+        for(int x = bounds.x; x <= bounds.y; x++)
+            for(int y = bounds.z; y <= bounds.w; y++) {
+                world[x][y][0] = 0;
+            }
+        checkBlock(blockX, blockY);
+    }
+
     @Override
     public void pause() {}
 
@@ -275,77 +324,5 @@ public class CollisionScreen implements Screen {
 
     @Override
     public void dispose() {}
-
-    /*
-
-            for(Hitbox[] hitboxList : world)
-            for(Hitbox hitbox : hitboxList) {
-                if(hitbox == null) continue;
-                Vector3 overlap = Hitbox.collideSAT(player, hitbox);
-                if(overlap != null) {
-                    hitbox.setColor(Color.RED);
-                    Vector2 normal = new Vector2(overlap.x, overlap.y);
-                    Vector2 c1 = new Vector2(player.getPosition()).add(new Vector2(player.getSize()).scl(0.5f));
-                    Vector2 c2 = new Vector2(hitbox.getPosition()).add(new Vector2(hitbox.getSize()).scl(0.5f));
-                    Vector2 c1c2 = new Vector2(c1).sub(c2);
-                    if (c1c2.dot(normal) < 0) normal.scl(-1f);
-
-                    Vector2 displacement = new Vector2(normal).scl(overlap.z + 1);
-
-                    player.addPosition(displacement.x, displacement.y);
-
-                    //response.y = Math.max(response.y, displacement.y);
-                    //response.set(Math.max(response.x, displacement.x), Math.max(response.y, displacement.y));
-
-                if(overlap.z != 0) {
-                    if(hitbox.getState() == 3 || hitbox.getState() == 2)
-                        player.addPosition(0, ((displacement.x * displacement.x) / displacement.y) + displacement.y);
-                    else player.addPosition(displacement);
-
-                }
-
-    //player.addPosition(0, displacement.y);
-
-     */
-
-    /*
-
-            for(Hitbox[] hitboxList : world)
-            for(Hitbox hitbox : hitboxList) {
-                if(hitbox == null) continue;
-                Vector3 overlap = Hitbox.collideSAT(player, hitbox);
-                if(overlap != null) {
-                    hitbox.setColor(Color.RED);
-                    Vector2 normal = new Vector2(overlap.x, overlap.y);
-                    Vector2 c1 = new Vector2(player.getPosition()).add(new Vector2(player.getSize()).scl(0.5f));
-                    Vector2 c2 = new Vector2(hitbox.getPosition()).add(new Vector2(hitbox.getSize()).scl(0.5f));
-                    Vector2 c1c2 = new Vector2(c1).sub(c2);
-                    if (c1c2.dot(normal) < 0) normal.scl(-1f);
-
-                    Vector2 displacement = new Vector2(normal).scl(overlap.z + 1);
-
-                if(overlap.z != 0) {
-                    if(hitbox.getState() == 3 || hitbox.getState() == 2)
-                        player.addPosition(0, ((displacement.x * displacement.x) / displacement.y) + displacement.y);
-                    else player.addPosition(displacement);
-
-                }
-
-                    if(displacement.x != 0 && displacement.y != 0) {
-        response.set(0, Math.max(response.y, displacement.y));
-    } else
-            response.set(Math.max(response.x, displacement.x), Math.max(response.y, displacement.y));
-
-
-                if(overlap.z != 0) {
-                    if(displacement.x != 0 && displacement.y != 0) {
-                        //player.addPosition(0, ((displacement.x * displacement.x) / displacement.y) + displacement.y);
-                    } //player.addPosition(displacement);
-                //}
-
-}
-            }
-
-     */
 
 }
