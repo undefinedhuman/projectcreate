@@ -342,4 +342,8 @@ public class Tools extends de.undefinedhuman.sandboxgame.engine.utils.Tools {
         return Tools.random.nextInt(value) + value;
     }
 
+    public static float dot(Vector3 vector3, Vector2 vector2) {
+
+    }
+
 }

@@ -7,8 +7,6 @@ import de.undefinedhuman.sandboxgame.utils.Tools;
 
 public class Hitbox {
 
-    // WHEN REMOVING THE FUNCTIONALITY FOR PLAYER HITBOX OUT OF THIS CLASS, CHANGE CURRENT VERTICES CALCULATION TO ONLY ADD +32, 0, etc. DON'T DO CALCULATION BY 1 * 32, 0 * 32
-
     private static final int VERTICES_TEMPLATE = 0;
     private static final int VERTICES_CURRENT = 1;
     private static final int AXES = 2;

@@ -26,6 +26,8 @@ public class CollisionScreen implements Screen {
         Collision X/Slopes -> Falls immernoch in einer Slope zur Seite rausdrücken, hier nochmal schauen welche Axis genommen wird, wenn die äußerste Seite des Spielers genommen wird ok, I guess?, wenn die untere schräge kante genommen wird muss das in eine straighte linie konvertiert werden
      */
 
+    private static final int BLOCK_SIZE = 32;
+
     private SpriteBatch batch;
     private OrthographicCamera camera;
 
@@ -33,10 +35,10 @@ public class CollisionScreen implements Screen {
 
     private byte[][][] world = new byte[40][40][2];
 
-    private static final int BLOCK_SIZE = 32;
-
     private float velocityY = 0;
     private boolean onSlope = false;
+
+    private Vector2 tempCenterVector = new Vector2();
 
     private byte[] collisionMasks = new byte[] {
             0, 0, 0, 2, 0, 0, 3, 1, 0, 4, 0, 1, 5, 1, 1, 0
@@ -103,6 +105,8 @@ public class CollisionScreen implements Screen {
         response = calculateSlopeCollision();
         player.addPosition(response.x, 0);
 
+        player.update();
+
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         player.render(batch);
@@ -150,6 +154,20 @@ public class CollisionScreen implements Screen {
             }
 
         return response;
+    }
+
+    private boolean calculateMTV(Hitbox entity, int x, int y, Vector3 mtv) {
+        byte state = world[x][y][1];
+        if(state == 0) return false;
+        Hitbox hitbox = hitboxes[state];
+        hitbox.update(x * BLOCK_SIZE, y * BLOCK_SIZE);
+        Vector3 overlap = SAT.collide(entity, hitbox);
+        if(overlap == null) return false;
+        tempCenterVector.set(entity.getCenter()).sub(hitbox.getCenter()).nor();
+        if (Vector2.dot(tempCenterVector.x, tempCenterVector.y, overlap.x, overlap.y) < 0)
+            overlap.scl(-1f, -1f, 1f);
+        mtv.set(overlap.x * overlap.z, overlap.y * overlap.z, overlap.z);
+        return true;
     }
 
     private Vector2 calculateCollisionResponseY() {
