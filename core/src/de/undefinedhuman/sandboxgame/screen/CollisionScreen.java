@@ -12,19 +12,11 @@ import de.undefinedhuman.sandboxgame.engine.utils.math.Vector4i;
 
 public class CollisionScreen implements Screen {
 
-    // Make Blocks turn to Edges and not full hitboxes
-    // Limit Player Velocity \/
     /*do {
         Handle Movement/Collision
     } while((velX = velX-8) > 0);*/
 
     // MAKE Sure Collision Goes from BOTTOM TO TOP
-
-    /*
-        Collision X -> nur X Response zurückgeben, keine Slope nach oben verschiebung
-        Collision Y -> Immer -Y also runterdrücke mitzählen/überschreibe, Slope bzw. normale Blöcke dann hoch tuen
-        Collision X/Slopes -> Falls immernoch in einer Slope zur Seite rausdrücken, hier nochmal schauen welche Axis genommen wird, wenn die äußerste Seite des Spielers genommen wird ok, I guess?, wenn die untere schräge kante genommen wird muss das in eine straighte linie konvertiert werden
-     */
 
     private static final int BLOCK_SIZE = 32;
 
@@ -87,7 +79,7 @@ public class CollisionScreen implements Screen {
         if(Gdx.input.isKeyPressed(Input.Keys.D)) player.addPosition(250f * delta, 0);
         if(Gdx.input.isKeyPressed(Input.Keys.A)) player.addPosition(-250f * delta, 0);
 
-        Vector2 response = calculateCollisionResponseX();
+        Vector3 response = calculateCollisionX(player);
         player.addPosition(response.x, response.y);
 
         velocityY -= 250f * delta;
@@ -95,15 +87,12 @@ public class CollisionScreen implements Screen {
         velocityY = Math.max(velocityY, -250f);
 
         player.addPosition(0, velocityY * delta);
-        response = calculateCollisionResponseY();
+        response = calculateCollisionY(player);
         if(!response.isZero() && velocityY > 0) velocityY = 0;
         player.addPosition(response.x, response.y);
 
-        response = calculateSlopeYCollision();
-        player.addPosition(0, response.y);
-
-        response = calculateSlopeCollision();
-        player.addPosition(response.x, 0);
+        player.addPosition(0, calculateSlopeCollisionY(player).y);
+        player.addPosition(calculateSlopeCollisionX(player).x, 0);
 
         player.update();
 
@@ -122,35 +111,63 @@ public class CollisionScreen implements Screen {
         batch.end();
     }
 
-    private Vector2 calculateCollisionResponseX() {
-
-        player.update();
-
-        float currentResLength = 0;
-        Vector2 response = new Vector2(0, 0);
+    private Vector3 calculateCollisionX(Hitbox entity) {
+        entity.update();
+        Vector3 response = new Vector3();
 
         for(int j = 0; j < world[0].length; j++)
-
             for(int i = 0; i < world.length; i++) {
+                Vector3 mtv = new Vector3();
+                if(!calculateMTV(entity, i, j, mtv)) continue;
+                if(mtv.z >= response.z) response.set((mtv.x != 0 && mtv.y != 0) ? 0 : mtv.x, 0, mtv.z);
+            }
 
-                byte state = world[i][j][1];
-                if(state == 0) continue;
-                Hitbox hitbox = hitboxes[state];
-                hitbox.update(i * BLOCK_SIZE, j * BLOCK_SIZE);
-                Vector3 overlap = SAT.collide(player, hitbox);
-                if(overlap == null) continue;
-                Vector2 normal = new Vector2(overlap.x, overlap.y);
-                Vector2 c1c2 = new Vector2(player.getCenter()).sub(hitbox.getCenter());
-                if (c1c2.nor().dot(normal) < 0) normal.scl(-1f);
-                Vector2 displacement = new Vector2(normal).scl(overlap.z + 1);
+        return response;
+    }
 
-                if(overlap.z >= currentResLength) {
-                    currentResLength = overlap.z;
-                    if(displacement.x != 0 && displacement.y != 0) {
-                        response.set(0, 0);
-                    } else response.set(displacement.x, 0);
+    private Vector3 calculateCollisionY(Hitbox entity) {
+        entity.update();
+        Vector3 response = new Vector3();
+
+        for(int j = 0; j < world[0].length; j++)
+            for(int i = 0; i < world.length; i++) {
+                Vector3 mtv = new Vector3();
+                if(!calculateMTV(entity, i, j, mtv)) continue;
+                if(mtv.z >= response.z) {
+                    onSlope = mtv.x != 0 && mtv.y != 0;
+                    response.set(0, onSlope ? ((mtv.x * mtv.x) / mtv.y) + mtv.y : mtv.y, mtv.z);
                 }
+            }
 
+        return response;
+    }
+
+    private Vector3 calculateSlopeCollisionX(Hitbox entity) {
+        entity.update();
+        Vector3 response = new Vector3();
+
+        for(int j = 0; j < world[0].length; j++)
+            for(int i = 0; i < world.length; i++) {
+                Vector3 mtv = new Vector3();
+                if(!calculateMTV(entity, i, j, mtv)) continue;
+                if(mtv.z > response.z && mtv.x != 0) {
+                    response.set((mtv.y * mtv.y) / mtv.x + mtv.x, 0, mtv.z);
+                    onSlope = false;
+                }
+            }
+
+        return response;
+    }
+
+    private Vector3 calculateSlopeCollisionY(Hitbox entity) {
+        entity.update();
+        Vector3 response = new Vector3();
+
+        for(int j = 0; j < world[0].length; j++)
+            for(int i = 0; i < world.length; i++) {
+                Vector3 mtv = new Vector3();
+                if(!calculateMTV(entity, i, j, mtv)) continue;
+                if (onSlope && mtv.z > response.z && mtv.y < 0) response.set(0, mtv.y, mtv.z);
             }
 
         return response;
@@ -168,117 +185,6 @@ public class CollisionScreen implements Screen {
             overlap.scl(-1f, -1f, 1f);
         mtv.set(overlap.x * overlap.z, overlap.y * overlap.z, overlap.z);
         return true;
-    }
-
-    private Vector2 calculateCollisionResponseY() {
-
-        player.update();
-
-        float responseValue = 0;
-        Vector2 response = new Vector2(0, 0);
-
-        for(int j = 0; j < world[0].length; j++)
-
-            for(int i = 0; i < world.length; i++) {
-
-                byte state = world[i][j][1];
-                if(state == 0) continue;
-                Hitbox hitbox = hitboxes[state];
-                hitbox.update(i * BLOCK_SIZE, j * BLOCK_SIZE);
-                Vector3 overlap = SAT.collide(player, hitbox);
-                if(overlap == null) continue;
-                Vector2 normal = new Vector2(overlap.x, overlap.y);
-                Vector2 c1c2 = new Vector2(player.getCenter()).sub(hitbox.getCenter());
-                if (c1c2.nor().dot(normal) < 0) normal.scl(-1f);
-                Vector2 displacement = new Vector2(normal).scl(overlap.z + 1);
-
-                if(overlap.z >= responseValue) {
-                    responseValue = overlap.z;
-                    if(displacement.x != 0 && displacement.y != 0) {
-                        onSlope = true;
-                        response.set(0, ((displacement.x * displacement.x) / displacement.y) + displacement.y);
-                    } else {
-                        response.set(0, displacement.y);
-                        if(onSlope) onSlope = false;
-                    }
-                }
-
-            }
-
-        return response;
-
-    }
-
-    private Vector2 calculateSlopeYCollision() {
-
-        player.update();
-
-        float responseValue = 0;
-        Vector2 response = new Vector2(0, 0);
-
-        for(int j = 0; j < world[0].length; j++) {
-
-            for(int i = 0; i < world.length; i++) {
-
-                byte state = world[i][j][1];
-                if (state == 0) continue;
-                Hitbox hitbox = hitboxes[state];
-                hitbox.update(i * BLOCK_SIZE, j * BLOCK_SIZE);
-                Vector3 overlap = SAT.collide(player, hitbox);
-                if (overlap == null) continue;
-                Vector2 normal = new Vector2(overlap.x, overlap.y);
-                Vector2 c1c2 = new Vector2(player.getCenter()).sub(hitbox.getCenter());
-                if (c1c2.nor().dot(normal) < 0)
-                    normal.scl(-1f);
-                Vector2 displacement = new Vector2(normal).scl(overlap.z + 1);
-
-                if (displacement.y < 0 && onSlope) {
-                    if (overlap.z > responseValue) {
-                        responseValue = overlap.z;
-                        response.set(0, displacement.y);
-                    }
-                }
-
-            }
-
-        }
-
-        return response;
-    }
-
-    private Vector2 calculateSlopeCollision() {
-
-        player.update();
-
-        float currentResLength = 0;
-        Vector2 response = new Vector2(0, 0);
-
-        for(int j = 0; j < world[0].length; j++)
-
-            for(int i = 0; i < world.length; i++) {
-
-                byte state = world[i][j][1];
-                if(state == 0) continue;
-                Hitbox hitbox = hitboxes[state];
-                hitbox.update(i * BLOCK_SIZE, j * BLOCK_SIZE);
-                Vector3 overlap = SAT.collide(player, hitbox);
-                if(overlap == null) continue;
-                Vector2 normal = new Vector2(overlap.x, overlap.y);
-                Vector2 c1c2 = new Vector2(player.getCenter()).sub(hitbox.getCenter());
-                if (c1c2.nor().dot(normal) < 0) normal.scl(-1f);
-                Vector2 displacement = new Vector2(normal).scl(overlap.z + 1);
-
-                //if(hitbox.getState() == 3 || hitbox.getState() == 2) {
-                    if(overlap.z > currentResLength && displacement.x != 0) {
-                        currentResLength = overlap.z;
-                        response.set((displacement.y * displacement.y) / displacement.x + displacement.x, 0);
-                        if(onSlope) onSlope = false;
-                    }
-                //}
-
-            }
-
-        return response;
     }
 
     @Override
