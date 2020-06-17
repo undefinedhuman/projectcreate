@@ -14,6 +14,10 @@ public class Vector2i {
         set(x, y);
     }
 
+    public Vector2i(float x, float y) {
+        set(x, y);
+    }
+
     public Vector2i(Vector2 vector) {
         set(vector);
     }

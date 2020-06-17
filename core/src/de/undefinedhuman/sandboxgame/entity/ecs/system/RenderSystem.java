@@ -34,7 +34,7 @@ public class RenderSystem extends System {
         spriteComponent.render(batch, renderOffset);
 
         CollisionComponent collisionComponent = (CollisionComponent) entity.getComponent(ComponentType.COLLISION);
-        if (!Variables.RENDER_HITBOXES || collisionComponent == null) return;
+        if (!Variables.DEBUG || collisionComponent == null) return;
         Tools.drawRect(batch, entity.getPosition().x + collisionComponent.getOffset().x, entity.getPosition().y + collisionComponent.getOffset().y, collisionComponent.getSize().x, collisionComponent.getSize().y, Variables.HITBOX_COLOR);
     }
 

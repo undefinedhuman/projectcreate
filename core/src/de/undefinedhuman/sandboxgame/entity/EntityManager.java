@@ -39,7 +39,7 @@ public class EntityManager extends Manager {
     @Override
     public void init() {
         clearEntities();
-        chunkSize.set(World.instance.width / Variables.CHUNK_SIZE, World.instance.height / Variables.CHUNK_SIZE);
+        chunkSize.set(World.instance.size.x / Variables.CHUNK_SIZE, World.instance.size.y / Variables.CHUNK_SIZE);
         chunks = new Chunk[chunkSize.x][chunkSize.y];
         for (int i = 0; i < chunkSize.x; i++)
             for (int j = 0; j < chunkSize.y; j++)
@@ -60,9 +60,9 @@ public class EntityManager extends Manager {
 
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
-        for (int chunkX = CameraManager.instance.chunkBounds.x; chunkX <= CameraManager.instance.chunkBounds.z; chunkX++)
-            for (int chunkY = CameraManager.instance.chunkBounds.y; chunkY <= CameraManager.instance.chunkBounds.w; chunkY++)
-                chunks[Tools.getWorldPositionX(chunkX, chunkSize.x)][chunkY].render(batch, World.instance.blockWidth * (chunkX < 0 ? -1 : chunkX >= chunkSize.x ? 1 : 0));
+        for (int x = CameraManager.instance.chunkBounds.x; x <= CameraManager.instance.chunkBounds.z; x++)
+            for (int y = CameraManager.instance.chunkBounds.y; y <= CameraManager.instance.chunkBounds.w; y++)
+                getChunk(x, y).render(batch, World.instance.pixelSize.x * (x < 0 ? -1 : x >= chunkSize.x ? 1 : 0));
     }
 
     public void render(SpriteBatch batch, Entity entity) {
@@ -91,8 +91,8 @@ public class EntityManager extends Manager {
     }
 
     public Chunk getChunk(int x, int y) {
-        y = Tools.clamp(y, 0, chunks[0].length);
-        return chunks[x][y];
+        y = Tools.clamp(y, 0, chunks[0].length-1);
+        return chunks[(chunkSize.x + x) % chunkSize.x][y];
     }
 
     public Vector2i getChunkSize() {
@@ -119,7 +119,7 @@ public class EntityManager extends Manager {
         ArrayList<Entity> entitiesInRange = new ArrayList<>();
         for(int chunkX = CameraManager.instance.chunkBounds.x; chunkX <= CameraManager.instance.chunkBounds.z; chunkX++)
             for(int chunkY = CameraManager.instance.chunkBounds.y; chunkY <= CameraManager.instance.chunkBounds.w; chunkY++)
-                entitiesInRange.addAll(chunks[Tools.getWorldPositionX(chunkX, chunkSize.x)][chunkY].getEntitiesInRangeForCollision(bounds));
+                entitiesInRange.addAll(getChunk(chunkX, chunkY).getEntitiesInRangeForCollision(bounds));
         return entitiesInRange;
     }
 

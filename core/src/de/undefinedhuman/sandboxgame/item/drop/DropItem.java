@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.collision.CollisionManager;
 import de.undefinedhuman.sandboxgame.engine.entity.EntityType;
 import de.undefinedhuman.sandboxgame.engine.resources.texture.TextureManager;
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.EntityManager;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
@@ -91,7 +92,7 @@ public class DropItem {
     }
 
     public boolean collide(Vector2 position, float xDistance, float yDistance) {
-        return CollisionManager.collide(World.instance.mainLayer.getBlock(Tools.floor((position.x + sprite.getWidth() / 2 + xDistance) / World.instance.getTileWidth()), Tools.floor((position.y + yDistance) / World.instance.getTileHeight())));
+        return CollisionManager.collide(World.instance.getBlock(Tools.floor((position.x + sprite.getWidth() / 2 + xDistance) / Variables.BLOCK_SIZE), Tools.floor((position.y + yDistance) / Variables.BLOCK_SIZE), World.MAIN_LAYER));
     }
 
     public Vector2 getCenter() {
@@ -99,8 +100,8 @@ public class DropItem {
     }
 
     private void checkWorld() {
-        if (position.x < 0.0F) position.x = World.instance.width * 16 + position.x;
-        if (position.x >= World.instance.width * 16) position.x = 0.0F + (position.x - World.instance.width * 16);
+        if (position.x < 0.0F) position.x = World.instance.size.x * Variables.BLOCK_SIZE + position.x;
+        if (position.x >= World.instance.size.x * Variables.BLOCK_SIZE) position.x = 0.0F + (position.x - World.instance.size.x * Variables.BLOCK_SIZE);
     }
 
     public void render(SpriteBatch batch) {

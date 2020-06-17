@@ -1,10 +1,4 @@
-TODO Physics
-    Add normal tile collision for Blocks
-    Add X/Y positions when colliding, so when colliding with a wall the players gets set to the blocks x/y position
-    Add range collision checking if the velocity is greater then Block Size (to hopefully fix the resize bug)
-
 TODO ADD EventSystem for all sorts of events (block breaking/placing, entity dead/hurt move, etc.)
-TODO FIX PLAYER MOVEMENT
 TODO IMPLEMENT INTERACTION COMPONENT WITH MOUSE SELECTION NOT POSITION AND MAKE SURE IT WORKS ALSO IF THE ITEM IS PLACED AT THE EDGE OF THE WORLD
 
 TODO Maybe change camera, entity and block rendered Position to integer

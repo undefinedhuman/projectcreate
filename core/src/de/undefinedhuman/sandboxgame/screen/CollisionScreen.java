@@ -96,7 +96,7 @@ public class CollisionScreen implements Screen {
 
         player.update();
 
-        batch.setProjectionMatrix(camera.combined);
+        /*batch.setProjectionMatrix(camera.combined);
         batch.begin();
         player.render(batch);
         for(int i = 0; i < world.length; i++) {
@@ -108,7 +108,7 @@ public class CollisionScreen implements Screen {
                 hitbox.render(batch);
             }
         }
-        batch.end();
+        batch.end();*/
     }
 
     private Vector3 calculateCollisionX(Hitbox entity) {
@@ -177,7 +177,7 @@ public class CollisionScreen implements Screen {
         byte state = world[x][y][1];
         if(state == 0) return false;
         Hitbox hitbox = hitboxes[state];
-        hitbox.update(x * BLOCK_SIZE, y * BLOCK_SIZE);
+        hitbox.update(x * BLOCK_SIZE, y * BLOCK_SIZE); // Variables.COLLISION_SIZE needs to be in the actual game
         Vector3 overlap = SAT.collide(entity, hitbox);
         if(overlap == null) return false;
         tempCenterVector.set(entity.getCenter()).sub(hitbox.getCenter()).nor();

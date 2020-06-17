@@ -18,8 +18,8 @@ public class DropItemManager {
 
     }
 
-    public void addDropItem(int id, int amount, Vector2 position) {
-        this.dropItems.add(new DropItem(id, amount, position));
+    public void addDropItem(byte itemID, int amount, Vector2 position) {
+        this.dropItems.add(new DropItem(itemID, amount, position));
     }
 
     public void update(float delta) {

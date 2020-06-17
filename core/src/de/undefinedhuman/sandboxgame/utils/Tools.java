@@ -17,12 +17,13 @@ import de.undefinedhuman.sandboxgame.engine.entity.components.equip.EquipCompone
 import de.undefinedhuman.sandboxgame.engine.file.Paths;
 import de.undefinedhuman.sandboxgame.engine.resources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
+import de.undefinedhuman.sandboxgame.engine.utils.math.Vector2i;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
 import de.undefinedhuman.sandboxgame.world.Noise;
-import de.undefinedhuman.sandboxgame.world.WorldLayer;
+import de.undefinedhuman.sandboxgame.world.World;
 import de.undefinedhuman.sandboxgame.world.layer.LayerTransition;
 
 import java.text.DateFormat;
@@ -233,8 +234,8 @@ public class Tools extends de.undefinedhuman.sandboxgame.engine.utils.Tools {
         return keycode == Input.Keys.SHIFT_LEFT || keycode == Input.Keys.SHIFT_RIGHT;
     }
 
-    public static Vector2 convertToWorldCoords(Vector2 pos) {
-        return new Vector2(pos.x / Variables.BLOCK_SIZE, pos.y / Variables.BLOCK_SIZE);
+    public static Vector2i convertToBlockPos(Vector2 position) {
+        return new Vector2i(position.x / Variables.BLOCK_SIZE, position.y / Variables.BLOCK_SIZE);
     }
 
     public static float mix(float a, float b, float f) {
@@ -277,12 +278,12 @@ public class Tools extends de.undefinedhuman.sandboxgame.engine.utils.Tools {
         return maxID;
     }
 
-    public static boolean getLayerTransitionMaxY(WorldLayer worldLayer, int x, int y, int maxY, LayerTransition trans) {
+    public static boolean getLayerTransitionMaxY(byte worldLayer, int x, int y, int maxY, LayerTransition trans) {
 
         switch (trans) {
 
             case TOP:
-                return y > maxY && (worldLayer.blockData[x][y + 2][0] == 0 || worldLayer.blockData[x][y + 1][0] == 0);
+                return y > maxY && (World.instance.getBlock(x, y + 2, worldLayer) == 0 || World.instance.getBlock(x, y + 1, worldLayer) == 0);
             case SIN:
                 return y < (maxY + (int) (Math.sin(x * 50) * 5));
             case RANDOM:

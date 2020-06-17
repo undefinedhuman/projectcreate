@@ -57,7 +57,7 @@ public class CameraManager extends Manager {
         // If lerp gets added again, make sure, that if the player gets teleported to the other side of the world the camera sets with him, otherwise there will be some kind of laggy movement
         gameCamera.position
                 .set(new Vector3(GameManager.instance.player.getCenterPosition(), 0))
-                .y = Tools.clamp(gameCamera.position.y, cameraYBounds, World.instance.blockHeight - cameraYBounds);
+                .y = Tools.clamp(gameCamera.position.y, cameraYBounds, World.instance.pixelSize.y - cameraYBounds);
         gameCamera.update();
     }
 

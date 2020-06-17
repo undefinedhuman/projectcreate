@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 import de.undefinedhuman.sandboxgame.world.layer.Layer;
 import de.undefinedhuman.sandboxgame.world.settings.BiomeSetting;
-import de.undefinedhuman.sandboxgame.world.settings.WorldPreset;
 import de.undefinedhuman.sandboxgame.world.settings.WorldSetting;
 import de.undefinedhuman.sandboxgame.world.shift.Shift;
 import de.undefinedhuman.sandboxgame.world.shift.ShiftList;
@@ -24,20 +23,10 @@ public class WorldGenerator {
         this.random = new Random();
     }
 
-    public World generateTestWorld(WorldPreset preset) {
-        return generateTestWorld(preset.getName(), preset.getWorldSetting(), preset.getBiomeSetting());
-    }
-
-    private World generateTestWorld(String name, WorldSetting worldSetting, BiomeSetting biomeSetting) {
-        World world = new World(name, 50, worldSetting.getBiomeSize() * (biomeSetting.getSize() + biomeSetting.getTransition()), 2000, 23479356);
-        for (int x = 0; x < world.width; x++) for (int y = 0; y < 50; y++) world.mainLayer.setBlock(x, y, (byte) 1);
-        WorldManager.instance.checkMap(world.backLayer);
-        WorldManager.instance.checkMap(world.mainLayer);
-        return world;
-    }
-
-    public World generateWorld(WorldPreset preset) {
-        return generateWorld(preset.getName(), preset.getWorldSetting(), preset.getBiomeSetting());
+    public void generateTestWorld(String name, WorldSetting worldSetting, BiomeSetting biomeSetting) {
+        World.instance = new World(name, 50, worldSetting.getBiomeSize() * (biomeSetting.getSize() + biomeSetting.getTransition()), 2000, 432);
+        for (int x = 0; x < World.instance.size.x; x++) for (int y = 0; y < 50; y++) World.instance.setBlock(x, y, World.MAIN_LAYER, (byte) 1);
+        WorldManager.instance.checkMap(World.MAIN_LAYER);
     }
 
     public World generateWorld(String name, WorldSetting worldSetting, BiomeSetting biomeSetting) {
@@ -76,7 +65,7 @@ public class WorldGenerator {
 
     private void generateWorldBiomes(World world, BiomeSetting biomeSetting, Biome[] biomes, Noise[] noise, Noise caveNoise) {
 
-        float[] caveHeight = new float[400], borderSizes = new float[world.width], biomeTransitions = new float[biomeSetting.getTransition()];
+        float[] caveHeight = new float[400], borderSizes = new float[world.size.x], biomeTransitions = new float[biomeSetting.getTransition()];
         int[] tempY = new int[400];
         int borderSize = biomeSetting.getTransition() / 4;
 
@@ -93,7 +82,7 @@ public class WorldGenerator {
         for (int x = 0; x < borderSizes.length; x++) borderSizes[x] = calcBorders(x, borderSizes.length, borderSize);
         for (int i = 0; i < biomes.length; i++)
             generateBiome(world, tempY, biomeSetting, i, biomes, noise, caveNoise, list, borderSizes, caveHeight, biomeTransitions);
-        for (int x = 0; x < world.width; x++) for (int y = 0; y < maxHeight; y++) checkWorldTile(world, x, y);
+        for (int x = 0; x < world.size.x; x++) for (int y = 0; y < maxHeight; y++) checkWorldTile(world, x, y);
 
     }
 
@@ -125,32 +114,35 @@ public class WorldGenerator {
             currentHeight = 400;
             for (int y = 0; y < currentHeight; y++) {
                 currentY = tempY[y];
-                if (currentNoise.select(0.5f, isTransition ? Tools.lerp(currentNoise.gradient(currentX + biomeSetting.getTransition(), y, currentHeight), nextNoise.gradient(nextBiomeID == 0 ? currentX + biomeSetting.getTransition() - world.width : currentX + biomeSetting.getTransition(), y, currentHeight), biomeTransitions[transitionX]) : currentNoise.gradient(currentX + biomeSetting.getTransition(), y, currentHeight)) && caveNoise.select(borderSizes[currentX] * caveHeight[y], caveNoise.calculateFractalNoise(currentX, currentY)))
-                    world.mainLayer.setBlock(currentX, currentY, getBlockID(world.mainLayer, currentX, currentY, borderSizes, biomes[isTransition && currentNoise.select(0.5f, Tools.lerp(0, 1, biomeTransitions[transitionX] + currentNoise.calculateInterpolatedNoise(currentX, y))) ? nextBiomeID : biomeID], list));
+                if (currentNoise.select(0.5f, isTransition ? Tools.lerp(currentNoise.gradient(currentX + biomeSetting.getTransition(), y, currentHeight), nextNoise.gradient(nextBiomeID == 0 ? currentX + biomeSetting.getTransition() - world.size.x : currentX + biomeSetting.getTransition(), y, currentHeight), biomeTransitions[transitionX]) : currentNoise.gradient(currentX + biomeSetting.getTransition(), y, currentHeight)) && caveNoise.select(borderSizes[currentX] * caveHeight[y], caveNoise.calculateFractalNoise(currentX, currentY)))
+                    world.setBlock(currentX, currentY, World.MAIN_LAYER, getBlockID(World.MAIN_LAYER, currentX, currentY, borderSizes, biomes[isTransition && currentNoise.select(0.5f, Tools.lerp(0, 1, biomeTransitions[transitionX] + currentNoise.calculateInterpolatedNoise(currentX, y))) ? nextBiomeID : biomeID], list));
             }
 
             currentHeight = 800;
             for (int y = 0; y <= currentHeight; y++) {
                 if (caveNoise.select(borderSizes[currentX] * 0.06f, caveNoise.calculateFractalNoise(currentX, y)))
-                    world.mainLayer.setBlock(currentX, y, getBlockID(world.mainLayer, currentX, y, borderSizes, biomes[isTransition && currentNoise.select(0.5f, Tools.lerp(0, 1, biomeTransitions[transitionX] + currentNoise.calculateInterpolatedNoise(currentX, y))) ? nextBiomeID : biomeID], list));
+                    world.setBlock(currentX, y, World.MAIN_LAYER, getBlockID((byte) currentX, y, World.MAIN_LAYER, borderSizes, biomes[isTransition && currentNoise.select(0.5f, Tools.lerp(0, 1, biomeTransitions[transitionX] + currentNoise.calculateInterpolatedNoise(currentX, y))) ? nextBiomeID : biomeID], list));
             }
 
         }
 
     }
 
+    // TODO REFACTOR THE MOST FREQUENT ARRAY ELEMENT TO ALSO CONSIDER THE BLOCK ID AT THE POSITION
+
     private void checkWorldTile(World world, int x, int y) {
         byte[] neighborIDs = new byte[4];
-        byte air = 0, current = world.mainLayer.getBlock(x, y);
+        byte air = 0, current = world.getBlock(x, y, World.MAIN_LAYER);
         for (int i = 0; i < neighborIDs.length; i++) {
-            neighborIDs[i] = world.mainLayer.getBlock(tempPosition.set(x, y).add(neighbors[i]));
+            tempPosition.set(x, y).add(neighbors[i]);
+            neighborIDs[i] = world.getBlock((int) tempPosition.x, (int) tempPosition.y, World.MAIN_LAYER);
             air += neighborIDs[i] == 0 ? 1 : 0;
         }
-        if (air >= 3 && current != 0) world.mainLayer.setBlock(x, y, (byte) 0);
-        if (air == 0 && current == 0) world.mainLayer.setBlock(x, y, Tools.getMostFrequentArrayElement(neighborIDs));
+        if (air >= 3 && current != 0) world.setBlock(x, y, World.MAIN_LAYER, (byte) 0);
+        if (air == 0 && current == 0) world.setBlock(x, y, World.MAIN_LAYER, Tools.getMostFrequentArrayElement(neighborIDs));
     }
 
-    private byte getBlockID(WorldLayer worldLayer, int x, int y, float[] borderSizes, Biome biome, ShiftList shiftList) {
+    private byte getBlockID(byte worldLayer, int x, int y, float[] borderSizes, Biome biome, ShiftList shiftList) {
         Layer maxLayer = null;
         for (Layer layer : biome.getLayerList().getLayers()) if (layer.isMaxY(worldLayer, x, y)) maxLayer = layer;
         byte blockID = maxLayer != null ? maxLayer.blockID : 0;

@@ -20,8 +20,8 @@ public class WorldLayerTest {
     private void initEach() {
         layer = new WorldLayer(10, 10);
         for(int i = 0; i < 10; i++) for(int j = 0; j < 10; j++) {
-            layer.blockData[i][j][0] = (byte) (i + j);
-            layer.blockData[i][j][1] = (byte) (i + j);
+            layer.blockLayer[i][j][0] = (byte) (i + j);
+            layer.blockLayer[i][j][1] = (byte) (i + j);
         }
     }
 

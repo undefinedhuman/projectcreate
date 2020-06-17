@@ -13,10 +13,8 @@ import de.undefinedhuman.sandboxgame.entity.EntityManager;
 import de.undefinedhuman.sandboxgame.entity.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
 import de.undefinedhuman.sandboxgame.screen.gamescreen.GameScreen;
-import de.undefinedhuman.sandboxgame.world.World;
 import de.undefinedhuman.sandboxgame.world.WorldGenerator;
 import de.undefinedhuman.sandboxgame.world.settings.BiomeSetting;
-import de.undefinedhuman.sandboxgame.world.settings.WorldPreset;
 import de.undefinedhuman.sandboxgame.world.settings.WorldSetting;
 
 public class TestScreen implements Screen {
@@ -35,8 +33,7 @@ public class TestScreen implements Screen {
         batch = new SpriteBatch();
 
         WorldGenerator.instance = new WorldGenerator();
-
-        World.instance = WorldGenerator.instance.generateTestWorld(new WorldPreset("Main", WorldSetting.DEV, BiomeSetting.DEV));
+        WorldGenerator.instance.generateTestWorld("Main", WorldSetting.DEV, BiomeSetting.DEV);
         EntityManager.instance.init();
 
         Entity player = BlueprintManager.instance.getBlueprint(0).createInstance();

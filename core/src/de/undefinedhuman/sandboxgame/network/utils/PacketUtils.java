@@ -1,6 +1,5 @@
 package de.undefinedhuman.sandboxgame.network.utils;
 
-import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
@@ -26,14 +25,14 @@ public class PacketUtils {
 
     }
 
-    public static BlockPacket createBlockPacket(int id, float x, float y, boolean main) {
+    public static BlockPacket createBlockPacket(int x, int y, byte worldLayer, byte blockID) {
 
         BlockPacket packet = new BlockPacket();
         packet.worldName = World.instance.name;
-        packet.id = id;
-        packet.x = (int) x;
-        packet.y = (int) y;
-        packet.main = main;
+        packet.blockID = blockID;
+        packet.x = x;
+        packet.y = y;
+        packet.worldLayer = worldLayer;
         return packet;
 
     }
@@ -50,10 +49,8 @@ public class PacketUtils {
     }
 
     public static void handleBlockPacket(BlockPacket packet) {
-
-        if (packet.id == -1) WorldManager.instance.destroyBlock(new Vector2(packet.x, packet.y), packet.main, false);
-        else WorldManager.instance.placeBlock(packet.main, new Vector2(packet.x, packet.y), (byte) packet.id, false);
-
+        if (packet.blockID == -1) WorldManager.instance.destroyBlock(packet.x, packet.y, packet.worldLayer, false);
+        else WorldManager.instance.placeBlock(packet.x, packet.y, packet.worldLayer, packet.blockID, false);
     }
 
     public static void handleComponentPacket(ComponentPacket packet) {

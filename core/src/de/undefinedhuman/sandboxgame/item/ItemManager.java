@@ -13,6 +13,7 @@ import de.undefinedhuman.sandboxgame.engine.settings.Setting;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
 import de.undefinedhuman.sandboxgame.utils.Tools;
+import de.undefinedhuman.sandboxgame.world.World;
 import de.undefinedhuman.sandboxgame.world.WorldManager;
 
 import java.util.Arrays;
@@ -51,27 +52,17 @@ public class ItemManager extends Manager {
         return items.containsKey(id);
     }
 
-    @Override
-    public void delete() {
-        for (Item item : items.values()) item.delete();
-        items.clear();
-    }
-
-    public void removeItems(int... id) {
-        for (int i : id) removeItem(i);
-    }
-
-    public void removeItem(int id) {
-        if (hasItem(id)) {
+    public void removeItems(int... ids) {
+        for(int id : ids) {
+            if (!hasItem(id)) continue;
             items.get(id).delete();
             items.remove(id);
         }
     }
 
     public Item getItem(int id) {
-        if (hasItem(id)) return items.get(id);
-        else if (addItems(id)) return items.get(id);
-        return hasItem(0) ? getItem(0) : null;
+        if (hasItem(id) || addItems(id)) return items.get(id);
+        return null;
     }
 
     public HashMap<Integer, Item> getItems() {
@@ -85,12 +76,18 @@ public class ItemManager extends Manager {
         boolean mouseLeft = Gdx.input.isButtonPressed(0), mouseRight = Gdx.input.isButtonPressed(1);
         switch (item.type) {
             case BLOCK:
-                if (mouseLeft || mouseRight) WorldManager.instance.placeBlock(mouseLeft);
+                if (mouseLeft || mouseRight) WorldManager.instance.placeBlock(mouseLeft ? World.MAIN_LAYER : World.BACK_LAYER);
                 break;
             case PICKAXE:
-                if (mouseLeft || mouseRight) WorldManager.instance.destroyBlock(mouseLeft);
+                if (mouseLeft || mouseRight) WorldManager.instance.destroyBlock(mouseLeft ? World.MAIN_LAYER : World.BACK_LAYER);
                 break;
         }
+    }
+
+    @Override
+    public void delete() {
+        for (Item item : items.values()) item.delete();
+        items.clear();
     }
 
     public static Item loadItem(FsFile file) {

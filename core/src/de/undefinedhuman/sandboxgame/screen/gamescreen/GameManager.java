@@ -75,7 +75,6 @@ public class GameManager {
         batch.setProjectionMatrix(CameraManager.gameCamera.combined);
         batch.begin();
         BackgroundManager.instance.render(batch, CameraManager.gameCamera);
-        World.instance.computeBounds(CameraManager.gameCamera);
         // World.instance.renderBackLayer(gameBatch);
         EntityManager.instance.render(batch, CameraManager.gameCamera);
         DropItemManager.instance.render(batch);

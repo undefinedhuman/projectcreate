@@ -85,7 +85,7 @@ public class DragAndDrop {
 
                     if (InventoryManager.instance.overGui()) cancelMoving();
                     else {
-                        DropItemManager.instance.addDropItem(currentItem.getID(), currentItem.getAmount(), Tools.getWorldPos(CameraManager.gameCamera, new Vector2(Mouse.getX() - 8, Mouse.getY() - 8)));
+                        DropItemManager.instance.addDropItem((byte) currentItem.getID(), currentItem.getAmount(), Tools.getWorldPos(CameraManager.gameCamera, new Vector2(Mouse.getX() - 8, Mouse.getY() - 8)));
                         removeTempItem();
                     }
 

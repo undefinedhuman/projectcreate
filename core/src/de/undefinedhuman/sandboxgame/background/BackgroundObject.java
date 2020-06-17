@@ -31,7 +31,7 @@ public class BackgroundObject extends GameObject {
     public void update(float delta) {
         position.x += speed * baseMultiplier * delta;
         position.x += BackgroundManager.instance.speed * baseMultiplier * delta;
-        position.x = position.x < -size.x ? World.instance.blockWidth : position.x > World.instance.blockWidth ? -size.x : position.x;
+        position.x = position.x < -size.x ? World.instance.pixelSize.x : position.x > World.instance.pixelSize.x ? -size.x : position.x;
     }
 
     @Override

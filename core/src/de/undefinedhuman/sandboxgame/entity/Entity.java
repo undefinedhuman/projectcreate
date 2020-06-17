@@ -81,7 +81,7 @@ public class Entity extends GameObject implements NetworkComponent {
     @Override
     public void setPosition(float x, float y) {
         super.setPosition(x, y);
-        position.x = (World.instance.blockWidth + position.x) % World.instance.blockWidth;
+        position.x = (World.instance.pixelSize.x + position.x) % World.instance.pixelSize.x;
         updateChunkPosition();
     }
 

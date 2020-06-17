@@ -9,7 +9,8 @@ public class Variables {
     public static final float DELTA_MULTIPLIER = 1.0f;
     public static final String SEPARATOR = ";", FILE_SEPARATOR = "/";
     public static final String DEFAULT_LANGUAGE = "eu_DE";
-    public static final boolean RENDER_HITBOXES = false;
+
+    public static final boolean DEBUG = false;
     public static final Color HITBOX_COLOR = new Color(0.41568628f, 0.3529412f, 0.8039216f, 0.4f);
 
     // Test
@@ -19,6 +20,7 @@ public class Variables {
     // World
     public static final int CHUNK_SIZE = 20;
     public static final int BLOCK_SIZE = 16;
+    public static final int COLLISION_SIZE = 8;
     public static final int HOUR_LENGTH = 1000;
 
     // Background
@@ -40,4 +42,7 @@ public class Variables {
 
     // Editor
     public static final int PLAYER_TEXTURE_OFFSET = 64;
+
+    // Player
+    public static final int BLOCK_PLACEMENT_RANGE = 6;
 }

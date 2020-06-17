@@ -34,7 +34,7 @@ public class Bird extends GameObject {
         }
         position.x += Variables.BIRD_SPEED * speedMultiplier * delta;
         position.x += BackgroundManager.instance.speed * speedMultiplier * delta;
-        position.x = position.x < -size.x ? World.instance.blockWidth : position.x > World.instance.blockWidth ? -size.x : position.x;
+        position.x = position.x < -size.x ? World.instance.pixelSize.x : position.x > World.instance.pixelSize.x ? -size.x : position.x;
     }
 
     @Override

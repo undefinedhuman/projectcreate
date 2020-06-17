@@ -20,12 +20,10 @@ import de.undefinedhuman.sandboxgame.gui.GuiManager;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.network.ClientManager;
-import de.undefinedhuman.sandboxgame.screen.CollisionScreen;
 import de.undefinedhuman.sandboxgame.screen.TestScreen;
 import de.undefinedhuman.sandboxgame.screen.gamescreen.GameScreen;
 import de.undefinedhuman.sandboxgame.utils.Inputs;
 import de.undefinedhuman.sandboxgame.utils.Timer;
-import de.undefinedhuman.sandboxgame.world.World;
 import de.undefinedhuman.sandboxgame.world.WorldManager;
 import de.undefinedhuman.sandboxgame.world.layer.topLayer.TopLayerManager;
 
@@ -50,8 +48,8 @@ public class Main extends Game {
     public void create() {
         managerList.init();
         initScreens();
-        setScreen(new CollisionScreen());
-        //setScreen(TestScreen.instance);
+        //setScreen(new CollisionScreen());
+        setScreen(TestScreen.instance);
     }
 
     @Override
@@ -103,7 +101,6 @@ public class Main extends Game {
         EquipManager.instance = new EquipManager();
         InventoryManager.instance = new InventoryManager();
 
-        World.instance = new World("Main", 50, 1000, 1000, 100);
         WorldManager.instance = new WorldManager();
 
         ClientManager.instance = new ClientManager();

@@ -1,77 +1,139 @@
 package de.undefinedhuman.sandboxgame.world;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.sandboxgame.engine.camera.CameraManager;
-import de.undefinedhuman.sandboxgame.engine.utils.Variables;
-import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.engine.items.type.blocks.Block;
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
+import de.undefinedhuman.sandboxgame.engine.utils.math.Vector2i;
+import de.undefinedhuman.sandboxgame.item.ItemManager;
+import de.undefinedhuman.sandboxgame.screen.CollisionUtils;
+import de.undefinedhuman.sandboxgame.screen.Hitbox;
+import de.undefinedhuman.sandboxgame.world.layer.topLayer.TopLayerManager;
+import de.undefinedhuman.sandboxgame.world.layer.topLayer.TopLayerType;
 
 import java.util.Random;
 
 public class World {
 
+    public static final byte MAIN_LAYER = 0;
+    public static final byte BACK_LAYER = 2;
+
+    private static final byte BLOCK_LAYER = 0;
+    private static final byte STATE_LAYER = 1;
+
+    public static final byte COLLISION_BASE_LAYER = 0;
+    public static final byte COLLISION_STATE_LAYER = 1;
+
     public static World instance;
 
     public String name;
-    public int maxHeight, width, height, seed, blockWidth, blockHeight;
-    public WorldLayer mainLayer, backLayer;
-    public Random random;
+    public int maxHeight, seed;
+    public Vector2i size = new Vector2i(), pixelSize = new Vector2i(), collisionSize = new Vector2i();
+    public Random random = new Random();
 
     private Color batchColor = new Color();
 
+    private byte[][][] blockLayer;       // Y, X, DATA LAYER (BLOCK, STATE)
+    private byte[][][] collisionLayer;   // Y, X, COLLISION LAYER
+
     public World(String name, int maxHeight, int width, int height, int seed) {
-
-        this.random = new Random(seed);
-        this.mainLayer = new WorldLayer(width, height);
-        this.backLayer = new WorldLayer(width, height);
-
         this.name = name;
-        this.width = width;
+        this.random.setSeed(this.seed = seed);
         this.maxHeight = maxHeight * Variables.BLOCK_SIZE;
-        this.height = height;
-        this.blockWidth = width * Variables.BLOCK_SIZE;
-        this.blockHeight = height * Variables.BLOCK_SIZE;
-        this.seed = seed;
 
-    }
+        this.size.set(width, height);
+        this.pixelSize.set(width * Variables.BLOCK_SIZE, height * Variables.BLOCK_SIZE);
+        this.collisionSize.set(width*2, height*2);
 
-    public void computeBounds(OrthographicCamera camera) {
-
-        /*this.minX = ((int) ((((int) camera.position.x) - camera.zoom * camera.viewportWidth / 2 - Variables.BLOCK_SIZE * 2) / getTileWidth()));
-        this.minY = ((int) ((((int) camera.position.y) - camera.zoom * camera.viewportHeight / 2 - Variables.BLOCK_SIZE * 2) / getTileHeight()));
-        this.maxX = ((int) ((((int) camera.position.x) + camera.zoom * camera.viewportWidth / 2 + Variables.BLOCK_SIZE * 2) / getTileWidth()));
-        this.maxY = ((int) ((((int) camera.position.y) + camera.zoom * camera.viewportHeight / 2 + Variables.BLOCK_SIZE * 2) / getTileHeight()));
-
-        if (this.minY < 0) this.minY = 0;
-        if (this.maxY > this.height - 2) this.maxY = (this.height - 2);
-        if (minX < -width + 2) minX = -width + 2;
-        if (maxX > width * 2 - 2) maxX = width * 2 - 2;*/
-
-    }
-
-    public float getTileWidth() {
-        return Variables.BLOCK_SIZE;
-    }
-
-    public float getTileHeight() {
-        return Variables.BLOCK_SIZE;
+        this.blockLayer = new byte[size.y][size.x][4];
+        this.collisionLayer = new byte[collisionSize.y][collisionSize.x][2];
     }
 
     public void renderMainLayer(SpriteBatch batch) {
         for (int i = CameraManager.instance.blockBounds.x; i <= CameraManager.instance.blockBounds.z; i++)
-            for (int j = CameraManager.instance.blockBounds.y; j <= CameraManager.instance.blockBounds.w; j++)
-                mainLayer.renderBlock(batch, batchColor.set(Color.WHITE), i, j);
+            for (int j = CameraManager.instance.blockBounds.y; j <= CameraManager.instance.blockBounds.w; j++) {
+                renderBlock(batch, Color.WHITE, i, j, MAIN_LAYER);
+            }
+
+        if(Variables.DEBUG)
+            for (int i = CameraManager.instance.blockBounds.x*2; i <= CameraManager.instance.blockBounds.z*2; i++)
+                for (int j = CameraManager.instance.blockBounds.y*2; j <= CameraManager.instance.blockBounds.w*2; j++) {
+                    byte state = getCollision(i, j, COLLISION_STATE_LAYER);
+                    if(state == 0) continue;
+                    Hitbox hitbox = CollisionUtils.blockCollisionMask[state];
+                    hitbox.update(i * Variables.COLLISION_SIZE, j * Variables.COLLISION_SIZE);
+                    hitbox.render(batch);
+                }
     }
 
     public void renderBackLayer(SpriteBatch batch) {
         for (int i = CameraManager.instance.blockBounds.x; i <= CameraManager.instance.blockBounds.z; i++)
             for (int j = CameraManager.instance.blockBounds.y; j <= CameraManager.instance.blockBounds.w; j++) {
-                Block block = (Block) ItemManager.instance.getItem(World.instance.mainLayer.getBlock(i, j));
-                if (block.id.getInt() == 0 || mainLayer.getState(i, j) != 0 || !block.isFull.getBoolean())
-                    backLayer.renderBlock(batch, batchColor.set(0.45f, 0.45f, 0.45f, 1), i, j);
+                Block block = (Block) ItemManager.instance.getItem(getBlock(i, j, MAIN_LAYER));
+                if (block.id.getInt() != 0 || getState(i, j, MAIN_LAYER) == 0 || block.isFull.getBoolean()) return;
+                renderBlock(batch, batchColor.set(0.45f, 0.45f, 0.45f, 1), i, j, BACK_LAYER);
             }
+    }
+
+    private void renderBlock(SpriteBatch batch, Color color, int x, int y, byte worldLayer) {
+        Block block = (Block) ItemManager.instance.getItem(getBlock(x, y, worldLayer));
+        if (block == null || block.id.getInt() == 0) return;
+
+        batch.setColor(color);
+        batch.draw(block.blockTextures[getState(x, y, worldLayer)], x * Variables.BLOCK_SIZE, y * Variables.BLOCK_SIZE, Variables.BLOCK_SIZE, Variables.BLOCK_SIZE);
+
+        if (block.id.getInt() == 3 && getBlock(x, y + 1, worldLayer) == 0)
+            TopLayerManager.instance.render(batch, x, y, TopLayerType.GRASS, getBlock(x - 1, y, worldLayer) != 0, getBlock(x + 1, y, worldLayer) != 0);
+    }
+
+    public byte getBlock(int x, int y, byte worldLayer) {
+        if(y < 0 || y >= size.y) return 0;
+        return getBlockData(x, y, worldLayer, BLOCK_LAYER);
+    }
+
+   public void setBlock(int x, int y, byte worldLayer, byte blockID) {
+        if(y < 0 || y >= size.y) return;
+        setBlockData(x, y, worldLayer, BLOCK_LAYER, blockID);
+        if(worldLayer == MAIN_LAYER) setCollisionBlock(x, y, blockID != 0 && ((Block) ItemManager.instance.getItem(blockID)).hasCollision.getBoolean());
+    }
+
+    public byte getState(int x, int y, byte worldLayer) {
+        if(getBlock(x, y, worldLayer) == 0) return 0;
+        return getBlockData(x, y, worldLayer, STATE_LAYER);
+    }
+
+    public void setState(int x, int y, byte worldLayer, byte state) {
+        if(y < 0 || y >= size.y) return;
+        setBlockData(x, y, worldLayer, STATE_LAYER, state);
+    }
+
+    public byte getCollision(int x, int y, byte collisionLayer) {
+        if(y < 0 || y >= collisionSize.y) return 1;
+        return this.collisionLayer[y][calculateXPosition(x, collisionSize.x)][collisionLayer];
+    }
+
+    public void setCollision(int x, int y, byte collisionLayer, byte collisionState) {
+        if(y < 0 || y >= collisionSize.y) return;
+        this.collisionLayer[y][calculateXPosition(x, collisionSize.x)][collisionLayer] = collisionState;
+    }
+
+    private void setCollisionBlock(int blockX, int blockY, boolean solid) {
+        for(int i = 0; i <=1; i++)
+            for(int j = 0; j <=1; j++)
+                setCollision(blockX*2+i, blockY*2+j, COLLISION_BASE_LAYER, (byte) (solid ? 1 : 0));
+    }
+
+    private byte getBlockData(int x, int y, byte worldLayer, byte dataLayer) {
+        return this.blockLayer[y][calculateXPosition(x, size.x)][worldLayer + dataLayer];
+    }
+
+    private void setBlockData(int x, int y, byte worldLayer, byte dataLayer, byte blockID) {
+        this.blockLayer[y][calculateXPosition(x, size.x)][worldLayer + dataLayer] = blockID;
+    }
+
+    private int calculateXPosition(int x, int width) {
+        return (width + x) % width;
     }
 
 }

@@ -1,9 +1,10 @@
 package de.undefinedhuman.sandboxgame.world.settings;
 
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
+
 public enum BiomeSetting {
 
-    // Immer ein Vielfaches von 20 aufgrund der Chunk Size für die Drop Items und der Entitys
-    DEV(80, 20), SMALL(200, 20), NORMAL(400, 40), BIG(800, 80);
+    DEV(Variables.CHUNK_SIZE * 2, Variables.CHUNK_SIZE), SMALL(Variables.CHUNK_SIZE * 5, Variables.CHUNK_SIZE * 2), NORMAL(Variables.CHUNK_SIZE * 10, Variables.CHUNK_SIZE * 2), BIG(Variables.CHUNK_SIZE * 15, Variables.CHUNK_SIZE * 2);
 
     private int size, transition;
 

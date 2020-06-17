@@ -17,6 +17,7 @@ public class Block extends Item {
             durability = new Setting(SettingType.Int, "Durability", 0),
             dropID = new Setting(SettingType.Int, "DropID", 0),
             hasStates = new BooleanSetting("HasStates", true),
+            hasCollision = new BooleanSetting("Collides", false),
             isFull = new BooleanSetting("IsFull", true),
             canBePlacedInBackLayer = new BooleanSetting("Place in Back", false),
             needBack = new BooleanSetting("Need Back", false);
@@ -26,7 +27,7 @@ public class Block extends Item {
 
     public Block() {
         super();
-        settings.addSettings(blockType, durability, dropID, hasStates, isFull, canBePlacedInBackLayer, needBack);
+        settings.addSettings(blockType, durability, dropID, hasStates, hasCollision, isFull, canBePlacedInBackLayer, needBack);
     }
 
     @Override

@@ -41,6 +41,7 @@ public class Setting {
     public float getFloat() { return Float.parseFloat(getString()); }
     public boolean getBoolean() { return FileUtils.readBoolean(getString()); }
     public int getInt() { return Integer.parseInt(getString()); }
+    public byte getByte() { return Byte.parseByte(getString()); }
 
     public Vector2 getVector2() { return (Vector2) value; }
 

@@ -26,7 +26,7 @@ public class BirdLayer extends Layer {
 
     @Override
     public void init() {
-        int birdCount = Tools.calculateRandomValue((World.instance.blockWidth/(World.instance.width*2))/3), xOffset = Tools.calculateRandomValue(World.instance.blockWidth/birdCount/2);
+        int birdCount = Tools.calculateRandomValue((World.instance.pixelSize.x/(World.instance.size.x*2))/3), xOffset = Tools.calculateRandomValue(World.instance.pixelSize.x/birdCount/2);
         for(int i = 0; i < birdCount; i++) {
             int groupCount = Tools.random.nextInt(3) + 3;
             for(int j = 0; j < groupCount; j++)
