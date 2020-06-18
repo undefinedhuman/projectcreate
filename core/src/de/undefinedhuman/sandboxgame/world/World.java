@@ -8,7 +8,7 @@ import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.engine.utils.math.Vector2i;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.screen.CollisionUtils;
-import de.undefinedhuman.sandboxgame.screen.Hitbox;
+import de.undefinedhuman.sandboxgame.engine.collision.Hitbox;
 import de.undefinedhuman.sandboxgame.world.layer.topLayer.TopLayerManager;
 import de.undefinedhuman.sandboxgame.world.layer.topLayer.TopLayerType;
 

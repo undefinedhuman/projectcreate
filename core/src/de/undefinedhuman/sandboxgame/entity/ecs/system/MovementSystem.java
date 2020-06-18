@@ -1,6 +1,7 @@
 package de.undefinedhuman.sandboxgame.entity.ecs.system;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.entity.components.animation.AnimationComponent;
 import de.undefinedhuman.sandboxgame.engine.entity.components.collision.CollisionComponent;
@@ -8,6 +9,7 @@ import de.undefinedhuman.sandboxgame.engine.entity.components.movement.MovementC
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.ecs.System;
+import de.undefinedhuman.sandboxgame.screen.CollisionUtils;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
 public class MovementSystem extends System {
@@ -39,44 +41,26 @@ public class MovementSystem extends System {
 
         currentPosition.set(entity.getPosition());
 
-        float velX = movementComponent.velocity.x * delta;
-        float velY = movementComponent.velocity.y * delta;
-        if(velX > Variables.BLOCK_SIZE) velX = Variables.BLOCK_SIZE;
-        if(velX < -Variables.BLOCK_SIZE) velX = -Variables.BLOCK_SIZE;
-        if(velY < -Variables.BLOCK_SIZE) velY = -Variables.BLOCK_SIZE;
+        float velX = Tools.clamp(movementComponent.velocity.x * delta, -Variables.COLLISION_SIZE, Variables.COLLISION_SIZE);
+        float velY = Tools.clamp(movementComponent.velocity.y * delta, -Variables.COLLISION_SIZE, Variables.COLLISION_SIZE);
 
-        //collisionComponent.updateHitbox(new Vector2(currentPosition).add(velX, 0));
+        collisionComponent.update(currentPosition.add(velX, 0));
+        Vector3 response = CollisionUtils.calculateCollisionX(collisionComponent);
+        currentPosition.add(response.x, response.y);
 
-        // Check for upper horizontal collision when going on and while being on a slope, don't add x velocity when horizontal collision, wenn der gang frei ist der Spieler also verikal theoretisch auf die Slope drauf kann aber an die Decke stoßen würde
-
-
-        /*
-        if(movementComponent.rightSlope || CollisionManager.collideVer(collisionComponent.bottomRight(), collisionComponent.upperRight()) == CollisionManager.NO_COLLISION) {
-            collisionComponent.updateHitbox(currentPosition);
-            movementComponent.rightSlope = collisionSlopes(movementComponent, collisionComponent, velX, velY, velX > 0, 6, movementComponent.rightSlope, (byte) 4, (byte) 12);
-        } else movementComponent.rightSlope = false;
-
-
-        if(velY < 0) {
-
-            collisionComponent.updateHitbox(currentPosition);
-
-            movementComponent.leftSlope = collisionSlopes(movementComponent, collisionComponent, velX, velY, velX < 0, 4, movementComponent.leftSlope, (byte) 1, (byte) 9);
-            movementComponent.middleSlope = collisionSlopes(movementComponent, collisionComponent, velX, velY, false, 5, movementComponent.middleSlope, (byte) 0, (byte) 8);
-            movementComponent.rightSlope = collisionSlopes(movementComponent, collisionComponent, velX, velY, velX > 0, 6, movementComponent.rightSlope, (byte) 4, (byte) 12);
-
-        } else {
-            movementComponent.leftSlope = false;
-            movementComponent.middleSlope = false;
-            movementComponent.rightSlope = false;
+        collisionComponent.update(currentPosition.add(0, velY));
+        response = CollisionUtils.calculateCollisionY(collisionComponent);
+        if(!response.isZero()) {
+            if(velY < 0 && collisionComponent.onSlope && movementComponent.canJump && movementComponent.velocity.x != 0 && (velX>0) == (response.x>0)) movementComponent.velocity.y = Math.max(Math.min(movementComponent.velocity.y, -50), -500f);
+            else movementComponent.velocity.y = -1f;
+            if(response.y > 0) movementComponent.canJump = true;
         }
+        currentPosition.add(0, response.y);
 
-        //if(!movementComponent.leftSlope && !movementComponent.middleSlope && !movementComponent.rightSlope) {
-        if(!movementComponent.rightSlope) {
-            collideVertical(collisionComponent, velX);
-            collideHorizontal(collisionComponent, movementComponent, velY);
-        }*/
-        //}
+        collisionComponent.update(currentPosition);
+        currentPosition.add(0, CollisionUtils.calculateSlopeCollisionY(collisionComponent).y);
+        collisionComponent.update(currentPosition);
+        currentPosition.add(CollisionUtils.calculateSlopeCollisionX(collisionComponent).x, 0);
 
         entity.setPosition(currentPosition);
 
@@ -86,7 +70,7 @@ public class MovementSystem extends System {
 
     private void animate(AnimationComponent animationComponent, MovementComponent movementComponent) {
         Vector2 velocity = movementComponent.velocity;
-        if(movementComponent.isJumping && !movementComponent.leftSlope && !movementComponent.rightSlope)
+        if(!movementComponent.canJump)
             animationComponent.setAnimation(velocity.y > movementComponent.getJumpTans() ? "Jump" : (velocity.y < -movementComponent.getJumpTans() ? "Fall" : "Transition"));
         else animationComponent.setAnimation(velocity.x != 0 ? "Run" : "Idle");
     }

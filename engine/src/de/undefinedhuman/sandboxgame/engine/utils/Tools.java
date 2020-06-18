@@ -1,11 +1,15 @@
 package de.undefinedhuman.sandboxgame.engine.utils;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.file.FileReader;
 import de.undefinedhuman.sandboxgame.engine.file.FileWriter;
 import de.undefinedhuman.sandboxgame.engine.file.FsFile;
 import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
+import de.undefinedhuman.sandboxgame.engine.resources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
 import de.undefinedhuman.sandboxgame.engine.utils.math.Vector4;
 
@@ -73,6 +77,17 @@ public class Tools {
     public static void resetPanel(JPanel panel) {
         panel.revalidate();
         panel.repaint();
+    }
+
+    public static void drawLine(SpriteBatch batch, Vector2 point1, Vector2 point2, int lineWidth, Color color) {
+        Vector2 vec = new Vector2(point2).sub(point1);
+        TextureRegion texture = TextureManager.instance.getTexture("blank.png");
+        Sprite sprite = new Sprite(texture, 0, 0, lineWidth, (int) vec.len());
+        sprite.setColor(color);
+        sprite.setOrigin(0, 0);
+        sprite.setPosition(point1.x, point1.y);
+        sprite.setRotation(vec.angle() - 90);
+        sprite.draw(batch);
     }
 
     public static float clamp(float val, float min, float max) {

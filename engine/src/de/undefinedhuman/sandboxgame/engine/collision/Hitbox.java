@@ -1,9 +1,9 @@
-package de.undefinedhuman.sandboxgame.screen;
+package de.undefinedhuman.sandboxgame.engine.collision;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.sandboxgame.engine.utils.Tools;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
-import de.undefinedhuman.sandboxgame.utils.Tools;
 
 public class Hitbox {
 
@@ -19,11 +19,6 @@ public class Hitbox {
     private Vector2 center = new Vector2();
 
     public Hitbox(Vector2 center, Vector2[] verticesTemplate) {
-        this(0, 0, center, verticesTemplate);
-    }
-
-    public Hitbox(float x, float y, Vector2 center, Vector2[] verticesTemplate) {
-        this.position.set(x, y);
         this.center.set(center);
         this.collisionData = new Vector2[3][verticesLength = verticesTemplate.length];
         this.collisionData[VERTICES_TEMPLATE] = verticesTemplate;
@@ -31,8 +26,8 @@ public class Hitbox {
         calculateAxes();
     }
 
-    public void update() {
-        this.update(this.position.x, this.position.y);
+    public void update(Vector2 position) {
+        this.update(position.x, position.y);
     }
 
     public void update(float x, float y) {
@@ -48,19 +43,8 @@ public class Hitbox {
             Tools.drawLine(batch, collisionData[VERTICES_CURRENT][i], collisionData[VERTICES_CURRENT][(i+1)%verticesLength], 1, Variables.HITBOX_COLOR);
     }
 
-    public void calculateAxes() {
-        for (int i = 0; i < verticesLength; i++) {
-            Vector2 edge = new Vector2(collisionData[VERTICES_TEMPLATE][i]).sub(collisionData[VERTICES_TEMPLATE][(i+1)%verticesLength]);
-            collisionData[AXES][i] = new Vector2(edge.y, -edge.x).nor();
-        }
-    }
-
     public Vector2 getCenter() {
         return new Vector2(position).add(center);
-    }
-
-    public void addPosition(float x, float y) {
-        this.position.add(x, y);
     }
 
     public Vector2[] getAxes() {
@@ -69,6 +53,14 @@ public class Hitbox {
 
     public Vector2[] getVertices() {
         return collisionData[VERTICES_CURRENT];
+    }
+
+
+    private void calculateAxes() {
+        for (int i = 0; i < verticesLength; i++) {
+            Vector2 edge = new Vector2(collisionData[VERTICES_TEMPLATE][i]).sub(collisionData[VERTICES_TEMPLATE][(i+1)%verticesLength]);
+            collisionData[AXES][i] = new Vector2(edge.y, -edge.x).nor();
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 package de.undefinedhuman.sandboxgame.entity.ecs.system;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.entity.components.collision.CollisionComponent;
 import de.undefinedhuman.sandboxgame.engine.entity.components.sprite.SpriteComponent;
@@ -8,7 +9,6 @@ import de.undefinedhuman.sandboxgame.engine.entity.components.sprite.SpriteData;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.ecs.System;
-import de.undefinedhuman.sandboxgame.utils.Tools;
 
 public class RenderSystem extends System {
 
@@ -35,7 +35,8 @@ public class RenderSystem extends System {
 
         CollisionComponent collisionComponent = (CollisionComponent) entity.getComponent(ComponentType.COLLISION);
         if (!Variables.DEBUG || collisionComponent == null) return;
-        Tools.drawRect(batch, entity.getPosition().x + collisionComponent.getOffset().x, entity.getPosition().y + collisionComponent.getOffset().y, collisionComponent.getSize().x, collisionComponent.getSize().y, Variables.HITBOX_COLOR);
+        collisionComponent.update(new Vector2(entity.getPosition()).add(renderOffset, 0));
+        collisionComponent.getHitbox().render(batch);
     }
 
 }

@@ -1,13 +1,12 @@
 package de.undefinedhuman.sandboxgame.screen;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import de.undefinedhuman.sandboxgame.engine.utils.math.Vector2i;
+import de.undefinedhuman.sandboxgame.engine.collision.Hitbox;
+import de.undefinedhuman.sandboxgame.engine.collision.SAT;
 import de.undefinedhuman.sandboxgame.engine.utils.math.Vector4i;
 
 public class CollisionScreen implements Screen {
@@ -50,7 +49,7 @@ public class CollisionScreen implements Screen {
         this.camera = new OrthographicCamera();
         this.batch = new SpriteBatch();
 
-        this.player = new Hitbox(500, 600, new Vector2(50, 100), new Vector2[] {
+        this.player = new Hitbox(new Vector2(50, 100), new Vector2[] {
                 new Vector2(25, 0),
                 new Vector2(75, 0),
                 new Vector2(100, 25),
@@ -71,7 +70,7 @@ public class CollisionScreen implements Screen {
     @Override
     public void render(float delta) {
 
-        Vector2i mouseBlockPosition = new Vector2i(Gdx.input.getX()/(BLOCK_SIZE*2), (Gdx.graphics.getHeight() - Gdx.input.getY())/(BLOCK_SIZE*2));
+        /*Vector2i mouseBlockPosition = new Vector2i(Gdx.input.getX()/(BLOCK_SIZE*2), (Gdx.graphics.getHeight() - Gdx.input.getY())/(BLOCK_SIZE*2));
 
         if(Gdx.input.isButtonJustPressed(0)) placeHitboxBlock(mouseBlockPosition.x, mouseBlockPosition.y);
         if(Gdx.input.isButtonJustPressed(1)) destroyHitboxBLock(mouseBlockPosition.x, mouseBlockPosition.y);
@@ -96,7 +95,7 @@ public class CollisionScreen implements Screen {
 
         player.update();
 
-        /*batch.setProjectionMatrix(camera.combined);
+        batch.setProjectionMatrix(camera.combined);
         batch.begin();
         player.render(batch);
         for(int i = 0; i < world.length; i++) {
@@ -112,7 +111,7 @@ public class CollisionScreen implements Screen {
     }
 
     private Vector3 calculateCollisionX(Hitbox entity) {
-        entity.update();
+        //entity.update();
         Vector3 response = new Vector3();
 
         for(int j = 0; j < world[0].length; j++)
@@ -126,7 +125,7 @@ public class CollisionScreen implements Screen {
     }
 
     private Vector3 calculateCollisionY(Hitbox entity) {
-        entity.update();
+        //entity.update();
         Vector3 response = new Vector3();
 
         for(int j = 0; j < world[0].length; j++)
@@ -143,7 +142,7 @@ public class CollisionScreen implements Screen {
     }
 
     private Vector3 calculateSlopeCollisionX(Hitbox entity) {
-        entity.update();
+        //entity.update();
         Vector3 response = new Vector3();
 
         for(int j = 0; j < world[0].length; j++)
@@ -160,7 +159,7 @@ public class CollisionScreen implements Screen {
     }
 
     private Vector3 calculateSlopeCollisionY(Hitbox entity) {
-        entity.update();
+        //entity.update();
         Vector3 response = new Vector3();
 
         for(int j = 0; j < world[0].length; j++)

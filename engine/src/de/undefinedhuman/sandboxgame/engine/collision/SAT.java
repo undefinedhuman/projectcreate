@@ -1,4 +1,4 @@
-package de.undefinedhuman.sandboxgame.screen;
+package de.undefinedhuman.sandboxgame.engine.collision;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -9,7 +9,6 @@ public class SAT {
         Vector3 mtv = new Vector3(0, 0, Float.MAX_VALUE);
         if(!collideAxis(hitbox1.getAxes(), hitbox1, hitbox2, mtv)) return null;
         if(!collideAxis(hitbox2.getAxes(), hitbox1, hitbox2, mtv)) return null;
-        mtv.z += 1;
         return mtv;
     }
 

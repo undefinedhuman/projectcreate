@@ -21,6 +21,7 @@ public class Variables {
     public static final int CHUNK_SIZE = 20;
     public static final int BLOCK_SIZE = 16;
     public static final int COLLISION_SIZE = 8;
+    public static final int COLLISION_HITBOX_OFFSET = 4;
     public static final int HOUR_LENGTH = 1000;
 
     // Background

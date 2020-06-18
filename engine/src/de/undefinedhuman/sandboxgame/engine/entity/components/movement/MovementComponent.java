@@ -9,7 +9,7 @@ import de.undefinedhuman.sandboxgame.engine.file.LineWriter;
 public class MovementComponent extends Component {
 
     public Vector2 velocity = new Vector2();
-    public boolean canJump = false, isJumping = false, leftSlope = false, middleSlope = false, rightSlope = false;
+    public boolean canJump = false;
 
     private float jumpTans, speed, jumpSpeed, gravity;
     private int direction = 0;
@@ -37,7 +37,6 @@ public class MovementComponent extends Component {
 
     public void setCanJump(boolean canJump) {
         this.canJump = canJump;
-        if(canJump && isJumping) isJumping = false;
     }
     
     public boolean jump() {
@@ -48,7 +47,6 @@ public class MovementComponent extends Component {
     public void setJump() {
         this.velocity.y = jumpSpeed;
         this.canJump = false;
-        this.isJumping = true;
     }
     public void move(boolean left, boolean right) {
         direction = left ? -1 : right ? 1 : 0;
