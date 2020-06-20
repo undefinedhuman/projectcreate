@@ -72,7 +72,7 @@ public class CollisionUtils {
             for(int i = collisionComponent.getCollisionBounds().x; i < collisionComponent.getCollisionBounds().z; i++) {
                 Vector3 mtv = new Vector3();
                 if (!calculateMTV(collisionComponent.getHitbox(), i, j, mtv)) continue;
-                if (collisionComponent.onSlope && mtv.z > response.z && mtv.y < 0) response.set(0, mtv.y, mtv.z);
+                if (collisionComponent.onSlope && mtv.z > response.z) response.set(0, mtv.y, mtv.z);
             }
 
         return response;
