@@ -41,10 +41,9 @@ public class CollisionUtils {
             for(int i = collisionComponent.getCollisionBounds().x; i < collisionComponent.getCollisionBounds().z; i++) {
                 Vector3 mtv = new Vector3();
                 if (!calculateMTV(collisionComponent.getHitbox(), i, j, mtv)) continue;
-                if (mtv.z >= response.z) {
-                    collisionComponent.onSlope = mtv.x != 0 && mtv.y != 0;
-                    response.set(mtv.x, collisionComponent.onSlope ? ((mtv.x * mtv.x) / mtv.y) + mtv.y : mtv.y, mtv.z);
-                }
+                if (mtv.z < response.z) continue;
+                collisionComponent.onSlope = mtv.x != 0 && mtv.y != 0;
+                response.set(mtv.x, collisionComponent.onSlope ? ((mtv.x * mtv.x) / mtv.y) + mtv.y : mtv.y, mtv.z);
             }
 
         return response;

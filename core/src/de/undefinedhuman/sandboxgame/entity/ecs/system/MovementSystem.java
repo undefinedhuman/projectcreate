@@ -52,7 +52,7 @@ public class MovementSystem extends System {
         response = CollisionUtils.calculateCollisionY(collisionComponent);
         if(!response.isZero()) {
             if(velY < 0 && collisionComponent.onSlope && movementComponent.canJump && movementComponent.velocity.x != 0 && (velX>0) == (response.x>0)) movementComponent.velocity.y = Math.max(Math.min(movementComponent.velocity.y, -50), -500f);
-            else movementComponent.velocity.y = -1f;
+            else movementComponent.velocity.y = 0;
             if(response.y > 0) movementComponent.canJump = true;
         }
         currentPosition.add(0, response.y);
