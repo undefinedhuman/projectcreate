@@ -10,7 +10,7 @@ public class RelativeOffset extends Constraint {
 
     @Override
     public int getValue(float guiScale) {
-        return (int) (guiTransform.getValue(getScaleAxis()) * value);
+        return (int) (currentTransform.getValue(getScaleAxis()) * value);
     }
 
 }

@@ -3,6 +3,7 @@ package de.undefinedhuman.sandboxgame.engine.utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Set;
 
 public class MultiMap<K, V> {
 
@@ -43,6 +44,10 @@ public class MultiMap<K, V> {
         ArrayList<V> values = new ArrayList<>();
         for(ArrayList<V> valueArray : map.values()) values.addAll(valueArray);
         return values;
+    }
+
+    public Set<K> keySet() {
+        return map.keySet();
     }
 
     public void clearMap() {

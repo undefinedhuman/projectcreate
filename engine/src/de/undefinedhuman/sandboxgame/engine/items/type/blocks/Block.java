@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import de.undefinedhuman.sandboxgame.engine.items.Item;
+import de.undefinedhuman.sandboxgame.engine.items.recipe.RecipeType;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
 import de.undefinedhuman.sandboxgame.engine.settings.SettingType;
 import de.undefinedhuman.sandboxgame.engine.settings.types.BooleanSetting;
@@ -28,6 +29,7 @@ public class Block extends Item {
     public Block() {
         super();
         settings.addSettings(blockType, durability, dropID, hasStates, hasCollision, isFull, canBePlacedInBackLayer, needBack);
+        this.recipeType = RecipeType.BLOCK;
     }
 
     @Override

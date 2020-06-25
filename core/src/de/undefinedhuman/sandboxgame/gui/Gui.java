@@ -82,6 +82,11 @@ public class Gui extends GuiComponent {
         return this;
     }
 
+    public void clearChildren() {
+        for(GuiTransform transform : children) transform.delete();
+        children.clear();
+    }
+
     @Override
     public GuiTransform setPosition(int x, int y) {
         texture.resize(x, y, (int) scale.x, (int) scale.y, guiScale);

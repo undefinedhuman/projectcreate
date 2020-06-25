@@ -1,8 +1,8 @@
 package de.undefinedhuman.sandboxgame.gui.transforms.constraints;
 
-public class RelativeConstraint extends Constraint {
+public class ResizeConstraint extends Constraint {
 
-    public RelativeConstraint(float value) {
+    public ResizeConstraint(float value) {
         super(value);
     }
 

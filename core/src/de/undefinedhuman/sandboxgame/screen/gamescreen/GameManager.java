@@ -2,6 +2,7 @@ package de.undefinedhuman.sandboxgame.screen.gamescreen;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.sandboxgame.background.BackgroundManager;
+import de.undefinedhuman.sandboxgame.crafting.gui.CraftingInventory;
 import de.undefinedhuman.sandboxgame.engine.camera.CameraManager;
 import de.undefinedhuman.sandboxgame.engine.utils.ManagerList;
 import de.undefinedhuman.sandboxgame.entity.Entity;
@@ -28,7 +29,7 @@ public class GameManager {
         batch = new SpriteBatch();
         CameraManager.instance = new CameraManager();
         manager = new ManagerList();
-        //CraftingInventory craftingInventory = new CraftingInventory();
+        CraftingInventory craftingInventory = new CraftingInventory();
     }
 
     public void init() {

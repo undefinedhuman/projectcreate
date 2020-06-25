@@ -7,7 +7,7 @@ public abstract class Constraint {
 
     protected float value;
 
-    protected GuiTransform guiTransform;
+    protected GuiTransform currentTransform;
     protected Axis axis;
 
     public Constraint(float value) {
@@ -15,7 +15,7 @@ public abstract class Constraint {
     }
 
     public Constraint setGui(GuiTransform guiTransform) {
-        this.guiTransform = guiTransform;
+        this.currentTransform = guiTransform;
         return this;
     }
 

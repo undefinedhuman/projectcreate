@@ -4,15 +4,15 @@ import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.event.ClickEvent;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.Constraint;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
 
 public abstract class MenuSlot extends Gui {
 
-    public MenuSlot(String iconPreview, int x, int y) {
+    public MenuSlot(String iconPreview, Constraint x, Constraint y) {
         super(GuiTemplate.SLOT);
-        set("p" + x, "p" + y, "p" + Variables.SLOT_SIZE, "p" + Variables.SLOT_SIZE);
-        Gui child = new Gui(iconPreview);
-        child.set("r0.5", "r0.5", "p" + Variables.ITEM_SIZE, "p" + Variables.ITEM_SIZE).setCentered();
-        addChild(child);
+        set(x, y, new PixelConstraint(Variables.SLOT_SIZE), new PixelConstraint(Variables.SLOT_SIZE));
+        addChild(new Gui(iconPreview).set("r0.5", "r0.5", "p" + Variables.ITEM_SIZE, "p" + Variables.ITEM_SIZE).setCentered());
         addEvent(new ClickEvent() {
             @Override
             public void onClick() {

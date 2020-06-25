@@ -38,7 +38,6 @@ public class GuiComponent extends GuiTransform {
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         super.render(batch, camera);
-        if (!visible || !parent.isVisible()) return;
         for (Event event : events) event.render(batch, camera);
     }
 

@@ -1,5 +1,6 @@
 package de.undefinedhuman.sandboxgame.engine.items;
 
+import de.undefinedhuman.sandboxgame.engine.items.recipe.RecipeType;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
 import de.undefinedhuman.sandboxgame.engine.settings.SettingType;
 import de.undefinedhuman.sandboxgame.engine.settings.SettingsList;
@@ -25,11 +26,13 @@ public class Item {
             rarity = new SelectionSetting("Rarity", Rarity.values());
 
     public ItemType type;
+    public RecipeType recipeType;
     protected SettingsList settings = new SettingsList();
 
     public Item() {
         settings.addSettings(id, name, desc, itemTexture, iconTexture, previewTexture, useIconAsHandTexture, maxAmount, isStackable, canShake, rarity);
         this.type = ItemType.ITEM;
+        this.recipeType = RecipeType.BLOCK;
     }
 
     public void init() { }

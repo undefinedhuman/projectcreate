@@ -4,6 +4,7 @@ import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.elements.MenuSlot;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
@@ -30,7 +31,7 @@ public class SidePanel extends Gui {
         for (int i = 0; i < buttons.length; i++) {
 
             int k = buttons.length - i - 1;
-            addChild(new MenuSlot(textures[k], getCornerSize(), getTemplate().cornerSize + (Variables.SLOT_SIZE + Variables.SLOT_SPACE) * i) {
+            addChild(new MenuSlot(textures[k], new PixelConstraint(getCornerSize()), new PixelConstraint(getTemplate().cornerSize + (Variables.SLOT_SIZE + Variables.SLOT_SPACE) * i)) {
                 @Override
                 public void onClick() { InventoryManager.instance.handleClick(k); }
             });

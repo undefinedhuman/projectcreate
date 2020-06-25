@@ -48,14 +48,13 @@ public class Main extends Game {
     public void create() {
         managerList.init();
         initScreens();
-        //setScreen(new CollisionScreen());
         setScreen(TestScreen.instance);
     }
 
     @Override
     public void resize(int width, int height) {
         int guiSetting = SettingsManager.instance.guiScale.getInt();
-        guiScale = guiSetting == 5 ? Math.max(width / 640, 1) : guiSetting;
+        guiScale = Math.max(guiSetting == 5 ? width/640 : guiSetting, 1);
         managerList.resize(width, height);
         super.resize(width, height);
     }

@@ -12,20 +12,14 @@ import de.undefinedhuman.sandboxgame.engine.log.Log;
 
 public enum ItemType {
 
-    ITEM(new Item(), ""), TOOL(new Tool(), "gui/preview/crafting/Tools.png"), PICKAXE(new Pickaxe(), ""), SWORD(new Sword(), ""), WEAPON(new Weapon(), "gui/preview/crafting/Weapons.png"),
-    BLOCK(new Block(), "gui/preview/crafting/Blocks.png"), BOW(new Bow(), ""), ARMOR(new Armor(), "gui/preview/crafting/Armor.png"), STAFF(new Weapon(), "gui/preview/crafting/Weapons.png"), HELMET(new Helmet(), ""),
-    STRUCTURE(new Item(), "gui/preview/crafting/Structures.png");
+    ITEM(new Item()), TOOL(new Tool()), PICKAXE(new Pickaxe()), SWORD(new Sword()), WEAPON(new Weapon()),
+    BLOCK(new Block()), BOW(new Bow()), ARMOR(new Armor()), STAFF(new Weapon()), HELMET(new Helmet()),
+    STRUCTURE(new Item());
 
     private Item item;
-    private String previewTexture;
 
-    ItemType(Item item, String previewTexture) {
+    ItemType(Item item) {
         this.item = item;
-        this.previewTexture = previewTexture;
-    }
-
-    public String getPreviewTexture() {
-        return previewTexture;
     }
 
     public Item createInstance() {

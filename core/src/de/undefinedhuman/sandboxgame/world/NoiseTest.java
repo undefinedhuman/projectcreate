@@ -1,6 +1,5 @@
 package de.undefinedhuman.sandboxgame.world;
 
-import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
 import javax.imageio.ImageIO;
@@ -32,22 +31,37 @@ public class NoiseTest extends JFrame {
         JLabel label2 = new JLabel();
         label2.setBounds(800, 0, 200, 800);
 
+        JLabel thresholdLabel = new JLabel("Threshold");
+        thresholdLabel.setBounds(920, 25, 100, 25);
         JTextField threshold = new JTextField(String.valueOf(tresh));
         threshold.setBounds(810, 25, 100, 25);
         label2.add(threshold);
+        label2.add(thresholdLabel);
 
+        JLabel octavesLabel = new JLabel("Octaves");
+        octavesLabel.setBounds(920, 60, 100, 25);
+        label2.add(octavesLabel);
         JTextField octaves = new JTextField(String.valueOf(oct));
         octaves.setBounds(810, 60, 100, 25);
         label2.add(octaves);
 
+        JLabel amplitudeLabel = new JLabel("Amplitude");
+        amplitudeLabel.setBounds(920, 95, 100, 25);
+        label2.add(amplitudeLabel);
         JTextField amplitude = new JTextField(String.valueOf(ampl));
         amplitude.setBounds(810, 95, 100, 25);
         label2.add(amplitude);
 
+        JLabel roughnessLabel = new JLabel("Roughness");
+        roughnessLabel.setBounds(920, 130, 100, 25);
+        label2.add(roughnessLabel);
         JTextField roughness = new JTextField(String.valueOf(rough));
         roughness.setBounds(810, 130, 100, 25);
         label2.add(roughness);
 
+        JLabel seedLabel = new JLabel("Seed");
+        seedLabel.setBounds(920, 165, 100, 25);
+        label2.add(seedLabel);
         JTextField seed = new JTextField("3455467");
         seed.setBounds(810, 165, 100, 25);
         label2.add(seed);
@@ -96,11 +110,7 @@ public class NoiseTest extends JFrame {
             for (int j = 0; j < width/2; j++) {
 
                 int y = i*2, x = j*2;
-
-                float dis = new Vector2(x, y).sub(new Vector2(320, 320)).len();
-                if(dis >= 50f) continue;
-                dis = 1f - dis / 50f;
-                float k = noise.select(threshold, (1f - noise.calculateFractalNoise(x, y)) * dis) ? 1 : 0;
+                float k = noise.select(threshold, (1f - noise.calculateFractalNoise(x, y))) ? 1 : 0;
                 int a = 255, r = (int) (k * 255f), g = (int) (k * 255f), b = (int) (k * 255f);
                 int p = (a << 24) | (r << 16) | (g << 8) | b;
                 img.setRGB(x, y, p);

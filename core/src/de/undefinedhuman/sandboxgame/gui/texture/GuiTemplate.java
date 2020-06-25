@@ -26,7 +26,6 @@ public enum GuiTemplate {
     }
 
     public void load() {
-
         FileHandle file = ResourceManager.loadFile(Paths.GUI_PATH, "template/" + templateName + "/settings.gui");
         FileReader reader = new FileReader(file, false);
         reader.nextLine();
@@ -35,7 +34,6 @@ public enum GuiTemplate {
         for (int i = 0; i < 9; i++)
             textures[i] = Paths.GUI_PATH.getPath() + "template/" + templateName + "/" + i + ".png";
         TextureManager.instance.addTexture(textures);
-
     }
 
     public Vector2 getOffset() {

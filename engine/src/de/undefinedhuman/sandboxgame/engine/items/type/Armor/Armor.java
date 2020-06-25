@@ -1,6 +1,7 @@
 package de.undefinedhuman.sandboxgame.engine.items.type.Armor;
 
 import de.undefinedhuman.sandboxgame.engine.items.Item;
+import de.undefinedhuman.sandboxgame.engine.items.recipe.RecipeType;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
 import de.undefinedhuman.sandboxgame.engine.settings.SettingType;
 import de.undefinedhuman.sandboxgame.engine.settings.types.StringArraySetting;
@@ -14,6 +15,7 @@ public class Armor extends Item {
     public Armor() {
         super();
         settings.addSettings(armor, inVisibleSprites);
+        this.recipeType = RecipeType.ARMOR;
     }
 
 }
