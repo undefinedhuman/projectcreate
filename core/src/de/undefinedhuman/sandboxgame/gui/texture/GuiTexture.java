@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.sandboxgame.Main;
 import de.undefinedhuman.sandboxgame.engine.resources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
@@ -37,10 +38,10 @@ public class GuiTexture {
         addTexture(template.textures);
     }
 
-    public void resize(int x, int y, int width, int height, float localScale) {
+    public void resize(int x, int y, int width, int height) {
         if (template == null) sprites.get(0).setBounds(x, y, width, height);
         else {
-            this.cornerSize = (int) (template.cornerSize * localScale);
+            this.cornerSize = (int) (template.cornerSize * Main.guiScale);
             int centerWidth = Math.max(0, width - cornerSize * 2);
             int centerHeight = Math.max(0, height - cornerSize * 2);
             int index, e, r, o, a;

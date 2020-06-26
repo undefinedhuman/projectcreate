@@ -4,6 +4,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.CenterConstraint;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
+import de.undefinedhuman.sandboxgame.gui.transforms.offset.CenterOffset;
+import de.undefinedhuman.sandboxgame.gui.transforms.offset.PixelOffset;
 import de.undefinedhuman.sandboxgame.inventory.EquipSlot;
 import de.undefinedhuman.sandboxgame.inventory.InvTarget;
 import de.undefinedhuman.sandboxgame.inventory.Slot;
@@ -20,9 +24,9 @@ public class EquipScreen extends Gui implements InvTarget {
 
     public EquipScreen() {
         super(GuiTemplate.SMALL_PANEL);
-        setScale(Tools.getInventoryWidth(GuiTemplate.SMALL_PANEL, 5), Tools.getInventoryHeight(GuiTemplate.SMALL_PANEL, 10));
+        setSize(Tools.getInventoryWidth(GuiTemplate.SMALL_PANEL, 5), Tools.getInventoryHeight(GuiTemplate.SMALL_PANEL, 10));
         Gui gui = new Gui("gui/preview/equip/Human-Preview.png");
-        gui.set("r0.5", "r0.5", "p64", "p128").setOffsetY("p48").setCentered();
+        gui.set(new CenterConstraint(), new CenterConstraint(), new PixelConstraint(64), new PixelConstraint(128)).setOffset(new CenterOffset(), new PixelOffset(48));
         addChild(gui);
 
         for (int i = 0; i < slots.length; i++) {
@@ -33,7 +37,7 @@ public class EquipScreen extends Gui implements InvTarget {
                 @Override
                 public void unequip() { EquipManager.instance.unEquipItemNetwork(GameManager.instance.player, this.getItem().getID(), true); }
             };
-            slots[i].setPosition("r0.5", "r0.5").setOffset("p" + offset[i].x, "p" + offset[i].y).setCentered();
+            slots[i].setPosition(new CenterConstraint(), new CenterConstraint()).setOffset(new PixelOffset(offset[i].x), new PixelOffset(offset[i].y));
         }
         addChild(slots);
     }

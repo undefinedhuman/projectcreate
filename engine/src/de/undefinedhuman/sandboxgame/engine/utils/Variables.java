@@ -34,14 +34,13 @@ public class Variables {
     public static final int BIRD_SPEED = 64;
     public static final float BIRD_ANIMATION_SPEED = 0.0875f;
 
-    // Gui
+    // User interface
+    public static final int BASE_WINDOW_WIDTH = 1280;
+    public static final int BASE_WINDOW_HEIGHT = 720;
     public static final int SLOT_SIZE = 24;
     public static final int ITEM_SIZE = 16;
     public static final int SLOT_SPACE = 2;
     public static final int SELECTED_AMOUNT = 2;
-
-    // Inventory
-    public static final int BASE_WINDOW_WIDTH = 1280;
 
     // Editor
     public static final int PLAYER_TEXTURE_OFFSET = 64;

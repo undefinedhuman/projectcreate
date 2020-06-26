@@ -5,15 +5,15 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.sandboxgame.Main;
 import de.undefinedhuman.sandboxgame.engine.resources.font.Font;
 import de.undefinedhuman.sandboxgame.gui.text.Text;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTexture;
 import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
 import de.undefinedhuman.sandboxgame.gui.transforms.GuiTransform;
-import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.RelativeConstraint;
+import de.undefinedhuman.sandboxgame.gui.transforms.offset.CenterOffset;
+import de.undefinedhuman.sandboxgame.gui.transforms.offset.PixelOffset;
 
 import java.util.ArrayList;
 
@@ -39,7 +39,7 @@ public class Gui extends GuiComponent {
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
-        this.texture.resize(getCurrentValue(Axis.X), getCurrentValue(Axis.Y), getCurrentValue(Axis.WIDTH), getCurrentValue(Axis.HEIGHT), Main.guiScale);
+        this.texture.resize(getCurrentValue(Axis.X), getCurrentValue(Axis.Y), getCurrentValue(Axis.WIDTH), getCurrentValue(Axis.HEIGHT));
         for (GuiTransform component : children) component.resize(width, height);
     }
 
@@ -52,7 +52,7 @@ public class Gui extends GuiComponent {
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         super.render(batch, camera);
-        if (!visible || !parent.isVisible()) return;
+        if (!visible) return;
         texture.render(batch, alpha);
         for (GuiTransform component : children) component.render(batch, camera);
     }
@@ -72,7 +72,7 @@ public class Gui extends GuiComponent {
 
     public void setTitle(String titleString, Font font, Color color) {
         Text text = new Text(titleString);
-        text.setFont(font).setColor(color).setPosition(new RelativeConstraint(0.5f), new RelativeConstraint(1f)).setOffsetY(new PixelConstraint(getTemplate() == null ? 0 : -(getTemplate().cornerSize/2f))).setCentered();
+        text.setFont(font).setColor(color).setPosition(new RelativeConstraint(0.5f), new RelativeConstraint(1f)).setOffset(new CenterOffset(), new PixelOffset(getTemplate() == null ? 0 : -(getTemplate().cornerSize/2f)));
         addChild(text);
     }
 
@@ -92,13 +92,13 @@ public class Gui extends GuiComponent {
 
     @Override
     public GuiTransform setPosition(int x, int y) {
-        texture.resize(x, y, getCurrentValue(Axis.WIDTH), getCurrentValue(Axis.HEIGHT), Main.guiScale);
+        texture.resize(x, y, getCurrentValue(Axis.WIDTH), getCurrentValue(Axis.HEIGHT));
         return super.setPosition(x, y);
     }
 
     @Override
     public GuiTransform setSize(int width, int height) {
-        texture.resize(getCurrentValue(Axis.X), getCurrentValue(Axis.Y), width, height, Main.guiScale);
+        texture.resize(getCurrentValue(Axis.X), getCurrentValue(Axis.Y), width, height);
         return super.setSize(width, height);
     }
 

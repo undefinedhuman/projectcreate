@@ -46,7 +46,7 @@ public class Slider extends Gui {
 
     private void initPointer(String texture) {
         pointer = new Gui(new GuiTexture(texture));
-        pointer.set(new RelativeConstraint(progress), new RelativeConstraint(0.5f), new PixelConstraint(4), new PixelConstraint(14)).setCentered();
+        pointer.set(new RelativeConstraint(progress), new RelativeConstraint(0.5f), new PixelConstraint(4), new PixelConstraint(14));
         addChild(pointer);
     }
 
@@ -73,22 +73,22 @@ public class Slider extends Gui {
 
         if (grabbed) {
             float mouseX = Mouse.getMouseCoords().x;
-            this.progress = Tools.clamp((mouseX - position.x) / size.x, 0, 1f);
+            this.progress = Tools.clamp((mouseX - getCurrentValue(Axis.X)) / getCurrentValue(Axis.WIDTH), 0, 1f);
             resizePointer();
             notifyChangeListener();
         }
 
         super.render(batch, camera);
-        batch.draw(progressTexture, position.x + texture.getCornerSize(), position.y + texture.getCornerSize(), 0, 0, (int) progressWidth, (int) progressHeight);
+        batch.draw(progressTexture, getCurrentValue(Axis.X) + texture.getCornerSize(), getCurrentValue(Axis.Y) + texture.getCornerSize(), 0, 0, (int) progressWidth, (int) progressHeight);
         pointer.render(batch, camera);
 
     }
 
     private void resizePointer() {
         if (pointer == null) return;
-        progressWidth = progress * (size.x - texture.getCornerSize() * 2);
-        progressHeight = size.y - texture.getCornerSize() * 2;
-        pointer.setValue(Axis.X, progressWidth / size.x);
+        progressWidth = progress * (getCurrentValue(Axis.WIDTH) - texture.getCornerSize() * 2);
+        progressHeight = getCurrentValue(Axis.HEIGHT) - texture.getCornerSize() * 2;
+        pointer.setValue(Axis.X, progressWidth / getCurrentValue(Axis.WIDTH));
         pointer.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 

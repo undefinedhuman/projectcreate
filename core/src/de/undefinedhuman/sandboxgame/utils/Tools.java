@@ -304,20 +304,20 @@ public class Tools extends de.undefinedhuman.sandboxgame.engine.utils.Tools {
         return length > 1 ? "s" : "";
     }
 
-    public static String getInventoryWidth(GuiTemplate template, int col) {
+    public static int getInventoryWidth(GuiTemplate template, int col) {
         return getInventoryWidth(template.cornerSize, col);
     }
 
-    public static String getInventoryWidth(float offsetX, int col) {
-        return "p" + (offsetX * 2 + (Variables.SLOT_SIZE * col + Variables.SLOT_SPACE * (col - 1)));
+    public static int getInventoryWidth(float offsetX, int col) {
+        return (int) (offsetX * 2 + (Variables.SLOT_SIZE * col + Variables.SLOT_SPACE * (col - 1)));
     }
 
-    public static String getInventoryHeight(GuiTemplate template, int row) {
+    public static int getInventoryHeight(GuiTemplate template, int row) {
         return getInventoryHeight(template.cornerSize, row);
     }
 
-    public static String getInventoryHeight(float offsetY, int row) {
-        return "p" + (offsetY * 2 + (Variables.SLOT_SIZE * row + Variables.SLOT_SPACE * (row - 1)));
+    public static int getInventoryHeight(float offsetY, int row) {
+        return (int) (offsetY * 2 + (Variables.SLOT_SIZE * row + Variables.SLOT_SPACE * (row - 1)));
     }
 
     public static int loop(int currentIndex, int maxLength) {

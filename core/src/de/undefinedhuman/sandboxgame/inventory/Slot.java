@@ -34,29 +34,23 @@ public abstract class Slot extends Gui {
     }
 
     public int addItem(int id, int amount) {
-
         if (id != 0 && amount != 0) {
-
             Item type = ItemManager.instance.getItem(id);
             int maxAmount = type.maxAmount.getInt();
             boolean stackable = type.isStackable.getBoolean();
 
             if (invItem != null) {
-                if (id == invItem.getID()) {
-                    if (stackable && (invItem.getAmount() + amount) <= maxAmount)
-                        this.invItem.setAmount(invItem.getAmount() + amount);
-                    else {
-                        int currentAmount = invItem.getAmount();
-                        this.invItem.setAmount(maxAmount);
-                        return amount - (maxAmount - currentAmount);
-                    }
-                } else return amount;
+                if (id != invItem.getID()) return amount;
+                if (stackable && (invItem.getAmount() + amount) <= maxAmount)
+                    this.invItem.setAmount(invItem.getAmount() + amount);
+                else {
+                    int currentAmount = invItem.getAmount();
+                    this.invItem.setAmount(maxAmount);
+                    return amount - (maxAmount - currentAmount);
+                }
             } else setItem(id, amount);
-
         }
-
         return 0;
-
     }
 
     public void setItem(int id, int amount) {

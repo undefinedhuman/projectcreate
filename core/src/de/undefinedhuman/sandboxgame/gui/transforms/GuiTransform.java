@@ -6,8 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.Main;
 import de.undefinedhuman.sandboxgame.gui.GuiManager;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.Constraint;
-import de.undefinedhuman.sandboxgame.gui.transforms.constraints.RelativeConstraint;
-import de.undefinedhuman.sandboxgame.gui.transforms.offset.RelativeOffset;
+import de.undefinedhuman.sandboxgame.gui.transforms.offset.Offset;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
 import java.util.HashMap;
@@ -33,7 +32,9 @@ public class GuiTransform {
     }
 
     public void resize(int width, int height) {
-        calculateCurrentValues(Axis.WIDTH, Axis.HEIGHT, Axis.X, Axis.Y);
+        calculateCurrentValues(Axis.WIDTH, Axis.HEIGHT);
+        this.currentValues.put(Axis.X, calculateConstraintValue(Axis.X) + calculateConstraintValue(Axis.OFFSET_X));
+        this.currentValues.put(Axis.Y, calculateConstraintValue(Axis.Y) + calculateConstraintValue(Axis.OFFSET_Y));
     }
 
     public void update(float delta) {}
@@ -64,34 +65,19 @@ public class GuiTransform {
         return this;
     }
 
-    public GuiTransform setOffset(Constraint x, Constraint y) {
+    public GuiTransform setOffset(Offset x, Offset y) {
         setOffsetX(x);
         setOffsetY(y);
         return this;
     }
 
-    public GuiTransform setOffsetX(Constraint x) {
+    public GuiTransform setOffsetX(Offset x) {
         addConstraint(Axis.OFFSET_X, x);
         return this;
     }
 
-    public GuiTransform setOffsetY(Constraint y) {
+    public GuiTransform setOffsetY(Offset y) {
         addConstraint(Axis.OFFSET_Y, y);
-        return this;
-    }
-
-    public GuiTransform setCentered() {
-        setOffset(new RelativeOffset(-0.5f), new RelativeOffset(-0.5f));
-        return this;
-    }
-
-    public GuiTransform setCenteredX() {
-        setOffsetX(new RelativeOffset(-0.5f));
-        return this;
-    }
-
-    public GuiTransform setCenteredY() {
-        setOffsetY(new RelativeConstraint(-0.5f));
         return this;
     }
 
@@ -147,7 +133,7 @@ public class GuiTransform {
             this.currentValues.put(axis, calculateConstraintValue(axis));
     }
 
-    private int calculateConstraintValue(Axis axis) {
+    protected int calculateConstraintValue(Axis axis) {
         if (!constraints.containsKey(axis)) return 0;
         return constraints.get(axis).getValue(Main.guiScale);
     }

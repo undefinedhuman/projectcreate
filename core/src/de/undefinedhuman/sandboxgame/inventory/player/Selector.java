@@ -3,8 +3,13 @@ package de.undefinedhuman.sandboxgame.inventory.player;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.equip.EquipManager;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.CenterConstraint;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.RelativeConstraint;
+import de.undefinedhuman.sandboxgame.gui.transforms.offset.PixelOffset;
+import de.undefinedhuman.sandboxgame.gui.transforms.offset.RelativeOffset;
 import de.undefinedhuman.sandboxgame.inventory.InvItem;
 import de.undefinedhuman.sandboxgame.inventory.Inventory;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
@@ -18,7 +23,8 @@ public class Selector extends Inventory {
 
     public Selector() {
         super(1, 9, new Vector2(8, 8), GuiTemplate.HOTBAR);
-        setPosition("r0.5", "r1").setCentered(-0.5f, -1).setOffsetY("p-10");
+        setPosition(new CenterConstraint(), new RelativeConstraint(1)).setOffset(new RelativeOffset(-0.5f), new PixelOffset(Variables.BASE_WINDOW_HEIGHT - 10));
+        setVisible(false);
     }
 
     public void updateSelector() {

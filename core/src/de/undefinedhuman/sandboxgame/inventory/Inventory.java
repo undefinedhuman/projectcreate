@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
@@ -27,15 +28,15 @@ public class Inventory extends Gui implements InvTarget {
         this.col = col;
         inventory = new InvSlot[row][col];
         this.offset.set(offset != null ? offset : new Vector2(template.cornerSize, template.cornerSize));
-        setScale(Tools.getInventoryWidth(this.offset.x, col), Tools.getInventoryHeight(this.offset.y, row));
+        setSize(Tools.getInventoryWidth(this.offset.x, col), Tools.getInventoryHeight(this.offset.y, row));
 
         for (int i = 0; i < inventory.length; i++)
             for (int j = 0; j < inventory[i].length; j++) {
                 inventory[i][j] = new InvSlot();
                 inventory[i][j].parent = this;
                 inventory[i][j].setPosition(
-                        "p" + (this.offset.x + (Variables.SLOT_SIZE + Variables.SLOT_SPACE) * j),
-                        "p" + (this.offset.y + (Variables.SLOT_SIZE + Variables.SLOT_SPACE) * i));
+                        new PixelConstraint(this.offset.x + (Variables.SLOT_SIZE + Variables.SLOT_SPACE) * j),
+                        new PixelConstraint(this.offset.y + (Variables.SLOT_SIZE + Variables.SLOT_SPACE) * i));
             }
 
     }
@@ -48,11 +49,9 @@ public class Inventory extends Gui implements InvTarget {
 
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
-
         super.render(batch, camera);
         if (visible)
             for (InvSlot[] invSlots : inventory) for (InvSlot invSlot : invSlots) invSlot.render(batch, camera);
-
     }
 
     @Override

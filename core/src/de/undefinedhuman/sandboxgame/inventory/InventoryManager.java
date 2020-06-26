@@ -12,8 +12,8 @@ import de.undefinedhuman.sandboxgame.equip.EquipScreen;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.CenterConstraint;
-import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.RelativeConstraint;
+import de.undefinedhuman.sandboxgame.gui.transforms.offset.PixelOffset;
 import de.undefinedhuman.sandboxgame.inventory.player.DragAndDrop;
 import de.undefinedhuman.sandboxgame.inventory.player.Selector;
 import de.undefinedhuman.sandboxgame.inventory.player.SidePanel;
@@ -152,7 +152,7 @@ public class InventoryManager extends Manager {
     }
 
     public void setGuiVisible(int id, Gui gui) {
-        gui.setPosition(new RelativeConstraint(1), new CenterConstraint()).setOffsetX(new PixelConstraint(Variables.BASE_WINDOW_WIDTH + getWidth(id)));
+        gui.setPosition(new RelativeConstraint(1), new CenterConstraint()).setOffsetX(new PixelOffset(Variables.BASE_WINDOW_WIDTH + getWidth(id)));
         gui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         gui.setVisible(true);
     }

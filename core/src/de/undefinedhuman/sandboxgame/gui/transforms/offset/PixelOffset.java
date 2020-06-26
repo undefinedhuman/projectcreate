@@ -1,8 +1,6 @@
 package de.undefinedhuman.sandboxgame.gui.transforms.offset;
 
-import de.undefinedhuman.sandboxgame.gui.transforms.constraints.Constraint;
-
-public class PixelOffset extends Constraint {
+public class PixelOffset extends Offset {
 
     public PixelOffset(float value) {
         super(value);

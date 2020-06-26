@@ -32,6 +32,7 @@ public class GuiManager extends Manager {
 
     @Override
     public void resize(int width, int height) {
+        screen.resize(width, height);
         for (GuiTransform gui : guiTransforms) gui.resize(width, height);
     }
 

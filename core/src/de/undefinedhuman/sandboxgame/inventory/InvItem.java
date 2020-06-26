@@ -23,12 +23,12 @@ public class InvItem extends Gui {
 
     public InvItem(int id, int amount) {
         super(ItemManager.instance.getItem(id).iconTexture.getString());
-        set(new CenterConstraint(), new CenterConstraint(), new PixelConstraint(Variables.ITEM_SIZE), new PixelConstraint(Variables.ITEM_SIZE)).setCentered();
+        set(new CenterConstraint(), new CenterConstraint(), new PixelConstraint(Variables.ITEM_SIZE), new PixelConstraint(Variables.ITEM_SIZE));
 
         this.id = id;
         this.amount = amount;
         amountText = new Text(amount);
-        amountText.setPosition(new RelativeConstraint(0.75f), new RelativeConstraint(0.25f)).setCentered();
+        amountText.setPosition(new RelativeConstraint(0.75f), new RelativeConstraint(0.25f));
         amountText.parent = this;
 
     }
