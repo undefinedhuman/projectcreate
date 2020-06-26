@@ -1,16 +1,17 @@
 package de.undefinedhuman.sandboxgame.gui.transforms.constraints;
 
+import com.badlogic.gdx.Gdx;
+import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
+
 public class ResizeConstraint extends Constraint {
 
-    public ResizeConstraint(float value) {
-        super(value);
+    public ResizeConstraint() {
+        super(0);
     }
 
     @Override
     public int getValue(float scale) {
-        if (isPosition())
-            return (int) (currentTransform.parent.getValue(axis) + currentTransform.parent.getValue(getScaleAxis()) * value);
-        else return (int) (currentTransform.parent.getValue(axis) * value);
+        return axis == Axis.WIDTH ? Gdx.graphics.getWidth() : axis == Axis.HEIGHT ? Gdx.graphics.getHeight() : 0;
     }
 
 }

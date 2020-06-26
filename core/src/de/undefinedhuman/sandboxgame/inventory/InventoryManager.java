@@ -7,9 +7,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.sandboxgame.engine.camera.CameraManager;
 import de.undefinedhuman.sandboxgame.engine.resources.font.Font;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.equip.EquipScreen;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.CenterConstraint;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.RelativeConstraint;
 import de.undefinedhuman.sandboxgame.inventory.player.DragAndDrop;
 import de.undefinedhuman.sandboxgame.inventory.player.Selector;
 import de.undefinedhuman.sandboxgame.inventory.player.SidePanel;
@@ -148,7 +152,7 @@ public class InventoryManager extends Manager {
     }
 
     public void setGuiVisible(int id, Gui gui) {
-        gui.setPosition("r1", "r0.5").setCentered(-1f, -0.5f).setOffsetX("p" + getWidth(id));
+        gui.setPosition(new RelativeConstraint(1), new CenterConstraint()).setOffsetX(new PixelConstraint(Variables.BASE_WINDOW_WIDTH + getWidth(id)));
         gui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         gui.setVisible(true);
     }

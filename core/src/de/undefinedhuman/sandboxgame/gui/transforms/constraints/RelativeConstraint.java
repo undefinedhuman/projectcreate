@@ -9,8 +9,8 @@ public class RelativeConstraint extends Constraint {
     @Override
     public int getValue(float scale) {
         if (isPosition())
-            return (int) (currentTransform.parent.getValue(axis) + currentTransform.parent.getValue(getScaleAxis()) * value);
-        else return (int) (currentTransform.parent.getValue(axis) * value);
+            return (int) (currentTransform.parent.getCurrentValue(axis) + currentTransform.parent.getCurrentValue(getScaleAxis()) * value);
+        else return (int) (currentTransform.parent.getCurrentValue(axis) * value);
     }
 
 }

@@ -40,6 +40,9 @@ public class Variables {
     public static final int SLOT_SPACE = 2;
     public static final int SELECTED_AMOUNT = 2;
 
+    // Inventory
+    public static final int BASE_WINDOW_WIDTH = 1280;
+
     // Editor
     public static final int PLAYER_TEXTURE_OFFSET = 64;
 

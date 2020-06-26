@@ -7,6 +7,9 @@ import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.GuiComponent;
 import de.undefinedhuman.sandboxgame.gui.text.Text;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.CenterConstraint;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.RelativeConstraint;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 
 public class InvItem extends Gui {
@@ -20,12 +23,12 @@ public class InvItem extends Gui {
 
     public InvItem(int id, int amount) {
         super(ItemManager.instance.getItem(id).iconTexture.getString());
-        set("r0.5", "r0.5", "p" + Variables.ITEM_SIZE, "p" + Variables.ITEM_SIZE).setCentered();
+        set(new CenterConstraint(), new CenterConstraint(), new PixelConstraint(Variables.ITEM_SIZE), new PixelConstraint(Variables.ITEM_SIZE)).setCentered();
 
         this.id = id;
         this.amount = amount;
         amountText = new Text(amount);
-        amountText.setPosition("r0.75", "r0.25").setCentered();
+        amountText.setPosition(new RelativeConstraint(0.75f), new RelativeConstraint(0.25f)).setCentered();
         amountText.parent = this;
 
     }

@@ -14,8 +14,11 @@ import de.undefinedhuman.sandboxgame.gui.GuiComponent;
 import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.Constraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.TextConstraint;
 
 public class Text extends GuiComponent {
+
+    // TODO Implement Font Size
 
     private GlyphLayout layout = new GlyphLayout();
     private String text;
@@ -29,31 +32,22 @@ public class Text extends GuiComponent {
         super();
         this.text = String.valueOf(text);
         this.font = FontManager.instance.getFont(fontType, Main.guiScale);
+        setSize(new TextConstraint(layout), new TextConstraint(layout));
         lineLength = new PixelConstraint(0).setGui(this).setAxis(Axis.WIDTH);
-        calcScale = false;
-    }
-
-    public Text setWrap(boolean wrap) {
-        this.wrap = wrap;
-        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        return this;
     }
 
     @Override
     public void resize(int width, int height) {
-        guiScale = Math.max((int) Math.ceil(Main.guiScale * baseGuiScale), 1);
-        font = FontManager.instance.getFont(fontType, guiScale);
-        layout.setText(font, text, color, lineLength.getValue(guiScale), align, wrap);
-        setScale((int) layout.width, (int) layout.height);
+        font = FontManager.instance.getFont(fontType, Main.guiScale);
+        layout.setText(font, text, color, lineLength.getValue(Main.guiScale), align, wrap);
         super.resize(width, height);
-        position.y += layout.height;
     }
 
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         super.render(batch, camera);
         if (!visible || !parent.isVisible()) return;
-        font.draw(batch, layout, position.x, position.y);
+        font.draw(batch, layout, getCurrentValue(Axis.X), getCurrentValue(Axis.Y) + layout.height);
     }
 
     @Override
@@ -62,8 +56,14 @@ public class Text extends GuiComponent {
         layout.reset();
     }
 
-    public Text setAlign(int align) {
-        this.align = align;
+    public Text setText(Object text) {
+        this.text = String.valueOf(text);
+        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        return this;
+    }
+
+    public Text setFont(Font font) {
+        this.fontType = font;
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         return this;
     }
@@ -74,23 +74,23 @@ public class Text extends GuiComponent {
         return this;
     }
 
-    public BitmapFont getFont() { return this.font; }
-
-    public Text setFont(Font font) {
-        this.fontType = font;
+    public Text setWrap(boolean wrap) {
+        this.wrap = wrap;
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         return this;
     }
+
+    public Text setAlign(int align) {
+        this.align = align;
+        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        return this;
+    }
+
+    public BitmapFont getFont() { return this.font; }
 
     public Color getColor() { return color; }
 
     public String getText() { return this.text; }
-
-    public Text setText(Object text) {
-        this.text = String.valueOf(text);
-        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        return this;
-    }
 
     public GlyphLayout getLayout() { return layout; }
 

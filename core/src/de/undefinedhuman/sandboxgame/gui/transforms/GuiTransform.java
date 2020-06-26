@@ -4,13 +4,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.Main;
-import de.undefinedhuman.sandboxgame.engine.utils.math.Vector4;
 import de.undefinedhuman.sandboxgame.gui.GuiManager;
-import de.undefinedhuman.sandboxgame.gui.transforms.constraints.ConstantConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.Constraint;
-import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.RelativeConstraint;
-import de.undefinedhuman.sandboxgame.gui.transforms.offset.PixelOffset;
 import de.undefinedhuman.sandboxgame.gui.transforms.offset.RelativeOffset;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
@@ -20,7 +16,7 @@ public class GuiTransform {
 
     public GuiTransform parent;
 
-    protected Vector2 position = new Vector2(), size = new Vector2();
+    protected HashMap<Axis, Integer> currentValues = new HashMap<>();
     protected boolean visible = true;
 
     private HashMap<Axis, Constraint> constraints = new HashMap<>();
@@ -31,14 +27,13 @@ public class GuiTransform {
 
     public void init() {}
 
-    public void resize(int width, int height) {
-        this.size.set(calculateConstraintValue(Axis.WIDTH), calculateConstraintValue(Axis.HEIGHT));
-        this.position.set(calculateConstraintValue(Axis.X) + calculateConstraintValue(Axis.OFFSET_X), calculateConstraintValue(Axis.Y) + calculateConstraintValue(Axis.OFFSET_Y));
+    public GuiTransform initScreen() {
+        this.parent = this;
+        return this;
     }
 
-    private int calculateConstraintValue(Axis axis) {
-        if (!constraints.containsKey(axis)) return 0;
-        return constraints.get(axis).getValue(Main.guiScale);
+    public void resize(int width, int height) {
+        calculateCurrentValues(Axis.WIDTH, Axis.HEIGHT, Axis.X, Axis.Y);
     }
 
     public void update(float delta) {}
@@ -52,10 +47,8 @@ public class GuiTransform {
     }
 
     public GuiTransform set(Constraint x, Constraint y, Constraint width, Constraint height) {
-        addConstraint(Axis.X, x);
-        addConstraint(Axis.Y, y);
-        addConstraint(Axis.WIDTH, width);
-        addConstraint(Axis.HEIGHT, height);
+        setPosition(x, y);
+        setSize(width, height);
         return this;
     }
 
@@ -87,6 +80,21 @@ public class GuiTransform {
         return this;
     }
 
+    public GuiTransform setCentered() {
+        setOffset(new RelativeOffset(-0.5f), new RelativeOffset(-0.5f));
+        return this;
+    }
+
+    public GuiTransform setCenteredX() {
+        setOffsetX(new RelativeOffset(-0.5f));
+        return this;
+    }
+
+    public GuiTransform setCenteredY() {
+        setOffsetY(new RelativeConstraint(-0.5f));
+        return this;
+    }
+
     public GuiTransform setValue(Axis axis, float value) {
         constraints.get(axis).setValue(value);
         return this;
@@ -97,16 +105,21 @@ public class GuiTransform {
         return constraints.get(axis).getValue();
     }
 
-    public GuiTransform initScreen(int width, int height) {
-        this.parent = this;
-        setPosition(new PixelConstraint(0), new PixelConstraint(0));
-        setSize(new PixelConstraint(width), new PixelConstraint(height));
+    public GuiTransform setPosition(int x, int y) {
+        this.currentValues.put(Axis.X, x);
+        this.currentValues.put(Axis.Y, y);
+        return this;
+    }
+
+    public GuiTransform setSize(int width, int height) {
+        this.currentValues.put(Axis.WIDTH, width);
+        this.currentValues.put(Axis.HEIGHT, height);
         return this;
     }
 
     public boolean isClicked(OrthographicCamera camera) {
         Vector2 coords = Tools.getMouseCoordsInWorldSpace(camera);
-        return (coords.x >= position.x && coords.x <= position.x + scale.x) && (coords.y >= position.y && coords.y <= position.y + scale.y);
+        return (coords.x >= getCurrentValue(Axis.X) && coords.x <= getCurrentValue(Axis.X) + getCurrentValue(Axis.WIDTH)) && (coords.y >= getCurrentValue(Axis.Y) && coords.y <= getCurrentValue(Axis.Y) + getCurrentValue(Axis.HEIGHT));
     }
 
     public GuiTransform setVisible(boolean visible) {
@@ -117,11 +130,26 @@ public class GuiTransform {
     public boolean isVisible() { return visible; }
 
     public Vector2 getPosition() {
-        return new Vector2(position);
+        return new Vector2(currentValues.get(Axis.X), currentValues.get(Axis.Y));
     }
 
-    public Vector2 getScale() {
-        return new Vector2(size);
+    public Vector2 getSize() {
+        return new Vector2(currentValues.get(Axis.WIDTH), currentValues.get(Axis.HEIGHT));
+    }
+
+    public int getCurrentValue(Axis axis) {
+        Integer value = currentValues.get(axis);
+        return value != null ? value : 0;
+    }
+
+    private void calculateCurrentValues(Axis... axes) {
+        for(Axis axis : axes)
+            this.currentValues.put(axis, calculateConstraintValue(axis));
+    }
+
+    private int calculateConstraintValue(Axis axis) {
+        if (!constraints.containsKey(axis)) return 0;
+        return constraints.get(axis).getValue(Main.guiScale);
     }
 
     private void addConstraint(Axis axis, Constraint constraint) {

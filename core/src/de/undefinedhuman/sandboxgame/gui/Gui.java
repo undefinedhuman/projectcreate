@@ -5,11 +5,15 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.sandboxgame.Main;
 import de.undefinedhuman.sandboxgame.engine.resources.font.Font;
 import de.undefinedhuman.sandboxgame.gui.text.Text;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTexture;
+import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
 import de.undefinedhuman.sandboxgame.gui.transforms.GuiTransform;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.RelativeConstraint;
 
 import java.util.ArrayList;
 
@@ -35,7 +39,7 @@ public class Gui extends GuiComponent {
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
-        this.texture.resize((int) position.x, (int) position.y, (int) scale.x, (int) scale.y, guiScale);
+        this.texture.resize(getCurrentValue(Axis.X), getCurrentValue(Axis.Y), getCurrentValue(Axis.WIDTH), getCurrentValue(Axis.HEIGHT), Main.guiScale);
         for (GuiTransform component : children) component.resize(width, height);
     }
 
@@ -68,8 +72,7 @@ public class Gui extends GuiComponent {
 
     public void setTitle(String titleString, Font font, Color color) {
         Text text = new Text(titleString);
-        text.setFont(font).setColor(color).setPosition("r0.5", "r0.5").setCentered();
-        text.set("r0.5", "r1", "p" + text.getScale().x, "p" + text.getScale().y).setOffsetY("p-7").setCentered();
+        text.setFont(font).setColor(color).setPosition(new RelativeConstraint(0.5f), new RelativeConstraint(1f)).setOffsetY(new PixelConstraint(getTemplate() == null ? 0 : -(getTemplate().cornerSize/2f))).setCentered();
         addChild(text);
     }
 
@@ -89,14 +92,14 @@ public class Gui extends GuiComponent {
 
     @Override
     public GuiTransform setPosition(int x, int y) {
-        texture.resize(x, y, (int) scale.x, (int) scale.y, guiScale);
+        texture.resize(x, y, getCurrentValue(Axis.WIDTH), getCurrentValue(Axis.HEIGHT), Main.guiScale);
         return super.setPosition(x, y);
     }
 
     @Override
-    public GuiTransform setScale(int width, int height) {
-        texture.resize((int) position.x, (int) position.y, width, height, guiScale);
-        return super.setScale(width, height);
+    public GuiTransform setSize(int width, int height) {
+        texture.resize(getCurrentValue(Axis.X), getCurrentValue(Axis.Y), width, height, Main.guiScale);
+        return super.setSize(width, height);
     }
 
     public void setTexture(String texture) {

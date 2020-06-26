@@ -10,6 +10,8 @@ import de.undefinedhuman.sandboxgame.gui.GuiComponent;
 import de.undefinedhuman.sandboxgame.gui.event.ChangeEvent;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTexture;
 import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.RelativeConstraint;
 import de.undefinedhuman.sandboxgame.utils.Mouse;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
@@ -28,13 +30,11 @@ public class Slider extends Gui {
     private boolean wrapProgress;
 
     public Slider(GuiTexture backgroundTexture, String progressTexture, String pointerTexture, boolean wrapProgress) {
-
         super(backgroundTexture);
         this.progressPath = progressTexture;
         this.pointerPath = pointerTexture;
         this.wrapProgress = wrapProgress;
         this.changeListeners = new ArrayList<>();
-
     }
 
     @Override
@@ -46,7 +46,7 @@ public class Slider extends Gui {
 
     private void initPointer(String texture) {
         pointer = new Gui(new GuiTexture(texture));
-        pointer.set("r" + progress, "r0.5f", "p4", "p14").setCentered();
+        pointer.set(new RelativeConstraint(progress), new RelativeConstraint(0.5f), new PixelConstraint(4), new PixelConstraint(14)).setCentered();
         addChild(pointer);
     }
 
@@ -73,7 +73,7 @@ public class Slider extends Gui {
 
         if (grabbed) {
             float mouseX = Mouse.getMouseCoords().x;
-            this.progress = Tools.clamp((mouseX - position.x) / scale.x, 0, 1f);
+            this.progress = Tools.clamp((mouseX - position.x) / size.x, 0, 1f);
             resizePointer();
             notifyChangeListener();
         }
@@ -86,9 +86,9 @@ public class Slider extends Gui {
 
     private void resizePointer() {
         if (pointer == null) return;
-        progressWidth = progress * (scale.x - texture.getCornerSize() * 2);
-        progressHeight = scale.y - texture.getCornerSize() * 2;
-        pointer.setValue(Axis.X, progressWidth / scale.x);
+        progressWidth = progress * (size.x - texture.getCornerSize() * 2);
+        progressHeight = size.y - texture.getCornerSize() * 2;
+        pointer.setValue(Axis.X, progressWidth / size.x);
         pointer.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 

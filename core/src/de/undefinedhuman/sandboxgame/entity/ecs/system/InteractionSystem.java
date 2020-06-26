@@ -9,6 +9,8 @@ import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.ecs.System;
 import de.undefinedhuman.sandboxgame.gui.GuiManager;
 import de.undefinedhuman.sandboxgame.gui.text.Text;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.RelativeConstraint;
 import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
 
 public class InteractionSystem extends System {
@@ -24,7 +26,7 @@ public class InteractionSystem extends System {
     @Override
     public void init(Entity entity) {
         helpText = new Text("");
-        GuiManager.instance.addGui(helpText.setGuiScale(1f).setPosition("r0.5", "p50").setCentered().setVisible(true));
+        GuiManager.instance.addGui(helpText.setPosition(new RelativeConstraint(0.5f), new PixelConstraint(50)).setCentered().setVisible(true));
     }
 
     @Override
