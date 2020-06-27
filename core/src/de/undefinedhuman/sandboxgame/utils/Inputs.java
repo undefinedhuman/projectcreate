@@ -8,6 +8,7 @@ import de.undefinedhuman.sandboxgame.engine.entity.components.movement.MovementC
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
+import de.undefinedhuman.sandboxgame.inventory.player.Selector;
 import de.undefinedhuman.sandboxgame.network.ClientManager;
 import de.undefinedhuman.sandboxgame.network.packets.player.JumpPacket;
 import de.undefinedhuman.sandboxgame.network.utils.PacketUtils;
@@ -44,31 +45,31 @@ public class Inputs extends Manager implements InputProcessor {
                 }
                 break;
             case Input.Keys.NUM_1:
-                InventoryManager.instance.getSelector().setSelected(0);
+                Selector.instance.setSelected(0);
                 break;
             case Input.Keys.NUM_2:
-                InventoryManager.instance.getSelector().setSelected(1);
+                Selector.instance.setSelected(1);
                 break;
             case Input.Keys.NUM_3:
-                InventoryManager.instance.getSelector().setSelected(2);
+                Selector.instance.setSelected(2);
                 break;
             case Input.Keys.NUM_4:
-                InventoryManager.instance.getSelector().setSelected(3);
+                Selector.instance.setSelected(3);
                 break;
             case Input.Keys.NUM_5:
-                InventoryManager.instance.getSelector().setSelected(4);
+                Selector.instance.setSelected(4);
                 break;
             case Input.Keys.NUM_6:
-                InventoryManager.instance.getSelector().setSelected(5);
+                Selector.instance.setSelected(5);
                 break;
             case Input.Keys.NUM_7:
-                InventoryManager.instance.getSelector().setSelected(6);
+                Selector.instance.setSelected(6);
                 break;
             case Input.Keys.NUM_8:
-                InventoryManager.instance.getSelector().setSelected(7);
+                Selector.instance.setSelected(7);
                 break;
             case Input.Keys.NUM_9:
-                InventoryManager.instance.getSelector().setSelected(8);
+                Selector.instance.setSelected(8);
                 break;
             case Input.Keys.E:
                 InventoryManager.instance.handleClick(0);
@@ -134,8 +135,8 @@ public class Inputs extends Manager implements InputProcessor {
     public boolean scrolled(int amount) {
 
         if (InventoryManager.instance.isInventoryOpened()) return false;
-        int selected = InventoryManager.instance.getSelector().getSelected() + amount, selectorLength = InventoryManager.instance.getSelector().getInv()[0].length;
-        InventoryManager.instance.getSelector().setSelected((selectorLength + selected) % selectorLength);
+        int selected = Selector.instance.getSelected() + amount, selectorLength = Selector.instance.getInventory()[0].length;
+        Selector.instance.setSelected((selectorLength + selected) % selectorLength);
         return true;
 
     }

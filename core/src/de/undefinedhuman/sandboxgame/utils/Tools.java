@@ -21,7 +21,7 @@ import de.undefinedhuman.sandboxgame.engine.utils.math.Vector2i;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
-import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
+import de.undefinedhuman.sandboxgame.inventory.player.Selector;
 import de.undefinedhuman.sandboxgame.world.Noise;
 import de.undefinedhuman.sandboxgame.world.World;
 import de.undefinedhuman.sandboxgame.world.layer.LayerTransition;
@@ -292,7 +292,7 @@ public class Tools extends de.undefinedhuman.sandboxgame.engine.utils.Tools {
     public static boolean isItemSelected(Entity entity) {
         EquipComponent equipComponent;
         if ((equipComponent = (EquipComponent) entity.getComponent(ComponentType.EQUIP)) != null || entity.mainPlayer)
-            return (entity.mainPlayer ? InventoryManager.instance.getSelector().getSelectedInvItem() != null : equipComponent.itemIDs[0] != -1);
+            return (entity.mainPlayer ? Selector.instance.getSelectedInvItem() != null : equipComponent.itemIDs[0] != -1);
         return false;
     }
 

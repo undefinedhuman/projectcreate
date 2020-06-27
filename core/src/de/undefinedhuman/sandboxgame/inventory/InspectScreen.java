@@ -14,12 +14,14 @@ import de.undefinedhuman.sandboxgame.utils.Tools;
 
 public class InspectScreen extends Gui {
 
+    public static InspectScreen instance;
+
     private Text nameText, descriptionText;
     private Gui previewImage;
 
     public InspectScreen() {
-
         super(GuiTemplate.SMALL_PANEL);
+        if(instance == null) instance = this;
         setSize(Tools.getInventoryWidth(GuiTemplate.SMALL_PANEL, 5), Tools.getInventoryHeight(GuiTemplate.SMALL_PANEL, 10));
         Item item = new ItemManager().getItem(2);
         previewImage = new Gui(item.previewTexture.getString());
@@ -32,7 +34,6 @@ public class InspectScreen extends Gui {
         descriptionText.setPosition(new CenterConstraint(), new RelativeConstraint(0.675f));
         addChild(nameText, descriptionText);
         setVisible(false);
-
     }
 
     public void openInspectScreen(Item item) {

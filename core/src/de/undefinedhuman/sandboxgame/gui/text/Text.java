@@ -47,7 +47,7 @@ public class Text extends GuiComponent {
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         super.render(batch, camera);
         if (!visible || !parent.isVisible()) return;
-        font.draw(batch, layout, getCurrentValue(Axis.X), getCurrentValue(Axis.Y) + layout.height);
+        font.draw(batch, layout, getCurrentValue(Axis.X), getCurrentValue(Axis.Y));
     }
 
     @Override

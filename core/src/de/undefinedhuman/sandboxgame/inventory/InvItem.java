@@ -10,6 +10,7 @@ import de.undefinedhuman.sandboxgame.gui.text.Text;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.CenterConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.RelativeConstraint;
+import de.undefinedhuman.sandboxgame.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 
 public class InvItem extends Gui {
@@ -23,10 +24,11 @@ public class InvItem extends Gui {
 
     public InvItem(int id, int amount) {
         super(ItemManager.instance.getItem(id).iconTexture.getString());
-        set(new CenterConstraint(), new CenterConstraint(), new PixelConstraint(Variables.ITEM_SIZE), new PixelConstraint(Variables.ITEM_SIZE));
+        set(new CenterConstraint(), new CenterConstraint(), new PixelConstraint(Variables.ITEM_SIZE), new PixelConstraint(Variables.ITEM_SIZE)).setOffset(new CenterOffset(), new CenterOffset());
 
         this.id = id;
         this.amount = amount;
+
         amountText = new Text(amount);
         amountText.setPosition(new RelativeConstraint(0.75f), new RelativeConstraint(0.25f));
         amountText.parent = this;

@@ -37,8 +37,8 @@ public class BackgroundManager extends Manager {
                 new BirdLayer(Color.valueOf("#1b2d2d"), 175, 0.5f),
                 new CloudLayer(175, 2),
                 new ForegroundLayer("background/foreground/Mountain 2.png", new Vector2(Variables.BASE_BACKGROUND_WIDTH, 162), 0.5f, 75f, 0.7f),
-                new ForegroundLayer("background/foreground/Pine 1.png", new Vector2(Variables.BASE_BACKGROUND_WIDTH, 148), 0.75f, -10f, 0.85f),
                 new CloudLayer(80, 1),
+                new ForegroundLayer("background/foreground/Pine 1.png", new Vector2(Variables.BASE_BACKGROUND_WIDTH, 148), 0.75f, -10f, 0.85f),
                 new ForegroundLayer("background/foreground/Pine 2.png", new Vector2(Variables.BASE_BACKGROUND_WIDTH, 199), 1f, -75f, 1f)
         };
     }

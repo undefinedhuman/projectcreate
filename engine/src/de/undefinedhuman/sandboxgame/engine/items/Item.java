@@ -21,7 +21,6 @@ public class Item {
             previewTexture = new TextureSetting("Preview", "Unknown.png"),
             useIconAsHandTexture = new BooleanSetting("UseIconInHand", false),
             maxAmount = new Setting(SettingType.Int, "MaxAmount", 999),
-            isStackable = new BooleanSetting("Stackable", true),
             canShake = new BooleanSetting("Shake", true),
             rarity = new SelectionSetting("Rarity", Rarity.values());
 
@@ -30,7 +29,7 @@ public class Item {
     protected SettingsList settings = new SettingsList();
 
     public Item() {
-        settings.addSettings(id, name, desc, itemTexture, iconTexture, previewTexture, useIconAsHandTexture, maxAmount, isStackable, canShake, rarity);
+        settings.addSettings(id, name, desc, itemTexture, iconTexture, previewTexture, useIconAsHandTexture, maxAmount, canShake, rarity);
         this.type = ItemType.ITEM;
         this.recipeType = RecipeType.BLOCK;
     }

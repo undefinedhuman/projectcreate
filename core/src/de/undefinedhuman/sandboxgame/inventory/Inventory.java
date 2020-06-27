@@ -12,7 +12,7 @@ import de.undefinedhuman.sandboxgame.utils.Tools;
 
 public class Inventory extends Gui implements InvTarget {
 
-    private InvSlot[][] inventory;
+    protected InvSlot[][] inventory;
     private int row, col;
 
     private Vector2 offset = new Vector2();
@@ -22,13 +22,10 @@ public class Inventory extends Gui implements InvTarget {
     }
 
     public Inventory(int row, int col, Vector2 offset, GuiTemplate template) {
-
         super(template);
-        this.row = row;
-        this.col = col;
-        inventory = new InvSlot[row][col];
+        inventory = new InvSlot[this.row = row][this.col = col];
         this.offset.set(offset != null ? offset : new Vector2(template.cornerSize, template.cornerSize));
-        setSize(Tools.getInventoryWidth(this.offset.x, col), Tools.getInventoryHeight(this.offset.y, row));
+        setSize(new PixelConstraint(Tools.getInventoryWidth(this.offset.x, col)), new PixelConstraint(Tools.getInventoryHeight(this.offset.y, row)));
 
         for (int i = 0; i < inventory.length; i++)
             for (int j = 0; j < inventory[i].length; j++) {
@@ -38,7 +35,6 @@ public class Inventory extends Gui implements InvTarget {
                         new PixelConstraint(this.offset.x + (Variables.SLOT_SIZE + Variables.SLOT_SPACE) * j),
                         new PixelConstraint(this.offset.y + (Variables.SLOT_SIZE + Variables.SLOT_SPACE) * i));
             }
-
     }
 
     @Override
@@ -58,100 +54,74 @@ public class Inventory extends Gui implements InvTarget {
     public Slot getClickedSlot(OrthographicCamera camera) {
         if (!visible) return null;
         for (InvSlot[] invSlots : inventory)
-            for (InvSlot invSlot : invSlots) if (invSlot.isClicked(camera)) return invSlot;
+            for (InvSlot invSlot : invSlots)
+                if (invSlot.isClicked(camera)) return invSlot;
         return null;
-    }
-
-    public boolean isFull(int id, int amount) {
-
-        int localAmount = 0;
-
-        for (int i = inventory.length - 1; i >= 0; i--)
-            for (int j = 0; j < inventory[i].length; j++) {
-
-                InvSlot slot = inventory[i][j];
-
-                if (slot.getItem() != null) {
-                    if (slot.getItem().getID() == id && ItemManager.instance.getItem(slot.getItem().getID()).isStackable.getBoolean())
-                        localAmount += ItemManager.instance.getItem(slot.getItem().getID()).maxAmount.getInt() - slot.getItem().getAmount();
-                } else localAmount += ItemManager.instance.getItem(id).maxAmount.getInt();
-
-            }
-
-        return amount - localAmount > 0;
-
-    }
-
-    public InvSlot isFull(int id) {
-
-        for (int i = inventory.length - 1; i >= 0; i--)
-            for (int j = 0; j < inventory[i].length; j++) {
-
-                InvSlot slot = inventory[i][j];
-
-                if (slot.getItem() != null) {
-                    if (slot.getItem().getID() == id && ItemManager.instance.getItem(slot.getItem().getID()).isStackable.getBoolean() && slot.getItem().getAmount() < ItemManager.instance.getItem(slot.getItem().getID()).maxAmount.getInt())
-                        return slot;
-                } else return slot;
-
-            }
-
-        return null;
-
-    }
-
-    public boolean contains(int id) {
-
-        boolean contains = false;
-        for (InvSlot[] invSlots : inventory)
-            for (InvSlot slot : invSlots)
-                if (slot.getItem() != null) if (slot.getItem().getID() == id) if (!contains) contains = true;
-        return contains;
-
-    }
-
-    public boolean contains(int id, int amount) {
-
-        boolean contains = false;
-        for (InvSlot[] invSlots : inventory)
-            for (InvSlot slot : invSlots)
-                if (slot.getItem() != null) if (slot.getItem().getID() == id && slot.getItem().getAmount() >= amount)
-                    if (!contains) contains = true;
-        return contains;
-
-    }
-
-    public InvSlot[][] getInv() {
-        return this.inventory;
-    }
-
-    public int getCol() {
-        return this.col;
-    }
-
-    public int getRow() {
-        return this.row;
     }
 
     public int addItem(int id, int amount) {
-
         InvSlot slot = isFull(id);
-
         if (slot == null) return amount;
         else {
-            int i = slot.addItem(id, amount);
-            if (i == 0) return 0;
-            return addItem(id, i);
+            int newAmount = slot.addItem(id, amount);
+            return newAmount == 0 ? 0 : addItem(id, newAmount);
         }
+    }
 
+    public boolean isFull(int id, int amount) {
+        int currentAmount = 0, maxAmount = ItemManager.instance.getItem(id).maxAmount.getInt();
+
+        for (int i = inventory.length - 1; i >= 0; i--)
+            for (int j = 0; j < inventory[i].length; j++) {
+                InvItem currentItem = inventory[i][j].getItem();
+                if(currentItem == null) {
+                    currentAmount += maxAmount;
+                    continue;
+                }
+                if(currentItem.getID() != id || currentItem.getAmount() == maxAmount) continue;
+                currentAmount += maxAmount - currentItem.getAmount();
+            }
+
+        return amount - currentAmount > 0;
+    }
+
+    public InvSlot isFull(int id) {
+        for (int i = inventory.length - 1; i >= 0; i--)
+            for (int j = 0; j < inventory[i].length; j++) {
+                InvSlot slot = inventory[i][j];
+                InvItem currentItem = slot.getItem();
+                if(currentItem == null || (currentItem.getID() == id && currentItem.getAmount() < ItemManager.instance.getItem(id).maxAmount.getInt())) return slot;
+            }
+        return null;
+    }
+
+    public boolean contains(int id) {
+        return this.contains(id, 1);
+    }
+
+    public boolean contains(int id, int amount) {
+        int containsAmount = amount;
+
+        for (InvSlot[] invSlots : inventory)
+            for (InvSlot slot : invSlots) {
+                InvItem currentItem = slot.getItem();
+                if(currentItem == null || currentItem.getID() != id) continue;
+                containsAmount -= currentItem.getAmount();
+            }
+
+        return containsAmount <= 0;
     }
 
     public void removeItem(int x, int y) {
-        inventory[x][y].deleteItem();
+        this.removeItem(inventory[x][y]);
     }
 
     public void removeItem(InvSlot slot) {
         slot.deleteItem();
+    }
+
+    public InvSlot[][] getInventory() {
+        return inventory;
     }
 
 }

@@ -20,6 +20,7 @@ import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.EntityManager;
 import de.undefinedhuman.sandboxgame.entity.ecs.System;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
+import de.undefinedhuman.sandboxgame.inventory.player.Selector;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
@@ -59,8 +60,8 @@ public class ArmSystem extends System {
             float angle = new Vector2(mousePos).sub(shoulderPosition).sub(entity.getPosition()).angle() + (angleComponent.isTurned ? 0 : 180);
             angle += angleComponent.isTurned ? 95 : -95;
 
-            if (InventoryManager.instance.getSelector().getSelectedInvItem() != null) {
-                Item item = ItemManager.instance.getItem(InventoryManager.instance.getSelector().getSelectedItemID());
+            if (Selector.instance.getSelectedInvItem() != null) {
+                Item item = ItemManager.instance.getItem(Selector.instance.getSelectedItemID());
                 boolean hasSword = (item.type == ItemType.SWORD);
                 CombatComponent combatComponent = (CombatComponent) entity.getComponent(ComponentType.COMBAT);
                 calculateShake(rightArmComponent, item);

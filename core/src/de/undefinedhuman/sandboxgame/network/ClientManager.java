@@ -10,7 +10,7 @@ import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.inventory.InvItem;
-import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
+import de.undefinedhuman.sandboxgame.inventory.player.Selector;
 import de.undefinedhuman.sandboxgame.network.packets.PacketManager;
 import de.undefinedhuman.sandboxgame.network.packets.entity.ComponentPacket;
 import de.undefinedhuman.sandboxgame.network.utils.PacketUtils;
@@ -51,7 +51,7 @@ public class ClientManager extends Manager {
 
         playerUpdateTimer10 = new Timer(0.1f, true, () -> {
             Entity player = GameManager.instance.player;
-            InvItem item = InventoryManager.instance.getSelector().getSelectedInvItem();
+            InvItem item = Selector.instance.getSelectedInvItem();
             ComponentPacket packet = PacketUtils.createComponentPacket(player, ComponentType.EQUIP);
             ClientManager.instance.sendUDP(packet);
         });

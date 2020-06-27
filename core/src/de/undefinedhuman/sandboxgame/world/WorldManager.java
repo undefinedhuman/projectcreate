@@ -10,7 +10,7 @@ import de.undefinedhuman.sandboxgame.engine.utils.math.Vector2i;
 import de.undefinedhuman.sandboxgame.engine.utils.math.Vector4;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.EntityManager;
-import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
+import de.undefinedhuman.sandboxgame.inventory.player.Selector;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.item.drop.DropItemManager;
 import de.undefinedhuman.sandboxgame.network.ClientManager;
@@ -48,12 +48,12 @@ public class WorldManager {
 
     private void updateDestroyVariables(float delta) {
         if (canDestroy) return;
-        if (!(InventoryManager.instance.getSelector().getSelectedItem() instanceof Pickaxe)) {
+        if (!(Selector.instance.getSelectedItem() instanceof Pickaxe)) {
             setDestroyVariables(-1);
             return;
         }
 
-        Pickaxe pickaxe = (Pickaxe) InventoryManager.instance.getSelector().getSelectedItem();
+        Pickaxe pickaxe = (Pickaxe) Selector.instance.getSelectedItem();
         if (oldPickaxeID != pickaxe.id.getInt()) {
             setDestroyVariables(oldPickaxeID);
             return;
@@ -64,7 +64,7 @@ public class WorldManager {
 
     public void placeBlock(byte worldLayer) {
         if (!canPlace) return;
-        int id = InventoryManager.instance.getSelector().getSelectedItemID();
+        int id = Selector.instance.getSelectedItemID();
         Block block = (Block) ItemManager.instance.getItem(id);
         Vector2i blockPos = Tools.convertToBlockPos(Tools.getWorldPos(CameraManager.gameCamera, Mouse.getMouseCoords()));
 
@@ -93,14 +93,14 @@ public class WorldManager {
         canPlace = false;
         if(!send) return;
         ClientManager.instance.sendTCP(PacketUtils.createBlockPacket(x, y, worldLayer, blockID));
-        InventoryManager.instance.getSelector().getSelectedInvItem().removeItem();
+        Selector.instance.getSelectedInvItem().removeItem();
     }
 
     public void destroyBlock(byte worldLayer) {
 
         if (!canDestroy) return;
 
-        Pickaxe pickaxe = (Pickaxe) InventoryManager.instance.getSelector().getSelectedItem();
+        Pickaxe pickaxe = (Pickaxe) Selector.instance.getSelectedItem();
         Vector2i blockPos = Tools.convertToBlockPos(Tools.getWorldPos(CameraManager.gameCamera, Mouse.getMouseCoords())), playerCenter = Tools.convertToBlockPos(new Vector2().add(GameManager.instance.player.getPosition()).add(GameManager.instance.player.getCenter()));
         Block currentBlock = (Block) ItemManager.instance.getItem(World.instance.getBlock(blockPos.x, blockPos.y, World.MAIN_LAYER));
 

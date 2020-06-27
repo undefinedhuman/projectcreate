@@ -14,6 +14,9 @@ import de.undefinedhuman.sandboxgame.utils.Tools;
 
 public class SidePanel extends Gui {
 
+    public static SidePanel instance;
+
+    private int itemCount = 10;
     private String[] textures = new String[] {
             "gui/Inventory Icon.png",
             "gui/preview/equip/Chestplate-Preview.png",
@@ -27,21 +30,19 @@ public class SidePanel extends Gui {
             "gui/Locked-Icon.png"};
 
     public SidePanel() {
-
         super(GuiTemplate.SMALL_PANEL);
-        set(new RelativeConstraint(1), new CenterConstraint(), new PixelConstraint(Tools.getInventoryWidth(GuiTemplate.SMALL_PANEL, 1)), new PixelConstraint(Tools.getInventoryHeight(GuiTemplate.SMALL_PANEL, 10))).setOffset(new PixelOffset(-Tools.getInventoryWidth(GuiTemplate.SMALL_PANEL, 1)), new CenterOffset());
+        if(instance == null) instance = this;
 
-        Gui[] buttons = new Gui[10];
-        for (int i = 0; i < buttons.length; i++) {
+        set(new RelativeConstraint(1), new CenterConstraint(), new PixelConstraint(Tools.getInventoryWidth(GuiTemplate.SMALL_PANEL, 1)), new PixelConstraint(Tools.getInventoryHeight(GuiTemplate.SMALL_PANEL, itemCount))).setOffset(new PixelOffset(-Tools.getInventoryWidth(GuiTemplate.SMALL_PANEL, 1) - 25), new CenterOffset());
+        for (int i = 0; i < itemCount; i++)
+            addMenuItem(i, itemCount - i - 1);
+    }
 
-            int k = buttons.length - i - 1;
-            addChild(new MenuSlot(textures[k], new PixelConstraint(getCornerSize()), new PixelConstraint(getTemplate().cornerSize + (Variables.SLOT_SIZE + Variables.SLOT_SPACE) * i)) {
-                @Override
-                public void onClick() { InventoryManager.instance.handleClick(k); }
-            });
-
-        }
-
+    private void addMenuItem(int i, int index) {
+        addChild(new MenuSlot(textures[index], new PixelConstraint(getCornerSize()), new PixelConstraint(getTemplate().cornerSize + (Variables.SLOT_SIZE + Variables.SLOT_SPACE) * i)) {
+            @Override
+            public void onClick() { InventoryManager.instance.handleClick(index); }
+        });
     }
 
 }

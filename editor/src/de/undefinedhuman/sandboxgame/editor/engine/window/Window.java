@@ -36,7 +36,7 @@ public class Window extends JFrame {
         Log.instance = new Log();
         Log.instance.init();
         setResizable(false);
-        setSize(1280, 720);
+        setSize(1920, 1080);
         container = getContentPane();
         addMenu();
 
