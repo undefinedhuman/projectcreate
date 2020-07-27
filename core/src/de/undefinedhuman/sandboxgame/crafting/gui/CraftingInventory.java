@@ -12,10 +12,13 @@ import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.CenterConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.RelativeConstraint;
+import de.undefinedhuman.sandboxgame.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.sandboxgame.gui.transforms.offset.RelativeOffset;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
 public class CraftingInventory extends Gui {
+
+    public static CraftingInventory instance;
 
     private Gui recipeBackground, menuBackground;
 
@@ -27,11 +30,12 @@ public class CraftingInventory extends Gui {
 
     public CraftingInventory() {
         super(GuiTemplate.SMALL_PANEL);
+        if(instance == null) instance = this;
         set(new CenterConstraint(), new CenterConstraint(), new PixelConstraint(Tools.getInventoryWidth(GuiTemplate.SMALL_PANEL, 15)), new PixelConstraint(Tools.getInventoryHeight(GuiTemplate.SMALL_PANEL, 10)));
+        setOffset(new CenterOffset(), new CenterOffset());
         initBackgrounds();
         initRecipes();
         GuiManager.instance.addGui(this);
-        setVisible(false);
     }
 
     private void initBackgrounds() {
@@ -44,24 +48,34 @@ public class CraftingInventory extends Gui {
     private void initRecipes() {
         for(int i = 0; i < recipeGuis.length; i++) {
             recipeGuis[i] = (Gui) new Gui(GuiTemplate.SLOT)
-                    .set(new RelativeConstraint(0.5f), new PixelConstraint(GuiTemplate.HOTBAR.cornerSize + (Variables.SLOT_SIZE + Variables.SLOT_SPACE) * i), new PixelConstraint(recipeBackground.getBaseValue(Axis.WIDTH) - GuiTemplate.HOTBAR.cornerSize * 2), new PixelConstraint(Variables.SLOT_SIZE));
+                    .set(new RelativeConstraint(0.5f), new PixelConstraint(GuiTemplate.HOTBAR.cornerSize + (Variables.SLOT_SIZE + Variables.SLOT_SPACE) * i), new PixelConstraint(recipeBackground.getBaseValue(Axis.WIDTH) - GuiTemplate.HOTBAR.cornerSize * 2), new PixelConstraint(Variables.SLOT_SIZE)).setOffsetX(new CenterOffset());
             recipeBackground.addChild(recipeGuis[i]);
         }
     }
 
     public void addRecipes(Recipe... recipes) {
         clear();
+
         for(Recipe recipe : recipes)
             this.recipes.addValuesWithKey(recipe.getRecipeType(), recipe);
+
         RecipeType[] recipeTypes = (RecipeType[]) this.recipes.keySet().toArray();
         currentRecipeType = recipeTypes[0];
-        for(int i = 0; i < recipeTypes.length; i++)
-            this.menuBackground.addChild(new MenuSlot(recipeTypes[i].getPreviewTexture(), new PixelConstraint(i * GuiTemplate.HOTBAR.cornerSize + (Variables.SLOT_SIZE + Variables.SLOT_SPACE) * i), new RelativeConstraint(0.5f)) {
+
+        addRecipeTypesToMenu(recipeTypes);
+
+    }
+
+    private void addRecipeTypesToMenu(RecipeType... recipeTypes) {
+        for(int i = 0; i < recipeTypes.length; i++) {
+            final RecipeType type = recipeTypes[i];
+            this.menuBackground.addChild(new MenuSlot(type.getPreviewTexture(), new PixelConstraint(i * GuiTemplate.HOTBAR.cornerSize + (Variables.SLOT_SIZE + Variables.SLOT_SPACE) * i), new RelativeConstraint(0.5f)) {
                 @Override
                 public void onClick() {
-
+                    updateArticles(type);
                 }
             });
+        }
     }
 
     public void updateArticles(RecipeType type) {

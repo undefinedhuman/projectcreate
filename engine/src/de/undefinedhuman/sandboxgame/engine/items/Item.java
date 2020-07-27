@@ -1,9 +1,11 @@
 package de.undefinedhuman.sandboxgame.engine.items;
 
+import de.undefinedhuman.sandboxgame.engine.crafting.RecipeItem;
 import de.undefinedhuman.sandboxgame.engine.items.recipe.RecipeType;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
 import de.undefinedhuman.sandboxgame.engine.settings.SettingType;
 import de.undefinedhuman.sandboxgame.engine.settings.SettingsList;
+import de.undefinedhuman.sandboxgame.engine.settings.panels.SelectionPanel;
 import de.undefinedhuman.sandboxgame.engine.settings.types.BooleanSetting;
 import de.undefinedhuman.sandboxgame.engine.settings.types.SelectionSetting;
 import de.undefinedhuman.sandboxgame.engine.settings.types.TextureSetting;
@@ -22,6 +24,8 @@ public class Item {
             useIconAsHandTexture = new BooleanSetting("UseIconInHand", false),
             maxAmount = new Setting(SettingType.Int, "MaxAmount", 999),
             canShake = new BooleanSetting("Shake", true),
+            recipeQuantity = new Setting(SettingType.Int, "Recipe Quantity", 1),
+            recipeItems = new SelectionPanel("Recipe Item", new RecipeItem()),
             rarity = new SelectionSetting("Rarity", Rarity.values());
 
     public ItemType type;
@@ -29,7 +33,7 @@ public class Item {
     protected SettingsList settings = new SettingsList();
 
     public Item() {
-        settings.addSettings(id, name, desc, itemTexture, iconTexture, previewTexture, useIconAsHandTexture, maxAmount, canShake, rarity);
+        settings.addSettings(id, name, desc, itemTexture, iconTexture, previewTexture, recipeQuantity, recipeItems, useIconAsHandTexture, maxAmount, canShake, rarity);
         this.type = ItemType.ITEM;
         this.recipeType = RecipeType.BLOCK;
     }

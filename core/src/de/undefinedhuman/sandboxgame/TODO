@@ -1,6 +1,11 @@
+TODO CREATE DEV OVERLAY BASIC CONSOLE OUPUT, TOGGLE COLLISION BOXES, DELTA MULITPLIER, GUI SCALE, etc.
+
 CRAFTING INVENTORY
+GUI STATES - INVENTORY OPENED, GAME, etc.
+CREATE SCROLL FUNCTION IN GUI MANAGER that scrolls through selecter when Gui State Game, and if inventory opened scroll in hovered gui
 MAKE SORTING - MATERIALS AVAILABLE - SEARCH BAR
 SHOW HOW MANY ITEMS YOU ALREADY HAVE IN YOUR INVENTORY
+Erst wenn man manche Materialien gefunden hat werden Rezepte freigegeben. Sillouten einbauen bei Crafting Menu
 
 TODO ADD EventSystem for all sorts of events (block breaking/placing, entity dead/hurt move, etc.)
 TODO IMPLEMENT INTERACTION COMPONENT WITH MOUSE SELECTION NOT POSITION AND MAKE SURE IT WORKS ALSO IF THE ITEM IS PLACED AT THE EDGE OF THE WORLD
@@ -25,6 +30,10 @@ TODO Add Settings Menu, for Variables.GAME_CAMERA_ZOOM Bounds [1f...3f], step 1f
 TODO Drop Items should not move below 0
 
 TODO Robert bekommt Fuchs Skin https://www.vippng.com/png/detail/312-3128737_starbound-custom-character-fox-mccloud-by-gabeexists-da7z4mo.png
+
+TODO Refactor Drag and Drop Class And rework the canceling when the last item gets dropped by placeOneItem
+
+Forager und Forager Video HandofUncut gibt gut inspiration
 
 https://www.youtube.com/watch?v=wAm3sFRqJLI
 
@@ -89,9 +98,6 @@ Gui:
  - Verhalten von RelativePosition überprüfen wenn das Parent Gui gecentered ist.
  - Chat Gui (Multicolor text)
 
-Crafting:
- - Erst wenn man manche Materialien gefunden hat werden Rezepte freigegeben. Sillouten einbauen bei Crafting Menu
-
 Party/Friend System:
  - Anzeigen irgendwo unter dem Spieler Stats GUI
 
@@ -126,7 +132,7 @@ Bugs:
  - Light Manager Default Height should be the height of the world generator
  - At higher Y Values the run animation doesn't work properly (weird)
  - Arrow Spawning when facing into different dir doesn't spawn at the correct position
- - Resizing the Window could result into teleport the player into an cave
+ - Resizing the de.undefinedhuman.sandboxgame.editor.Window could result into teleport the player into an cave
  - Wenn ein Spieler AFK ist kann er angeklickt werden mit AFK Info und er hat Sleep als Z Z Z Partikel über sich und die Augen zu
  - Achievment System & Settings! Achievments werden in einer ART Scroll Panel dargestellt es existieren 4-5 Elemente an Achievments und dann gibts Pfeile um immer ein nues anzeiogen zu lassen wie Starbound Charakter Auswahl!
  - Effects Progess Bar die sich in der Zeit immer verringert udn links am Rand angezeigt wird

@@ -1,9 +1,6 @@
 package de.undefinedhuman.sandboxgame.engine.settings.types;
 
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.sandboxgame.engine.file.FileWriter;
-import de.undefinedhuman.sandboxgame.engine.file.FsFile;
-import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
 import de.undefinedhuman.sandboxgame.engine.settings.SettingType;
 
@@ -15,16 +12,6 @@ public class BooleanSetting extends Setting {
 
     public BooleanSetting(String key, boolean value) {
         super(SettingType.Boolean, key, value);
-    }
-
-    @Override
-    public void load(FsFile parentDir, LineSplitter splitter) {
-        value = splitter.getNextBoolean();
-    }
-
-    @Override
-    public void save(FsFile parentDir, FileWriter writer) {
-        writer.writeBoolean(getBoolean());
     }
 
     @Override

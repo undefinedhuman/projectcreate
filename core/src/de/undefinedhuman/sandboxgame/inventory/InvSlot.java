@@ -19,6 +19,12 @@ public class InvSlot extends Slot {
     }
 
     @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+        if (invItem != null) invItem.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    }
+
+    @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         super.render(batch, camera);
         if (invItem != null) {
@@ -33,22 +39,19 @@ public class InvSlot extends Slot {
         return super.setVisible(visible);
     }
 
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+        updateSelected(selected);
+    }
+
     public boolean isSelected() {
         return selected;
     }
 
-    public void setSelected(boolean selected) {
-        this.selected = selected;
-        updateSelected(selected);
-        if (invItem != null) invItem.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-    }
-
     private void updateSelected(boolean selected) {
-        int slotScale = Variables.SLOT_SIZE + (selected ? Variables.SELECTED_AMOUNT : 0);
-        setSize(new PixelConstraint(slotScale), new PixelConstraint(slotScale));
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        int offset = -(selected ? (Variables.SELECTED_AMOUNT / 2) : 0) * Main.guiScale;
-        texture.resize(getCurrentValue(Axis.X) + offset, getCurrentValue(Axis.Y) + offset, getCurrentValue(Axis.WIDTH), getCurrentValue(Axis.HEIGHT));
+        int selectedSize = (selected ? Variables.SELECTED_AMOUNT : 0) * Main.guiScale, selectedOffset = -(selected ? (Variables.SELECTED_AMOUNT / 2) : 0) * Main.guiScale;
+        texture.resize(getCurrentValue(Axis.X) + selectedOffset, getCurrentValue(Axis.Y) + selectedOffset, getCurrentValue(Axis.WIDTH) + selectedSize, getCurrentValue(Axis.HEIGHT) + selectedSize);
     }
 
 }

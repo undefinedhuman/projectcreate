@@ -72,11 +72,9 @@ public class DragAndDrop {
                     if (clickedSlot.getItem() == null || clickedSlot.getItem().getID() == currentItem.getID() || half) {
                         currentItem.setAmount(clickedSlot.addItem(currentItem));
                     } else {
-
                         InvItem clickedItem = clickedSlot.getItem();
                         clickedSlot.setItem(currentItem.getID(), currentItem.getAmount());
                         currentItem.setStats(clickedItem.getID(), clickedItem.getAmount());
-
                     }
 
                     cancelMoving();
@@ -115,10 +113,8 @@ public class DragAndDrop {
         for (InvTarget inventory : targets) if ((clickedSlot = inventory.getClickedSlot(camera)) != null) break;
         if (clickedSlot != null && clickedSlot.isCompatible(currentItem)) {
 
-            if (clickedSlot.addItem(currentItem.getID(), 1) == 0) {
-                currentItem.setAmount(currentItem.getAmount() - 1);
-            }
-            if (currentItem.getAmount() < 1) currentItem.setStats(0, 0);
+            if (clickedSlot.addItem(currentItem.getID(), 1) == 0) currentItem.setAmount(currentItem.getAmount() - 1);
+            if (currentItem.getAmount() < 1) cancelMoving();
 
         }
 
@@ -162,11 +158,9 @@ public class DragAndDrop {
     }
 
     private void removeTempItem() {
-
         currentItem.setStats(0, 0);
         moving = false;
         half = false;
-
     }
 
     public void render(SpriteBatch batch, OrthographicCamera camera) {

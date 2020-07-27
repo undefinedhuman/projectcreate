@@ -3,22 +3,21 @@ package de.undefinedhuman.sandboxgame.editor.editor.entity;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.editor.editor.Editor;
-import de.undefinedhuman.sandboxgame.editor.engine.ressources.ResourceManager;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentBlueprint;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.entity.EntityType;
 import de.undefinedhuman.sandboxgame.engine.file.*;
-import de.undefinedhuman.sandboxgame.engine.log.Log;
+import de.undefinedhuman.sandboxgame.engine.resources.ResourceManager;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
 import de.undefinedhuman.sandboxgame.engine.settings.SettingType;
 import de.undefinedhuman.sandboxgame.engine.settings.SettingsList;
 import de.undefinedhuman.sandboxgame.engine.settings.types.SelectionSetting;
 import de.undefinedhuman.sandboxgame.engine.settings.types.Vector2Setting;
 import de.undefinedhuman.sandboxgame.engine.utils.Tools;
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -38,7 +37,10 @@ public class EntityEditor extends Editor {
     public EntityEditor(Container container) {
         super(container);
         components = new HashMap<>();
-        addComponentComboBox();
+
+        componentComboBox = new JComboBox<>(ComponentType.values());
+        componentComboBox.setSelectedItem(null);
+        componentComboBox.setBounds(20, 25, 150, 25);
 
         entitySettings.addSettings(
                 new Setting(SettingType.Int, "ID", 0),
@@ -60,10 +62,10 @@ public class EntityEditor extends Editor {
         });
 
         JScrollPane listScroller = new JScrollPane(listPanel);
-        listScroller.setBounds(25, 125, 150, 450);
+        listScroller.setBounds(20, 125, 150, 450);
 
         JButton addComponent = new JButton("Add");
-        addComponent.setBounds(25, 55, 150, 25);
+        addComponent.setBounds(20, 55, 150, 25);
         addComponent.addActionListener(e -> {
             if(componentComboBox.getSelectedItem() == null) return;
             Tools.removeSettings(settingsPanel);
@@ -74,7 +76,7 @@ public class EntityEditor extends Editor {
         });
 
         JButton removeComponent = new JButton("Remove");
-        removeComponent.setBounds(25, 85, 150, 25);
+        removeComponent.setBounds(20, 85, 150, 25);
         removeComponent.addActionListener(e -> {
             if(listPanel.getSelectedValue() == null) return;
             ComponentType type = ComponentType.valueOf(listPanel.getSelectedValue());
@@ -83,23 +85,11 @@ public class EntityEditor extends Editor {
             if(componentList.contains(type.toString())) componentList.removeElement(type.toString());
         });
 
-        JPanel middlePanel = new JPanel();
-        middlePanel.setBorder(BorderFactory.createTitledBorder("Type:"));
-        middlePanel.setLayout(null);
-        middlePanel.setBounds(545, 25, 200, 620);
         middlePanel.add(componentComboBox);
         middlePanel.add(addComponent);
         middlePanel.add(removeComponent);
         middlePanel.add(listScroller);
 
-        container.add(middlePanel);
-
-    }
-
-    private void addComponentComboBox() {
-        componentComboBox = new JComboBox<>(ComponentType.values());
-        componentComboBox.setSelectedItem(null);
-        componentComboBox.setBounds(25, 25, 150, 25);
     }
 
     @Override
@@ -109,12 +99,12 @@ public class EntityEditor extends Editor {
         ArrayList<String> ids = new ArrayList<>();
 
         for (FileHandle entityDir : entityDirs) {
-            if (!entityDir.isDirectory()) continue;
+            /*if (!entityDir.isDirectory()) continue;
             FileReader reader = new FileReader(new FsFile(Paths.ENTITY_FOLDER, entityDir.name() + "/settings.entity", false), true);
             reader.nextLine();
-            HashMap<String, LineSplitter> settings = Tools.loadSettings(reader);
-            ids.add(entityDir.name() + "-" + settings.get("Name").getNextString());
-            reader.close();
+            HashMap<String, LineSplitter[]> settings = Tools.loadSettings(reader);
+            ids.add(entityDir.name() + "-" + settings.get("Name")[0].getNextString());
+            reader.close();*/
         }
 
         JFrame chooseWindow = new JFrame("Load entity");
@@ -132,7 +122,7 @@ public class EntityEditor extends Editor {
         comboBox.setBounds(90, 35, 300, 25);
 
         button.addActionListener(a -> {
-            if(comboBox.getSelectedItem() == null) return;
+            /*if(comboBox.getSelectedItem() == null) return;
 
             componentList.clear();
             components.clear();
@@ -140,8 +130,8 @@ public class EntityEditor extends Editor {
 
             FileReader reader = new FileReader(ResourceManager.loadFile(Paths.ENTITY_FOLDER, Integer.parseInt(((String) comboBox.getSelectedItem()).split("-")[0]) + "/settings.entity"), true);
             reader.nextLine();
-            HashMap<String, LineSplitter> settingsList = Tools.loadSettings(reader);
-            for(Setting setting : entitySettings.getSettings()) setting.loadSetting(reader.getParentDirectory(), settingsList);
+            HashMap<String, LineSplitter[]> settings = Tools.loadSettings(reader);
+            for(Setting setting : entitySettings.getSettings()) setting.loadSetting(reader.getParentDirectory(), settings);
 
             int componentSize = reader.getNextInt();
             reader.nextLine();
@@ -154,7 +144,7 @@ public class EntityEditor extends Editor {
             }
 
             chooseWindow.setVisible(false);
-            reader.close();
+            reader.close();*/
 
         });
 
@@ -167,23 +157,20 @@ public class EntityEditor extends Editor {
 
     @Override
     public void save() {
-        File file = new File(Paths.ENTITY_FOLDER.getPath() + entitySettings.getSettings().get(0).getInt() + "/");
-        if(file.exists()) { FileUtils.deleteFile(file); Log.info("Entity directory deleted successfully!"); }
+        FsFile entityDir = new FsFile(Paths.ENTITY_FOLDER, entitySettings.getSettings().get(0).getString() + Variables.FILE_SEPARATOR, true);
+        if(entityDir.exists())
+            FileUtils.deleteFile(entityDir);
 
-        FsFile entityDir = new FsFile(Paths.ENTITY_FOLDER, String.valueOf(entitySettings.getSettings().get(0).getString()), true);
-        FsFile settingsFile = new FsFile(entityDir, "/settings.entity", false);
+        /*JSONObject entity = new JSONObject();
+        entity.put("Base", Tools.saveSettings(entityDir, entitySettings.getSettings()));
+        JSONArray components = new JSONArray();
+        for(ComponentBlueprint componentBlueprint : this.components.values())
+            components.add(componentBlueprint.save(entityDir));
+        entity.put("Components", components);
 
-        FileWriter writer = settingsFile.getFileWriter(true);
-        Tools.saveSettings(writer, entitySettings.getSettings());
-
-        writer.writeInt(components.size());
-        writer.nextLine();
-        for(ComponentBlueprint componentBlueprint : components.values()) {
-            writer.writeString(componentBlueprint.getType().name());
-            writer.nextLine();
-            componentBlueprint.save(writer);
-        }
-        writer.close();
+        FileWriter writer = new FsFile(entityDir.createFile(true), "settings.entity", false).getFileWriter(true);
+        writer.writeString(entity.toJSONString());
+        writer.close();*/
     }
 
 }

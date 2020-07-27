@@ -12,10 +12,8 @@ import de.undefinedhuman.sandboxgame.engine.items.Rarity;
 import de.undefinedhuman.sandboxgame.engine.items.type.blocks.BlockType;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.HashMap;
 
 public class Setting {
 
@@ -50,7 +48,7 @@ public class Setting {
     public String[] getStringArray() { return (String[]) value; }
     public Vector2[] getVector2Array() { return (Vector2[]) value; }
 
-    public Rarity getRarity() { return (Rarity) Rarity.valueOf(getString()); }
+    public Rarity getRarity() { return Rarity.valueOf(getString()); }
     public Animation.PlayMode getPlayMode() {
         return Animation.PlayMode.valueOf(getString());
     }
@@ -59,20 +57,25 @@ public class Setting {
 
     public SettingType getType() { return type; }
 
-    public void loadSetting(FsFile parentDir, HashMap<String, LineSplitter> settings) {
-        if(!settings.containsKey(key)) return;
-        load(parentDir, settings.get(key));
+    public void loadSetting(FsFile parentDir, SettingsObject settingsObject) {
+        if(!settingsObject.containsKey(key)) return;
+        load(parentDir, settingsObject.get(key));
         setValueInMenu(value);
     }
-    public void saveSetting(FsFile parentDir, FileWriter writer) {
+
+    public void save(FileWriter writer) {
         writer.writeString(key);
-        save(parentDir, writer);
+        writer.writeString(value.toString());
+    }
+
+    protected void load(FsFile parentDir, Object value) {
+        if(!(value instanceof LineSplitter)) return;
+        setValue(((LineSplitter) value).getNextString());
     }
 
     public void addMenuComponents(JPanel panel, Vector2 position) {
         JLabel keyLabel = new JLabel(key + ": (" + type.name() + ")", SwingConstants.CENTER);
         keyLabel.setBounds((int) position.x, (int) position.y, 170, 25);
-        keyLabel.setBackground(Color.LIGHT_GRAY);
         keyLabel.setOpaque(true);
         panel.add(keyLabel);
         addValueMenuComponents(panel, new Vector2(position).add(180, 0));
@@ -98,13 +101,6 @@ public class Setting {
 
     protected void setValueInMenu(Object value) {
         if(valueField != null) valueField.setText(value.toString());
-    }
-
-    protected void load(FsFile parentDir, LineSplitter splitter) {
-        value = splitter.getNextString();
-    }
-    protected void save(FsFile parentDir, FileWriter writer) {
-        writer.writeString(value.toString());
     }
 
     protected void delete() { value = null; }

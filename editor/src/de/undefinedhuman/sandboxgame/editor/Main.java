@@ -3,7 +3,6 @@ package de.undefinedhuman.sandboxgame.editor;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import de.undefinedhuman.sandboxgame.editor.engine.window.Window;
 
 import java.awt.*;
 
@@ -21,6 +20,7 @@ public class Main extends Game {
     public void render() {
         clear();
         delta = Gdx.graphics.getDeltaTime();
+        Window.instance.updateErrorTime(delta);
         super.render();
     }
 

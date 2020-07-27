@@ -2,8 +2,8 @@ package de.undefinedhuman.sandboxgame.inventory.player;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.items.Item;
+import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.equip.EquipManager;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.CenterConstraint;
@@ -15,6 +15,7 @@ import de.undefinedhuman.sandboxgame.inventory.Inventory;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.screen.gamescreen.GameManager;
+import de.undefinedhuman.sandboxgame.utils.Tools;
 
 public class Selector extends Inventory {
 
@@ -23,9 +24,10 @@ public class Selector extends Inventory {
     private int selected = 0;
 
     public Selector() {
-        super(1, 9, new Vector2(8, 8), GuiTemplate.HOTBAR);
+        super(1, 9, GuiTemplate.HOTBAR);
         if(instance == null) instance = this;
-        setPosition(new CenterConstraint(), new RelativeConstraint(1)).setOffset(new CenterOffset(), new PixelOffset(-100));
+        Log.info(GuiTemplate.HOTBAR.cornerSize);
+        setPosition(new CenterConstraint(), new RelativeConstraint(1)).setOffset(new CenterOffset(), new PixelOffset(-Tools.getInventoryHeight(GuiTemplate.HOTBAR, 1) - 10));
     }
 
     @Override

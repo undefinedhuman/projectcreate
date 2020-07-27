@@ -1,32 +1,29 @@
 package de.undefinedhuman.sandboxgame.engine.settings.panels;
 
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.sandboxgame.engine.file.FileReader;
 import de.undefinedhuman.sandboxgame.engine.file.FileWriter;
+import de.undefinedhuman.sandboxgame.engine.file.FsFile;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
 import de.undefinedhuman.sandboxgame.engine.settings.SettingType;
-import de.undefinedhuman.sandboxgame.engine.utils.Tools;
+import de.undefinedhuman.sandboxgame.engine.settings.SettingsObject;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 
-public class Panel extends Setting {
+public abstract class Panel extends Setting {
 
-    private JTextField objectName;
     private JButton addObject, removeObject;
-
-    private JPanel objectPanel;
-
-    private DefaultListModel<String> objectList;
     private JList<String> objectSelectionList;
     private JScrollPane objectScrollPane;
 
-    private HashMap<String, PanelObject> objects = new HashMap<>();
-    private PanelObject panelObject;
+    protected HashMap<String, PanelObject> objects = new HashMap<>();
+    protected DefaultListModel<String> objectList;
+    protected PanelObject panelObject;
+    protected JPanel objectPanel;
 
-    public Panel(SettingType type, String name, PanelObject panelObject) {
-        super(type, name, "");
+    public Panel(String key, PanelObject panelObject) {
+        super(SettingType.Panel, key, "");
         this.panelObject = panelObject;
     }
 
@@ -41,79 +38,66 @@ public class Panel extends Setting {
     protected void addValueMenuComponents(JPanel panel, Vector2 position) {
         objectPanel = new JPanel(null);
         objectPanel.setBounds((int) position.x - 175, (int) position.y + 190, 370, panelObject.settings.getSettings().size() * 25);
-        objectPanel.setBackground(Color.WHITE);
         objectPanel.setOpaque(true);
-
-        objectName = new JTextField("");
-        objectName.setBounds((int) position.x - 175, (int) position.y + 30, 370, 25);
 
         objectList = new DefaultListModel<>();
         for(String key : objects.keySet()) objectList.addElement(key);
+
         objectSelectionList = new JList<>(objectList);
         objectSelectionList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         objectSelectionList.addListSelectionListener(e -> {
             if(objectSelectionList.getSelectedValue() == null) return;
-            PanelObject currentObject = objects.get(objectSelectionList.getSelectedValue());
-            objectName.setText(objectSelectionList.getSelectedValue());
-            Tools.removeSettings(objectPanel);
-            Tools.addSettings(objectPanel, currentObject.getSettings());
-        });
-
-        addObject = new JButton("Add");
-        addObject.setBounds((int) position.x - 175, (int) position.y + 60, 180, 25);
-        addObject.addActionListener(e -> {
-            if(objectList.contains(objectName.getText())) return;
-            objectList.addElement(objectName.getText());
-            try { objects.put(objectName.getText(), panelObject.getClass().newInstance());
-            } catch (InstantiationException | IllegalAccessException ex) { ex.printStackTrace(); }
-        });
-
-        removeObject = new JButton("Remove");
-        removeObject.setBounds((int) position.x + 15, (int) position.y + 60, 180, 25);
-        removeObject.addActionListener(e -> {
-            if(!objectList.contains(objectName.getText())) return;
-            objectList.removeElement(objectName.getText());
-            objects.remove(objectName.getText());
+            selectObject(objects.get(objectSelectionList.getSelectedValue()));
         });
 
         objectScrollPane = new JScrollPane(objectSelectionList);
         objectScrollPane.setBounds((int) position.x - 175, (int) position.y + 90, 370, 90);
 
+        this.offset = 190 + panelObject.settings.getSettings().size() * 30;
+
         panel.add(objectScrollPane);
         panel.add(objectPanel);
-        panel.add(objectName);
-        panel.add(addObject);
-        panel.add(removeObject);
+        panel.add(addObject = addButton("Add", (int) position.x - 175, (int) position.y + 60, 180, 25, e -> addObject()));
+        panel.add(removeObject = addButton("Remove", (int) position.x + 15, (int) position.y + 60, 180, 25, e -> removeObject()));
     }
 
-    public void loadObjects(FileReader reader) {
-        objects.clear();
-        int size = reader.getNextInt();
-        reader.nextLine();
-        for(int i = 0; i < size; i++) {
-            String key = reader.getNextString();
-            reader.nextLine();
-            try { objects.put(key, panelObject.getClass().newInstance().load(reader));
-            } catch (InstantiationException | IllegalAccessException e) { e.printStackTrace(); }
-        }
-        if(objectList != null) {
-            objectList.clear();
-            for(String key : objects.keySet()) objectList.addElement(key);
-        }
+    private JButton addButton(String text, int x, int y, int width, int height, ActionListener listener) {
+        JButton button = new JButton(text);
+        button.setBounds(x, y, width, height);
+        button.addActionListener(listener);
+        return button;
     }
 
-    public void saveObjects(FileWriter writer) {
-        writer.writeInt(objects.size());
-        writer.nextLine();
-        for(String key : objects.keySet()) {
-            writer.writeString(key);
-            writer.nextLine();
-            objects.get(key).save(writer);
+    @Override
+    protected void load(FsFile parentDir, Object value) {
+        if(!(value instanceof SettingsObject)) return;
+        SettingsObject settingsObject = (SettingsObject) value;
+        HashMap<String, Object> settings = settingsObject.getSettings();
+        for(String key : settings.keySet()) {
+            Object panelObjectSettings = settings.get(key);
+            if(!(panelObjectSettings instanceof SettingsObject)) continue;
+            try {
+                objects.put(key, panelObject.getClass().newInstance().load(parentDir, (SettingsObject) panelObjectSettings).setKey(key));
+            } catch (InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    public HashMap<String, PanelObject> getObjects() {
+    @Override
+    public void save(FileWriter writer) {
+        writer.writeString("{:" + key).nextLine();
+        for(PanelObject object : this.objects.values())
+            object.save(writer);
+        writer.writeString("}");
+    }
+
+    public HashMap<String, PanelObject> getPanelObjects() {
         return objects;
     }
+
+    public abstract void addObject();
+    public abstract void removeObject();
+    public abstract void selectObject(PanelObject object);
 
 }

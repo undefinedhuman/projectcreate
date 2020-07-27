@@ -20,13 +20,14 @@ public class Vector2Setting extends Setting {
     }
 
     @Override
-    public void load(FsFile parentDir, LineSplitter splitter) {
-        value = splitter.getNextVector2();
+    public void load(FsFile parentDir, Object value) {
+        if(!(value instanceof LineSplitter)) return;
+        setValue(((LineSplitter) value).getNextVector2());
     }
 
     @Override
-    public void save(FsFile parentDir, FileWriter writer) {
-        writer.writeVector2(getVector2());
+    public void save(FileWriter writer) {
+        writer.writeString(key).writeVector2(getVector2());
     }
 
     @Override

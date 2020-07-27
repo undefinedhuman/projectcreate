@@ -5,19 +5,21 @@ import java.awt.*;
 
 public abstract class Editor {
 
-    protected JPanel mainPanel, settingsPanel;
+    protected JPanel mainPanel, middlePanel, settingsPanel;
 
     public Editor(Container container) {
         mainPanel = new JPanel(null, true);
         settingsPanel = new JPanel(null, true);
-        container.add(addPanel(mainPanel, "Main:", new Dimension(480, 260), 25, 25));
-        container.add(addPanel(settingsPanel, "Settings:", new Dimension(400, 580), 780, 25));
+        middlePanel = new JPanel(null, true);
+        container.add(addPanel(mainPanel, "Main:", 20, 20, 820, 960));
+        container.add(addPanel(middlePanel, "Type:", 860, 20, 200, 960));
+        container.add(addPanel(settingsPanel, "Settings:", 1080, 20, 820, 960));
     }
 
-    private JScrollPane addPanel(JPanel panel, String name, Dimension panelSize, int x, int y) {
-        panel.setPreferredSize(panelSize);
+    private JScrollPane addPanel(JPanel panel, String name, int x, int y, int width, int height) {
+        panel.setPreferredSize(new Dimension(width - 25, height - 25));
         JScrollPane scrollPane = new JScrollPane(panel);
-        scrollPane.setBounds(x, y, 460, 620);
+        scrollPane.setBounds(x, y, width, 990);
         scrollPane.setBorder(BorderFactory.createTitledBorder(name));
         return scrollPane;
     }

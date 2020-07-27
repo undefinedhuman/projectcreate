@@ -33,7 +33,7 @@ public class Text extends GuiComponent {
         this.text = String.valueOf(text);
         this.font = FontManager.instance.getFont(fontType, Main.guiScale);
         setSize(new TextConstraint(layout), new TextConstraint(layout));
-        lineLength = new PixelConstraint(0).setGui(this).setAxis(Axis.WIDTH);
+        lineLength = new PixelConstraint(0).setGui(this).setAxis(Axis.LINE_LENGTH);
     }
 
     @Override

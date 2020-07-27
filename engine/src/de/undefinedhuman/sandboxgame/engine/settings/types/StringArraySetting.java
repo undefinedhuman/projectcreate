@@ -21,15 +21,17 @@ public class StringArraySetting extends Setting {
     }
 
     @Override
-    public void load(FsFile parentDir, LineSplitter splitter) {
-        String[] strings = new String[splitter.getNextInt()];
-        for(int i = 0; i < strings.length; i++) strings[i] = splitter.getNextString();
-        value = strings;
+    public void load(FsFile parentDir, Object value) {
+        if(!(value instanceof LineSplitter)) return;
+        LineSplitter splitter = (LineSplitter) value;
+        String[] values = new String[splitter.getNextInt()];
+        for(int i = 0; i < values.length; i++) values[i] = splitter.getNextString();
+        setValue(values);
     }
 
     @Override
-    public void save(FsFile parentDir, FileWriter writer) {
-        writer.writeInt(getStringArray().length);
+    public void save(FileWriter writer) {
+        writer.writeString(key).writeInt(getStringArray().length);
         for(String s : getStringArray()) writer.writeString(s);
     }
 

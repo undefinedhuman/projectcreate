@@ -18,7 +18,6 @@ public class Animation extends PanelObject {
         settings.addSettings(bounds, frameTime, playMode);
     }
 
-
     public int getSize() {
         return (int) (bounds.getVector2().y - bounds.getVector2().x + 1);
     }

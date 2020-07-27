@@ -11,7 +11,6 @@ public enum SettingType {
     Selection,
     Vector2Array,
     InputKey,
-    Animation,
-    Sprite,
+    Panel,
     Texture
 }

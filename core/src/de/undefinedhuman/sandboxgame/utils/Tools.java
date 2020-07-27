@@ -308,7 +308,7 @@ public class Tools extends de.undefinedhuman.sandboxgame.engine.utils.Tools {
         return getInventoryWidth(template.cornerSize, col);
     }
 
-    public static int getInventoryWidth(float offsetX, int col) {
+    private static int getInventoryWidth(float offsetX, int col) {
         return (int) (offsetX * 2 + (Variables.SLOT_SIZE * col + Variables.SLOT_SPACE * (col - 1)));
     }
 
@@ -316,7 +316,7 @@ public class Tools extends de.undefinedhuman.sandboxgame.engine.utils.Tools {
         return getInventoryHeight(template.cornerSize, row);
     }
 
-    public static int getInventoryHeight(float offsetY, int row) {
+    private static int getInventoryHeight(float offsetY, int row) {
         return (int) (offsetY * 2 + (Variables.SLOT_SIZE * row + Variables.SLOT_SPACE * (row - 1)));
     }
 

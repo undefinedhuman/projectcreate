@@ -95,10 +95,11 @@ public class ItemManager extends Manager {
         reader.nextLine();
         ItemType type = ItemType.valueOf(reader.getNextString());
         reader.nextLine();
-        HashMap<String, LineSplitter> settings = Tools.loadSettings(reader);
+        HashMap<String, LineSplitter[]> settings = Tools.loadSettings(reader);
         Item item = type.createInstance();
         if(item == null) return null;
-        for(Setting setting : item.getSettings()) setting.loadSetting(reader.getParentDirectory(), settings);
+        for(Setting setting : item.getSettings()) setting.load
+    Setting(reader.getParentDirectory(), settings);
         item.init();
         reader.close();
         settings.clear();

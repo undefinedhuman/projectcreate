@@ -6,6 +6,9 @@ import de.undefinedhuman.sandboxgame.engine.utils.Tools;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class FileUtils {
 
@@ -43,19 +46,23 @@ public class FileUtils {
         }
     }
 
-    public static void deleteFile(File file) {
-        if (!file.exists()) return;
-        if (file.isDirectory()) {
-            File[] files = file.listFiles();
+    private static void deleteFile(ArrayList<String> deletedFileNames, File fileToDelete) {
+        if (!fileToDelete.exists()) return;
+        if (fileToDelete.isDirectory()) {
+            File[] files = fileToDelete.listFiles();
             assert files != null;
-            if (files.length != 0) for (File file1 : files) deleteFile(file1);
+            if (files.length != 0) for (File file1 : files) deleteFile(deletedFileNames, file1);
         }
-        boolean del = file.delete();
-        if (del) Log.info("Successfully deleted: " + file.getName());
+        if(fileToDelete.delete()) deletedFileNames.add(fileToDelete.getName());
     }
 
-    public static void deleteFile(FsFile file) {
-        deleteFile(file.getFile());
+    public static void deleteFile(FsFile... filesToDelete) {
+        for(FsFile file : filesToDelete) {
+            ArrayList<String> deletedFileNames = new ArrayList<>();
+            deleteFile(deletedFileNames, file.getFile());
+            Collections.reverse(deletedFileNames);
+            Log.info("File" + Tools.appendSToString(deletedFileNames.size()) + " deleted succesfully: " + Arrays.toString(deletedFileNames.toArray()));
+        }
     }
 
     public static boolean readBoolean(String value) {

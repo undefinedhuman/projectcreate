@@ -30,7 +30,7 @@ public class InvItem extends Gui {
         this.amount = amount;
 
         amountText = new Text(amount);
-        amountText.setPosition(new RelativeConstraint(0.75f), new RelativeConstraint(0.25f));
+        amountText.setPosition(new RelativeConstraint(0.35f), new RelativeConstraint(0.35f));
         amountText.parent = this;
 
     }

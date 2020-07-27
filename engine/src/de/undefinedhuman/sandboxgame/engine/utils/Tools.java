@@ -7,40 +7,42 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.file.FileReader;
 import de.undefinedhuman.sandboxgame.engine.file.FileWriter;
-import de.undefinedhuman.sandboxgame.engine.file.FsFile;
-import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
+import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.engine.resources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
+import de.undefinedhuman.sandboxgame.engine.settings.SettingsObject;
 import de.undefinedhuman.sandboxgame.engine.utils.math.Vector4;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Tools {
 
-    public static HashMap<String, LineSplitter> loadSettings(FileReader reader) {
-        int size = reader.getNextInt();
-        reader.nextLine();
-        HashMap<String, LineSplitter> settings = new HashMap<>();
-        for(int i = 0; i < size; i++) {
-            settings.put(reader.getNextString(), reader.getRemainingRawData());
-            reader.nextLine();
+    public static SettingsObject loadSettings(FileReader reader) {
+        SettingsObject settingsObject = new SettingsObject();
+        while(reader.nextLine() != null) {
+            String key = reader.getNextString();
+            if(key.startsWith("}")) return settingsObject;
+            else if(key.startsWith("{")) settingsObject.addSetting(loadKey(key), loadSettings(reader));
+            else settingsObject.addSetting(key, reader.getRemainingRawData());
         }
-        return settings;
+        return settingsObject;
+    }
+
+    private static String loadKey(String key) {
+        String[] values = key.split(":");
+        if(values == null || values.length < 2)
+            Log.instance.crash("Can't find key in string: " + key);
+        return values[1];
     }
 
     public static void saveSettings(FileWriter writer, List<Setting> settings) {
-        writer.writeInt(settings.size());
-        writer.nextLine();
         for(Setting setting : settings) {
-            setting.saveSetting(writer.getParentDirectory(), writer);
+            setting.save(writer);
             writer.nextLine();
         }
     }
@@ -147,14 +149,6 @@ public class Tools {
             return true;
         } catch (NumberFormatException ex) {
             return false;
-        }
-    }
-
-    public static void saveExpectedImage(BufferedImage image, String name) {
-        try {
-            ImageIO.write(image, "png", new FsFile("test/editorUI/" + name + "_Expected.png", false).getFile());
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

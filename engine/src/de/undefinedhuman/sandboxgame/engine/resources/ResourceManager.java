@@ -30,7 +30,6 @@ public class ResourceManager {
         return music;
     }
 
-
     public static BitmapFont loadFont(String name) {
         return loadBitmapFont(Paths.GUI_PATH.getPath() + "font/" + name + ".fnt");
     }
@@ -67,8 +66,12 @@ public class ResourceManager {
         return shaderProgram;
     }
 
+    public static FileHandle loadDir(Paths path) {
+        return Gdx.files.internal(path.getPath());
+    }
+
     public static FileHandle loadFile(Paths path, String name) {
-        return Gdx.files.internal((path.getPath() + name));
+        return Gdx.files.internal(path.getPath() + name);
     }
 
     public static boolean existItem(int id) {

@@ -28,14 +28,6 @@ public class LineSplitter {
         return s != null ? s : "";
     }
 
-    private String getNextData() {
-        if (hasMoreValues()) {
-            String s = this.data[this.pointer++];
-            return (base ? Base64Coder.decodeString(s) : s);
-        }
-        return null;
-    }
-
     public boolean hasMoreValues() {
         return this.pointer < this.data.length;
     }
@@ -79,21 +71,33 @@ public class LineSplitter {
         return builder.toString();
     }
 
+    public LineSplitter getRawDataAsLineSplitter() {
+        StringBuilder builder = new StringBuilder();
+        for (String data : this.data)
+            builder.append(data).append(separator);
+        return new LineSplitter(builder.toString(), true, separator);
+    }
+
     public String getRemainingRawData() {
         StringBuilder builder = new StringBuilder();
         while(hasMoreValues()) builder.append(this.data[pointer++]).append(separator);
         return builder.toString();
     }
 
-    public String getDataString() {
-        StringBuilder builder = new StringBuilder();
-        for (String s : data) builder.append(s);
-        return builder.toString();
+    private String getNextData() {
+        if (hasMoreValues()) {
+            String s = this.data[this.pointer++];
+            return (base ? Base64Coder.decodeString(s) : s);
+        }
+        return null;
     }
 
-    public void setLine(String string, String separator) {
-        this.data = string.split(separator);
-        pointer = 0;
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        for(int i = 0; i < data.length; i++)
+            builder.append((base ? Base64Coder.decodeString(data[i]) : data[i])).append(i != data.length - 1 ? ", " : "");
+        return builder.toString();
     }
 
 }

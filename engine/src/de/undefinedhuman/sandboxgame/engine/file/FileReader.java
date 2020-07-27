@@ -43,6 +43,9 @@ public class FileReader {
         return line;
     }
 
+    public String getNextString() {
+        return splitter.getNextString();
+    }
     public int getNextInt() {
         return splitter.getNextInt();
     }
@@ -64,17 +67,15 @@ public class FileReader {
     public boolean getNextBoolean() {
         return splitter.getNextBoolean();
     }
-    public String getNextString() {
-        return splitter.getNextString();
-    }
 
     public String getData() {
         StringBuilder builder = new StringBuilder();
-        while (!isEndOfLine()) builder.append(getNextString()).append(";");
+        while (!isEndOfLine()) builder.append(getNextString()).append(Variables.SEPARATOR);
         return builder.toString();
     }
 
     public LineSplitter getRemainingRawData() { return new LineSplitter(splitter.getRemainingRawData(), base, separator); }
+
     public boolean isEndOfLine() {
         return !splitter.hasMoreValues();
     }

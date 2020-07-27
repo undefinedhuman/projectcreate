@@ -2,21 +2,19 @@ package de.undefinedhuman.sandboxgame.editor.editor.item;
 
 import com.badlogic.gdx.files.FileHandle;
 import de.undefinedhuman.sandboxgame.editor.editor.Editor;
-import de.undefinedhuman.sandboxgame.editor.engine.ressources.ResourceManager;
 import de.undefinedhuman.sandboxgame.engine.file.*;
 import de.undefinedhuman.sandboxgame.engine.items.Item;
 import de.undefinedhuman.sandboxgame.engine.items.ItemType;
-import de.undefinedhuman.sandboxgame.engine.log.Log;
+import de.undefinedhuman.sandboxgame.engine.resources.ResourceManager;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
+import de.undefinedhuman.sandboxgame.engine.settings.SettingsObject;
 import de.undefinedhuman.sandboxgame.engine.utils.Tools;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
 
 public class ItemEditor extends Editor {
 
@@ -32,6 +30,7 @@ public class ItemEditor extends Editor {
         super(container);
 
         itemComboBox = new JComboBox<>(ItemType.values());
+        itemComboBox.setBounds(20, 25, 150, 25);
         itemComboBox.setSelectedIndex(0);
         itemComboBox.addActionListener(e -> {
             if(itemComboBox.getSelectedItem() == null) return;
@@ -42,12 +41,7 @@ public class ItemEditor extends Editor {
             Tools.addSettings(settingsPanel, currentItem.getSettings());
         });
 
-        JPanel middlePanel = new JPanel();
-        middlePanel.setBorder(BorderFactory.createTitledBorder("Type:"));
-        middlePanel.setBounds(545, 25, 200, 620);
         middlePanel.add(itemComboBox);
-
-        container.add(middlePanel);
 
     }
 
@@ -59,11 +53,11 @@ public class ItemEditor extends Editor {
 
         for (FileHandle itemDir : itemDirs) {
             if (!itemDir.isDirectory()) continue;
-            FileReader reader = new FileReader(new FsFile(Paths.ITEM_PATH, itemDir.name() + "/settings.item", false), true);
-            reader.nextLine();
-            reader.nextLine();
-            HashMap<String, LineSplitter> settings = Tools.loadSettings(reader);
-            ids.add(itemDir.name() + "-" + settings.get("Name").getNextString());
+            FsFile file = new FsFile(Paths.ITEM_PATH, itemDir.name() + "/settings.item", true);
+            if(file.isEmpty()) continue;
+            FileReader reader = new FileReader(file, true);
+            SettingsObject settings = Tools.loadSettings(reader);
+            ids.add(itemDir.name() + "-" + ((LineSplitter) settings.get("Name")).getNextString());
             reader.close();
         }
 
@@ -87,47 +81,38 @@ public class ItemEditor extends Editor {
         loadButton.addActionListener(a -> {
             if(itemSelection.getSelectedItem() == null) return;
             FileReader reader = new FileReader(ResourceManager.loadFile(Paths.ITEM_PATH, Integer.parseInt(((String) itemSelection.getSelectedItem()).split("-")[0]) + "/settings.item"), true);
-            reader.nextLine();
-            ItemType type = ItemType.valueOf(reader.getNextString());
+            SettingsObject settingsObject = Tools.loadSettings(reader);
+            settingsObject.log(settingsObject);
+            if(!settingsObject.containsKey("Type")) return;
+            ItemType type = ItemType.valueOf(((LineSplitter) settingsObject.get("Type")).getNextString());
             if(type == null) return;
-            reader.nextLine();
             itemComboBox.setSelectedItem(type);
             Tools.removeSettings(settingsPanel);
             currentItem = type.createInstance();
-            HashMap<String, LineSplitter> settingsList = Tools.loadSettings(reader);
-            for(Setting setting : currentItem.getSettings()) setting.loadSetting(reader.getParentDirectory(), settingsList);
+            for(Setting setting : currentItem.getSettings())
+                setting.loadSetting(reader.getParentDirectory(), settingsObject);
             Tools.addSettings(settingsPanel, currentItem.getSettings());
             loadWindow.setVisible(false);
             reader.close();
-
         });
 
         label.add(itemSelection);
         label.add(loadButton);
         loadWindow.setVisible(true);
-
     }
 
     @Override
     public void save() {
         if(currentItem == null) return;
-        File file = new File(Paths.ITEM_PATH.getPath() + currentItem.getSettings().get(0).getInt() + "/");
-        if(file.exists()) { FileUtils.deleteFile(file); Log.info("Item directory deleted successfully!"); }
+        FsFile itemDir = new FsFile(Paths.ITEM_PATH, currentItem.getSettings().get(0).getInt() + "/", true);
+        if(itemDir.exists())
+            FileUtils.deleteFile(itemDir);
 
-        FsFile entityDir = new FsFile(Paths.ITEM_PATH, String.valueOf(currentItem.getSettings().get(0).getString()), true);
-        FsFile settingsFile = new FsFile(entityDir, "/settings.item", false);
-
-        FileWriter writer = settingsFile.getFileWriter(true);
-        writer.writeString(currentItem.type.name());
+        FileWriter writer = new FsFile(itemDir.createFile(true), "settings.item", false).getFileWriter(true);
+        writer.writeString("Type").writeString(currentItem.type.name());
         writer.nextLine();
         Tools.saveSettings(writer, currentItem.getSettings());
         writer.close();
-    }
-
-    public void reset() {
-        itemComboBox.setSelectedIndex(0);
-        currentItem = null;
-        Tools.removeSettings(settingsPanel);
     }
 
 }

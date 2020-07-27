@@ -3,6 +3,7 @@ package de.undefinedhuman.sandboxgame.inventory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import de.undefinedhuman.sandboxgame.crafting.gui.CraftingInventory;
 import de.undefinedhuman.sandboxgame.engine.camera.CameraManager;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
 import de.undefinedhuman.sandboxgame.equip.EquipScreen;
@@ -13,10 +14,7 @@ import de.undefinedhuman.sandboxgame.gui.transforms.constraints.CenterConstraint
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.RelativeConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.sandboxgame.gui.transforms.offset.PixelOffset;
-import de.undefinedhuman.sandboxgame.inventory.player.DragAndDrop;
-import de.undefinedhuman.sandboxgame.inventory.player.PlayerInventory;
-import de.undefinedhuman.sandboxgame.inventory.player.Selector;
-import de.undefinedhuman.sandboxgame.inventory.player.SidePanel;
+import de.undefinedhuman.sandboxgame.inventory.player.*;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
@@ -34,7 +32,7 @@ public class InventoryManager extends Manager {
     public InventoryManager() {
         if (instance == null) instance = this;
         dragAndDrop = new DragAndDrop();
-        GuiManager.instance.addGui(new Selector(), new SidePanel(), new InspectScreen(), new EquipScreen(), new PlayerInventory());
+        GuiManager.instance.addGui(new Selector(), new SidePanel(), new InspectScreen(), new EquipScreen(), new PlayerInventory(), new CraftingInventory());
         dragAndDrop.addTarget(PlayerInventory.instance, Selector.instance, EquipScreen.instance);
     }
 

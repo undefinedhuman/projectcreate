@@ -20,16 +20,22 @@ public class Vector2ArraySetting extends Setting {
         super(SettingType.Vector2Array, key, value);
     }
 
+    public Vector2ArraySetting(SettingType type, String key, Vector2[] value) {
+        super(type, key, value);
+    }
+
     @Override
-    public void load(FsFile parentDir, LineSplitter splitter) {
+    public void load(FsFile parentDir, Object value) {
+        if(!(value instanceof LineSplitter)) return;
+        LineSplitter splitter = (LineSplitter) value;
         Vector2[] vectors = new Vector2[splitter.getNextInt()];
         for(int i = 0; i < vectors.length; i++) vectors[i] = splitter.getNextVector2();
         setValue(vectors);
     }
 
     @Override
-    public void save(FsFile parentDir, FileWriter writer) {
-        writer.writeInt(getVector2Array().length);
+    public void save(FileWriter writer) {
+        writer.writeString(key).writeInt(getVector2Array().length);
         for(Vector2 vector : getVector2Array()) writer.writeVector2(vector);
     }
 

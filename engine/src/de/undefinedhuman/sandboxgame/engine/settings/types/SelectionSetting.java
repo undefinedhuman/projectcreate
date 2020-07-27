@@ -1,9 +1,6 @@
 package de.undefinedhuman.sandboxgame.engine.settings.types;
 
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.sandboxgame.engine.file.FileWriter;
-import de.undefinedhuman.sandboxgame.engine.file.FsFile;
-import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
 import de.undefinedhuman.sandboxgame.engine.settings.SettingType;
 
@@ -18,16 +15,6 @@ public class SelectionSetting extends Setting {
         super(SettingType.Selection, key, values[0]);
         this.values = new String[values.length];
         for(int i = 0; i < values.length; i++) this.values[i] = values[i].toString();
-    }
-
-    @Override
-    public void load(FsFile parentDir, LineSplitter splitter) {
-        value = splitter.getNextString();
-    }
-
-    @Override
-    public void save(FsFile parentDir, FileWriter writer) {
-        writer.writeString(String.valueOf(value));
     }
 
     @Override

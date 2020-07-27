@@ -17,7 +17,7 @@ allprojects {
     version = '1.0'
     ext {
         appName = "SandboxGame"
-        gdxVersion = '1.9.10'
+        gdxVersion = '1.9.11'
         roboVMVersion = '2.3.5'
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.0'
@@ -94,6 +94,7 @@ project(":editor") {
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
 
+        implementation 'com.formdev:flatlaf:0.36'
         testImplementation 'junit:junit:4.12'
     }
 }

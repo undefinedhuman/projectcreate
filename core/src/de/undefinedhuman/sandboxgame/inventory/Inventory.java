@@ -2,7 +2,6 @@ package de.undefinedhuman.sandboxgame.inventory;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
@@ -15,25 +14,22 @@ public class Inventory extends Gui implements InvTarget {
     protected InvSlot[][] inventory;
     private int row, col;
 
-    private Vector2 offset = new Vector2();
-
     public Inventory(int row, int col) {
-        this(row, col, null, GuiTemplate.SMALL_PANEL);
+        this(row, col, GuiTemplate.SMALL_PANEL);
     }
 
-    public Inventory(int row, int col, Vector2 offset, GuiTemplate template) {
+    public Inventory(int row, int col, GuiTemplate template) {
         super(template);
         inventory = new InvSlot[this.row = row][this.col = col];
-        this.offset.set(offset != null ? offset : new Vector2(template.cornerSize, template.cornerSize));
-        setSize(new PixelConstraint(Tools.getInventoryWidth(this.offset.x, col)), new PixelConstraint(Tools.getInventoryHeight(this.offset.y, row)));
+        setSize(new PixelConstraint(Tools.getInventoryWidth(template, col)), new PixelConstraint(Tools.getInventoryHeight(template, row)));
 
         for (int i = 0; i < inventory.length; i++)
             for (int j = 0; j < inventory[i].length; j++) {
                 inventory[i][j] = new InvSlot();
                 inventory[i][j].parent = this;
                 inventory[i][j].setPosition(
-                        new PixelConstraint(this.offset.x + (Variables.SLOT_SIZE + Variables.SLOT_SPACE) * j),
-                        new PixelConstraint(this.offset.y + (Variables.SLOT_SIZE + Variables.SLOT_SPACE) * i));
+                        new PixelConstraint(template.cornerSize + (Variables.SLOT_SIZE + Variables.SLOT_SPACE) * j),
+                        new PixelConstraint(template.cornerSize + (Variables.SLOT_SIZE + Variables.SLOT_SPACE) * i));
             }
     }
 
@@ -71,8 +67,8 @@ public class Inventory extends Gui implements InvTarget {
     public boolean isFull(int id, int amount) {
         int currentAmount = 0, maxAmount = ItemManager.instance.getItem(id).maxAmount.getInt();
 
-        for (int i = inventory.length - 1; i >= 0; i--)
-            for (int j = 0; j < inventory[i].length; j++) {
+        for (int i = row - 1; i >= 0; i--)
+            for (int j = 0; j < col; j++) {
                 InvItem currentItem = inventory[i][j].getItem();
                 if(currentItem == null) {
                     currentAmount += maxAmount;
@@ -86,8 +82,8 @@ public class Inventory extends Gui implements InvTarget {
     }
 
     public InvSlot isFull(int id) {
-        for (int i = inventory.length - 1; i >= 0; i--)
-            for (int j = 0; j < inventory[i].length; j++) {
+        for (int i = row - 1; i >= 0; i--)
+            for (int j = 0; j < col; j++) {
                 InvSlot slot = inventory[i][j];
                 InvItem currentItem = slot.getItem();
                 if(currentItem == null || (currentItem.getID() == id && currentItem.getAmount() < ItemManager.instance.getItem(id).maxAmount.getInt())) return slot;

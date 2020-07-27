@@ -26,36 +26,6 @@ public class Log extends Manager {
         if (instance == null) instance = this;
     }
 
-    public static void log(Object msg) {
-        createMessage("Log", msg);
-    }
-
-    public static void error(Object msg) {
-        createMessage("Error", msg);
-    }
-
-    public static void info(Object... values) {
-        StringBuilder s = new StringBuilder();
-        for (int i = 0; i < values.length; i++) s.append(values[i]).append(i < values.length - 1 ? ", " : "");
-        createMessage("Info", s.toString());
-    }
-
-    public static void test(Object... values) {
-        StringBuilder s = new StringBuilder();
-        for (int i = 0; i < values.length; i++) s.append(values[i]).append(i < values.length - 1 ? ", " : "");
-        createMessage("Test", s.toString());
-    }
-
-    private static void createMessage(String title, Object msg) {
-        String message = generateMessage(title, String.valueOf(msg));
-        System.out.println(message);
-        logMessages.add(message);
-    }
-
-    private static String generateMessage(String prefix, String msg) {
-        return "[" + getTime() + "] [" + prefix + "] " + msg;
-    }
-
     @Override
     public void init() {
         fileName = getTime() + ".txt";
@@ -76,14 +46,50 @@ public class Log extends Manager {
         writer.close();
     }
 
-    public static void info(Object msg) {
-        createMessage("Info", msg);
-    }
-
     public void load() {
         checkLogs();
         file = new FsFile(Paths.LOG_PATH.getPath() + fileName, false);
         if (file.exists()) info("Log file successfully created!");
+    }
+
+    public void crash() {
+        save();
+        System.exit(0);
+    }
+
+    public void crash(String errorMessage) {
+        error(errorMessage);
+        save();
+        System.exit(1);
+    }
+
+    public static void log(Object msg) {
+        createMessage("Log", msg);
+    }
+
+    public static void error(Object msg) {
+        createMessage("Error", msg);
+    }
+
+    public static void info(Object msg) {
+        createMessage("Info", msg);
+    }
+
+    public static void info(Object... values) {
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < values.length; i++) s.append(values[i]).append(i < values.length - 1 ? ", " : "");
+        createMessage("Info", s.toString());
+    }
+
+    private static void createMessage(String prefix, Object msg) {
+        String message = generateMessage(prefix, String.valueOf(msg));
+        Log.instance.displayMessage("[" + prefix + "] " + msg);
+        System.out.println(message);
+        logMessages.add(message);
+    }
+
+    private static String generateMessage(String prefix, String msg) {
+        return "[" + getTime() + "] [" + prefix + "] " + msg;
     }
 
     private void checkLogs() {
@@ -100,17 +106,7 @@ public class Log extends Manager {
         filesToRemove.clear();
     }
 
-    public void crash() {
-        save();
-        System.exit(0);
-    }
-
-    public void crash(String errorMessage) {
-        error(errorMessage);
-        save();
-        System.exit(1);
-    }
-
+    public void displayMessage(String msg) {}
 
     public static String getTime() {
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy - HH-mm-ss");

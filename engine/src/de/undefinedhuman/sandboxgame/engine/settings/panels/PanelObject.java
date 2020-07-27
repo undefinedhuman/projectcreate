@@ -1,33 +1,42 @@
 package de.undefinedhuman.sandboxgame.engine.settings.panels;
 
-import de.undefinedhuman.sandboxgame.engine.file.FileReader;
 import de.undefinedhuman.sandboxgame.engine.file.FileWriter;
-import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
+import de.undefinedhuman.sandboxgame.engine.file.FsFile;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
 import de.undefinedhuman.sandboxgame.engine.settings.SettingsList;
+import de.undefinedhuman.sandboxgame.engine.settings.SettingsObject;
 import de.undefinedhuman.sandboxgame.engine.utils.Tools;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class PanelObject {
 
+    public String key;
+
     protected SettingsList settings = new SettingsList();
 
-    public PanelObject() {}
-
     public void save(FileWriter writer) {
+        writer.writeString("{:" + getKey()).nextLine();
         Tools.saveSettings(writer, settings.getSettings());
+        writer.writeString("}").nextLine();
     }
 
-    public PanelObject load(FileReader reader) {
-        HashMap<String, LineSplitter> settings = Tools.loadSettings(reader);
-        for(Setting setting : this.settings.getSettings()) setting.loadSetting(reader.getParentDirectory(), settings);
+    public PanelObject load(FsFile parentDir, SettingsObject settingsObject) {
+        for(Setting setting : this.settings.getSettings()) setting.loadSetting(parentDir, settingsObject);
         return this;
     }
 
     public ArrayList<Setting> getSettings() {
         return settings.getSettings();
+    }
+
+    public PanelObject setKey(String key) {
+        this.key = key;
+        return this;
+    }
+
+    public String getKey() {
+        return key;
     }
 
     public void delete() {

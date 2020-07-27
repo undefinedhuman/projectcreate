@@ -64,6 +64,7 @@ public class AnimationComponent extends Component {
 
     public void addAnimationTime(float delta) {
         this.animationTime += delta * animationTimeMultiplier;
+        this.animationTime = animationTime % 100000;
     }
 
     public void setAnimationTimeMultiplier(float animationTimeMultiplier) {

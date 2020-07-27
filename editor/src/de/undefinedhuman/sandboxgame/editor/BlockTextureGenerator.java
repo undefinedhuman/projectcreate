@@ -25,8 +25,8 @@ public class BlockTextureGenerator {
 
         generateBlockTexture("./assets/editor/template/Block-Template.png", baseTexture, "./assets/editor/", borderColor);
 
-        FileUtils.deleteFile(new FsFile("./assets/editor/items/" + name + "/Texture.atlas", false).getFile());
-        FileUtils.deleteFile(new FsFile("./assets/editor/" + name + "/", true).getFile());
+        FileUtils.deleteFile(new FsFile("./assets/editor/items/" + name + "/Texture.atlas", false));
+        FileUtils.deleteFile(new FsFile("./assets/editor/" + name + "/", true));
 
         ImageIO.write(generateIcon("./assets/editor/template/Sprite-Template-1.png", baseTexture, borderColor), "png", new FsFile("./assets/editor/items/" + name + "/" + name + "-Icon.png", false).getFile());
 

@@ -1,10 +1,7 @@
 package de.undefinedhuman.sandboxgame.engine.settings.types;
 
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.sandboxgame.engine.file.FileWriter;
 import de.undefinedhuman.sandboxgame.engine.file.FsFile;
-import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
-import de.undefinedhuman.sandboxgame.engine.settings.Setting;
 import de.undefinedhuman.sandboxgame.engine.settings.SettingType;
 import de.undefinedhuman.sandboxgame.engine.utils.Tools;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
@@ -19,14 +16,14 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class TextureOffsetSetting extends Setting {
+public class TextureOffsetSetting extends Vector2ArraySetting {
 
     private BufferedImage texture;
     private JLabel textureLabel;
     private JTextField valueField;
     private boolean offset;
 
-    public TextureOffsetSetting(String key, Object value, boolean offset) {
+    public TextureOffsetSetting(String key, Vector2[] value, boolean offset) {
         super(SettingType.Texture, key, value);
         try { texture = ImageIO.read(new FsFile("Unknown.png", false).getFile());
         } catch (IOException e) { e.printStackTrace(); }
@@ -61,25 +58,6 @@ public class TextureOffsetSetting extends Setting {
         panel.add(textureLabel);
         valueField = createTextField(Tools.convertArrayToString(getVector2Array()), new Vector2(position).add(30, 0), new Vector2(170, 25), null);
         panel.add(valueField);
-    }
-
-    @Override
-    public void save(FsFile parentDir, FileWriter writer) {
-        Vector2[] vectors = getVector2Array();
-        writer.writeInt(vectors.length);
-        for(Vector2 vector : vectors) writer.writeVector2(vector);
-    }
-
-    @Override
-    public void load(FsFile parentDir, LineSplitter splitter) {
-        Vector2[] vectors = new Vector2[splitter.getNextInt()];
-        for(int i = 0; i < vectors.length; i++) vectors[i] = splitter.getNextVector2();
-        setValue(vectors);
-    }
-
-    @Override
-    protected void setValueInMenu(Object value) {
-        if(valueField != null) valueField.setText(Tools.convertArrayToString(getVector2Array()));
     }
 
     private Vector2[] calculateVectors(BufferedImage currentImage) {

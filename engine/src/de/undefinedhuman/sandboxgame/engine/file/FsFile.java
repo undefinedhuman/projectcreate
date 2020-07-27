@@ -30,12 +30,13 @@ public class FsFile {
         createFile(isDirectory);
     }
 
-    public void createFile(boolean isDirectory) {
+    public FsFile createFile(boolean isDirectory) {
         try {
             createNewFile(isDirectory);
         } catch (IOException ex) {
             Log.instance.crash(ex.getMessage());
         }
+        return this;
     }
 
     private void createNewFile(boolean isDirectory) throws IOException {

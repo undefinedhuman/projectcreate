@@ -11,6 +11,7 @@ import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTexture;
 import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
 import de.undefinedhuman.sandboxgame.gui.transforms.GuiTransform;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.CenterConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.RelativeConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.sandboxgame.gui.transforms.offset.PixelOffset;
@@ -72,7 +73,7 @@ public class Gui extends GuiComponent {
 
     public void setTitle(String titleString, Font font, Color color) {
         Text text = new Text(titleString);
-        text.setFont(font).setColor(color).setPosition(new RelativeConstraint(0.5f), new RelativeConstraint(1f)).setOffset(new CenterOffset(), new PixelOffset(getTemplate() == null ? 0 : -(getTemplate().cornerSize/2f)));
+        text.setFont(font).setColor(color).setPosition(new CenterConstraint(), new RelativeConstraint(1f)).setOffset(new CenterOffset(), new PixelOffset(-2));
         addChild(text);
     }
 
