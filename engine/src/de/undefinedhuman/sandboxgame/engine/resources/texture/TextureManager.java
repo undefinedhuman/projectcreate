@@ -21,8 +21,7 @@ public class TextureManager extends Manager {
 
     @Override
     public void init() {
-        addTexture("Unknown.png");
-        addTexture("blank.png");
+        addTexture("Unknown.png", "blank.png");
     }
 
     public boolean addTexture(String... names) {

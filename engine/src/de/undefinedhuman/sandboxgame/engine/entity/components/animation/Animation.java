@@ -1,6 +1,8 @@
 package de.undefinedhuman.sandboxgame.engine.entity.components.animation;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
+
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
 import de.undefinedhuman.sandboxgame.engine.settings.SettingType;
 import de.undefinedhuman.sandboxgame.engine.settings.panels.PanelObject;
@@ -12,7 +14,7 @@ public class Animation extends PanelObject {
     public Setting
             bounds = new Vector2Setting("Bounds", new Vector2()),
             frameTime = new Setting(SettingType.Float, "Frame Time", 0),
-            playMode = new SelectionSetting("Play Mode", com.badlogic.gdx.graphics.g2d.Animation.PlayMode.values());
+            playMode = new SelectionSetting("Play Mode", PlayMode.values());
 
     public Animation() {
         settings.addSettings(bounds, frameTime, playMode);

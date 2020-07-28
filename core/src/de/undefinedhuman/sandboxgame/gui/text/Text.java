@@ -12,6 +12,7 @@ import de.undefinedhuman.sandboxgame.engine.resources.font.Font;
 import de.undefinedhuman.sandboxgame.engine.resources.font.FontManager;
 import de.undefinedhuman.sandboxgame.gui.GuiComponent;
 import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
+import de.undefinedhuman.sandboxgame.gui.transforms.GuiTransform;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.Constraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.TextConstraint;
@@ -47,13 +48,23 @@ public class Text extends GuiComponent {
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         super.render(batch, camera);
         if (!visible || !parent.isVisible()) return;
-        font.draw(batch, layout, getCurrentValue(Axis.X), getCurrentValue(Axis.Y));
+        font.draw(batch, layout, getCurrentValue(Axis.X), getCurrentValue(Axis.Y) + getCurrentValue(Axis.HEIGHT));
     }
 
     @Override
     public void delete() {
         super.delete();
         layout.reset();
+    }
+
+    @Override
+    public GuiTransform set(Constraint x, Constraint y, Constraint width, Constraint height) {
+        return super.set(x, y, new TextConstraint(layout), new TextConstraint(layout));
+    }
+
+    @Override
+    public GuiTransform setSize(Constraint width, Constraint height) {
+        return super.setSize(new TextConstraint(layout), new TextConstraint(layout));
     }
 
     public Text setText(Object text) {
@@ -69,7 +80,7 @@ public class Text extends GuiComponent {
     }
 
     public Text setLineLength(Constraint lineLength) {
-        this.lineLength = lineLength.setAxis(Axis.WIDTH).setGui(this);
+        this.lineLength = lineLength.setAxis(Axis.LINE_LENGTH).setGui(this);
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         return this;
     }

@@ -8,6 +8,8 @@ import de.undefinedhuman.sandboxgame.editor.editor.Editor;
 import de.undefinedhuman.sandboxgame.editor.editor.EditorType;
 import de.undefinedhuman.sandboxgame.editor.editor.entity.EntityEditor;
 import de.undefinedhuman.sandboxgame.editor.editor.item.ItemEditor;
+import de.undefinedhuman.sandboxgame.engine.file.FileReader;
+import de.undefinedhuman.sandboxgame.engine.file.FsFile;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
 
 import javax.swing.*;
@@ -45,6 +47,7 @@ public class Window extends JFrame {
 
         Log.instance = new Log() {
             @Override
+
             public void displayMessage(String msg) {
                 if(!msg.contains("Error")) return;
                 errorMessage.setText(msg);
@@ -60,9 +63,9 @@ public class Window extends JFrame {
 
         setEditor(EditorType.ENTITY);
 
-        /*FileReader reader = new FsFile(Paths.ITEM_PATH, "0/settings.item", false).getFileReader(true);
+        FileReader reader = new FsFile("old entity/0/settings.entity", false).getFileReader(true);
         while(reader.nextLine() != null) System.out.println(reader.getData());
-        reader.close();*/
+        reader.close();
 
         setLocationRelativeTo(null);
         setVisible(true);

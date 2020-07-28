@@ -3,9 +3,9 @@ package de.undefinedhuman.sandboxgame.gui.transforms.constraints;
 import com.badlogic.gdx.Gdx;
 import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
 
-public class ResizeConstraint extends Constraint {
+public class ScreenConstraint extends Constraint {
 
-    public ResizeConstraint() {
+    public ScreenConstraint() {
         super(0);
     }
 

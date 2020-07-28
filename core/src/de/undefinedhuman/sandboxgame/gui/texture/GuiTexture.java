@@ -41,7 +41,7 @@ public class GuiTexture {
     public void resize(int x, int y, int width, int height) {
         if (template == null) sprites.get(0).setBounds(x, y, width, height);
         else {
-            this.cornerSize = (int) (template.cornerSize * Main.guiScale);
+            this.cornerSize = template.cornerSize * Main.guiScale;
             int centerWidth = Math.max(0, width - cornerSize * 2);
             int centerHeight = Math.max(0, height - cornerSize * 2);
             int index, e, r, o, a;
@@ -62,7 +62,6 @@ public class GuiTexture {
                 }
 
             sprites.get(8).setBounds(x + cornerSize, y + cornerSize, centerWidth, centerHeight);
-
         }
     }
 

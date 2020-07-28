@@ -1,10 +1,11 @@
 package de.undefinedhuman.sandboxgame.engine.entity;
 
-import de.undefinedhuman.sandboxgame.engine.file.FileReader;
+import de.undefinedhuman.sandboxgame.engine.file.FileWriter;
 import de.undefinedhuman.sandboxgame.engine.file.FsFile;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
 import de.undefinedhuman.sandboxgame.engine.settings.SettingsList;
 import de.undefinedhuman.sandboxgame.engine.settings.SettingsObject;
+import de.undefinedhuman.sandboxgame.engine.utils.Tools;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,17 +23,15 @@ public abstract class ComponentBlueprint {
 
     public abstract Component createInstance(HashMap<ComponentType, ComponentParam> params);
 
-    public void load(FileReader reader) {
-        //HashMap<String, LineSplitter[]> settings = Tools.loadSettings(reader);
-        //for(Setting setting : this.settings.getSettings()) setting.loadSetting(reader.getParentDirectory(), settings);
+    public void load(FsFile parentDir, SettingsObject settingsObject) {
+        for(Setting setting : this.settings.getSettings())
+            setting.loadSetting(parentDir, settingsObject);
     }
 
-    public SettingsObject save(FsFile parentDir) {
-        /*object.put("Type", type.name());
-        for(Setting setting : settings.getSettings())
-            setting.save(parentDir, object);
-        return object;*/
-        return null;
+    public void save(FileWriter writer) {
+        writer.writeString("{:" + type.name()).nextLine();
+        Tools.saveSettings(writer, settings.getSettings());
+        writer.writeString("}").nextLine();
     }
 
     public ArrayList<Setting> getSettings() {

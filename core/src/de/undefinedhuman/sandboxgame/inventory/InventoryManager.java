@@ -3,7 +3,6 @@ package de.undefinedhuman.sandboxgame.inventory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import de.undefinedhuman.sandboxgame.crafting.gui.CraftingInventory;
 import de.undefinedhuman.sandboxgame.engine.camera.CameraManager;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
 import de.undefinedhuman.sandboxgame.equip.EquipScreen;
@@ -32,7 +31,7 @@ public class InventoryManager extends Manager {
     public InventoryManager() {
         if (instance == null) instance = this;
         dragAndDrop = new DragAndDrop();
-        GuiManager.instance.addGui(new Selector(), new SidePanel(), new InspectScreen(), new EquipScreen(), new PlayerInventory(), new CraftingInventory());
+        GuiManager.instance.addGui(new Selector(), new SidePanel(), new InspectScreen(), new EquipScreen(), new PlayerInventory());
         dragAndDrop.addTarget(PlayerInventory.instance, Selector.instance, EquipScreen.instance);
     }
 

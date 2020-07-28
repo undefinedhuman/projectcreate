@@ -28,8 +28,8 @@ public class Inventory extends Gui implements InvTarget {
                 inventory[i][j] = new InvSlot();
                 inventory[i][j].parent = this;
                 inventory[i][j].setPosition(
-                        new PixelConstraint(template.cornerSize + (Variables.SLOT_SIZE + Variables.SLOT_SPACE) * j),
-                        new PixelConstraint(template.cornerSize + (Variables.SLOT_SIZE + Variables.SLOT_SPACE) * i));
+                        new PixelConstraint((Variables.SLOT_SIZE + Variables.SLOT_SPACE) * j),
+                        new PixelConstraint((Variables.SLOT_SIZE + Variables.SLOT_SPACE) * i));
             }
     }
 

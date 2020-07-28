@@ -10,6 +10,7 @@ import de.undefinedhuman.sandboxgame.engine.items.ItemType;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.engine.resources.ResourceManager;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
+import de.undefinedhuman.sandboxgame.engine.settings.SettingsObject;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
 import de.undefinedhuman.sandboxgame.utils.Tools;
@@ -40,7 +41,7 @@ public class ItemManager extends Manager {
         boolean loaded = false;
         for (int id : ids) {
             if (hasItem(id) || !ResourceManager.existItem(id)) continue;
-            items.put(id, loadItem(new FsFile(Paths.ITEM_PATH, id + "/settings.item", false)));
+            items.put(id, loadItem(id));
             loaded = true;
         }
         if(loaded)
@@ -90,19 +91,17 @@ public class ItemManager extends Manager {
         items.clear();
     }
 
-    public static Item loadItem(FsFile file) {
-        FileReader reader = file.getFileReader(true);
-        reader.nextLine();
-        ItemType type = ItemType.valueOf(reader.getNextString());
-        reader.nextLine();
-        HashMap<String, LineSplitter[]> settings = Tools.loadSettings(reader);
+    private Item loadItem(int id) {
+        FileReader reader = new FsFile(Paths.ITEM_PATH, id + "/settings.item", false).getFileReader(true);
+        SettingsObject settingsObject = Tools.loadSettings(reader);
+        if(!settingsObject.containsKey("Type")) return null;
+        ItemType type = ItemType.valueOf(((LineSplitter) settingsObject.get("Type")).getNextString());
+        if(type == null) return null;
         Item item = type.createInstance();
-        if(item == null) return null;
-        for(Setting setting : item.getSettings()) setting.load
-    Setting(reader.getParentDirectory(), settings);
+        for(Setting setting : item.getSettings())
+            setting.loadSetting(reader.getParentDirectory(), settingsObject);
         item.init();
         reader.close();
-        settings.clear();
         return item;
     }
 

@@ -56,9 +56,10 @@ public class GuiComponent extends GuiTransform {
         return this;
     }
 
-    public void addEvent(Event event) {
+    public GuiComponent addEvent(Event event) {
         this.events.add(event);
         event.setGuiComponent(this);
+        return this;
     }
 
 }

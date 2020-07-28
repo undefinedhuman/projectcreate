@@ -14,7 +14,7 @@ import java.awt.event.KeyEvent;
 
 public class Vector2ArraySetting extends Setting {
 
-    private JTextField valueField;
+    protected JTextField valueField;
 
     public Vector2ArraySetting(String key, Vector2[] value) {
         super(SettingType.Vector2Array, key, value);

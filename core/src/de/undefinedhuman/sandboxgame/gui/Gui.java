@@ -14,7 +14,7 @@ import de.undefinedhuman.sandboxgame.gui.transforms.GuiTransform;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.CenterConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.RelativeConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.offset.CenterOffset;
-import de.undefinedhuman.sandboxgame.gui.transforms.offset.PixelOffset;
+import de.undefinedhuman.sandboxgame.gui.transforms.offset.RelativeOffset;
 
 import java.util.ArrayList;
 
@@ -73,7 +73,7 @@ public class Gui extends GuiComponent {
 
     public void setTitle(String titleString, Font font, Color color) {
         Text text = new Text(titleString);
-        text.setFont(font).setColor(color).setPosition(new CenterConstraint(), new RelativeConstraint(1f)).setOffset(new CenterOffset(), new PixelOffset(-2));
+        text.setFont(font).setColor(color).setPosition(new CenterConstraint(), new RelativeConstraint(1f)).setOffset(new CenterOffset(), new RelativeOffset(-1.2f));
         addChild(text);
     }
 
@@ -91,16 +91,18 @@ public class Gui extends GuiComponent {
         children.clear();
     }
 
+    // TODO Remove those two functions  \/
+
     @Override
-    public GuiTransform setPosition(int x, int y) {
+    public GuiTransform setCurrentPosition(int x, int y) {
         texture.resize(x, y, getCurrentValue(Axis.WIDTH), getCurrentValue(Axis.HEIGHT));
-        return super.setPosition(x, y);
+        return super.setCurrentPosition(x, y);
     }
 
     @Override
-    public GuiTransform setSize(int width, int height) {
+    public GuiTransform setCurrentSize(int width, int height) {
         texture.resize(getCurrentValue(Axis.X), getCurrentValue(Axis.Y), width, height);
-        return super.setSize(width, height);
+        return super.setCurrentSize(width, height);
     }
 
     public void setTexture(String texture) {
@@ -116,5 +118,9 @@ public class Gui extends GuiComponent {
     public int getCornerSize() { return texture.getCornerSize(); }
 
     public int getBaseCornerSize() { return texture.getBaseCornerSize(); }
+
+    public ArrayList<GuiTransform> getChildren() {
+        return children;
+    }
 
 }

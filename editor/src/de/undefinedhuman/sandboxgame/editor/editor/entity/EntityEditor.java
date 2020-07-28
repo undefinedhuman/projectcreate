@@ -11,6 +11,7 @@ import de.undefinedhuman.sandboxgame.engine.resources.ResourceManager;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
 import de.undefinedhuman.sandboxgame.engine.settings.SettingType;
 import de.undefinedhuman.sandboxgame.engine.settings.SettingsList;
+import de.undefinedhuman.sandboxgame.engine.settings.SettingsObject;
 import de.undefinedhuman.sandboxgame.engine.settings.types.SelectionSetting;
 import de.undefinedhuman.sandboxgame.engine.settings.types.Vector2Setting;
 import de.undefinedhuman.sandboxgame.engine.utils.Tools;
@@ -32,7 +33,7 @@ public class EntityEditor extends Editor {
 
     private HashMap<ComponentType, ComponentBlueprint> components;
 
-    private SettingsList entitySettings = new SettingsList();
+    private SettingsList baseSettings = new SettingsList();
 
     public EntityEditor(Container container) {
         super(container);
@@ -42,12 +43,12 @@ public class EntityEditor extends Editor {
         componentComboBox.setSelectedItem(null);
         componentComboBox.setBounds(20, 25, 150, 25);
 
-        entitySettings.addSettings(
+        baseSettings.addSettings(
                 new Setting(SettingType.Int, "ID", 0),
                 new Setting(SettingType.String, "Name", "Temp Name"),
                 new Vector2Setting("Size", new Vector2(0, 0)),
                 new SelectionSetting("Type", EntityType.values()));
-        Tools.addSettings(mainPanel, entitySettings.getSettings());
+        Tools.addSettings(mainPanel, baseSettings.getSettings());
 
         componentList = new DefaultListModel<>();
 
@@ -99,12 +100,13 @@ public class EntityEditor extends Editor {
         ArrayList<String> ids = new ArrayList<>();
 
         for (FileHandle entityDir : entityDirs) {
-            /*if (!entityDir.isDirectory()) continue;
-            FileReader reader = new FileReader(new FsFile(Paths.ENTITY_FOLDER, entityDir.name() + "/settings.entity", false), true);
-            reader.nextLine();
-            HashMap<String, LineSplitter[]> settings = Tools.loadSettings(reader);
-            ids.add(entityDir.name() + "-" + settings.get("Name")[0].getNextString());
-            reader.close();*/
+            if (!entityDir.isDirectory()) continue;
+            FsFile entityFile = new FsFile(Paths.ENTITY_FOLDER, entityDir.name() + "/settings.entity", true);
+            if(entityFile.isEmpty()) continue;
+            FileReader reader = entityFile.getFileReader(true);
+            SettingsObject settings = Tools.loadSettings(reader);
+            ids.add(entityDir.name() + "-" + ((LineSplitter) settings.get("Name")).getNextString());
+            reader.close();
         }
 
         JFrame chooseWindow = new JFrame("Load entity");
@@ -122,29 +124,27 @@ public class EntityEditor extends Editor {
         comboBox.setBounds(90, 35, 300, 25);
 
         button.addActionListener(a -> {
-            /*if(comboBox.getSelectedItem() == null) return;
-
+            if(comboBox.getSelectedItem() == null) return;
             componentList.clear();
             components.clear();
             Tools.removeSettings(settingsPanel);
 
             FileReader reader = new FileReader(ResourceManager.loadFile(Paths.ENTITY_FOLDER, Integer.parseInt(((String) comboBox.getSelectedItem()).split("-")[0]) + "/settings.entity"), true);
-            reader.nextLine();
-            HashMap<String, LineSplitter[]> settings = Tools.loadSettings(reader);
-            for(Setting setting : entitySettings.getSettings()) setting.loadSetting(reader.getParentDirectory(), settings);
+            SettingsObject settingsObject = Tools.loadSettings(reader);
 
-            int componentSize = reader.getNextInt();
-            reader.nextLine();
-            for(int i = 0; i < componentSize; i++) {
-                ComponentType type = ComponentType.valueOf(reader.getNextString());
-                if(componentList.contains(type.name())) return;
+            for(Setting setting : baseSettings.getSettings())
+                setting.loadSetting(reader.getParentDirectory(), settingsObject);
+
+            for(ComponentType type : ComponentType.values()) {
+                if(!settingsObject.containsKey(type.name())) continue;
                 componentList.addElement(type.name());
-                reader.nextLine();
-                components.put(type, type.load(reader));
+                Object componentObject = settingsObject.get(type.name());
+                if(!(componentObject instanceof SettingsObject)) continue;
+                components.put(type, type.load(reader.getParentDirectory(), (SettingsObject) settingsObject.get(type.name())));
             }
 
             chooseWindow.setVisible(false);
-            reader.close();*/
+            reader.close();
 
         });
 
@@ -157,20 +157,15 @@ public class EntityEditor extends Editor {
 
     @Override
     public void save() {
-        FsFile entityDir = new FsFile(Paths.ENTITY_FOLDER, entitySettings.getSettings().get(0).getString() + Variables.FILE_SEPARATOR, true);
+        FsFile entityDir = new FsFile(Paths.ENTITY_FOLDER, baseSettings.getSettings().get(0).getString() + Variables.FILE_SEPARATOR, true);
         if(entityDir.exists())
             FileUtils.deleteFile(entityDir);
 
-        /*JSONObject entity = new JSONObject();
-        entity.put("Base", Tools.saveSettings(entityDir, entitySettings.getSettings()));
-        JSONArray components = new JSONArray();
-        for(ComponentBlueprint componentBlueprint : this.components.values())
-            components.add(componentBlueprint.save(entityDir));
-        entity.put("Components", components);
-
         FileWriter writer = new FsFile(entityDir.createFile(true), "settings.entity", false).getFileWriter(true);
-        writer.writeString(entity.toJSONString());
-        writer.close();*/
+        Tools.saveSettings(writer, baseSettings.getSettings());
+        for(ComponentBlueprint componentBlueprint : this.components.values())
+            componentBlueprint.save(writer);
+        writer.close();
     }
 
 }

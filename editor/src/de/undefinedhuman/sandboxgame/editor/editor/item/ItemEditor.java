@@ -9,6 +9,7 @@ import de.undefinedhuman.sandboxgame.engine.resources.ResourceManager;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
 import de.undefinedhuman.sandboxgame.engine.settings.SettingsObject;
 import de.undefinedhuman.sandboxgame.engine.utils.Tools;
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 
 import javax.swing.*;
 import java.awt.*;
@@ -53,9 +54,9 @@ public class ItemEditor extends Editor {
 
         for (FileHandle itemDir : itemDirs) {
             if (!itemDir.isDirectory()) continue;
-            FsFile file = new FsFile(Paths.ITEM_PATH, itemDir.name() + "/settings.item", true);
-            if(file.isEmpty()) continue;
-            FileReader reader = new FileReader(file, true);
+            FsFile itemFile = new FsFile(Paths.ITEM_PATH, itemDir.name() + "/settings.item", true);
+            if(itemFile.isEmpty()) continue;
+            FileReader reader = itemFile.getFileReader(true);
             SettingsObject settings = Tools.loadSettings(reader);
             ids.add(itemDir.name() + "-" + ((LineSplitter) settings.get("Name")).getNextString());
             reader.close();
@@ -82,7 +83,6 @@ public class ItemEditor extends Editor {
             if(itemSelection.getSelectedItem() == null) return;
             FileReader reader = new FileReader(ResourceManager.loadFile(Paths.ITEM_PATH, Integer.parseInt(((String) itemSelection.getSelectedItem()).split("-")[0]) + "/settings.item"), true);
             SettingsObject settingsObject = Tools.loadSettings(reader);
-            settingsObject.log(settingsObject);
             if(!settingsObject.containsKey("Type")) return;
             ItemType type = ItemType.valueOf(((LineSplitter) settingsObject.get("Type")).getNextString());
             if(type == null) return;
@@ -104,7 +104,7 @@ public class ItemEditor extends Editor {
     @Override
     public void save() {
         if(currentItem == null) return;
-        FsFile itemDir = new FsFile(Paths.ITEM_PATH, currentItem.getSettings().get(0).getInt() + "/", true);
+        FsFile itemDir = new FsFile(Paths.ITEM_PATH, currentItem.getSettings().get(0).getInt() + Variables.FILE_SEPARATOR, true);
         if(itemDir.exists())
             FileUtils.deleteFile(itemDir);
 

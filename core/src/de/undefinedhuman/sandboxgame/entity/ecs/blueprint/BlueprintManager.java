@@ -3,10 +3,10 @@ package de.undefinedhuman.sandboxgame.entity.ecs.blueprint;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.file.FileReader;
 import de.undefinedhuman.sandboxgame.engine.file.FsFile;
-import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
 import de.undefinedhuman.sandboxgame.engine.file.Paths;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
+import de.undefinedhuman.sandboxgame.engine.settings.SettingsObject;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
@@ -71,17 +71,18 @@ public class BlueprintManager extends Manager {
     public static Blueprint loadBlueprint(FsFile file) {
         Blueprint blueprint = new Blueprint();
         FileReader reader = file.getFileReader(true);
-        reader.nextLine();
-        HashMap<String, LineSplitter> settingsList = Tools.loadSettings(reader);
-        for(Setting setting : blueprint.settings.getSettings()) setting.loadSetting(reader.getParentDirectory(), settingsList);
-        int componentSize = reader.getNextInt();
-        reader.nextLine();
-        for (int i = 0; i < componentSize; i++) {
-            String s = reader.getNextString();
-            ComponentType type = ComponentType.valueOf(s);
-            reader.nextLine();
-            blueprint.addComponentBlueprint(type.load(reader));
+        SettingsObject object = Tools.loadSettings(reader);
+
+        for(Setting setting : blueprint.settings.getSettings())
+            setting.loadSetting(reader.getParentDirectory(), object);
+
+        for(ComponentType type : ComponentType.values()) {
+            if(!object.containsKey(type.name())) continue;
+            Object componentObject = object.get(type.name());
+            if(!(componentObject instanceof SettingsObject)) continue;
+            blueprint.addComponentBlueprint(type.load(reader.getParentDirectory(), (SettingsObject) object.get(type.name())));
         }
+
         reader.close();
         return blueprint;
     }

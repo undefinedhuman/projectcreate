@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.Main;
 import de.undefinedhuman.sandboxgame.gui.GuiManager;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.Constraint;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.offset.Offset;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
@@ -22,6 +23,7 @@ public class GuiTransform {
 
     public GuiTransform() {
         this.parent = GuiManager.instance.screen;
+        set(new PixelConstraint(0), new PixelConstraint(0), new PixelConstraint(0), new PixelConstraint(0));
     }
 
     public void init() {}
@@ -91,13 +93,13 @@ public class GuiTransform {
         return constraints.get(axis).getValue();
     }
 
-    public GuiTransform setPosition(int x, int y) {
+    public GuiTransform setCurrentPosition(int x, int y) {
         this.currentValues.put(Axis.X, x);
         this.currentValues.put(Axis.Y, y);
         return this;
     }
 
-    public GuiTransform setSize(int width, int height) {
+    public GuiTransform setCurrentSize(int width, int height) {
         this.currentValues.put(Axis.WIDTH, width);
         this.currentValues.put(Axis.HEIGHT, height);
         return this;
@@ -140,6 +142,10 @@ public class GuiTransform {
 
     private void addConstraint(Axis axis, Constraint constraint) {
         this.constraints.put(axis, constraint.setAxis(axis).setGui(this));
+    }
+
+    public GuiTransform create() {
+        return this;
     }
 
 }

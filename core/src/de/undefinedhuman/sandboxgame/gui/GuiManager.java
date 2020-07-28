@@ -8,7 +8,7 @@ import de.undefinedhuman.sandboxgame.engine.utils.Manager;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.gui.transforms.GuiTransform;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
-import de.undefinedhuman.sandboxgame.gui.transforms.constraints.ResizeConstraint;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.ScreenConstraint;
 
 import java.util.ArrayList;
 
@@ -27,7 +27,7 @@ public class GuiManager extends Manager {
     public void init() {
         for (GuiTemplate template : GuiTemplate.values()) template.load();
         TextureManager.instance.addTexture("gui/Chains/Chain-Top-Right.png", "gui/Chains/Chain-Top-Left.png", "gui/Chains/Chain-Mid-Right.png", "gui/Chains/Chain-Mid-Left.png", "gui/Chains/Chain-Bottom-Right.png", "gui/Chains/Chain-Bottom-Left.png");
-        screen = new GuiComponent().set(new PixelConstraint(0), new PixelConstraint(0), new ResizeConstraint(), new ResizeConstraint()).initScreen();
+        screen = new GuiComponent().set(new PixelConstraint(0), new PixelConstraint(0), new ScreenConstraint(), new ScreenConstraint()).initScreen();
     }
 
     @Override

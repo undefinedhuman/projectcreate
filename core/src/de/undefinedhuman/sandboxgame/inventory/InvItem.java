@@ -11,6 +11,7 @@ import de.undefinedhuman.sandboxgame.gui.transforms.constraints.CenterConstraint
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.RelativeConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.offset.CenterOffset;
+import de.undefinedhuman.sandboxgame.gui.transforms.offset.RelativeOffset;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 
 public class InvItem extends Gui {
@@ -30,7 +31,7 @@ public class InvItem extends Gui {
         this.amount = amount;
 
         amountText = new Text(amount);
-        amountText.setPosition(new RelativeConstraint(0.35f), new RelativeConstraint(0.35f));
+        amountText.setPosition(new RelativeConstraint(1.2f), new RelativeConstraint(0)).setOffsetX(new RelativeOffset(-1f));
         amountText.parent = this;
 
     }
@@ -73,8 +74,8 @@ public class InvItem extends Gui {
     }
 
     @Override
-    public GuiComponent setPosition(int x, int y) {
-        super.setPosition(x, y);
+    public GuiComponent setCurrentPosition(int x, int y) {
+        super.setCurrentPosition(x, y);
         amountText.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         return this;
     }

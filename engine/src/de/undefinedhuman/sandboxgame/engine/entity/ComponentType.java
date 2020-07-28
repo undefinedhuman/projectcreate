@@ -14,7 +14,8 @@ import de.undefinedhuman.sandboxgame.engine.entity.components.sprite.SpriteBluep
 import de.undefinedhuman.sandboxgame.engine.entity.components.stats.food.FoodBlueprint;
 import de.undefinedhuman.sandboxgame.engine.entity.components.stats.health.HealthBlueprint;
 import de.undefinedhuman.sandboxgame.engine.entity.components.stats.mana.ManaBlueprint;
-import de.undefinedhuman.sandboxgame.engine.file.FileReader;
+import de.undefinedhuman.sandboxgame.engine.file.FsFile;
+import de.undefinedhuman.sandboxgame.engine.settings.SettingsObject;
 
 public enum ComponentType {
 
@@ -31,12 +32,12 @@ public enum ComponentType {
         this.blueprint = blueprint;
     }
 
-    public ComponentBlueprint load(FileReader reader) {
+    public ComponentBlueprint load(FsFile parentDir, SettingsObject settingsObject) {
         ComponentBlueprint componentBlueprint = null;
         if (blueprint != null) {
             try { componentBlueprint = blueprint.getClass().newInstance();
             } catch (InstantiationException | IllegalAccessException e) { e.printStackTrace(); }
-            if (componentBlueprint != null) componentBlueprint.load(reader);
+            if (componentBlueprint != null) componentBlueprint.load(parentDir, settingsObject);
         }
         return componentBlueprint;
     }
@@ -45,10 +46,6 @@ public enum ComponentType {
         try { return blueprint.getClass().newInstance();
         } catch (InstantiationException | IllegalAccessException e) { e.printStackTrace(); }
         return null;
-    }
-
-    public static ComponentBlueprint load(String name, FileReader reader) {
-        return ComponentType.valueOf(name).load(reader);
     }
 
 }

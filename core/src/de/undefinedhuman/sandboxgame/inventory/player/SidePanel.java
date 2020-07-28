@@ -39,7 +39,7 @@ public class SidePanel extends Gui {
     }
 
     private void addMenuItem(int i, int index) {
-        addChild(new MenuSlot(textures[index], new PixelConstraint(getCornerSize()), new PixelConstraint(getTemplate().cornerSize + (Variables.SLOT_SIZE + Variables.SLOT_SPACE) * i)) {
+        addChild(new MenuSlot(textures[index], new PixelConstraint(0), new PixelConstraint((Variables.SLOT_SIZE + Variables.SLOT_SPACE) * i)) {
             @Override
             public void onClick() { InventoryManager.instance.handleClick(index); }
         });

@@ -20,7 +20,6 @@ public class TextureOffsetSetting extends Vector2ArraySetting {
 
     private BufferedImage texture;
     private JLabel textureLabel;
-    private JTextField valueField;
     private boolean offset;
 
     public TextureOffsetSetting(String key, Vector2[] value, boolean offset) {

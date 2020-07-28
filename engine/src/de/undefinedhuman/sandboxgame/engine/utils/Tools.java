@@ -49,16 +49,15 @@ public class Tools {
 
     public static String convertArrayToString(String[] array) {
         StringBuilder builder = new StringBuilder();
-        for(int i = 0; i < array.length; i++) builder.append(array[i]).append(i < array.length-1 ? ";" : "");
+        for (String s : array)
+            builder.append(s).append(Variables.SEPARATOR);
         return builder.toString();
     }
 
     public static String convertArrayToString(Vector2[] array) {
         StringBuilder builder = new StringBuilder();
-        for(int i = 0; i < array.length; i++) {
-            Vector2 current = array[i];
-            builder.append(current.x).append(";").append(current.y).append(i < array.length-1 ? ";" : "");
-        }
+        for (Vector2 current : array)
+            builder.append(current.x).append(Variables.SEPARATOR).append(current.y).append(Variables.SEPARATOR);
         return builder.toString();
     }
 
