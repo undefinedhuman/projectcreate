@@ -8,6 +8,7 @@ import de.undefinedhuman.sandboxgame.engine.resources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.GuiComponent;
 import de.undefinedhuman.sandboxgame.gui.event.ChangeEvent;
+import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTexture;
 import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 
 public class Slider extends Gui {
 
-    private float progress = 1f, progressWidth = 0, progressHeight = 0;
+    private float progress, progressWidth = 0, progressHeight = 0;
     private boolean grabbed = false;
     private GuiComponent pointer;
 
@@ -30,8 +31,8 @@ public class Slider extends Gui {
     private String progressPath, pointerPath;
     private boolean wrapProgress;
 
-    public Slider(GuiTexture backgroundTexture, String progressTexture, String pointerTexture) {
-        this(backgroundTexture, progressTexture, pointerTexture, false);
+    public Slider() {
+        this(new GuiTexture(GuiTemplate.SLIDER), "gui/sound bar.png", "gui/pointer.png", true);
     }
 
     public Slider(GuiTexture backgroundTexture, String progressTexture, String pointerTexture, float progress) {
@@ -60,7 +61,7 @@ public class Slider extends Gui {
 
     private void initPointer(String texture) {
         addChild(pointer = (Gui) new Gui(texture)
-                .set(new RelativeConstraint(progress), new RelativeConstraint(0.5f), new PixelConstraint(24), new PixelConstraint(24))
+                .set(new RelativeConstraint(progress), new RelativeConstraint(0.5f), new PixelConstraint(4), new PixelConstraint(14))
                 .setOffset(new CenterOffset(), new CenterOffset())
         );
     }

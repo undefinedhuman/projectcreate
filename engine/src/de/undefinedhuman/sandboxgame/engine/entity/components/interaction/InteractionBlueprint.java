@@ -25,7 +25,4 @@ public class InteractionBlueprint extends ComponentBlueprint {
         return new InteractionComponent(range.getInt(), inputKey.getInputKey());
     }
 
-    @Override
-    public void delete() {}
-
 }

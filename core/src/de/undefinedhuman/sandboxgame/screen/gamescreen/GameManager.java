@@ -2,13 +2,16 @@ package de.undefinedhuman.sandboxgame.screen.gamescreen;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.sandboxgame.background.BackgroundManager;
-import de.undefinedhuman.sandboxgame.crafting.gui.CraftingInventory;
+import de.undefinedhuman.sandboxgame.crafting.gui.ScrollBar;
 import de.undefinedhuman.sandboxgame.engine.camera.CameraManager;
 import de.undefinedhuman.sandboxgame.engine.utils.ManagerList;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.EntityManager;
 import de.undefinedhuman.sandboxgame.entity.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.sandboxgame.gui.GuiManager;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.CenterConstraint;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
+import de.undefinedhuman.sandboxgame.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.item.drop.DropItemManager;
@@ -29,13 +32,15 @@ public class GameManager {
         batch = new SpriteBatch();
         CameraManager.instance = new CameraManager();
         manager = new ManagerList();
-        CraftingInventory craftingInventory = new CraftingInventory();
     }
 
     public void init() {
         BackgroundManager.instance = new BackgroundManager();
         BackgroundManager.instance.init();
         loadManager();
+
+        //new CraftingInventory();
+        GuiManager.instance.addGui(new ScrollBar().set(new CenterConstraint(), new CenterConstraint(), new PixelConstraint(10), new PixelConstraint(200)).setOffset(new CenterOffset(), new CenterOffset()));
     }
 
     public void resize(int width, int height) {

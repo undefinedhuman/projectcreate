@@ -15,7 +15,7 @@ public class SpriteData {
     private Sprite sprite;
     private float alpha = 1;
     private Color color = Color.WHITE;
-    private int renderLevel = 0, currentFrameID;
+    private int renderLevel, currentFrameID;
     private Vector2 positionOffset = new Vector2();
     private boolean isVisible = true, turned = true;
     private TextureRegion[] textures;

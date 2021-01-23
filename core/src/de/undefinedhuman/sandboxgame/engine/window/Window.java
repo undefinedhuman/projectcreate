@@ -18,8 +18,8 @@ public class Window {
         config.title = "SandboxGame";
         config.vSyncEnabled = false;
         config.foregroundFPS = 120;
-        config.backgroundFPS = 30;
-        config.useGL30 = true;
+        config.backgroundFPS = 120;
+        config.vSyncEnabled = true;
         config.width = 1280;
         config.height = 720;
         return config;

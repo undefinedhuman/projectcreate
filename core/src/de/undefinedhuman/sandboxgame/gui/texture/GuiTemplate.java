@@ -1,36 +1,30 @@
 package de.undefinedhuman.sandboxgame.gui.texture;
 
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.sandboxgame.engine.file.FileReader;
 import de.undefinedhuman.sandboxgame.engine.file.Paths;
-import de.undefinedhuman.sandboxgame.engine.resources.ResourceManager;
 import de.undefinedhuman.sandboxgame.engine.resources.texture.TextureManager;
 
 public enum GuiTemplate {
 
-    BIG_BUTTON("Big Button"),
-    HOTBAR("Hotbar"),
-    PANEL("Panel"),
-    SCROLL_PANEL("Scroll Panel"),
-    SMALL_PANEL("Small Panel"),
-    SMALL_BUTTON("Small Button"),
-    SLOT("Slot");
+    BIG_BUTTON("Big Button", 14),
+    HOTBAR("Hotbar", 6),
+    PANEL("Panel", 27),
+    SLIDER("Slider", 1),
+    SCROLL_BAR("Scroll Panel", 2),
+    SMALL_PANEL("Small Panel", 19),
+    SMALL_BUTTON("Small Button", 12),
+    SLOT("Slot", 2);
 
     public String templateName;
     public int cornerSize;
     public String[] textures = new String[9];
 
-    GuiTemplate(String templateName) {
+    GuiTemplate(String templateName, int cornerSize) {
         this.templateName = templateName;
+        this.cornerSize = cornerSize;
     }
 
     public void load() {
-        FileHandle file = ResourceManager.loadFile(Paths.GUI_PATH, "template/" + templateName + "/settings.gui");
-        FileReader reader = new FileReader(file, false);
-        reader.nextLine();
-        this.cornerSize = reader.getNextInt();
-        reader.close();
         for (int i = 0; i < 9; i++)
             textures[i] = Paths.GUI_PATH + "template/" + templateName + "/" + i + ".png";
         TextureManager.instance.addTexture(textures);

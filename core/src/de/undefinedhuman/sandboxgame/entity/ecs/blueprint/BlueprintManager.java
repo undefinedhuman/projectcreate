@@ -47,7 +47,8 @@ public class BlueprintManager extends Manager {
 
     @Override
     public void delete() {
-        for (Blueprint blueprint : blueprints.values()) blueprint.delete();
+        for (Blueprint blueprint : blueprints.values())
+            blueprint.delete();
         blueprints.clear();
     }
 
@@ -80,7 +81,7 @@ public class BlueprintManager extends Manager {
             if(!object.containsKey(type.name())) continue;
             Object componentObject = object.get(type.name());
             if(!(componentObject instanceof SettingsObject)) continue;
-            blueprint.addComponentBlueprint(type.load(reader.getParentDirectory(), (SettingsObject) object.get(type.name())));
+            blueprint.addComponentBlueprint(type.createInstance(reader.getParentDirectory(), (SettingsObject) object.get(type.name())));
         }
 
         reader.close();

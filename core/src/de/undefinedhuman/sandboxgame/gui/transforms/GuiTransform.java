@@ -41,9 +41,7 @@ public class GuiTransform {
 
     public void update(float delta) {}
 
-    public void render(SpriteBatch batch, OrthographicCamera camera) {
-        if (!visible || !parent.isVisible()) return;
-    }
+    public void render(SpriteBatch batch, OrthographicCamera camera) {}
 
     public void delete() {
         constraints.clear();

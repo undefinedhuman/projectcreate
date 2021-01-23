@@ -2,8 +2,6 @@ package de.undefinedhuman.sandboxgame.engine.entity.components.interaction;
 
 import de.undefinedhuman.sandboxgame.engine.entity.Component;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
-import de.undefinedhuman.sandboxgame.engine.file.LineSplitter;
-import de.undefinedhuman.sandboxgame.engine.file.LineWriter;
 
 public class InteractionComponent extends Component {
 
@@ -28,11 +26,5 @@ public class InteractionComponent extends Component {
     public int getInputKey() {
         return inputKey;
     }
-
-    @Override
-    public void receive(LineSplitter splitter) {}
-
-    @Override
-    public void send(LineWriter writer) {}
 
 }

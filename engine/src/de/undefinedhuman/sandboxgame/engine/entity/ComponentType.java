@@ -19,33 +19,38 @@ import de.undefinedhuman.sandboxgame.engine.settings.SettingsObject;
 
 public enum ComponentType {
 
-    SPRITE(new SpriteBlueprint()),
-    MOVEMENT(new MovementBlueprint()), COLLISION(new CollisionBlueprint()),
-    RIGHTARM(new RightArmBlueprint()), ANGLE(new AngleBlueprint()), NAME(new NameBlueprint()),
-    HEALTH(new HealthBlueprint()), FOOD(new FoodBlueprint()), MANA(new ManaBlueprint()),
-    EQUIP(new EquipBlueprint()), COMBAT(new CombatBlueprint()), ANIMATION(new AnimationBlueprint()), SHOULDER(new ShoulderBlueprint()),
-    INTERACTION(new InteractionBlueprint());
+    SPRITE(SpriteBlueprint.class),
+    MOVEMENT(MovementBlueprint.class),
+    COLLISION(CollisionBlueprint.class),
+    RIGHTARM(RightArmBlueprint.class),
+    ANGLE(AngleBlueprint.class),
+    NAME(NameBlueprint.class),
+    HEALTH(HealthBlueprint.class),
+    FOOD(FoodBlueprint.class),
+    MANA(ManaBlueprint.class),
+    EQUIP(EquipBlueprint.class),
+    COMBAT(CombatBlueprint.class),
+    ANIMATION(AnimationBlueprint.class),
+    SHOULDER(ShoulderBlueprint.class),
+    INTERACTION(InteractionBlueprint.class);
 
-    private ComponentBlueprint blueprint;
+    private Class<? extends ComponentBlueprint> componentBlueprint;
 
-    ComponentType(ComponentBlueprint blueprint) {
-        this.blueprint = blueprint;
+    ComponentType(Class<? extends ComponentBlueprint> componentBlueprint) {
+        this.componentBlueprint = componentBlueprint;
     }
 
-    public ComponentBlueprint load(FsFile parentDir, SettingsObject settingsObject) {
+    public ComponentBlueprint createInstance(FsFile parentDir, SettingsObject settingsObject) {
         ComponentBlueprint componentBlueprint = null;
-        if (blueprint != null) {
-            try { componentBlueprint = blueprint.getClass().newInstance();
-            } catch (InstantiationException | IllegalAccessException e) { e.printStackTrace(); }
-            if (componentBlueprint != null) componentBlueprint.load(parentDir, settingsObject);
-        }
+        try { componentBlueprint = this.componentBlueprint.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) { e.printStackTrace(); }
+        if(componentBlueprint != null) componentBlueprint.load(parentDir, settingsObject);
         return componentBlueprint;
     }
 
-    public ComponentBlueprint createNewInstance() {
-        try { return blueprint.getClass().newInstance();
+    public ComponentBlueprint createInstance() {
+        try { return componentBlueprint.newInstance();
         } catch (InstantiationException | IllegalAccessException e) { e.printStackTrace(); }
         return null;
     }
-
 }
