@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import de.undefinedhuman.sandboxgame.engine.file.Paths;
 import de.undefinedhuman.sandboxgame.engine.items.Item;
 import de.undefinedhuman.sandboxgame.engine.items.recipe.RecipeType;
 import de.undefinedhuman.sandboxgame.engine.settings.Setting;
@@ -35,7 +36,7 @@ public class Block extends Item {
     @Override
     public void init() {
         if(!hasStates.getBoolean()) return;
-        blockTextureAtlas = new TextureAtlas(Gdx.files.internal("items/Block.atlas"), Gdx.files.internal("items/" + id.getInt() + "/"));
+        blockTextureAtlas = new TextureAtlas(Gdx.files.internal(Paths.ITEM_PATH + "Block.atlas"), Gdx.files.internal(Paths.ITEM_PATH + id.getInt() + "/"));
         blockTextures = new AtlasRegion[16];
         for(int i = 0; i < blockTextures.length; i++) blockTextures[i] = blockTextureAtlas.findRegion("" + i);
     }

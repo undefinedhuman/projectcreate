@@ -25,7 +25,7 @@ public class EquipScreen extends Gui implements InvTarget {
         super(GuiTemplate.SMALL_PANEL);
         if(instance == null) instance = this;
         setSize(new PixelConstraint(Tools.getInventoryWidth(GuiTemplate.SMALL_PANEL, 5)), new PixelConstraint(Tools.getInventoryHeight(GuiTemplate.SMALL_PANEL, 10)));
-        setTitle("Equip", Font.Title, Color.WHITE);
+        setTitle("Character", Font.Title, Color.WHITE);
 
         /*addChild(new Gui("gui/preview/equip/Human-Preview.png").set(new CenterConstraint(), new CenterConstraint(), new PixelConstraint(64), new PixelConstraint(128)).setOffset(new CenterOffset(), new PixelOffset(48)));
 

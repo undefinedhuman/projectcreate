@@ -4,18 +4,27 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
 public class Variables {
+    // General
+    public static final String NAME = "SandboxGame";
+    public static final Version VERSION = new Version(0, 1, 0);
+
     // Engine
     public static final float GAME_CAMERA_ZOOM = 3f;
     public static final float DELTA_MULTIPLIER = 1.0f;
-    public static final String SEPARATOR = ";", FILE_SEPARATOR = "/";
+
+    // File System
+    public static final String SEPARATOR = ";";
+    public static final String FILE_SEPARATOR = "/";
+
+    // Language
     public static final String DEFAULT_LANGUAGE = "eu_DE";
+
+    // Log
+    public static final String LOG_MESSAGE_FORMAT = "[%prefix% - %time%] %message%";
+    public static final String LOG_DATE_FORMAT = "dd-MM-yyyy - HH-mm-ss";
 
     public static final boolean DEBUG = false;
     public static final Color HITBOX_COLOR = new Color(0.41568628f, 0.3529412f, 0.8039216f, 0.4f);
-
-    // Test
-    public static final long E2E_SLEEP_AMOUNT = 250;
-    public static final float E2E_THRESHOLD = 0.00025f;
 
     // World
     public static final int CHUNK_SIZE = 20;

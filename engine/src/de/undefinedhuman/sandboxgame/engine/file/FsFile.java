@@ -16,8 +16,8 @@ public class FsFile {
         this(file.getPath() + fileName, isDirectory);
     }
 
-    public FsFile(Paths path, String fileName, boolean isDirectory) {
-        this(path.getPath() + fileName, isDirectory);
+    public FsFile(String path, String fileName, boolean isDirectory) {
+        this(path + fileName, isDirectory);
     }
 
     public FsFile(String fileName, boolean isDirectory) {

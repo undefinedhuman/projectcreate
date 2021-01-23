@@ -12,7 +12,7 @@ public class SettingsManager extends Manager {
 
     public static SettingsManager instance;
     public Setting displayHeight, displayWidth, vSync, maxFps, fullScreen, language, renderHitbox, firstRun, guiScale;
-    private SettingsList settings;
+    private final SettingsList settings;
 
     public SettingsManager() {
         if (instance == null) instance = this;

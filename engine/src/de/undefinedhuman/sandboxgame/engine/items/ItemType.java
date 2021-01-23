@@ -26,6 +26,7 @@ public enum ItemType {
         Item newItemInstance = null;
         try { newItemInstance = this.item.getClass().newInstance();
         } catch (InstantiationException | IllegalAccessException e) { Log.info(e.getMessage()); }
+        assert newItemInstance != null;
         newItemInstance.type = this;
         return newItemInstance;
     }

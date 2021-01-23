@@ -16,7 +16,10 @@ public class Window {
     private LwjglApplicationConfiguration createLWJGLConfig() {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = "SandboxGame";
-        config.vSyncEnabled = true;
+        config.vSyncEnabled = false;
+        config.foregroundFPS = 120;
+        config.backgroundFPS = 30;
+        config.useGL30 = true;
         config.width = 1280;
         config.height = 720;
         return config;

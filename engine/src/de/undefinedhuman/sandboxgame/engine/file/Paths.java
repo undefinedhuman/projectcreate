@@ -1,13 +1,15 @@
 package de.undefinedhuman.sandboxgame.engine.file;
 
-public enum Paths {
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 
-    GAME_PATH("../sandboxgame/"), CONFIG_PATH(GAME_PATH.getPath() + "config/"), LOG_PATH(GAME_PATH.getPath() + "log/"), SCREENSHOT_PATH(GAME_PATH.getPath() + "screenshot/"),
-    ENTITY_FOLDER("entity/"), SOUND_FOLDER("sounds/"), ITEM_PATH("items/"), GUI_PATH("gui/"), LANGUAGE_PATH("language/");
-
-    private String path;
-
-    Paths(String path) { this.path = path; }
-    public String getPath() { return path; }
-
+public class Paths {
+    public static final String GAME_PATH = "../" + Variables.NAME + "/";
+    public static final String LOG_PATH = GAME_PATH + "log/";
+    public static final String CONFIG_PATH = GAME_PATH + "config/";
+    public static final String SCREENSHOT_PATH = GAME_PATH + "screenshots/";
+    public static final String ENTITY_PATH = "entity/";
+    public static final String SOUND_PATH = "sound/";
+    public static final String LANGUAGE_PATH = "language/";
+    public static final String ITEM_PATH = "item/";
+    public static final String GUI_PATH = "gui/";
 }

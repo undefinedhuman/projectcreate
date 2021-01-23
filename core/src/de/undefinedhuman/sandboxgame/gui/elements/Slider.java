@@ -12,6 +12,7 @@ import de.undefinedhuman.sandboxgame.gui.texture.GuiTexture;
 import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.RelativeConstraint;
+import de.undefinedhuman.sandboxgame.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.sandboxgame.utils.Mouse;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
@@ -29,8 +30,21 @@ public class Slider extends Gui {
     private String progressPath, pointerPath;
     private boolean wrapProgress;
 
+    public Slider(GuiTexture backgroundTexture, String progressTexture, String pointerTexture) {
+        this(backgroundTexture, progressTexture, pointerTexture, false);
+    }
+
+    public Slider(GuiTexture backgroundTexture, String progressTexture, String pointerTexture, float progress) {
+        this(backgroundTexture, progressTexture, pointerTexture, false, progress);
+    }
+
     public Slider(GuiTexture backgroundTexture, String progressTexture, String pointerTexture, boolean wrapProgress) {
+        this(backgroundTexture, progressTexture, pointerTexture, wrapProgress, 1);
+    }
+
+    public Slider(GuiTexture backgroundTexture, String progressTexture, String pointerTexture, boolean wrapProgress, float progress) {
         super(backgroundTexture);
+        this.progress = progress;
         this.progressPath = progressTexture;
         this.pointerPath = pointerTexture;
         this.wrapProgress = wrapProgress;
@@ -45,9 +59,10 @@ public class Slider extends Gui {
     }
 
     private void initPointer(String texture) {
-        pointer = new Gui(new GuiTexture(texture));
-        pointer.set(new RelativeConstraint(progress), new RelativeConstraint(0.5f), new PixelConstraint(4), new PixelConstraint(14));
-        addChild(pointer);
+        addChild(pointer = (Gui) new Gui(texture)
+                .set(new RelativeConstraint(progress), new RelativeConstraint(0.5f), new PixelConstraint(24), new PixelConstraint(24))
+                .setOffset(new CenterOffset(), new CenterOffset())
+        );
     }
 
     private void initProgress(String texture, boolean wrap) {
@@ -56,7 +71,8 @@ public class Slider extends Gui {
     }
 
     private void notifyChangeListener() {
-        for (ChangeEvent changeListener : changeListeners) changeListener.notify(progress);
+        for (ChangeEvent changeListener : changeListeners)
+            changeListener.notify(progress);
     }
 
     @Override
@@ -96,14 +112,16 @@ public class Slider extends Gui {
         return progress;
     }
 
-    public void setProgress(float progress) {
+    public Slider setProgress(float progress) {
         this.progress = progress;
         resizePointer();
         notifyChangeListener();
+        return this;
     }
 
-    public void addChangeListener(ChangeEvent changeListener) {
+    public Slider addChangeListener(ChangeEvent changeListener) {
         this.changeListeners.add(changeListener);
+        return this;
     }
 
 }

@@ -130,7 +130,7 @@ public class CraftingInventory extends Gui {
         Item currentItem = ItemManager.instance.getItem(itemID);
         recipeBackground.addChild(
                 new Gui(currentItem.iconTexture.getString()).set(new PixelConstraint(0), new CenterConstraint(), new PixelConstraint(Variables.ITEM_SIZE), new PixelConstraint(Variables.ITEM_SIZE)).setOffsetY(new CenterOffset()),
-                new Text(currentItem.name.getString()).setFont(Font.Title).setLineLength(new PixelConstraint(1)).setColor(currentItem.rarity.getRarity().getColor()).setPosition(new PixelConstraint(Variables.ITEM_SIZE + Variables.SLOT_SPACE), new CenterConstraint()).setOffsetY(new CenterOffset()));
+                new Text(currentItem.name.getString()).setFont(Font.Normal).setLineLength(new PixelConstraint(1)).setColor(currentItem.rarity.getRarity().getColor()).setPosition(new PixelConstraint(Variables.ITEM_SIZE + Variables.SLOT_SPACE), new CenterConstraint()).setOffsetY(new CenterOffset()));
         recipeBackground.setVisible(true);
     }
 

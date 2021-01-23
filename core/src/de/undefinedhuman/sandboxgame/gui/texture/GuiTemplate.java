@@ -32,7 +32,7 @@ public enum GuiTemplate {
         this.cornerSize = reader.getNextInt();
         reader.close();
         for (int i = 0; i < 9; i++)
-            textures[i] = Paths.GUI_PATH.getPath() + "template/" + templateName + "/" + i + ".png";
+            textures[i] = Paths.GUI_PATH + "template/" + templateName + "/" + i + ".png";
         TextureManager.instance.addTexture(textures);
     }
 

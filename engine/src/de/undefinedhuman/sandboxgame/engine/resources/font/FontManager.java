@@ -1,20 +1,18 @@
 package de.undefinedhuman.sandboxgame.engine.resources.font;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import de.undefinedhuman.sandboxgame.engine.log.Log;
-import de.undefinedhuman.sandboxgame.engine.resources.ResourceManager;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
-import de.undefinedhuman.sandboxgame.engine.utils.Tools;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class FontManager extends Manager {
 
     public static FontManager instance;
 
-    private HashMap<Font, ArrayList<BitmapFont>> fonts;
+    private final HashMap<Font, HashMap<Integer, BitmapFont>> fonts;
 
     public FontManager() {
         if (instance == null) instance = this;
@@ -23,43 +21,38 @@ public class FontManager extends Manager {
 
     @Override
     public void init() {
-        loadFonts(Font.values());
-    }
-
-    public void loadFonts(Font... fonts) {
-
-        boolean loaded = false;
-
-        for (Font font : fonts) {
-            ArrayList<BitmapFont> fontList = new ArrayList<>();
-
-            for (int i = 0; i < 10; i++) {
-                BitmapFont bitmapFont = ResourceManager.loadFont(font.name());
-                if (bitmapFont == null) continue;
-                else loaded = true;
-                bitmapFont.getData().markupEnabled = true;
-                bitmapFont.getData().setScale(i + 1);
-                bitmapFont.getData().spaceXadvance = i + 1;
-                fontList.add(bitmapFont);
-            }
-            this.fonts.put(font, fontList);
-        }
-
-        if (loaded) Log.info("Font" + Tools.appendSToString(fonts.length) + " loaded: " + Arrays.toString(fonts));
-
+        for(Font font : Font.values())
+            fonts.put(font, new HashMap<>());
     }
 
     @Override
     public void delete() {
-        for (ArrayList<BitmapFont> list : fonts.values()) {
-            for (BitmapFont font : list) font.dispose();
-            list.clear();
+        for(HashMap<Integer, BitmapFont> fontList : fonts.values()) {
+            for(BitmapFont font : fontList.values())
+                font.dispose();
+            fontList.clear();
         }
         fonts.clear();
     }
 
-    public BitmapFont getFont(Font font, float scale) {
-        return fonts.get(font).get((int) (Math.max(Math.min(10, scale), 1) - 1));
+    public BitmapFont getFont(Font font, int size) {
+        HashMap<Integer, BitmapFont> fontList = fonts.get(font);
+        BitmapFont bitmapFont = fontList != null ? fontList.get(size) : null;
+        if(bitmapFont == null) bitmapFont = generateFont("gui/font/" + font.name() + ".ttf", size);
+        assert fontList != null;
+        fontList.put(size, bitmapFont);
+        return bitmapFont;
+    }
+
+    private BitmapFont generateFont(String path, int fontSize) {
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(path));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = fontSize;
+        parameter.minFilter = Texture.TextureFilter.Nearest;
+        parameter.magFilter = Texture.TextureFilter.Nearest;
+        BitmapFont font = generator.generateFont(parameter);
+        generator.dispose();
+        return font;
     }
 
 }

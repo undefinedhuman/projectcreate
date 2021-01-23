@@ -4,6 +4,7 @@ import de.undefinedhuman.sandboxgame.engine.file.FileWriter;
 import de.undefinedhuman.sandboxgame.engine.file.FsFile;
 import de.undefinedhuman.sandboxgame.engine.file.Paths;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -15,6 +16,8 @@ import java.util.List;
 
 public class Log extends Manager {
 
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat(Variables.LOG_DATE_FORMAT);
+
     public static Log instance;
     private static List<String> logMessages;
 
@@ -22,17 +25,15 @@ public class Log extends Manager {
     private FsFile file;
 
     public Log() {
-        logMessages = new ArrayList<>();
         if (instance == null) instance = this;
+        logMessages = new ArrayList<>();
     }
 
-    @Override
     public void init() {
         fileName = getTime() + ".txt";
         load();
     }
 
-    @Override
     public void delete() {
         save();
     }
@@ -41,26 +42,27 @@ public class Log extends Manager {
         if(file == null || !file.exists()) return;
         FileWriter writer = file.getFileWriter(false, "");
         info("Log file successfully saved!");
-        for (String message : logMessages) writer.writeString(message).nextLine();
+        for (String message : logMessages)
+            writer.writeString(message).nextLine();
         logMessages.clear();
         writer.close();
     }
 
     public void load() {
         checkLogs();
-        file = new FsFile(Paths.LOG_PATH.getPath() + fileName, false);
+        file = new FsFile(Paths.LOG_PATH + fileName, false);
         if (file.exists()) info("Log file successfully created!");
     }
 
     public void crash() {
+        close();
         save();
         System.exit(0);
     }
 
     public void crash(String errorMessage) {
         error(errorMessage);
-        save();
-        System.exit(1);
+        crash();
     }
 
     public static void log(Object msg) {
@@ -82,19 +84,20 @@ public class Log extends Manager {
     }
 
     private static void createMessage(String prefix, Object msg) {
-        String message = generateMessage(prefix, String.valueOf(msg));
-        Log.instance.displayMessage("[" + prefix + "] " + msg);
-        System.out.println(message);
-        logMessages.add(message);
-    }
-
-    private static String generateMessage(String prefix, String msg) {
-        return "[" + getTime() + "] [" + prefix + "] " + msg;
+        String logMessage = Variables.LOG_MESSAGE_FORMAT
+                .replaceAll("%prefix%", prefix)
+                .replaceAll("%time%", getTime())
+                .replaceAll("%message%", String.valueOf(msg))
+                .replaceAll("%name%", Variables.NAME)
+                .replaceAll("%version%", Variables.VERSION.toString());
+        Log.instance.displayMessage(logMessage);
+        System.out.println(logMessage);
+        logMessages.add(logMessage);
     }
 
     private void checkLogs() {
         ArrayList<File> filesToRemove = new ArrayList<>();
-        File dir = new File(Paths.LOG_PATH.getPath());
+        File dir = new File(Paths.LOG_PATH);
         if (!dir.exists() || !dir.isDirectory()) return;
         File[] files = dir.listFiles();
         if(files == null || files.length == 0) return;
@@ -106,12 +109,12 @@ public class Log extends Manager {
         filesToRemove.clear();
     }
 
+    public static String getTime() {
+        return DATE_FORMAT.format(Calendar.getInstance().getTime());
+    }
+
     public void displayMessage(String msg) {}
 
-    public static String getTime() {
-        DateFormat df = new SimpleDateFormat("dd-MM-yyyy - HH-mm-ss");
-        Calendar cal = Calendar.getInstance();
-        return df.format(cal.getTime());
-    }
+    public void close() {}
 
 }

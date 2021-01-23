@@ -19,8 +19,6 @@ import de.undefinedhuman.sandboxgame.gui.transforms.constraints.TextConstraint;
 
 public class Text extends GuiComponent {
 
-    // TODO Implement Font Size
-
     private GlyphLayout layout = new GlyphLayout();
     private String text;
     private int align = Align.left;
@@ -28,18 +26,19 @@ public class Text extends GuiComponent {
     private BitmapFont font;
     private boolean wrap = false;
     private Constraint lineLength;
+    private int fontSize = 16;
 
     public Text(Object text) {
         super();
         this.text = String.valueOf(text);
-        this.font = FontManager.instance.getFont(fontType, Main.guiScale);
+        this.font = FontManager.instance.getFont(fontType, Main.guiScale * fontSize);
         setSize(new TextConstraint(layout), new TextConstraint(layout));
         lineLength = new PixelConstraint(0).setGui(this).setAxis(Axis.LINE_LENGTH);
     }
 
     @Override
     public void resize(int width, int height) {
-        font = FontManager.instance.getFont(fontType, Main.guiScale);
+        font = FontManager.instance.getFont(fontType, Main.guiScale * fontSize);
         layout.setText(font, text, color, lineLength.getValue(Main.guiScale), align, wrap);
         super.resize(width, height);
     }
@@ -93,6 +92,12 @@ public class Text extends GuiComponent {
 
     public Text setAlign(int align) {
         this.align = align;
+        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        return this;
+    }
+
+    public Text setFontSize(int fontSize) {
+        this.fontSize = fontSize;
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         return this;
     }

@@ -15,7 +15,7 @@ public class LanguageManager extends Manager {
 
     public static LanguageManager instance;
 
-    private HashMap<String, String> languageList = new HashMap<>();
+    private final HashMap<String, String> languageList = new HashMap<>();
     private String languageName;
 
     public LanguageManager() {
@@ -32,11 +32,9 @@ public class LanguageManager extends Manager {
     }
 
     public boolean loadLanguage(String languageName) {
-
         try {
-
             XmlReader reader = new XmlReader();
-            XmlReader.Element root = reader.parse(Gdx.files.internal(Paths.LANGUAGE_PATH.getPath() + "languages.xml").reader("UTF-8"));
+            XmlReader.Element root = reader.parse(Gdx.files.internal(Paths.LANGUAGE_PATH + "languages.xml").reader("UTF-8"));
             Array<XmlReader.Element> languages = root.getChildrenByName("language");
             for (int i = 0; i < languages.size; ++i) {
                 XmlReader.Element language = languages.get(i);
@@ -50,14 +48,11 @@ public class LanguageManager extends Manager {
                 Log.info("Loaded language " + languageName + " successfully!");
                 return true;
             }
-
         } catch (Exception ex) {
             Log.error("Error while loading language " + languageName);
             Log.error(ex.getMessage());
         }
-
         return false;
-
     }
 
     @Override
@@ -70,7 +65,6 @@ public class LanguageManager extends Manager {
     }
 
     public String getString(String key, Replacement... replacements) {
-        if (languageList == null) return languageName + " not found!";
         String s = languageList.get(key);
         if (s == null) return key + " not found!";
         for (Replacement replacement : replacements) s = s.replaceAll(replacement.getName(), replacement.getValue());

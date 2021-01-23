@@ -186,7 +186,7 @@ public class Tools extends de.undefinedhuman.sandboxgame.engine.utils.Tools {
         for (int i = 4; i < pixels.length; i += 4) pixels[i - 1] = (byte) 255;
         Pixmap pixmap = new Pixmap(Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), Pixmap.Format.RGBA8888);
         BufferUtils.copy(pixels, 0, pixmap.getPixels(), pixels.length);
-        PixmapIO.writePNG(Gdx.files.external(Paths.SCREENSHOT_PATH.getPath() + "ScreenShot_" + getTime() + ".png"), pixmap);
+        PixmapIO.writePNG(Gdx.files.external(Paths.SCREENSHOT_PATH + "ScreenShot_" + getTime() + ".png"), pixmap);
         pixmap.dispose();
     }
 

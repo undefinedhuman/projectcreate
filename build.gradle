@@ -78,6 +78,7 @@ project(":engine") {
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
         compile group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
 
         testImplementation 'junit:junit:4.12'
