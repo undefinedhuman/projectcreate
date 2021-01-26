@@ -26,16 +26,22 @@ public abstract class Constraint {
         return this;
     }
 
-    public Axis getScaleAxis() { return (axis == Axis.X || axis == Axis.OFFSET_X) ? Axis.WIDTH : Axis.HEIGHT; }
+    public Axis getScaleAxis() {
+        return (axis == Axis.X || axis == Axis.OFFSET_X) ? Axis.WIDTH : Axis.HEIGHT;
+    }
 
-    public float getValue() { return value; }
+    public float getValue() {
+        return value;
+    }
 
     public void setValue(float value) {
         this.value = value;
     }
 
-    protected boolean isPosition() { return axis == Axis.X || axis == Axis.Y; }
+    protected boolean isPosition() {
+        return axis == Axis.X || axis == Axis.Y;
+    }
 
-    public abstract int getValue(float guiScale);
+    public abstract int getValue(float scale);
 
 }

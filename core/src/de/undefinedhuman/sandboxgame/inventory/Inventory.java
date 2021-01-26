@@ -36,14 +36,18 @@ public class Inventory extends Gui implements InvTarget {
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
-        for (InvSlot[] inv : inventory) for (InvSlot slot : inv) slot.resize(width, height);
+        for (InvSlot[] inv : inventory)
+            for (InvSlot slot : inv)
+                slot.resize(width, height);
     }
 
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         super.render(batch, camera);
         if (visible)
-            for (InvSlot[] invSlots : inventory) for (InvSlot invSlot : invSlots) invSlot.render(batch, camera);
+            for (InvSlot[] slots : inventory)
+                for (InvSlot slot : slots)
+                    slot.render(batch, camera);
     }
 
     @Override

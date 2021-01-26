@@ -1,5 +1,6 @@
 package de.undefinedhuman.sandboxgame.gui.transforms;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -26,11 +27,17 @@ public class GuiTransform {
         set(new PixelConstraint(0), new PixelConstraint(0), new PixelConstraint(0), new PixelConstraint(0));
     }
 
-    public void init() {}
+    public void init() {
+
+    }
 
     public GuiTransform initScreen() {
         this.parent = this;
         return this;
+    }
+
+    public void resize() {
+        this.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     public void resize(int width, int height) {
@@ -133,17 +140,17 @@ public class GuiTransform {
             this.currentValues.put(axis, calculateConstraintValue(axis));
     }
 
-    protected int calculateConstraintValue(Axis axis) {
+    public int calculateConstraintValue(Axis axis) {
+        return calculateConstraintValue(axis, Main.guiScale);
+    }
+
+    public int calculateConstraintValue(Axis axis, int scale) {
         if (!constraints.containsKey(axis)) return 0;
-        return constraints.get(axis).getValue(Main.guiScale);
+        return constraints.get(axis).getValue(scale);
     }
 
     private void addConstraint(Axis axis, Constraint constraint) {
         this.constraints.put(axis, constraint.setAxis(axis).setGui(this));
-    }
-
-    public GuiTransform create() {
-        return this;
     }
 
 }

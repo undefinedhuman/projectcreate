@@ -20,16 +20,6 @@ public class GuiComponent extends GuiTransform {
     }
 
     @Override
-    public void init() {
-        super.init();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        super.resize(width, height);
-    }
-
-    @Override
     public void update(float delta) {
         super.update(delta);
         for (Event event : events) event.update(delta);

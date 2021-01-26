@@ -21,14 +21,16 @@ public class InvSlot extends Slot {
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
-        if (invItem != null) invItem.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        if (invItem != null)
+            invItem.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         super.render(batch, camera);
         if (invItem != null) {
-            if (invItem.getAmount() > 0) invItem.render(batch, camera);
+            if (invItem.getAmount() > 0)
+                invItem.render(batch, camera);
             else this.deleteItem();
         }
     }

@@ -21,7 +21,6 @@ import java.util.ArrayList;
 public class Gui extends GuiComponent {
 
     protected GuiTexture texture;
-
     private ArrayList<GuiTransform> children = new ArrayList<>();
 
     public Gui(String texture) {
@@ -73,7 +72,7 @@ public class Gui extends GuiComponent {
 
     public void setTitle(String titleString, Font font, Color color) {
         Text text = new Text(titleString);
-        text.setFont(font).setColor(color).setPosition(new CenterConstraint(), new RelativeConstraint(1f)).setOffset(new CenterOffset(), new RelativeOffset(-1.2f));
+        text.setFont(font).setColor(color).setPosition(new CenterConstraint(), new RelativeConstraint(1f)).setOffset(new CenterOffset(), new RelativeOffset(0.55f));
         addChild(text);
     }
 
@@ -109,8 +108,8 @@ public class Gui extends GuiComponent {
         this.texture.setTexture(texture);
     }
 
-    public GuiTemplate getTemplate() {
-        return texture.getTemplate();
+    public GuiTexture getTexture() {
+        return texture;
     }
 
     public Vector2 getOffset() { return texture.getOffset(); }

@@ -71,7 +71,8 @@ public class InvItem extends Gui {
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         super.render(batch, camera);
-        if (amount > 1) amountText.render(batch, camera);
+        if (amount > 1)
+            amountText.render(batch, camera);
     }
 
     @Override

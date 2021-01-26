@@ -2,7 +2,7 @@ package de.undefinedhuman.sandboxgame.screen.gamescreen;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.sandboxgame.background.BackgroundManager;
-import de.undefinedhuman.sandboxgame.crafting.gui.ScrollBar;
+import de.undefinedhuman.sandboxgame.crafting.gui.ScrollPanel;
 import de.undefinedhuman.sandboxgame.engine.camera.CameraManager;
 import de.undefinedhuman.sandboxgame.engine.utils.ManagerList;
 import de.undefinedhuman.sandboxgame.entity.Entity;
@@ -34,13 +34,16 @@ public class GameManager {
         manager = new ManagerList();
     }
 
+    public ScrollPanel panel;
+
     public void init() {
         BackgroundManager.instance = new BackgroundManager();
         BackgroundManager.instance.init();
         loadManager();
 
         //new CraftingInventory();
-        GuiManager.instance.addGui(new ScrollBar().set(new CenterConstraint(), new CenterConstraint(), new PixelConstraint(10), new PixelConstraint(200)).setOffset(new CenterOffset(), new CenterOffset()));
+        panel = (ScrollPanel) new ScrollPanel().set(new CenterConstraint(), new CenterConstraint(), new PixelConstraint(200), new PixelConstraint(200)).setOffset(new CenterOffset(), new CenterOffset());
+        GuiManager.instance.addGui(panel);
     }
 
     public void resize(int width, int height) {

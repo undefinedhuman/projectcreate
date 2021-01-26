@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import de.undefinedhuman.sandboxgame.Main;
+import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 
 public class Window {
 
@@ -16,12 +17,11 @@ public class Window {
     private LwjglApplicationConfiguration createLWJGLConfig() {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = "SandboxGame";
+        config.foregroundFPS = -1;
+        config.backgroundFPS = -1;
         config.vSyncEnabled = false;
-        config.foregroundFPS = 120;
-        config.backgroundFPS = 120;
-        config.vSyncEnabled = true;
-        config.width = 1280;
-        config.height = 720;
+        config.width = Variables.BASE_WINDOW_WIDTH;
+        config.height = Variables.BASE_WINDOW_HEIGHT;
         return config;
     }
 

@@ -1,7 +1,6 @@
 package de.undefinedhuman.sandboxgame.gui.transforms.constraints;
 
 import de.undefinedhuman.sandboxgame.gui.Gui;
-import de.undefinedhuman.sandboxgame.gui.transforms.GuiTransform;
 
 public class PixelConstraint extends Constraint {
 
@@ -11,8 +10,7 @@ public class PixelConstraint extends Constraint {
 
     @Override
     public int getValue(float scale) {
-        GuiTransform parent = currentTransform.parent;
-        return (int) ((isPosition() ? parent.getCurrentValue(axis) + (parent instanceof Gui ? ((Gui) parent).getCornerSize() : 0) : 0) + (value * scale));
+        return (int) ((isPosition() ? currentTransform.parent.getCurrentValue(axis) + (currentTransform.parent instanceof Gui ? ((Gui) currentTransform.parent).getCornerSize() : 0) : 0) + (value * scale));
     }
 
 }

@@ -7,7 +7,7 @@ public class ConstantConstraint extends Constraint {
     }
 
     @Override
-    public int getValue(float guiScale) {
+    public int getValue(float scale) {
         return (int) value;
     }
 

@@ -18,9 +18,4 @@ public class CombatBlueprint extends ComponentBlueprint {
         return new CombatComponent();
     }
 
-    @Override
-    public void delete() {
-
-    }
-
 }

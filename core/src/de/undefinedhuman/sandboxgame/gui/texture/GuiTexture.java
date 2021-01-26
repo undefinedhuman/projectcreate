@@ -18,15 +18,7 @@ public class GuiTexture {
     private ArrayList<String> textureNames = new ArrayList<>();
     private ArrayList<Sprite> sprites = new ArrayList<>();
 
-    public GuiTexture() {
-        addTexture("Unknown.png");
-    }
-
-    private void addTexture(String... names) {
-        TextureManager.instance.addTexture(names);
-        textureNames.addAll(Arrays.asList(names));
-        for (String name : names) sprites.add(new Sprite(TextureManager.instance.getTexture(name)));
-    }
+    public GuiTexture() { }
 
     public GuiTexture(String texture) {
         addTexture(texture);
@@ -38,8 +30,17 @@ public class GuiTexture {
         addTexture(template.textures);
     }
 
+    private void addTexture(String... names) {
+        TextureManager.instance.addTexture(names);
+        textureNames.addAll(Arrays.asList(names));
+        for (String name : names)
+            sprites.add(new Sprite(TextureManager.instance.getTexture(name)));
+    }
+
     public void resize(int x, int y, int width, int height) {
-        if (template == null) sprites.get(0).setBounds(x, y, width, height);
+        if (template == null)
+            for(Sprite sprite : sprites)
+                sprite.setBounds(x, y, width, height);
         else {
             this.cornerSize = template.cornerSize * Main.guiScale;
             int centerWidth = Math.max(0, width - cornerSize * 2);
@@ -66,7 +67,8 @@ public class GuiTexture {
     }
 
     public void render(SpriteBatch batch, float alpha) {
-        for (Sprite sprite : sprites) sprite.draw(batch, alpha);
+        for (Sprite sprite : sprites)
+            sprite.draw(batch, alpha);
     }
 
     public void setColor(Color color) {
