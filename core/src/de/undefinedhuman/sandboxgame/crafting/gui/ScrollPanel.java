@@ -19,7 +19,7 @@ import de.undefinedhuman.sandboxgame.gui.transforms.offset.RelativeOffset;
 
 public class ScrollPanel extends Gui {
 
-    private int offset = 0;
+    private int offset = 0, viewportHeight = 0;
 
     private Gui scrollBar;
 
@@ -35,6 +35,8 @@ public class ScrollPanel extends Gui {
         scrollBar = new Gui(GuiTemplate.SCROLL_BAR);
         scrollBar.set(new RelativeConstraint(1), new PixelConstraint(0), new PixelConstraint(10), new RelativeConstraint(1));
         scrollBar.setOffsetX(new RelativeOffset(-1));
+
+        scrollBar.addChild(new Gui().set());
 
         viewport = new Gui(new GuiTexture()) {
             @Override
@@ -70,7 +72,7 @@ public class ScrollPanel extends Gui {
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
-        maxOffset = recipes.length * (Variables.SLOT_SIZE + Variables.SLOT_SPACE) - Variables.SLOT_SPACE - viewport.getCurrentValue(Axis.HEIGHT) / Main.guiScale;
+        maxOffset = recipes.length * (Variables.SLOT_SIZE + Variables.SLOT_SPACE) - Variables.SLOT_SPACE - (viewportHeight = viewport.getCurrentValue(Axis.HEIGHT)) / Main.guiScale;
     }
 
     public void scroll(int amount) {
@@ -78,7 +80,7 @@ public class ScrollPanel extends Gui {
         offset += amount * Variables.MOUSE_SENSITIVITY;
         offset = Tools.clamp(offset, 0, maxOffset);
         for(int i = 0; i < recipes.length; i++)
-            recipes[i].setValue(Axis.OFFSET_Y, offset + -(Variables.SLOT_SIZE + Variables.SLOT_SPACE) * (i+1) + Variables.SLOT_SPACE).resize();
+            recipes[i].setValue(Axis.Y, 1 + ((float) offset / viewportHeight * Main.guiScale)).resize();
     }
 
 }
