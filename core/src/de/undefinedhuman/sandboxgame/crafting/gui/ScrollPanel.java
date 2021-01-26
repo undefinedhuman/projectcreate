@@ -54,7 +54,6 @@ public class ScrollPanel extends Gui {
                 ScissorStack.popScissors();
             }
         };
-        // TEMP HEIGHT MAKE IT FLEXIBLE
         viewport.set(new PixelConstraint(0), new PixelConstraint(0), new RelativePixelConstraint(1, 12), new RelativeConstraint(1));
 
         for(int i = 0; i < recipes.length; i++) {
@@ -74,14 +73,9 @@ public class ScrollPanel extends Gui {
         maxOffset = recipes.length * (Variables.SLOT_SIZE + Variables.SLOT_SPACE) - Variables.SLOT_SPACE - viewport.getCurrentValue(Axis.HEIGHT) / Main.guiScale;
     }
 
-    @Override
-    public void init() {
-        super.init();
-    }
-
     public void scroll(int amount) {
         if(amount == 0) return;
-        offset += amount * 10;
+        offset += amount * Variables.MOUSE_SENSITIVITY;
         offset = Tools.clamp(offset, 0, maxOffset);
         for(int i = 0; i < recipes.length; i++)
             recipes[i].setValue(Axis.OFFSET_Y, offset + -(Variables.SLOT_SIZE + Variables.SLOT_SPACE) * (i+1) + Variables.SLOT_SPACE).resize();
