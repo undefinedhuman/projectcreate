@@ -25,31 +25,40 @@ public class GuiManager extends Manager {
 
     @Override
     public void init() {
-        for (GuiTemplate template : GuiTemplate.values()) template.load();
-        TextureManager.instance.addTexture("gui/Chains/Chain-Top-Right.png", "gui/Chains/Chain-Top-Left.png", "gui/Chains/Chain-Mid-Right.png", "gui/Chains/Chain-Mid-Left.png", "gui/Chains/Chain-Bottom-Right.png", "gui/Chains/Chain-Bottom-Left.png");
-        screen = new GuiComponent().set(new PixelConstraint(0), new PixelConstraint(0), new ScreenConstraint(), new ScreenConstraint()).initScreen();
+        for (GuiTemplate template : GuiTemplate.values())
+            template.load();
+        TextureManager.instance.addTexture("gui/chains/Chain-Top-Right.png", "gui/chains/Chain-Top-Left.png", "gui/chains/Chain-Mid-Right.png", "gui/chains/Chain-Mid-Left.png", "gui/chains/Chain-Bottom-Right.png", "gui/chains/Chain-Bottom-Left.png");
+        screen = new GuiComponent()
+                .set(new PixelConstraint(0), new PixelConstraint(0), new ScreenConstraint(), new ScreenConstraint())
+                .initScreen();
     }
 
     @Override
     public void resize(int width, int height) {
         screen.resize(width, height);
-        for (GuiTransform gui : guiTransforms) gui.resize(width, height);
+        for (GuiTransform guiTransform : guiTransforms)
+            guiTransform.resize(width, height);
     }
 
     @Override
     public void update(float delta) {
-        for (GuiTransform gui : guiTransforms) gui.update(delta);
+        for (GuiTransform guiTransform : guiTransforms)
+            guiTransform.update(delta);
     }
 
     @Override
     public void renderGui(SpriteBatch batch, OrthographicCamera camera) {
-        for (GuiTransform gui : guiTransforms) gui.render(batch, camera);
+        for (GuiTransform guiTransform : guiTransforms)
+            guiTransform.render(batch, camera);
     }
 
     @Override
     public void delete() {
-        for (GuiTemplate template : GuiTemplate.values()) template.delete();
+        for (GuiTemplate template : GuiTemplate.values())
+            template.delete();
         screen.delete();
+        for(GuiTransform guiTransform : guiTransforms)
+            guiTransform.delete();
         guiTransforms.clear();
     }
 
@@ -57,13 +66,17 @@ public class GuiManager extends Manager {
 
     public void addGui(GuiTransform... guiTransforms) {
         for (GuiTransform guiTransform : guiTransforms) {
-            if (hasGui(guiTransform)) continue;
+            if (hasGui(guiTransform))
+                continue;
             this.guiTransforms.add(guiTransform);
-            guiTransform.init();
             guiTransform.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            guiTransform.init();
         }
     }
 
-    public void removeGui(GuiTransform gui) { if (hasGui(gui)) this.guiTransforms.remove(gui); }
+    public void removeGui(GuiTransform gui) {
+        if (hasGui(gui))
+            this.guiTransforms.remove(gui);
+    }
 
 }

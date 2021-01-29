@@ -1,5 +1,7 @@
 TODO CREATE DEV OVERLAY BASIC CONSOLE OUPUT, TOGGLE COLLISION BOXES, DELTA MULITPLIER, GUI SCALE, etc.
 
+TODO AUTOMATE SET LOG_LEVEL IN VARIABLES FROM DEBUG TO NONE WHEN GOING INTO PRODUCTION
+
 CRAFTING INVENTORY
 GUI STATES - INVENTORY OPENED, GAME, etc.
 CREATE SCROLL FUNCTION IN GUI MANAGER that scrolls through selecter when Gui State Game, and if inventory opened scroll in hovered gui
@@ -39,6 +41,8 @@ TODO Robert bekommt Fuchs Skin https://www.vippng.com/png/detail/312-3128737_sta
 
 TODO Drop Items should not move below 0
 TODO Refactor Drag and Drop Class And rework the canceling when the last item gets dropped by placeOneItem
+
+Production: https://github.com/libGDX/packr
 
 Forager und Forager Video HandofUncut gibt gut inspiration
 

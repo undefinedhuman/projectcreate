@@ -84,13 +84,11 @@ public class Slider extends Gui {
 
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
-
         if ((isClicked(camera) || pointer.isClicked(camera)) && Mouse.isLeftClicked()) grabbed = true;
         else if (!Mouse.isLeftClicked()) grabbed = false;
 
         if (grabbed) {
-            float mouseX = Mouse.getMouseCoords().x;
-            this.progress = Tools.clamp((mouseX - getCurrentValue(Axis.X)) / getCurrentValue(Axis.WIDTH), 0, 1f);
+            this.progress = Tools.clamp((Mouse.getX() - getCurrentValue(Axis.X)) / getCurrentValue(Axis.WIDTH), 0, 1f);
             resizePointer();
             notifyChangeListener();
         }
@@ -98,7 +96,6 @@ public class Slider extends Gui {
         super.render(batch, camera);
         batch.draw(progressTexture, getCurrentValue(Axis.X) + texture.getCornerSize(), getCurrentValue(Axis.Y) + texture.getCornerSize(), 0, 0, (int) progressWidth, (int) progressHeight);
         pointer.render(batch, camera);
-
     }
 
     private void resizePointer() {

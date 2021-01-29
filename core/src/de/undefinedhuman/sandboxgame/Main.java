@@ -46,6 +46,7 @@ public class Main extends Game {
 
     @Override
     public void create() {
+        initGDX();
         managerList.init();
         initScreens();
         setScreen(TestScreen.instance);
@@ -90,8 +91,11 @@ public class Main extends Game {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
     }
 
-    private void initScreens() {
+    private void initGDX() {
+        Gdx.app.setLogLevel(Variables.LOG_LEVEL);
+    }
 
+    private void initScreens() {
         EntityManager.instance = new EntityManager();
 
         TestScreen.instance = new TestScreen();

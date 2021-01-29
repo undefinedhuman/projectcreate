@@ -35,7 +35,7 @@ public class Tools {
 
     private static String loadKey(String key) {
         String[] values = key.split(":");
-        if(values == null || values.length < 2)
+        if(values.length < 2)
             Log.instance.crash("Can't find key in string: " + key);
         return values[1];
     }

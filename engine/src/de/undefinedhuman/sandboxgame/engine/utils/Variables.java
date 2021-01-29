@@ -1,5 +1,6 @@
 package de.undefinedhuman.sandboxgame.engine.utils;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
@@ -9,6 +10,7 @@ public class Variables {
     public static final Version VERSION = new Version(0, 1, 0);
 
     // Engine
+    public static final int LOG_LEVEL = Application.LOG_DEBUG;
     public static final float GAME_CAMERA_ZOOM = 3f;
     public static final float DELTA_MULTIPLIER = 1.0f;
 

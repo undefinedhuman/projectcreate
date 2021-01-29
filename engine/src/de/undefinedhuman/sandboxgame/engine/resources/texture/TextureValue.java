@@ -10,6 +10,8 @@ public class TextureValue {
     private TextureRegion texture;
 
     public TextureValue(Texture texture) {
+        if(texture == null)
+            return;
         texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         this.texture = new TextureRegion(texture);
     }

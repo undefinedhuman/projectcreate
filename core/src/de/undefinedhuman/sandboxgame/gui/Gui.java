@@ -37,16 +37,23 @@ public class Gui extends GuiComponent {
     }
 
     @Override
+    public void init() {
+        super.init();
+        for(GuiTransform transform : children)
+            transform.init();
+    }
+
+    @Override
     public void resize(int width, int height) {
         super.resize(width, height);
         this.texture.resize(getCurrentValue(Axis.X), getCurrentValue(Axis.Y), getCurrentValue(Axis.WIDTH), getCurrentValue(Axis.HEIGHT));
-        for (GuiTransform component : children) component.resize(width, height);
+        for (GuiTransform transform : children) transform.resize(width, height);
     }
 
     @Override
     public void update(float delta) {
         super.update(delta);
-        for (GuiTransform component : children) component.update(delta);
+        for (GuiTransform transform : children) transform.update(delta);
     }
 
     @Override
@@ -54,14 +61,14 @@ public class Gui extends GuiComponent {
         super.render(batch, camera);
         if (!visible) return;
         texture.render(batch, alpha);
-        for (GuiTransform component : children) component.render(batch, camera);
+        for (GuiTransform transform : children) transform.render(batch, camera);
     }
 
     @Override
     public void delete() {
         super.delete();
         texture.delete();
-        for (GuiTransform component : children) component.delete();
+        for (GuiTransform transform : children) transform.delete();
     }
 
     @Override

@@ -237,7 +237,7 @@ public class Tools extends de.undefinedhuman.sandboxgame.engine.utils.Tools {
     }
 
     public static Vector2 getScaledSize(Vector2 baseScale, Vector2 maxScale) {
-        double widthRatio = maxScale.x / baseScale.x, heightRatio = maxScale.y / maxScale.y, ratio = Math.min(widthRatio, heightRatio);
+        double widthRatio = maxScale.x / baseScale.x, heightRatio = maxScale.y / baseScale.y, ratio = Math.min(widthRatio, heightRatio);
         return new Vector2((int) (baseScale.x * ratio), (int) (baseScale.y * ratio));
     }
 

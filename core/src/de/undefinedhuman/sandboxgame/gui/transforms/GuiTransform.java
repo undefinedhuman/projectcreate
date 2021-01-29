@@ -27,9 +27,7 @@ public class GuiTransform {
         set(new PixelConstraint(0), new PixelConstraint(0), new PixelConstraint(0), new PixelConstraint(0));
     }
 
-    public void init() {
-
-    }
+    public void init() { }
 
     public GuiTransform initScreen() {
         this.parent = this;

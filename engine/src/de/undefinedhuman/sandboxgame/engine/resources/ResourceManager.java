@@ -16,6 +16,8 @@ public class ResourceManager {
         Texture texture = null;
         try { texture = new Texture(Gdx.files.internal(path));
         } catch (Exception ex) { Log.error("Error while loading texture: " + path + "\n" + ex.getMessage()); }
+        if(texture == null && path.equals("Unknown.png"))
+            Log.instance.crash("Can't load default texture!");
         return texture != null ? texture : loadTexture("Unknown.png");
     }
 
