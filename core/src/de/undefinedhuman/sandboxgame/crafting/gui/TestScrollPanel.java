@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 import de.undefinedhuman.sandboxgame.Main;
-import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.engine.utils.Tools;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.gui.Gui;
@@ -20,21 +19,21 @@ import de.undefinedhuman.sandboxgame.gui.transforms.offset.PixelOffset;
 import de.undefinedhuman.sandboxgame.gui.transforms.offset.RelativeOffset;
 import de.undefinedhuman.sandboxgame.utils.Mouse;
 
-public class ScrollPanel extends Gui {
+public class TestScrollPanel extends Gui {
 
     private Gui viewport, scrollBar, thumb;
-    private Gui[] recipes = new Gui[17];
+    private Gui[] content = new Gui[25];
     private int viewportHeight = 0;
-    private float offset = 0, maxOffset;
+    private float offset, maxOffset;
     private boolean grabbed = false;
     private Rectangle scissors = new Rectangle(), clipBounds = new Rectangle();
 
-    public ScrollPanel() {
+    public TestScrollPanel() {
         super(GuiTemplate.HOTBAR);
         scrollBar = (Gui) new Gui(GuiTemplate.SCROLL_BAR)
                 .addChild(
                         thumb = (Gui) new Gui(GuiTemplate.SLOT)
-                                .set(new PixelConstraint(0), new RelativeConstraint(0), new RelativeConstraint(1), new RelativeConstraint(1))
+                                .set(new RelativeConstraint(0), new RelativeConstraint(0), new RelativeConstraint(1), new RelativeConstraint(1))
                 )
                 .set(new RelativeConstraint(1), new PixelConstraint(0), new PixelConstraint(10), new RelativeConstraint(1))
                 .setOffsetX(new RelativeOffset(-1f));
@@ -58,11 +57,11 @@ public class ScrollPanel extends Gui {
             }
         }.set(new PixelConstraint(0), new PixelConstraint(0), new RelativePixelConstraint(1, 12), new RelativeConstraint(1));
 
-        for(int i = 0; i < recipes.length; i++) {
+        for(int i = 0; i < content.length; i++) {
             Gui recipe = new Gui(GuiTemplate.SLOT);
             recipe.set(new PixelConstraint(0), new RelativeConstraint(0), new RelativeConstraint(1), new PixelConstraint(Variables.SLOT_SIZE));
             recipe.setOffsetY(new PixelOffset((Variables.SLOT_SIZE + Variables.SLOT_SPACE) * i));
-            recipes[i] = recipe;
+            content[i] = recipe;
             viewport.addChild(recipe);
         }
 
@@ -72,18 +71,19 @@ public class ScrollPanel extends Gui {
     @Override
     public void init() {
         super.init();
-        resize();
-        thumb.setValue(Axis.Y, maxOffset).resize();
-        for (Gui recipe : recipes)
-            recipe.setValue(Axis.Y, -maxOffset).resize();
+        thumb.setValue(Axis.HEIGHT, Tools.clamp(1f - maxOffset, 0.1f, 1f));
+        updateOffset(maxOffset);
     }
+
+    private float scrollBarY = 0, scrollBarHeight;
 
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
         viewportHeight = viewport.getCurrentValue(Axis.HEIGHT);
-        maxOffset = (float) ((recipes.length * (Variables.SLOT_SIZE + Variables.SLOT_SPACE) - Variables.SLOT_SPACE) * Main.guiScale - viewportHeight) / viewportHeight;
-        thumb.setValue(Axis.HEIGHT, Tools.clamp(1f - maxOffset, 0.1f, 1f)).resize();
+        maxOffset = (float) ((content.length * (Variables.SLOT_SIZE + Variables.SLOT_SPACE) - Variables.SLOT_SPACE) * Main.guiScale - viewportHeight) / viewportHeight;
+        scrollBarY = scrollBar.getCurrentValue(Axis.Y) + scrollBar.getCornerSize();
+        scrollBarHeight = scrollBar.getCurrentValue(Axis.HEIGHT) - scrollBar.getCornerSize() * 2;
     }
 
     private float mouseOffset = 0;
@@ -97,19 +97,27 @@ public class ScrollPanel extends Gui {
         } else if (!Mouse.isLeftClicked()) grabbed = false;
 
         if (grabbed) {
-            float mouseY = (Gdx.graphics.getHeight() - Mouse.getY() - mouseOffset) - scrollBar.getCurrentValue(Axis.Y);
-            Log.info(scrollBar.getCurrentValue(Axis.HEIGHT));
-            this.offset = Tools.clamp(mouseY / scrollBar.getCurrentValue(Axis.HEIGHT), 0, maxOffset);
-            thumb.setValue(Axis.Y, offset).resize();
+            updateOffset(Tools.clamp((Gdx.graphics.getHeight() - Mouse.getY() - mouseOffset - scrollBarY) / scrollBarHeight, 0, maxOffset));
+            // Log.info(maxOffset, 1f, (Gdx.graphics.getHeight() - Mouse.getY() - mouseOffset - scrollBarY) / scrollBarHeight);
         }
+
     }
 
     public void scroll(int amount) {
-        if(amount == 0) return;
-        offset -= (float) (amount * Variables.MOUSE_SENSITIVITY) / viewportHeight * Main.guiScale;
-        offset = Tools.clamp(offset, 0, maxOffset);
-        for (Gui recipe : recipes)
-            recipe.setValue(Axis.Y, -offset).resize();
+        if(amount == 0 || maxOffset < 0)
+            return;
+        updateOffset(Tools.clamp(offset - (float) (amount * Variables.MOUSE_SENSITIVITY) / scrollBarHeight, 0, maxOffset));
+    }
+
+    // SPLIT OFFSET // FOR SCROLLING USE THUMB EDITED AS BELOW AND NORMAL TRANSLATION OF CONTENT // FOR THUMB USE NORMAL THUMB OFFSET AND EDITED CONTENT OFFSET
+
+    private void updateOffset(float offset) {
+        thumb
+                .setValue(Axis.Y, Tools.clamp((offset / Math.max(maxOffset, 0.9f)) * 0.9f, 0, 0.9f))
+                .resize();
+        for (Gui gui : content)
+            gui.setValue(Axis.Y, -offset).resize();
+        this.offset = offset;
     }
 
 }
