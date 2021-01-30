@@ -10,7 +10,7 @@ public class MultiMap<K, V> {
     private HashMap<K, ArrayList<V>> map = new HashMap<>();
 
     @SafeVarargs
-    public final void addValuesWithKey(K key, V... values) {
+    public final void add(K key, V... values) {
         if(map.containsKey(key)) map.get(key).addAll(Arrays.asList(values));
         else map.put(key, new ArrayList<>(Arrays.asList(values)));
     }
@@ -50,7 +50,7 @@ public class MultiMap<K, V> {
         return map.keySet();
     }
 
-    public void clearMap() {
+    public void clear() {
         for(ArrayList<V> list : map.values()) list.clear();
         map.clear();
     }

@@ -168,6 +168,7 @@ public class DragAndDrop {
         Vector2 mousePosition = Tools.getMouseCoordsInWorldSpace(camera);
 
         if (moving && (currentItem.getID() != 0 && currentItem.getAmount() != 0)) {
+            // TODO EXCHANGE WITH A NEW FOLLOW MOUSE CONSTRAINT
             currentItem.setCurrentPosition((int) (mousePosition.x - currentItem.getSize().x / 2), (int) (mousePosition.y - currentItem.getSize().y / 2));
             currentItem.render(batch, camera);
         }

@@ -1,7 +1,11 @@
 package de.undefinedhuman.sandboxgame.engine.items.recipe;
 
 public enum RecipeType {
-    BLOCK("Blocks"), STRUCTURE("Structure"), TOOL("Tools"), WEAPON("Weapons"), ARMOR("Armor");
+    BLOCK("Blocks"),
+    STRUCTURE("Structure"),
+    TOOL("Tools"),
+    WEAPON("Weapons"),
+    ARMOR("Armor");
 
     private String previewTexture;
 

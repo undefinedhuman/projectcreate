@@ -29,7 +29,7 @@ public class Chunk {
 
     public void addEntity(Entity entity) {
         if(entity == null || entitiesByType.hasValue(entity.getType(), entity)) return;
-        this.entitiesByType.addValuesWithKey(entity.getType(), entity);
+        this.entitiesByType.add(entity.getType(), entity);
         if (entity.hasComponent(ComponentType.COLLISION)) entitiesForCollision.add(entity);
     }
 
@@ -54,7 +54,7 @@ public class Chunk {
 
     public void delete() {
         entitiesForCollision.clear();
-        entitiesByType.clearMap();
+        entitiesByType.clear();
     }
 
 }

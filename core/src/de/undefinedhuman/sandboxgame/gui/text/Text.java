@@ -79,7 +79,9 @@ public class Text extends GuiComponent {
     }
 
     public Text setLineLength(Constraint lineLength) {
-        this.lineLength = lineLength.setAxis(Axis.LINE_LENGTH).setGui(this);
+        this.lineLength = lineLength
+                .setAxis(Axis.LINE_LENGTH)
+                .setGui(this);
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         return this;
     }

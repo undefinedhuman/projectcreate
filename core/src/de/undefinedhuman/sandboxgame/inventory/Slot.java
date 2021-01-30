@@ -27,7 +27,9 @@ public abstract class Slot extends Gui {
         if (invItem != null) invItem.resize(width, height);
     }
 
-    public boolean isCompatible(InvItem item) { return itemType == null || ItemManager.instance.getItem(item.getID()).type == itemType; }
+    public boolean isCompatible(InvItem item) {
+        return itemType == null || ItemManager.instance.getItem(item.getID()).type == itemType;
+    }
 
     public int addItem(InvItem item) {
         return this.addItem(item.getID(), item.getAmount());

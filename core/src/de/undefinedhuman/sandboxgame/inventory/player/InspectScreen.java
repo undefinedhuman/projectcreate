@@ -10,7 +10,6 @@ import de.undefinedhuman.sandboxgame.gui.transforms.constraints.CenterConstraint
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.RelativeConstraint;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
-import de.undefinedhuman.sandboxgame.utils.Tools;
 
 public class InspectScreen extends Gui {
 
@@ -22,7 +21,7 @@ public class InspectScreen extends Gui {
     public InspectScreen() {
         super(GuiTemplate.SMALL_PANEL);
         if(instance == null) instance = this;
-        setCurrentSize(Tools.getInventoryWidth(GuiTemplate.SMALL_PANEL, 5), Tools.getInventoryHeight(GuiTemplate.SMALL_PANEL, 10));
+        // setSize(Tools.getInventoryWidth(GuiTemplate.SMALL_PANEL, 5), Tools.getInventoryHeight(GuiTemplate.SMALL_PANEL, 10));
         Item item = new ItemManager().getItem(2);
         previewImage = new Gui(item.previewTexture.getString());
         previewImage.set(new CenterConstraint(), new RelativeConstraint(0.85f), new PixelConstraint(32), new PixelConstraint(32));

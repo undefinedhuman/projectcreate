@@ -68,7 +68,7 @@ public class Gui extends GuiComponent {
     public void delete() {
         super.delete();
         texture.delete();
-        for (GuiTransform transform : children) transform.delete();
+        deleteChildren();
     }
 
     @Override
@@ -92,8 +92,13 @@ public class Gui extends GuiComponent {
         return this;
     }
 
+    public void deleteChildren() {
+        for(GuiTransform child : children)
+            child.delete();
+        children.clear();
+    }
+
     public void clearChildren() {
-        for(GuiTransform transform : children) transform.delete();
         children.clear();
     }
 
@@ -103,12 +108,6 @@ public class Gui extends GuiComponent {
     public GuiTransform setCurrentPosition(int x, int y) {
         texture.resize(x, y, getCurrentValue(Axis.WIDTH), getCurrentValue(Axis.HEIGHT));
         return super.setCurrentPosition(x, y);
-    }
-
-    @Override
-    public GuiTransform setCurrentSize(int width, int height) {
-        texture.resize(getCurrentValue(Axis.X), getCurrentValue(Axis.Y), width, height);
-        return super.setCurrentSize(width, height);
     }
 
     public void setTexture(String texture) {

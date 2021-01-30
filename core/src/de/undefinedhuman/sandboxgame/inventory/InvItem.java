@@ -25,7 +25,8 @@ public class InvItem extends Gui {
 
     public InvItem(int id, int amount) {
         super(ItemManager.instance.getItem(id).iconTexture.getString());
-        set(new CenterConstraint(), new CenterConstraint(), new PixelConstraint(Variables.ITEM_SIZE), new PixelConstraint(Variables.ITEM_SIZE)).setOffset(new CenterOffset(), new CenterOffset());
+        set(new CenterConstraint(), new CenterConstraint(), new PixelConstraint(Variables.ITEM_SIZE), new PixelConstraint(Variables.ITEM_SIZE))
+                .setOffset(new CenterOffset(), new CenterOffset());
 
         this.id = id;
         this.amount = amount;

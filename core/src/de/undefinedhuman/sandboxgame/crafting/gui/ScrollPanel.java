@@ -25,8 +25,7 @@ public class ScrollPanel extends Gui {
 
     private Gui viewport, scrollBar, thumb;
     private ArrayList<Gui> content = new ArrayList<>();
-    private int viewportHeight = 0;
-    private float offset, maxOffset;
+    private float mouseOffset = 0, offset, maxOffset, scrollBarY, scrollBarHeight;
     private boolean grabbed = false;
     private Rectangle scissors = new Rectangle(), clipBounds = new Rectangle();
 
@@ -59,36 +58,26 @@ public class ScrollPanel extends Gui {
             }
         }.set(new PixelConstraint(0), new PixelConstraint(0), new RelativePixelConstraint(1, 12), new RelativeConstraint(1));
 
-        for(int i = 0; i < content.length; i++) {
-            Gui recipe = new Gui(GuiTemplate.SLOT);
-            recipe.set(new PixelConstraint(0), new RelativeConstraint(0), new RelativeConstraint(1), new PixelConstraint(Variables.SLOT_SIZE));
-            recipe.setOffsetY(new PixelOffset((Variables.SLOT_SIZE + Variables.SLOT_SPACE) * i));
-            content[i] = recipe;
-            viewport.addChild(recipe);
-        }
-
         addChild(viewport, scrollBar);
     }
 
     @Override
     public void init() {
         super.init();
+        initContent();
+    }
+
+    private void initContent() {
         thumb.setValue(Axis.HEIGHT, Tools.clamp(1f - maxOffset, 0.1f, 1f));
         updateOffset(maxOffset);
     }
 
-    private float scrollBarY = 0, scrollBarHeight;
-
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
-        viewportHeight = viewport.getCurrentValue(Axis.HEIGHT);
-        maxOffset = (float) ((content.size() * (Variables.SLOT_SIZE + Variables.SLOT_SPACE) - Variables.SLOT_SPACE) * Main.guiScale - viewportHeight) / viewportHeight;
         scrollBarY = scrollBar.getCurrentValue(Axis.Y) + scrollBar.getCornerSize();
         scrollBarHeight = scrollBar.getCurrentValue(Axis.HEIGHT) - scrollBar.getCornerSize() * 2;
     }
-
-    private float mouseOffset = 0;
 
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
@@ -102,10 +91,37 @@ public class ScrollPanel extends Gui {
             updateOffset(Tools.clamp((Gdx.graphics.getHeight() - Mouse.getY() - mouseOffset - scrollBarY) / scrollBarHeight * Math.max(maxOffset * (1f / 0.9f), 1f), 0, maxOffset));
     }
 
+    @Override
+    public void delete() {
+        super.delete();
+        viewport.deleteChildren();
+        content.clear();
+    }
+
+    public void clear() {
+        this.content.clear();
+        this.viewport.clearChildren();
+    }
+
     public void scroll(int amount) {
         if(amount == 0 || maxOffset < 0)
             return;
         updateOffset(Tools.clamp(offset - (float) (amount * Variables.MOUSE_SENSITIVITY) / scrollBarHeight, 0, maxOffset));
+    }
+
+    public void setContent(int contentHeight, int contentSpacing, Gui... content) {
+        clear();
+        for(int i = 0; i < content.length; i++) {
+            content[i]
+                    .set(new PixelConstraint(0), new RelativeConstraint(0), new RelativeConstraint(1), new PixelConstraint(contentHeight))
+                    .setOffsetY(new PixelOffset((contentHeight + contentSpacing) * i));
+            this.content.add(content[i]);
+            viewport.addChild(content[i]);
+        }
+        float viewportHeight = viewport.getCurrentValue(Axis.HEIGHT);
+        maxOffset = ((content.length * (contentHeight + contentSpacing) - contentSpacing) * Main.guiScale - viewportHeight) / viewportHeight;
+        resize();
+        initContent();
     }
 
     private void updateOffset(float offset) {
