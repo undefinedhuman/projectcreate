@@ -24,7 +24,7 @@ public class CraftingInventory extends Gui {
 
     public static CraftingInventory instance;
 
-    private Gui menuBackground, recipeBackground;
+    private Gui menuBackground, recipeBackground, recipePreviewTexture;
     private ScrollPanel recipesBackground;
 
     private MultiMap<RecipeType, Gui> recipes = new MultiMap<>();
@@ -48,6 +48,10 @@ public class CraftingInventory extends Gui {
                 recipesBackground = (ScrollPanel) new ScrollPanel()
                         .setSize(new PixelConstraint(Tools.getInventoryWidth(GuiTemplate.HOTBAR, 7)), new PixelConstraint(Tools.getInventoryHeight(GuiTemplate.HOTBAR, 8))),
                 recipeBackground = (Gui) new Gui(GuiTemplate.HOTBAR)
+                        .addChild(recipePreviewTexture = (Gui) new Gui("Unknown.png")
+                                .set(new CenterConstraint(), new RelativeConstraint(0.75f), new PixelConstraint(64), new PixelConstraint(64))
+                                .setOffset(new CenterOffset(), new CenterOffset())
+                        )
                         .set(new RelativeConstraint(1), new PixelConstraint(0), new PixelConstraint(Tools.getInventoryWidth(GuiTemplate.HOTBAR, 7)), new RelativeConstraint(1f))
                         .setOffsetX(new RelativeOffset(-1f))
         );
@@ -73,12 +77,10 @@ public class CraftingInventory extends Gui {
         }
 
         ArrayList<RecipeType> recipeTypes = new ArrayList<>(this.recipes.keySet());
-        currentRecipeType = recipeTypes.get(0);
-
-        if(currentRecipeType == null)
-            return;
         addRecipeTypesToMenu(recipeTypes);
-        updateRecipes();
+        if(menuBackground.getChildren().size() <= 0)
+            return;
+        ((MenuSlot) menuBackground.getChildren().get(0)).onClick();
     }
 
     private void addRecipeTypesToMenu(ArrayList<RecipeType> recipeTypes) {
@@ -101,10 +103,7 @@ public class CraftingInventory extends Gui {
     }
 
     public void updateRecipe() {
-        recipeBackground.clearChildren();
-        recipeBackground.addChild(
 
-        );
     }
 
     public void clear() {

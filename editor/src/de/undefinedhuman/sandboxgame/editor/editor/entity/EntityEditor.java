@@ -73,7 +73,7 @@ public class EntityEditor extends Editor {
             ComponentType type = ComponentType.valueOf(componentComboBox.getSelectedItem().toString());
             if(componentList.contains(type.toString())) return;
             componentList.addElement(type.toString());
-            components.put(type, type.createNewInstance());
+            components.put(type, type.createInstance());
         });
 
         JButton removeComponent = new JButton("Remove");
@@ -96,12 +96,12 @@ public class EntityEditor extends Editor {
     @Override
     public void load() {
 
-        FileHandle[] entityDirs = ResourceManager.loadDir(Paths.ENTITY_FOLDER).list();
+        FileHandle[] entityDirs = ResourceManager.loadDir(Paths.ENTITY_PATH).list();
         ArrayList<String> ids = new ArrayList<>();
 
         for (FileHandle entityDir : entityDirs) {
             if (!entityDir.isDirectory()) continue;
-            FsFile entityFile = new FsFile(Paths.ENTITY_FOLDER, entityDir.name() + "/settings.entity", true);
+            FsFile entityFile = new FsFile(Paths.ENTITY_PATH, entityDir.name() + "/settings.entity", true);
             if(entityFile.isEmpty()) continue;
             FileReader reader = entityFile.getFileReader(true);
             SettingsObject settings = Tools.loadSettings(reader);
@@ -129,7 +129,7 @@ public class EntityEditor extends Editor {
             components.clear();
             Tools.removeSettings(settingsPanel);
 
-            FileReader reader = new FileReader(ResourceManager.loadFile(Paths.ENTITY_FOLDER, Integer.parseInt(((String) comboBox.getSelectedItem()).split("-")[0]) + "/settings.entity"), true);
+            FileReader reader = new FileReader(ResourceManager.loadFile(Paths.ENTITY_PATH, Integer.parseInt(((String) comboBox.getSelectedItem()).split("-")[0]) + "/settings.entity"), true);
             SettingsObject settingsObject = Tools.loadSettings(reader);
 
             for(Setting setting : baseSettings.getSettings())
@@ -140,7 +140,7 @@ public class EntityEditor extends Editor {
                 componentList.addElement(type.name());
                 Object componentObject = settingsObject.get(type.name());
                 if(!(componentObject instanceof SettingsObject)) continue;
-                components.put(type, type.load(reader.getParentDirectory(), (SettingsObject) settingsObject.get(type.name())));
+                components.put(type, type.createInstance(reader.getParentDirectory(), (SettingsObject) settingsObject.get(type.name())));
             }
 
             chooseWindow.setVisible(false);
@@ -157,7 +157,7 @@ public class EntityEditor extends Editor {
 
     @Override
     public void save() {
-        FsFile entityDir = new FsFile(Paths.ENTITY_FOLDER, baseSettings.getSettings().get(0).getString() + Variables.FILE_SEPARATOR, true);
+        FsFile entityDir = new FsFile(Paths.ENTITY_PATH, baseSettings.getSettings().get(0).getString() + Variables.FILE_SEPARATOR, true);
         if(entityDir.exists())
             FileUtils.deleteFile(entityDir);
 

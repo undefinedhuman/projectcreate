@@ -3,6 +3,7 @@ package de.undefinedhuman.sandboxgame.screen.gamescreen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.sandboxgame.background.BackgroundManager;
 import de.undefinedhuman.sandboxgame.crafting.gui.CraftingInventory;
+import de.undefinedhuman.sandboxgame.crafting.gui.ScrollPanel;
 import de.undefinedhuman.sandboxgame.engine.camera.CameraManager;
 import de.undefinedhuman.sandboxgame.engine.utils.ManagerList;
 import de.undefinedhuman.sandboxgame.entity.Entity;
@@ -25,6 +26,8 @@ public class GameManager {
 
     private ManagerList manager;
 
+    public ScrollPanel panel;
+
     public GameManager() {
         batch = new SpriteBatch();
         CameraManager.instance = new CameraManager();
@@ -40,7 +43,6 @@ public class GameManager {
     }
 
     public void resize(int width, int height) {
-
         CameraManager.instance.resize(width, height);
 
         manager.resize(width, height);
@@ -49,7 +51,6 @@ public class GameManager {
 
         GuiManager.instance.resize(width, height);
         InventoryManager.instance.resize(width, height);
-
     }
 
     public void update(float delta) {
@@ -69,7 +70,6 @@ public class GameManager {
         BackgroundManager.instance.update(delta);
 
         CameraManager.instance.update(delta);
-
     }
 
     public void render() {

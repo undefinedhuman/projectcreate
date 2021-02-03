@@ -43,6 +43,7 @@ TODO Drop Items should not move below 0
 TODO Refactor Drag and Drop Class And rework the canceling when the last item gets dropped by placeOneItem
 
 TODO BUG Background Sometimes Birds line up in one line
+TODO BUG When moving items in inventory sometimes it loads texture of item id 0 again and again
 
 Production: https://github.com/libGDX/packr
 
@@ -57,6 +58,11 @@ Combat System:
  - Waffen können verschiedene Effekte/Enchantments haben die bekommen dann auch Ränder wie hier https://www.gamedevmarket.net/asset/pixel-art-fantasy-iconset-24x24-2181/
  - Shields should have some kind of mana or stamina value which sets when hold up and gets lower when take damage, not block any damage just lower the damage in the beginning
    and then if gets lowered by the player it regenerates, with some cooldown
+
+Storage:
+ - Take all/transfer all buttons from/into inventory into/from storage
+ - Sorting
+ - Option to change the name (with coloring)
 
 Drop Items:
  - When finding Items, make them unique everytime, make them contain different type of abilitys, different stats, maybe make them levelable so you find a weapon and don't instantly know what to expect
@@ -135,9 +141,6 @@ World:
 Drop Items:
  - Vom selben typ zu einem Stack zusammenfassen
 
-Font Manager:
- - Es gibt eine Default Liste mit Fonts z.B. Title, Normal, Hover, jede Anwendung die eine Font braucht bekommt eine eigene Instanz in einer Liste mit eigener Scale etc.
-
 Bugs:
  - Lightning is off at the edges of the world
  - Block check doesn't work properly at the bottom of the world
@@ -147,7 +150,6 @@ Bugs:
  - Arrow Spawning when facing into different dir doesn't spawn at the correct position
  - Resizing the de.undefinedhuman.sandboxgame.editor.Window could result into teleport the player into an cave
  - Wenn ein Spieler AFK ist kann er angeklickt werden mit AFK Info und er hat Sleep als Z Z Z Partikel über sich und die Augen zu
- - Achievment System & Settings! Achievments werden in einer ART Scroll Panel dargestellt es existieren 4-5 Elemente an Achievments und dann gibts Pfeile um immer ein nues anzeiogen zu lassen wie Starbound Charakter Auswahl!
  - Effects Progess Bar die sich in der Zeit immer verringert udn links am Rand angezeigt wird
  - Unter Name und Health etc
  - Changelog programmieren mit Time View und Latest Löschen und neu anlegen auf der Website aufrufbar mit jedem nueen Upload wird eine neue Version und ein neuer Changelog erwartet beim Upload programm!

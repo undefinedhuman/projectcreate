@@ -77,10 +77,11 @@ public class Gui extends GuiComponent {
         return super.setColor(color);
     }
 
-    public void setTitle(String titleString, Font font, Color color) {
+    public Gui setTitle(String titleString, Font font, Color color) {
         Text text = new Text(titleString);
         text.setFont(font).setColor(color).setPosition(new CenterConstraint(), new RelativeConstraint(1f)).setOffset(new CenterOffset(), new RelativeOffset(0.55f));
         addChild(text);
+        return this;
     }
 
     public Gui addChild(GuiTransform... components) {
