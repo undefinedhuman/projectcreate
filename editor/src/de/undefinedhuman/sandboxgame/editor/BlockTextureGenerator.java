@@ -28,7 +28,12 @@ public class BlockTextureGenerator {
         FileUtils.deleteFile(new FsFile("./assets/editor/items/" + name + "/Texture.atlas", false));
         FileUtils.deleteFile(new FsFile("./assets/editor/" + name + "/", true));
 
-        ImageIO.write(generateIcon("./assets/editor/template/Sprite-Template-1.png", baseTexture, borderColor), "png", new FsFile("./assets/editor/items/" + name + "/" + name + "-Icon.png", false).getFile());
+        BufferedImage icon = generateIcon("./assets/editor/template/Sprite-Template-1.png", baseTexture, borderColor);
+        if(icon == null) {
+            System.out.println("Generated Icon doesn't exist!");
+            return;
+        }
+        ImageIO.write(icon, "png", new FsFile("./assets/editor/items/" + name + "/" + name + "-Icon.png", false).getFile());
 
     }
 
@@ -37,6 +42,7 @@ public class BlockTextureGenerator {
         try { templateTexture = ImageIO.read(new FsFile(templatePath, false).getFile()); } catch (IOException e) { Log.info("Loading template texture"); }
         if(templateTexture == null) return;
         for(int i = 0; i < templateCount; i++) {
+            //noinspection SuspiciousNameCombination
             BufferedImage image = new BufferedImage(blockWidth, blockWidth, BufferedImage.TYPE_INT_ARGB);
             for(int x = 0; x < blockWidth; x++)
                 for(int y = 0; y < blockWidth; y++) {
@@ -62,7 +68,6 @@ public class BlockTextureGenerator {
         settings.stripWhitespaceY = true;
         settings.bleed = true;
         settings.grid = false;
-        settings.duplicatePadding = true;
         settings.pot = false;
         settings.alias = true;
         settings.ignoreBlankImages = false;
