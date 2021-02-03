@@ -8,6 +8,7 @@ import de.undefinedhuman.sandboxgame.engine.utils.MultiMap;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.elements.MenuSlot;
+import de.undefinedhuman.sandboxgame.gui.elements.scrollpanel.ScrollPanel;
 import de.undefinedhuman.sandboxgame.gui.text.Text;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.CenterConstraint;
@@ -48,9 +49,11 @@ public class CraftingInventory extends Gui {
                 recipesBackground = (ScrollPanel) new ScrollPanel()
                         .setSize(new PixelConstraint(Tools.getInventoryWidth(GuiTemplate.HOTBAR, 7)), new PixelConstraint(Tools.getInventoryHeight(GuiTemplate.HOTBAR, 8))),
                 recipeBackground = (Gui) new Gui(GuiTemplate.HOTBAR)
-                        .addChild(recipePreviewTexture = (Gui) new Gui("Unknown.png")
-                                .set(new CenterConstraint(), new RelativeConstraint(0.75f), new PixelConstraint(64), new PixelConstraint(64))
-                                .setOffset(new CenterOffset(), new CenterOffset())
+                        .addChild(
+                                recipePreviewTexture = (Gui) new Gui("Unknown.png")
+                                        .set(new CenterConstraint(), new RelativeConstraint(0.75f), new PixelConstraint(64), new PixelConstraint(64))
+                                        .setOffset(new CenterOffset(), new CenterOffset())
+
                         )
                         .set(new RelativeConstraint(1), new PixelConstraint(0), new PixelConstraint(Tools.getInventoryWidth(GuiTemplate.HOTBAR, 7)), new RelativeConstraint(1f))
                         .setOffsetX(new RelativeOffset(-1f))

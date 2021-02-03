@@ -2,15 +2,14 @@ TODO CREATE DEV OVERLAY BASIC CONSOLE OUPUT, TOGGLE COLLISION BOXES, DELTA MULIT
 
 TODO AUTOMATE SET LOG_LEVEL IN VARIABLES FROM DEBUG TO NONE WHEN GOING INTO PRODUCTION
 
+TODO ART Create Palette File and add to repo change add a new gray scale range with the darkest scale but the darkest one should be the darkest one from Furnace.png (editor/Furnace.png)
+
 CRAFTING INVENTORY
 GUI STATES - INVENTORY OPENED, GAME, etc.
 CREATE SCROLL FUNCTION IN GUI MANAGER that scrolls through selecter when Gui State Game, and if inventory opened scroll in hovered gui
 MAKE SORTING - MATERIALS AVAILABLE - SEARCH BAR
 SHOW HOW MANY ITEMS YOU ALREADY HAVE IN YOUR INVENTORY
 Erst wenn man manche Materialien gefunden hat werden Rezepte freigegeben. Sillouten einbauen bei Crafting Menu
-
-
-TODO MAYBE RETHINK THE INITIAL SIZING OF THE SCROLL BAR THING WHERE YOU INIT THE MAX HEIGHT IN THE BEGINNING BY CREATING A DEFAULT SIZE
 
 TODO BUG OPENING THE INVENTORY AND CHARACTER SCREEN COSTS 300+ FPS
 
@@ -107,14 +106,13 @@ Story:
 
 Screenshot:
  - Screenshot Manager mit Datei Erstellung und dann Methode zum erstellen eines Screenshots.
+ - Screenshots ingame anzeigen lassen evt. umbennen und editieren
 
 Emotes:
  - Man kann kleine Emote Buttons drücken mit Smiley etc. und wenn man einen drückt kommt eine Sprechblase über einem die das Emote mit Animation abspielt!
 
 Gui:
  - Es soll ein einheitliches Scale System geben für die Guis und auch für die Welt.
- - Inventory verschiedene Screens Also Inventory, Chests, Inspect etc.
- - Verhalten von RelativePosition überprüfen wenn das Parent Gui gecentered ist.
  - Chat Gui (Multicolor text)
 
 Party/Friend System:
@@ -135,7 +133,7 @@ Entity:
 
 World:
  - Kleine Höhlen irgendwie 4 * 6 groß mit kleiner Kiste in der Mitte
- - In kleinen Oberwelt Höhlen Säulen einfpgen im Hintergrund siehe Starbound oder dieses Block Pack
+ - Höhlen an der Oberfläche bekommen auch im Hintergrund Dirt Blöcke genauso wie im untergrund
    -> Und kleine Säulen also 4 * 10 auf der Oberfläche nach oben einbauen
 
 Drop Items:

@@ -1,4 +1,4 @@
-package de.undefinedhuman.sandboxgame.crafting.gui;
+package de.undefinedhuman.sandboxgame.gui.elements.scrollpanel;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;

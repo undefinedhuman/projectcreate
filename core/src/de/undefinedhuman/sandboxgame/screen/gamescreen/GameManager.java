@@ -3,7 +3,7 @@ package de.undefinedhuman.sandboxgame.screen.gamescreen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.sandboxgame.background.BackgroundManager;
 import de.undefinedhuman.sandboxgame.crafting.gui.CraftingInventory;
-import de.undefinedhuman.sandboxgame.crafting.gui.ScrollPanel;
+import de.undefinedhuman.sandboxgame.gui.elements.scrollpanel.ScrollPanel;
 import de.undefinedhuman.sandboxgame.engine.camera.CameraManager;
 import de.undefinedhuman.sandboxgame.engine.utils.ManagerList;
 import de.undefinedhuman.sandboxgame.entity.Entity;
