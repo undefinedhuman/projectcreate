@@ -23,7 +23,7 @@ public class ScrollPanel extends Gui {
     private Gui viewport;
     private ScrollBar scrollBar;
     private ArrayList<Gui> content = new ArrayList<>();
-    private float offset, maxOffset;
+    private float offset, maxOffset, contentHeight;
     private Rectangle scissors = new Rectangle(), clipBounds = new Rectangle();
 
     public ScrollPanel() {
@@ -62,13 +62,11 @@ public class ScrollPanel extends Gui {
         initContent();
     }
 
-    private void initContent() {
-        boolean visible = maxOffset > 0;
-        scrollBar.setVisible(visible);
-        ((RelativePixelConstraint) viewport.getConstraint(Axis.WIDTH)).setOffset(visible ? 12 : 0);
-        viewport.resize();
-        scrollBar.updateThumbHeight(1f - maxOffset);
-        updateOffset(maxOffset);
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+        float viewportHeight = viewport.getCurrentValue(Axis.HEIGHT);
+        maxOffset = (contentHeight * Main.guiScale - viewportHeight) / viewportHeight;
     }
 
     @Override
@@ -97,8 +95,7 @@ public class ScrollPanel extends Gui {
             this.content.add(content[i]);
             viewport.addChild(content[i]);
         }
-        float viewportHeight = viewport.getCurrentValue(Axis.HEIGHT);
-        maxOffset = ((content.length * (contentHeight + contentSpacing) - contentSpacing) * Main.guiScale - viewportHeight) / viewportHeight;
+        this.contentHeight = (content.length * (contentHeight + contentSpacing) - contentSpacing);
         resize();
         initContent();
     }
@@ -109,6 +106,15 @@ public class ScrollPanel extends Gui {
         for (Gui gui : content)
             gui.setValue(Axis.Y, -offset).resize();
         this.offset = offset;
+    }
+
+    private void initContent() {
+        boolean visible = maxOffset > 0;
+        scrollBar.setVisible(visible);
+        ((RelativePixelConstraint) viewport.getConstraint(Axis.WIDTH)).setOffset(visible ? 12 : 0);
+        viewport.resize();
+        scrollBar.updateThumbHeight(1f - maxOffset);
+        updateOffset(maxOffset);
     }
 
 }

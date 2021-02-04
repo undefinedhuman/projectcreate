@@ -58,6 +58,16 @@ public class Vector4i {
         return this;
     }
 
+    public boolean isEqual(Vector4i other) {
+        if(this == other) return true;
+        if(other == null) return false;
+        return x == other.x && y == other.y && z == other.z && w == other.w;
+    }
+
+    public boolean isEqual(int x, int y, int z, int w) {
+        return this.x == x && this.y == y && this.z == z && this.w == w;
+    }
+
     @Override
     public String toString() {
         return "[" + x + ", " + y + ", " + z + ", " + w + "]";

@@ -58,7 +58,8 @@ public class Selector extends Inventory {
     }
 
     public void setSelected(int index) {
-        if (!InventoryManager.instance.isInventoryOpened()) this.selected = index;
+        if (!InventoryManager.instance.isInventoryOpened())
+            this.selected = index;
         InvItem item = inventory[0][selected].getItem();
         if (item != null)
             EquipManager.instance.equipItemNetwork(GameManager.instance.player, inventory[0][selected].getItem().getID(), false);
