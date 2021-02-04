@@ -1,6 +1,6 @@
 package de.undefinedhuman.sandboxgame.gui.event;
 
 @FunctionalInterface
-public interface ChangeEvent {
+public interface ChangeListener {
     void notify(float progress);
 }

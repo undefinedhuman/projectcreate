@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.sandboxgame.engine.resources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.GuiComponent;
-import de.undefinedhuman.sandboxgame.gui.event.ChangeEvent;
+import de.undefinedhuman.sandboxgame.gui.event.ChangeListener;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTexture;
 import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
@@ -27,7 +27,7 @@ public class Slider extends Gui {
 
     private Texture progressTexture;
 
-    private ArrayList<ChangeEvent> changeListeners;
+    private ArrayList<ChangeListener> changeListeners;
     private String progressPath, pointerPath;
     private boolean wrapProgress;
 
@@ -72,7 +72,7 @@ public class Slider extends Gui {
     }
 
     private void notifyChangeListener() {
-        for (ChangeEvent changeListener : changeListeners)
+        for (ChangeListener changeListener : changeListeners)
             changeListener.notify(progress);
     }
 
@@ -117,7 +117,7 @@ public class Slider extends Gui {
         return this;
     }
 
-    public Slider addChangeListener(ChangeEvent changeListener) {
+    public Slider addChangeListener(ChangeListener changeListener) {
         this.changeListeners.add(changeListener);
         return this;
     }
