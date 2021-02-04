@@ -1,12 +1,7 @@
 package de.undefinedhuman.sandboxgame.gui.texture;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.Main;
 import de.undefinedhuman.sandboxgame.engine.resources.texture.TextureManager;
@@ -22,15 +17,6 @@ public class GuiTexture {
     private Color color = Color.WHITE;
     private ArrayList<String> textureNames = new ArrayList<>();
     private ArrayList<Vector4i> bounds = new ArrayList<>();
-
-    private Vector4i prevBounds = new Vector4i();
-
-    private FrameBuffer guiTextureFBO;
-    private TextureRegion m_fboRegion;
-
-    private SpriteBatch batch = new SpriteBatch();
-
-    private int x, y;
 
     public GuiTexture() {
         addTexture();
@@ -52,9 +38,6 @@ public class GuiTexture {
             textureNames.add(texture);
             bounds.add(new Vector4i());
         }
-
-        m_fboRegion = new TextureRegion();
-        m_fboRegion.flip(false, true);
     }
 
     public void resize(int x, int y, int width, int height) {
@@ -95,19 +78,6 @@ public class GuiTexture {
 
     }
 
-    private void createFrameBuffer() {
-        if(guiTextureFBO != null)
-            guiTextureFBO.dispose();
-        guiTextureFBO = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
-        //m_fboRegion.setRegion(guiTextureFBO.getColorBufferTexture());
-        m_fboRegion = new TextureRegion(guiTextureFBO.getColorBufferTexture());
-        m_fboRegion.flip(false, true);
-    }
-
-    public void drawTextureToFBO(String texture, int x, int y, int width, int height) {
-        batch.draw(TextureManager.instance.getTexture(texture), x, y, width, height);
-    }
-
     public void render(SpriteBatch batch, float alpha) {
         Color batchColor = batch.getColor();
         batch.setColor(color.r, color.g, color.b, alpha);
@@ -116,9 +86,6 @@ public class GuiTexture {
             batch.draw(TextureManager.instance.getTexture(textureNames.get(i)), bound.x, bound.y, bound.z, bound.w);
         }
         batch.setColor(batchColor);
-        /*if(m_fboRegion == null)
-            return;
-        batch.draw(m_fboRegion, 0, 0);*/
     }
 
     public void setColor(Color color) {
@@ -146,10 +113,6 @@ public class GuiTexture {
             TextureManager.instance.removeTexture(s);
         textureNames.clear();
         bounds.clear();
-    }
-
-    private void clear() {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
     }
 
 }
