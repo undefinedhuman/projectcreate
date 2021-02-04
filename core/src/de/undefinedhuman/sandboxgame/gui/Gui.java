@@ -61,7 +61,8 @@ public class Gui extends GuiComponent {
         super.render(batch, camera);
         if (!visible) return;
         texture.render(batch, alpha);
-        for (GuiTransform transform : children) transform.render(batch, camera);
+        for (GuiTransform transform : children)
+            transform.render(batch, camera);
     }
 
     @Override

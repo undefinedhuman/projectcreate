@@ -1,22 +1,22 @@
 package de.undefinedhuman.sandboxgame.gui.texture;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.Main;
 import de.undefinedhuman.sandboxgame.engine.resources.texture.TextureManager;
+import de.undefinedhuman.sandboxgame.engine.utils.math.Vector4i;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class GuiTexture {
 
     private GuiTemplate template = null;
     private int cornerSize = 0;
+    private Color color = Color.WHITE;
     private ArrayList<String> textureNames = new ArrayList<>();
-    private ArrayList<Sprite> sprites = new ArrayList<>();
+    private ArrayList<Vector4i> bounds = new ArrayList<>();
 
     public GuiTexture() { }
 
@@ -30,17 +30,18 @@ public class GuiTexture {
         addTexture(template.textures);
     }
 
-    private void addTexture(String... names) {
-        TextureManager.instance.addTexture(names);
-        textureNames.addAll(Arrays.asList(names));
-        for (String name : names)
-            sprites.add(new Sprite(TextureManager.instance.getTexture(name)));
+    private void addTexture(String... textures) {
+        TextureManager.instance.addTexture(textures);
+        for(String texture : textures) {
+            textureNames.add(texture);
+            bounds.add(new Vector4i());
+        }
     }
 
     public void resize(int x, int y, int width, int height) {
         if (template == null)
-            for(Sprite sprite : sprites)
-                sprite.setBounds(x, y, width, height);
+            for(Vector4i bound : bounds)
+                bound.set(x, y, width, height);
         else {
             this.cornerSize = template.cornerSize * Main.guiScale;
             int centerWidth = Math.max(0, width - cornerSize * 2);
@@ -54,32 +55,45 @@ public class GuiTexture {
                     o = i | j;
                     a = i & j;
                     index = (3 - (i + j)) * e + 2 * r * i;
-                    sprites.get(index).setBounds(x + (centerWidth + cornerSize) * i, y + (centerHeight + cornerSize) * j, cornerSize, cornerSize);
-                    sprites.get(4 + index).setBounds(
+                    bounds.get(index).set(
+                            x + (centerWidth + cornerSize) * i,
+                            y + (centerHeight + cornerSize) * j,
+                            cornerSize,
+                            cornerSize
+                    );
+                    bounds.get(4 + index).set(
                             x + cornerSize * o + centerWidth * a,
                             y + cornerSize * (e | j) + centerHeight * (r & j),
                             cornerSize * e + centerWidth * r,
-                            cornerSize * r + centerHeight * e);
+                            cornerSize * r + centerHeight * e
+                    );
                 }
 
-            sprites.get(8).setBounds(x + cornerSize, y + cornerSize, centerWidth, centerHeight);
+            bounds.get(8).set(x + cornerSize, y + cornerSize, centerWidth, centerHeight);
         }
     }
 
     public void render(SpriteBatch batch, float alpha) {
-        for (Sprite sprite : sprites)
-            sprite.draw(batch, alpha);
+        Color batchColor = batch.getColor();
+        batch.setColor(color.r, color.g, color.b, alpha);
+        for(int i = 0; i < textureNames.size(); i++) {
+            Vector4i bound = bounds.get(i);
+            batch.draw(TextureManager.instance.getTexture(textureNames.get(i)), bound.x, bound.y, bound.z, bound.w);
+        }
+        batch.setColor(batchColor);
     }
 
     public void setColor(Color color) {
-        for (Sprite sprite : sprites) sprite.setColor(color);
+        this.color.set(color);
     }
 
     public void setTexture(String texture) {
-        if (template != null) template = null;
-        for (String name : textureNames) TextureManager.instance.removeTexture(name);
+        if (template != null)
+            template = null;
+        for (String name : textureNames)
+            TextureManager.instance.removeTexture(name);
         this.textureNames.clear();
-        this.sprites.clear();
+        this.bounds.clear();
         addTexture(texture);
     }
 
@@ -90,13 +104,10 @@ public class GuiTexture {
     public Vector2 getOffset() { return new Vector2(cornerSize, cornerSize); }
 
     public void delete() {
-        for (String s : textureNames) TextureManager.instance.removeTexture(s);
+        for (String s : textureNames)
+            TextureManager.instance.removeTexture(s);
         textureNames.clear();
-        sprites.clear();
-    }
-
-    public GuiTemplate getTemplate() {
-        return template;
+        bounds.clear();
     }
 
 }

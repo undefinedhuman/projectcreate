@@ -103,6 +103,8 @@ public class CraftingInventory extends Gui {
 
     public void updateRecipes() {
         recipesBackground.setContent(Variables.SLOT_SIZE, Variables.SLOT_SPACE, recipes.getValuesWithKey(currentRecipeType).toArray(new Gui[0]));
+        if(currentRecipeType == RecipeType.TOOL)
+            recipesBackground.setContent(Variables.SLOT_SIZE, Variables.SLOT_SPACE, recipes.getValuesWithKey(currentRecipeType).toArray(new Gui[0]));
     }
 
     public void updateRecipe() {

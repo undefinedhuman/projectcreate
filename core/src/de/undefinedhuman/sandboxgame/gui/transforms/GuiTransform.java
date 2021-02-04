@@ -86,6 +86,10 @@ public class GuiTransform {
         return this;
     }
 
+    public Constraint getConstraint(Axis axis) {
+        return constraints.get(axis);
+    }
+
     public GuiTransform setValue(Axis axis, float value) {
         constraints.get(axis).setValue(value);
         return this;
@@ -96,15 +100,11 @@ public class GuiTransform {
         return constraints.get(axis).getValue();
     }
 
+    // TODO REMOVE THIS FUNCTION AND REPLACE WITH CONSTRAINT
+
     public GuiTransform setCurrentPosition(int x, int y) {
         this.currentValues.put(Axis.X, x);
         this.currentValues.put(Axis.Y, y);
-        return this;
-    }
-
-    public GuiTransform setCurrentSize(int width, int height) {
-        this.currentValues.put(Axis.WIDTH, width);
-        this.currentValues.put(Axis.HEIGHT, height);
         return this;
     }
 

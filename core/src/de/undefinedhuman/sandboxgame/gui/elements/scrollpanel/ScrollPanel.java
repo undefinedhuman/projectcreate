@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 import de.undefinedhuman.sandboxgame.Main;
-import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.engine.utils.Tools;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.gui.Gui;
@@ -32,7 +31,7 @@ public class ScrollPanel extends Gui {
 
         scrollBar = new ScrollBar(GuiTemplate.SCROLL_BAR, 10).addChangeListener(progress -> {
             if(maxOffset > 0)
-                updateOffset(Tools.clamp(progress * Math.max(maxOffset * (1f / 0.9f), 1f), 0f, maxOffset));
+                updateOffset(Tools.clamp(progress * Math.max(maxOffset * (1f / 0.9f), 1f), 0, maxOffset));
         });
 
         viewport = (Gui) new Gui(new GuiTexture()) {
@@ -64,6 +63,10 @@ public class ScrollPanel extends Gui {
     }
 
     private void initContent() {
+        boolean visible = maxOffset > 0;
+        scrollBar.setVisible(visible);
+        ((RelativePixelConstraint) viewport.getConstraint(Axis.WIDTH)).setOffset(visible ? 12 : 0);
+        viewport.resize();
         scrollBar.updateThumbHeight(1f - maxOffset);
         updateOffset(maxOffset);
     }
@@ -82,7 +85,7 @@ public class ScrollPanel extends Gui {
     public void scroll(int amount) {
         if(amount == 0 || maxOffset < 0)
             return;
-        updateOffset(offset - (float) (amount * Variables.MOUSE_SENSITIVITY) / scrollBar.getScrollBarHeight());
+        updateOffset(Tools.clamp(offset - (float) (amount * Variables.MOUSE_SENSITIVITY) / scrollBar.getScrollBarHeight(), 0, maxOffset));
     }
 
     public void setContent(int contentHeight, int contentSpacing, Gui... content) {
@@ -101,8 +104,6 @@ public class ScrollPanel extends Gui {
     }
 
     private void updateOffset(float offset) {
-        offset = Tools.clamp(offset, 0, maxOffset);
-        Log.info(maxOffset);
         scrollBar.updateThumbY(Tools.clamp((offset / Math.max(maxOffset, 0.9f)) * 0.9f, 0, 0.9f));
 
         for (Gui gui : content)

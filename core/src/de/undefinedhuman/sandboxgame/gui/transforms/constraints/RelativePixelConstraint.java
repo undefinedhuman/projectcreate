@@ -23,4 +23,7 @@ public class RelativePixelConstraint extends Constraint {
         } else return (int) (currentTransform.parent.getCurrentValue(axis) * value - offset * Main.guiScale);
     }
 
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
 }
