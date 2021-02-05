@@ -12,23 +12,39 @@ import de.undefinedhuman.sandboxgame.engine.log.Log;
 
 public enum ItemType {
 
-    ITEM(new Item()), TOOL(new Tool()), PICKAXE(new Pickaxe()), SWORD(new Sword()), WEAPON(new Weapon()),
-    BLOCK(new Block()), BOW(new Bow()), ARMOR(new Armor()), STAFF(new Weapon()), HELMET(new Helmet()),
-    STRUCTURE(new Item());
+    // TODO Create Crafting Material Class
 
-    private Item item;
+    ITEM(Item.class, "Item"),
+    TOOL(Tool.class, "Tool"),
+    PICKAXE(Pickaxe.class, "Pickaxe"),
+    SWORD(Sword.class, "Sword"),
+    WEAPON(Weapon.class, "Weapon"),
+    BLOCK(Block.class, "Block"),
+    BOW(Bow.class, "Bow"),
+    ARMOR(Armor.class, "Armor"),
+    STAFF(Weapon.class, "Staff"),
+    HELMET(Helmet.class, "Helmet"),
+    STRUCTURE(Item.class, "Structure");
 
-    ItemType(Item item) {
+    private Class<? extends Item> item;
+    private String title;
+
+    ItemType(Class<? extends Item> item, String title) {
         this.item = item;
+        this.title = title;
     }
 
     public Item createInstance() {
-        Item newItemInstance = null;
-        try { newItemInstance = this.item.getClass().newInstance();
-        } catch (InstantiationException | IllegalAccessException e) { Log.info(e.getMessage()); }
-        assert newItemInstance != null;
-        newItemInstance.type = this;
-        return newItemInstance;
+        Item item = null;
+        try { item = this.item.newInstance();
+        } catch (InstantiationException | IllegalAccessException ex) {
+            Log.error("Could not create Component Blueprint Instance: " + ex.getMessage());
+        }
+        if(item != null) item.type = this;
+        return item;
     }
 
+    public String getTitle() {
+        return title;
+    }
 }

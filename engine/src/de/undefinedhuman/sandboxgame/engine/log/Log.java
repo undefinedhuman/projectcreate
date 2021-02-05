@@ -85,11 +85,11 @@ public class Log extends Manager {
 
     private static void createMessage(String prefix, Object msg) {
         String logMessage = Variables.LOG_MESSAGE_FORMAT
-                .replaceAll("%prefix%", prefix)
-                .replaceAll("%time%", getTime())
-                .replaceAll("%message%", String.valueOf(msg))
-                .replaceAll("%name%", Variables.NAME)
-                .replaceAll("%version%", Variables.VERSION.toString());
+                .replace("%prefix%", prefix)
+                .replace("%time%", getTime())
+                .replace("%message%", String.valueOf(msg))
+                .replace("%name%", Variables.NAME)
+                .replace("%version%", Variables.VERSION.toString());
         Log.instance.displayMessage(logMessage);
         System.out.println(logMessage);
         logMessages.add(logMessage);

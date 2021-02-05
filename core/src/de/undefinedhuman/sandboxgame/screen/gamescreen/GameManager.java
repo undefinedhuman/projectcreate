@@ -2,19 +2,13 @@ package de.undefinedhuman.sandboxgame.screen.gamescreen;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.sandboxgame.background.BackgroundManager;
+import de.undefinedhuman.sandboxgame.crafting.CraftingInventory;
 import de.undefinedhuman.sandboxgame.engine.camera.CameraManager;
 import de.undefinedhuman.sandboxgame.engine.utils.ManagerList;
-import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.EntityManager;
 import de.undefinedhuman.sandboxgame.entity.ecs.blueprint.BlueprintManager;
-import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.GuiManager;
-import de.undefinedhuman.sandboxgame.gui.elements.scrollpanel.ScrollPanel;
-import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
-import de.undefinedhuman.sandboxgame.gui.transforms.constraints.CenterConstraint;
-import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
-import de.undefinedhuman.sandboxgame.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.item.drop.DropItemManager;
@@ -31,8 +25,6 @@ public class GameManager {
 
     private ManagerList manager;
 
-    public ScrollPanel panel;
-
     public GameManager() {
         batch = new SpriteBatch();
         CameraManager.instance = new CameraManager();
@@ -44,17 +36,7 @@ public class GameManager {
         BackgroundManager.instance.init();
         loadManager();
 
-        // GuiManager.instance.addGui(new CraftingInventory());
-
-        panel = (ScrollPanel) new ScrollPanel().set(new CenterConstraint(), new CenterConstraint(), new PixelConstraint(200), new PixelConstraint(200)).setOffset(new CenterOffset(), new CenterOffset());
-
-        Gui[] gui = new Gui[100];
-        for(int i = 0; i < gui.length; i++)
-            gui[i] = new Gui(GuiTemplate.SLOT);
-
-        panel.setContent(Variables.SLOT_SIZE, Variables.SLOT_SPACE, gui);
-
-        GuiManager.instance.addGui(panel);
+        GuiManager.instance.addGui(new CraftingInventory());
     }
 
     public void resize(int width, int height) {

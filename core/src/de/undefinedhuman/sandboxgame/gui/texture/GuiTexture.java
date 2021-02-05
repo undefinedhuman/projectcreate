@@ -6,14 +6,13 @@ import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.Main;
 import de.undefinedhuman.sandboxgame.engine.resources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.engine.utils.math.Vector4i;
-import de.undefinedhuman.sandboxgame.utils.Tools;
 
 import java.util.ArrayList;
 
 public class GuiTexture {
 
     private GuiTemplate template = null;
-    private int cornerSize = 0;
+    private int cornerSize = 0, centerWidth, centerHeight;
     private Color color = Color.WHITE;
     private ArrayList<String> textureNames = new ArrayList<>();
     private ArrayList<Vector4i> bounds = new ArrayList<>();
@@ -41,41 +40,24 @@ public class GuiTexture {
     }
 
     public void resize(int x, int y, int width, int height) {
-
         if (template == null)
             for(Vector4i bound : bounds)
                 bound.set(x, y, width, height);
         else {
             this.cornerSize = template.cornerSize * Main.guiScale;
-            int centerWidth = Math.max(0, width - cornerSize * 2);
-            int centerHeight = Math.max(0, height - cornerSize * 2);
-            int index, e, r, o, a;
+            centerWidth = Math.max(0, width - cornerSize * 2);
+            centerHeight = Math.max(0, height - cornerSize * 2);
 
-            for (int i = 0; i < 2; i++)
-                for (int j = 0; j < 2; j++) {
-                    e = Tools.isEqual(i, j);
-                    r = i ^ j;
-                    o = i | j;
-                    a = i & j;
-                    index = (3 - (i + j)) * e + 2 * r * i;
-                    bounds.get(index).set(
-                            x + (centerWidth + cornerSize) * i,
-                            y + (centerHeight + cornerSize) * j,
-                            cornerSize,
-                            cornerSize
-                    );
-
-                    bounds.get(4 + index).set(
-                            x + cornerSize * o + centerWidth * a,
-                            y + cornerSize * (e | j) + centerHeight * (r & j),
-                            cornerSize * e + centerWidth * r,
-                            cornerSize * r + centerHeight * e
-                    );
-                }
-
+            bounds.get(0).set(x, y + height - cornerSize, cornerSize, cornerSize);
+            bounds.get(1).set(x + width - cornerSize, y + height - cornerSize, cornerSize, cornerSize);
+            bounds.get(2).set(x + width - cornerSize, y, cornerSize, cornerSize);
+            bounds.get(3).set(x, y, cornerSize, cornerSize);
+            bounds.get(4).set(x + cornerSize, y + cornerSize + centerHeight, centerWidth, cornerSize);
+            bounds.get(5).set(x + centerWidth + cornerSize, y + cornerSize, cornerSize, centerHeight);
+            bounds.get(6).set(x + cornerSize, y, centerWidth, cornerSize);
+            bounds.get(7).set(x, y + cornerSize, cornerSize, centerHeight);
             bounds.get(8).set(x + cornerSize, y + cornerSize, centerWidth, centerHeight);
         }
-
     }
 
     public void render(SpriteBatch batch, float alpha) {
@@ -99,6 +81,7 @@ public class GuiTexture {
             TextureManager.instance.removeTexture(name);
         this.textureNames.clear();
         this.bounds.clear();
+        TextureManager.instance.addTexture(texture);
         addTexture(texture);
     }
 

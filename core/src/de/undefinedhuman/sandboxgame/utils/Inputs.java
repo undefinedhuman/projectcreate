@@ -133,15 +133,11 @@ public class Inputs extends Manager implements InputProcessor {
 
     @Override
     public boolean scrolled(int amount) {
-
-        GameManager.instance.panel.scroll(amount);
-
         if (InventoryManager.instance.isInventoryOpened())
             return false;
         int selected = Selector.instance.getSelected() + amount, selectorLength = Selector.instance.getInventory()[0].length;
         Selector.instance.setSelected((selectorLength + selected) % selectorLength);
         return true;
-
     }
 
 }

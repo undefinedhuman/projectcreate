@@ -59,7 +59,8 @@ public class Gui extends GuiComponent {
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         super.render(batch, camera);
-        if (!visible) return;
+        if (!visible)
+            return;
         texture.render(batch, alpha);
         for (GuiTransform transform : children)
             transform.render(batch, camera);
@@ -100,12 +101,7 @@ public class Gui extends GuiComponent {
         children.clear();
     }
 
-    public void clearChildren() {
-        children.clear();
-    }
-
-    // TODO Remove those two functions  \/
-
+    // TODO Remove this
     @Override
     public GuiTransform setCurrentPosition(int x, int y) {
         texture.resize(x, y, getCurrentValue(Axis.WIDTH), getCurrentValue(Axis.HEIGHT));

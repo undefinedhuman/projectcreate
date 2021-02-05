@@ -2,15 +2,17 @@ TODO CREATE DEV OVERLAY BASIC CONSOLE OUPUT, TOGGLE COLLISION BOXES, DELTA MULIT
 TODO DEV OVERLAY GRAPHS WHICH SHOW WHEN IN DEBUG MODE FPS, GLPROFILER: DRAWCALLS AND TEXTURE BINDS ETC
 TODO AND ALSO CAN DISABLE AND ENABLE PROFILER
 TODO DISABLE PROFILER/DEBUG IN PRODUCTION
+TODO DISPLAY USAGES OF TEXTURES FROM TEXTURE MANAGER
 
 TODO FIX SELECTOR SELECTION
 
 TODO AUTOMATE SET LOG_LEVEL IN VARIABLES FROM DEBUG TO NONE WHEN GOING INTO PRODUCTION
 
 TODO ART Create Palette File and add to repo change add a new gray scale range with the darkest scale but the darkest one should be the darkest one from Furnace.png (editor/Furnace.png)
+TODO ART ITEM ICONS SHOULD BE OUTLINED BUT NOT BLACK BUT A DARKER VERSION OF THE SURROUNDING COLOR
 
 CRAFTING INVENTORY
-GUI STATES - INVENTORY OPENED, GAME, etc.
+TODO GUI STATES - INVENTORY OPENED, GAME, etc.
 CREATE SCROLL FUNCTION IN GUI MANAGER that scrolls through selecter when Gui State Game, and if inventory opened scroll in hovered gui
 MAKE SORTING - MATERIALS AVAILABLE - SEARCH BAR
 SHOW HOW MANY ITEMS YOU ALREADY HAVE IN YOUR INVENTORY
@@ -22,6 +24,8 @@ TODO FIX HOTBAR GUI CORNER LIGHTNING LOWER AND UPPER
 TODO FIX SLOT LIGHTNING CHANGE EDGE LIGHT SHADE FROM LEFT TO RIGHT
 
 TODO ADD EventSystem for all sorts of events (block breaking/placing, entity dead/hurt move, etc.)
+    - without Event Type just use the event class
+
 TODO IMPLEMENT INTERACTION COMPONENT WITH MOUSE SELECTION NOT POSITION AND MAKE SURE IT WORKS ALSO IF THE ITEM IS PLACED AT THE EDGE OF THE WORLD
 
 TODO Maybe change camera, entity and block rendered Position to integer
@@ -52,8 +56,11 @@ TODO BUG When moving items in inventory sometimes it loads texture of item id 0 
 Production: https://github.com/libGDX/packr
 
 Forager und Forager Video HandofUncut gibt gut inspiration
-
 https://www.youtube.com/watch?v=wAm3sFRqJLI
+
+Black Market
+
+Alchemy (Brewing)
 
 Combat System:
  - Verschiedene Materialien, für jede Waffe.
@@ -151,7 +158,7 @@ Bugs:
  - Light Manager Default Height should be the height of the world generator
  - At higher Y Values the run animation doesn't work properly (weird)
  - Arrow Spawning when facing into different dir doesn't spawn at the correct position
- - Resizing the de.undefinedhuman.sandboxgame.editor.Window could result into teleport the player into an cave
+ - Resizing the Window could result into teleport the player into an cave
  - Wenn ein Spieler AFK ist kann er angeklickt werden mit AFK Info und er hat Sleep als Z Z Z Partikel über sich und die Augen zu
  - Effects Progess Bar die sich in der Zeit immer verringert udn links am Rand angezeigt wird
  - Unter Name und Health etc

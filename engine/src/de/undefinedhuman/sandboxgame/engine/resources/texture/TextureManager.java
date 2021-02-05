@@ -24,6 +24,13 @@ public class TextureManager extends Manager {
         addTexture("Unknown.png", "blank.png");
     }
 
+    @Override
+    public void delete() {
+        for (TextureValue texture : textures.values())
+            texture.delete();
+        textures.clear();
+    }
+
     public boolean addTexture(String... names) {
         boolean loaded = false;
         for (String name : names) {
@@ -41,16 +48,14 @@ public class TextureManager extends Manager {
         return textures.containsKey(name);
     }
 
-    @Override
-    public void delete() {
-        for (TextureValue texture : textures.values()) texture.delete();
-        textures.clear();
-    }
-
     public void removeTexture(String... names) {
         for (String name : names) {
-            if (hasTexture(name)) textures.get(name).remove();
-            if (textures.containsKey(name) && textures.get(name).remove) textures.remove(name);
+            if (!hasTexture(name)) continue;
+            TextureValue texture = textures.get(name);
+            texture.remove();
+            if(!texture.remove) continue;
+            textures.remove(name);
+            texture.delete();
         }
     }
 

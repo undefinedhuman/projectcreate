@@ -2,7 +2,7 @@ package de.undefinedhuman.sandboxgame.gui.transforms.offset;
 
 public class PixelOffset extends Offset {
 
-    public PixelOffset(float value) {
+    public PixelOffset(int value) {
         super(value);
     }
 
