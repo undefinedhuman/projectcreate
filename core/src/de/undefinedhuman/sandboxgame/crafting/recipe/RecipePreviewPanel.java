@@ -21,7 +21,7 @@ public class RecipePreviewPanel extends Gui {
 
     public RecipePreviewPanel() {
         super(GuiTemplate.HOTBAR);
-        set(new RelativeConstraint(1), new PixelConstraint(0), new PixelConstraint(Tools.getInventoryWidth(GuiTemplate.HOTBAR, 7)), new RelativeConstraint(1f));
+        set(new RelativeConstraint(1), new PixelConstraint(0), Tools.getInventoryConstraint(GuiTemplate.HOTBAR, 7), Tools.getInventoryConstraint(GuiTemplate.HOTBAR, 8));
         setOffsetX(new RelativeOffset(-1f));
 
         itemPreview = (Gui) new Gui("Unknown.png")

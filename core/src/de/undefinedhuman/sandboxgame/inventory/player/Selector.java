@@ -25,7 +25,7 @@ public class Selector extends Inventory {
     public Selector() {
         super(1, 9, GuiTemplate.HOTBAR);
         if(instance == null) instance = this;
-        setPosition(new CenterConstraint(), new RelativeConstraint(1)).setOffset(new CenterOffset(), new PixelOffset(-Tools.getInventoryHeight(GuiTemplate.HOTBAR, 1) - 10));
+        setPosition(new CenterConstraint(), new RelativeConstraint(1)).setOffset(new CenterOffset(), new PixelOffset(-Tools.getInventorySize(GuiTemplate.HOTBAR, 1) - 10));
     }
 
     @Override

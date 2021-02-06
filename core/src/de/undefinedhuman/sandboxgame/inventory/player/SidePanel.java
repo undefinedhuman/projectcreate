@@ -33,7 +33,7 @@ public class SidePanel extends Gui {
         super(GuiTemplate.SMALL_PANEL);
         if(instance == null) instance = this;
 
-        set(new RelativeConstraint(1), new CenterConstraint(), new PixelConstraint(Tools.getInventoryWidth(GuiTemplate.SMALL_PANEL, 1)), new PixelConstraint(Tools.getInventoryHeight(GuiTemplate.SMALL_PANEL, itemCount))).setOffset(new PixelOffset(-Tools.getInventoryWidth(GuiTemplate.SMALL_PANEL, 1) - 25), new CenterOffset());
+        set(new RelativeConstraint(1), new CenterConstraint(), Tools.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 1), Tools.getInventoryConstraint(GuiTemplate.SMALL_PANEL, itemCount)).setOffset(new PixelOffset(-Tools.getInventorySize(GuiTemplate.SMALL_PANEL, 1) - 25), new CenterOffset());
         for (int i = 0; i < itemCount; i++)
             addMenuItem(i, itemCount - i - 1);
     }

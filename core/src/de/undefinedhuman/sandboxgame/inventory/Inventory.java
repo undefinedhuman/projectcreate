@@ -21,7 +21,7 @@ public class Inventory extends Gui implements InvTarget {
     public Inventory(int row, int col, GuiTemplate template) {
         super(template);
         inventory = new InvSlot[this.row = row][this.col = col];
-        setSize(new PixelConstraint(Tools.getInventoryWidth(template, col)), new PixelConstraint(Tools.getInventoryHeight(template, row)));
+        setSize(Tools.getInventoryConstraint(template, col), Tools.getInventoryConstraint(template, row));
 
         for (int i = 0; i < inventory.length; i++)
             for (int j = 0; j < inventory[i].length; j++) {

@@ -39,7 +39,8 @@ public class CraftingInventory extends Gui {
         super(GuiTemplate.SMALL_PANEL);
         if(instance == null)
             instance = this;
-        set(new CenterConstraint(), new CenterConstraint(), new PixelConstraint(Tools.getInventoryWidth(GuiTemplate.SMALL_PANEL, 15)), new PixelConstraint(Tools.getInventoryHeight(GuiTemplate.SMALL_PANEL, 10)));
+        setPosition(new CenterConstraint(), new CenterConstraint());
+        setSize(Tools.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 15), Tools.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 10));
         setOffset(new CenterOffset(), new CenterOffset());
         initBackgrounds();
         setTitle("Crafting", Font.Title, Color.WHITE);
@@ -55,7 +56,7 @@ public class CraftingInventory extends Gui {
     @Override
     public void init() {
         super.init();
-        setRecipes(1, 2);
+        setRecipes(2);
     }
 
     private void initBackgrounds() {
@@ -68,11 +69,11 @@ public class CraftingInventory extends Gui {
                 recipesScrollPanel.getContent().clear();
             }
         };
-        recipesScrollPanel.setSize(new PixelConstraint(Tools.getInventoryWidth(GuiTemplate.HOTBAR, 7)), new PixelConstraint(Tools.getInventoryHeight(GuiTemplate.HOTBAR, 8)));
+        recipesScrollPanel.setSize(Tools.getInventoryConstraint(GuiTemplate.HOTBAR, 7), Tools.getInventoryConstraint(GuiTemplate.HOTBAR, 8));
 
         addChild(
                 menuBackground = (Gui) new Gui(GuiTemplate.HOTBAR)
-                        .set(new PixelConstraint(0), new RelativeConstraint(1), new PixelConstraint(Tools.getInventoryWidth(GuiTemplate.HOTBAR, 7)), new PixelConstraint(Tools.getInventoryHeight(GuiTemplate.HOTBAR, 1)))
+                        .set(new PixelConstraint(0), new RelativeConstraint(1), Tools.getInventoryConstraint(GuiTemplate.HOTBAR, 7), Tools.getInventoryConstraint(GuiTemplate.HOTBAR, 1))
                         .setOffsetY(new RelativeOffset(-1)),
                 recipesScrollPanel,
                 recipePreviewPanel = new RecipePreviewPanel()
@@ -101,6 +102,7 @@ public class CraftingInventory extends Gui {
                 public void onClick() {
                     if(currentRecipeType == recipeType)
                         return;
+
                     currentRecipeType = recipeType;
                     updateRecipes();
                 }

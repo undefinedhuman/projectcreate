@@ -7,7 +7,6 @@ import de.undefinedhuman.sandboxgame.engine.items.ItemType;
 import de.undefinedhuman.sandboxgame.engine.resources.font.Font;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
-import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.sandboxgame.inventory.InvTarget;
 import de.undefinedhuman.sandboxgame.inventory.Slot;
 import de.undefinedhuman.sandboxgame.utils.Tools;
@@ -24,7 +23,7 @@ public class EquipScreen extends Gui implements InvTarget {
     public EquipScreen() {
         super(GuiTemplate.SMALL_PANEL);
         if(instance == null) instance = this;
-        setSize(new PixelConstraint(Tools.getInventoryWidth(GuiTemplate.SMALL_PANEL, 5)), new PixelConstraint(Tools.getInventoryHeight(GuiTemplate.SMALL_PANEL, 10)));
+        setSize(Tools.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 5), Tools.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 10));
         setTitle("Character", Font.Title, Color.WHITE);
 
         /*addChild(new Gui("gui/preview/equip/Human-Preview.png").set(new CenterConstraint(), new CenterConstraint(), new PixelConstraint(64), new PixelConstraint(128)).setOffset(new CenterOffset(), new PixelOffset(48)));

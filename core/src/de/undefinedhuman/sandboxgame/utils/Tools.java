@@ -21,6 +21,7 @@ import de.undefinedhuman.sandboxgame.engine.utils.math.Vector2i;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.sandboxgame.inventory.player.Selector;
 import de.undefinedhuman.sandboxgame.world.Noise;
 import de.undefinedhuman.sandboxgame.world.World;
@@ -304,20 +305,12 @@ public class Tools extends de.undefinedhuman.sandboxgame.engine.utils.Tools {
         return length > 1 ? "s" : "";
     }
 
-    public static int getInventoryWidth(GuiTemplate template, int col) {
-        return getInventoryWidth(template.cornerSize, col);
+    public static PixelConstraint getInventoryConstraint(GuiTemplate template, int size) {
+        return new PixelConstraint(getInventorySize(template, size));
     }
 
-    private static int getInventoryWidth(float offsetX, int col) {
-        return (int) (offsetX * 2 + (Variables.SLOT_SIZE * col + Variables.SLOT_SPACE * (col - 1)));
-    }
-
-    public static int getInventoryHeight(GuiTemplate template, int row) {
-        return getInventoryHeight(template.cornerSize, row);
-    }
-
-    private static int getInventoryHeight(float offsetY, int row) {
-        return (int) (offsetY * 2 + (Variables.SLOT_SIZE * row + Variables.SLOT_SPACE * (row - 1)));
+    public static int getInventorySize(GuiTemplate template, int size) {
+        return template.cornerSize * 2 + size * (Variables.SLOT_SIZE + Variables.SLOT_SPACE) - Variables.SLOT_SPACE;
     }
 
     public static int loop(int currentIndex, int maxLength) {
