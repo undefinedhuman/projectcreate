@@ -1,6 +1,5 @@
 package de.undefinedhuman.sandboxgame.gui.text;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -20,7 +19,7 @@ import de.undefinedhuman.sandboxgame.gui.transforms.constraints.TextConstraint;
 public class Text extends GuiComponent {
 
     private GlyphLayout layout = new GlyphLayout();
-    private String text;
+    private String text, truncate = "...";
     private int align = Align.left;
     private Font fontType = Font.Normal;
     private BitmapFont font;
@@ -33,13 +32,14 @@ public class Text extends GuiComponent {
         this.text = String.valueOf(text);
         this.font = FontManager.instance.getFont(fontType, Main.guiScale * fontSize);
         setSize(new TextConstraint(layout), new TextConstraint(layout));
-        lineLength = new PixelConstraint(0).setGui(this).setAxis(Axis.LINE_LENGTH);
+        lineLength = new PixelConstraint(0).setGui(this).setAxis(Axis.WIDTH);
     }
 
     @Override
     public void resize(int width, int height) {
         font = FontManager.instance.getFont(fontType, Main.guiScale * fontSize);
-        layout.setText(font, text, color, lineLength.getValue(Main.guiScale), align, wrap);
+        int lineLength = this.lineLength.getValue(Main.guiScale);
+        layout.setText(font, text, 0, text.length(), color, lineLength, align, wrap, wrap || lineLength == 0 ? null : truncate);
         super.resize(width, height);
     }
 
@@ -68,39 +68,45 @@ public class Text extends GuiComponent {
 
     public Text setText(Object text) {
         this.text = String.valueOf(text);
-        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        resize();
         return this;
     }
 
     public Text setFont(Font font) {
         this.fontType = font;
-        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        resize();
         return this;
     }
 
     public Text setLineLength(Constraint lineLength) {
         this.lineLength = lineLength
-                .setAxis(Axis.LINE_LENGTH)
+                .setAxis(Axis.WIDTH)
                 .setGui(this);
-        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        resize();
         return this;
     }
 
     public Text setWrap(boolean wrap) {
         this.wrap = wrap;
-        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        resize();
         return this;
     }
 
     public Text setAlign(int align) {
         this.align = align;
-        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        resize();
         return this;
     }
 
     public Text setFontSize(int fontSize) {
         this.fontSize = fontSize;
-        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        resize();
+        return this;
+    }
+
+    public Text setTruncate(String truncate) {
+        this.truncate = truncate;
+        resize();
         return this;
     }
 

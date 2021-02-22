@@ -1,8 +1,8 @@
 package de.undefinedhuman.sandboxgame.crafting.recipe;
 
-import de.undefinedhuman.sandboxgame.engine.utils.ObjectPool;
+import de.undefinedhuman.sandboxgame.engine.utils.ds.ObjectPool;
 
-public abstract class RecipeGuiPool extends ObjectPool<RecipeGui> {
+public class RecipeGuiPool extends ObjectPool<RecipeGui> {
 
     public RecipeGuiPool(long timeUntilDeletion) {
         super(timeUntilDeletion);
@@ -10,12 +10,7 @@ public abstract class RecipeGuiPool extends ObjectPool<RecipeGui> {
 
     @Override
     protected RecipeGui createInstance() {
-        return new RecipeGui() {
-            @Override
-            public void onClick(int itemID) {
-                RecipeGuiPool.this.onClick(itemID);
-            }
-        };
+        return new RecipeGui();
     }
 
     @Override
@@ -27,7 +22,5 @@ public abstract class RecipeGuiPool extends ObjectPool<RecipeGui> {
     public void delete(RecipeGui object) {
         object.delete();
     }
-
-    public abstract void onClick(int itemID);
 
 }

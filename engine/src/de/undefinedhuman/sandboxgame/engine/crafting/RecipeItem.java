@@ -23,8 +23,8 @@ public class RecipeItem extends PanelObject {
         return key.split("-")[0];
     }
 
-    public int getQuantity() {
-        return quantity.getInt();
+    public int getID() {
+        return Integer.parseInt(getKey());
     }
 
 }

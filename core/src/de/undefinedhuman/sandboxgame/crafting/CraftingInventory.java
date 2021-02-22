@@ -6,8 +6,8 @@ import de.undefinedhuman.sandboxgame.crafting.recipe.RecipeGuiPool;
 import de.undefinedhuman.sandboxgame.crafting.recipe.RecipePreviewPanel;
 import de.undefinedhuman.sandboxgame.engine.items.recipe.RecipeType;
 import de.undefinedhuman.sandboxgame.engine.resources.font.Font;
-import de.undefinedhuman.sandboxgame.engine.utils.MultiMap;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
+import de.undefinedhuman.sandboxgame.engine.utils.ds.MultiMap;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.elements.MenuSlot;
 import de.undefinedhuman.sandboxgame.gui.elements.scrollpanel.ScrollPanel;
@@ -45,12 +45,7 @@ public class CraftingInventory extends Gui {
         initBackgrounds();
         setTitle("Crafting", Font.Title, Color.WHITE);
 
-        recipeGuiPool = new RecipeGuiPool(300000) {
-            @Override
-            public void onClick(int itemID) {
-                updateRecipe(itemID);
-            }
-        };
+        recipeGuiPool = new RecipeGuiPool(300000);
     }
 
     @Override
@@ -60,20 +55,12 @@ public class CraftingInventory extends Gui {
     }
 
     private void initBackgrounds() {
-        recipesScrollPanel = new ScrollPanel<RecipeGui>() {
-            @Override
-            public void clear() {
-                ArrayList<RecipeGui> recipeGuis = recipesScrollPanel.getContent();
-                for (RecipeGui recipeGui : recipeGuis)
-                    recipeGuiPool.add(recipeGui);
-                recipesScrollPanel.getContent().clear();
-            }
-        };
-        recipesScrollPanel.setSize(Tools.getInventoryConstraint(GuiTemplate.HOTBAR, 7), Tools.getInventoryConstraint(GuiTemplate.HOTBAR, 8));
+        recipesScrollPanel = new ScrollPanel<>(GuiTemplate.HOTBAR, recipeGuiPool);
+        recipesScrollPanel.setSize(Tools.getInventoryConstraint(GuiTemplate.HOTBAR, 5), Tools.getInventoryConstraint(GuiTemplate.HOTBAR, 8));
 
         addChild(
                 menuBackground = (Gui) new Gui(GuiTemplate.HOTBAR)
-                        .set(new PixelConstraint(0), new RelativeConstraint(1), Tools.getInventoryConstraint(GuiTemplate.HOTBAR, 7), Tools.getInventoryConstraint(GuiTemplate.HOTBAR, 1))
+                        .set(new PixelConstraint(0), new RelativeConstraint(1), new RelativeConstraint(1f), Tools.getInventoryConstraint(GuiTemplate.HOTBAR, 1))
                         .setOffsetY(new RelativeOffset(-1)),
                 recipesScrollPanel,
                 recipePreviewPanel = new RecipePreviewPanel()

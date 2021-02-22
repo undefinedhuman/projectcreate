@@ -1,25 +1,26 @@
 package de.undefinedhuman.sandboxgame.gui.transforms.constraints;
 
-import de.undefinedhuman.sandboxgame.gui.Gui;
-
 public class RelativeConstraint extends Constraint {
 
+    private int offset;
+
     public RelativeConstraint(float value) {
+        this(value, 0);
+    }
+
+    public RelativeConstraint(float value, int offset) {
         super(value);
+        this.offset = offset;
     }
 
     @Override
     public int getValue(float scale) {
-        if(currentTransform.parent instanceof Gui) {
-            Gui parentGui = (Gui) currentTransform.parent;
-            if(isPosition())
-                return (int) (parentGui.getCurrentValue(axis) + parentGui.getCornerSize() + (parentGui.getCurrentValue(getScaleAxis()) - parentGui.getCornerSize() * 2) * value);
-            else return (int) ((parentGui.getCurrentValue(axis) - parentGui.getCornerSize() * 2) * value);
-        } else {
-            if (isPosition())
-                return (int) (currentTransform.parent.getCurrentValue(axis) + currentTransform.parent.getCurrentValue(getScaleAxis()) * value);
-            else return (int) (currentTransform.parent.getCurrentValue(axis) * value);
-        }
+        if(isPosition())
+            return (int) (currentTransform.parent.getCurrentValue(axis) + currentTransform.parent.getCornerSize() + (currentTransform.parent.getCurrentValue(getScaleAxis()) - currentTransform.parent.getCornerSize() * 2) * value + offset * scale);
+        else return (int) ((currentTransform.parent.getCurrentValue(axis) - currentTransform.parent.getCornerSize() * 2) * value + offset * scale);
     }
 
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
 }

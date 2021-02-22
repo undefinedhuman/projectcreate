@@ -55,7 +55,8 @@ public class ItemManager extends Manager {
 
     public void removeItems(int... ids) {
         for(int id : ids) {
-            if (!hasItem(id)) continue;
+            if (!hasItem(id))
+                continue;
             items.get(id).delete();
             items.remove(id);
         }

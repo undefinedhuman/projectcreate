@@ -7,13 +7,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 import de.undefinedhuman.sandboxgame.Main;
 import de.undefinedhuman.sandboxgame.engine.utils.Tools;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
+import de.undefinedhuman.sandboxgame.engine.utils.ds.ObjectPool;
 import de.undefinedhuman.sandboxgame.gui.Gui;
+import de.undefinedhuman.sandboxgame.gui.event.ChangeListener;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTexture;
 import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.RelativeConstraint;
-import de.undefinedhuman.sandboxgame.gui.transforms.constraints.RelativePixelConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.offset.PixelOffset;
 
 import java.util.ArrayList;
@@ -25,17 +26,37 @@ public class ScrollPanel<T extends Gui> extends Gui {
     private ArrayList<T> content = new ArrayList<>();
     private float offset, maxOffset;
     private Rectangle scissors = new Rectangle(), clipBounds = new Rectangle();
+    private ObjectPool<T> contentPool;
 
     public ScrollPanel() {
-        super(GuiTemplate.HOTBAR);
+        super();
+        create(null);
+    }
 
-        scrollBar = new ScrollBar(GuiTemplate.SCROLL_BAR, 10).addChangeListener(progress -> {
-            if(maxOffset > 0)
-                updateOffset(Tools.clamp(progress * Math.max(maxOffset * (1f / 0.9f), 1f), 0, maxOffset));
+    public ScrollPanel(GuiTemplate template) {
+        super(template);
+        create(null);
+    }
+
+    public ScrollPanel(ObjectPool<T> contentPool) {
+        super();
+        create(contentPool);
+    }
+
+    public ScrollPanel(GuiTemplate template, ObjectPool<T> contentPool) {
+        super(template);
+        create(contentPool);
+    }
+
+    private void create(ObjectPool<T> contentPool) {
+        this.contentPool = contentPool;
+        scrollBar = (ScrollBar) new ScrollBar(GuiTemplate.SCROLL_BAR, 10).addListener((ChangeListener) progress -> {
+            if (maxOffset > 0)
+                updateOffset(Tools.clamp(Math.max(maxOffset * (1f / 0.9f), 1f) * progress, 0, maxOffset));
         });
 
         viewport = (Gui) new Gui(new GuiTexture())
-                .set(new PixelConstraint(0), new PixelConstraint(0), new RelativePixelConstraint(1, 12), new RelativeConstraint(1));
+                .set(new PixelConstraint(0), new PixelConstraint(0), new RelativeConstraint(1, -12), new RelativeConstraint(1));
 
         addChild(viewport, scrollBar);
     }
@@ -83,8 +104,9 @@ public class ScrollPanel<T extends Gui> extends Gui {
     }
 
     public void clear() {
-        for(T gui : content)
-            gui.delete();
+        if(contentPool != null)
+            contentPool.add(content);
+        else for(T gui : content) gui.delete();
         this.content.clear();
     }
 
@@ -102,14 +124,10 @@ public class ScrollPanel<T extends Gui> extends Gui {
         initContent();
     }
 
-    public ArrayList<T> getContent() {
-        return content;
-    }
-
     private void initContent() {
         boolean visible = maxOffset > 0;
         scrollBar.setVisible(visible);
-        ((RelativePixelConstraint) viewport.getConstraint(Axis.WIDTH)).setOffset(visible ? 12 : 0);
+        ((RelativeConstraint) viewport.getConstraint(Axis.WIDTH)).setOffset(visible ? 12 : 0);
         viewport.resize();
         scrollBar.updateThumbHeight(1f - maxOffset);
         updateOffset(maxOffset);

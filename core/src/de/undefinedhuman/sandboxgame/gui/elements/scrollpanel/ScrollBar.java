@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.sandboxgame.engine.utils.Tools;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.event.ChangeListener;
+import de.undefinedhuman.sandboxgame.gui.event.Listener;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
@@ -13,15 +14,11 @@ import de.undefinedhuman.sandboxgame.gui.transforms.constraints.RelativeConstrai
 import de.undefinedhuman.sandboxgame.gui.transforms.offset.RelativeOffset;
 import de.undefinedhuman.sandboxgame.utils.Mouse;
 
-import java.util.ArrayList;
-
 public class ScrollBar extends Gui {
 
     private Gui thumb;
     private boolean grabbed = false;
     private float mouseOffset, scrollBarY, scrollBarHeight;
-
-    private ArrayList<ChangeListener> changeListeners = new ArrayList<>();
 
     public ScrollBar(GuiTemplate template, int width) {
         super(template);
@@ -68,14 +65,12 @@ public class ScrollBar extends Gui {
         return scrollBarHeight;
     }
 
-    public ScrollBar addChangeListener(ChangeListener changeListener) {
-        this.changeListeners.add(changeListener);
-        return this;
-    }
-
     private void notifyChangeListener(float offset) {
-        for (ChangeListener changeListener : changeListeners)
-            changeListener.notify(offset);
+        for (Listener listener : listeners) {
+            if(!(listener instanceof ChangeListener))
+                continue;
+            ((ChangeListener) listener).notify(offset);
+        }
     }
 
 }

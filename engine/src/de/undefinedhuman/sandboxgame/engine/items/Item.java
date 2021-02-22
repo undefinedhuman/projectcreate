@@ -25,8 +25,9 @@ public class Item {
             maxAmount = new Setting(SettingType.Int, "MaxAmount", 999),
             canShake = new BooleanSetting("Shake", true),
             recipeQuantity = new Setting(SettingType.Int, "Recipe Quantity", 1),
-            recipeItems = new SelectionPanel("Recipe Item", new RecipeItem()),
             rarity = new SelectionSetting("Rarity", Rarity.values());
+
+    public SelectionPanel<RecipeItem> recipeItems = new SelectionPanel<>("Recipe Item", new RecipeItem());
 
     public ItemType type;
     public RecipeType recipeType;

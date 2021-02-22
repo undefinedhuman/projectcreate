@@ -6,26 +6,33 @@ TODO DISPLAY USAGES OF TEXTURES FROM TEXTURE MANAGER
 
 TODO FIX SELECTOR SELECTION
 
+TODO FIX DRAG AND DROP
+
 TODO AUTOMATE SET LOG_LEVEL IN VARIABLES FROM DEBUG TO NONE WHEN GOING INTO PRODUCTION
 
 TODO ART Create Palette File and add to repo change add a new gray scale range with the darkest scale but the darkest one should be the darkest one from Furnace.png (editor/Furnace.png)
 TODO ART ITEM ICONS SHOULD BE OUTLINED BUT NOT BLACK BUT A DARKER VERSION OF THE SURROUNDING COLOR
+TODO ART GUIDELINE PREVIEW PICTURES FOR ITEMS (DISPLAYED IN CRAFTING INVENTORY) SHOULD BE 48x48 / Furnace can be 48x48 Pickaxe is 24x24
 
 CRAFTING INVENTORY
 TODO GUI STATES - INVENTORY OPENED, GAME, etc.
 TODO CREATE DIFFERENT RECIPE LIST STYLES ONLY ICON AND TEXT OR 4 ICONS in ROW
-CREATE SCROLL FUNCTION IN GUI MANAGER that scrolls through selecter when Gui State Game, and if inventory opened scroll in hovered gui
+CREATE SCROLL FUNCTION IN GUI MANAGER that scrolls through selector when Gui State Game, and if inventory opened scroll in hovered gui
 MAKE SORTING - MATERIALS AVAILABLE - SEARCH BAR
 SHOW HOW MANY ITEMS YOU ALREADY HAVE IN YOUR INVENTORY
-Erst wenn man manche Materialien gefunden hat werden Rezepte freigegeben. Sillouten einbauen bei Crafting Menu
+Erst wenn man manche Materialien gefunden hat werden Rezepte freigegeben. Silhouettes einbauen bei Crafting Menu
+
+TODO REWORK INVENTORY ADD ITEM FUNCTION, THAT WHEN ADDING MORE THEN THE MAX AMOUNT IT DOESNT SEARCH FROM THE BEGINNING BUT GOES IN ONE LOOP
+TODO
 
 TODO BUG OPENING THE INVENTORY AND CHARACTER SCREEN COSTS 300+ FPS
 
-TODO FIX HOTBAR GUI CORNER LIGHTNING LOWER AND UPPER
-TODO FIX SLOT LIGHTNING CHANGE EDGE LIGHT SHADE FROM LEFT TO RIGHT
+TODO ART REFACTOR LIGHTNING OF GUI
+    - HOTBAR GUI CORNER LIGHTNING LOWER AND UPPER
+    - SLOT LIGHTNING CHANGE EDGE LIGHT SHADE FROM LEFT TO RIGHT
 
 TODO ADD EventSystem for all sorts of events (block breaking/placing, entity dead/hurt move, etc.)
-    - without Event Type just use the event class
+    - without Event Type just use the listener class
 
 TODO IMPLEMENT INTERACTION COMPONENT WITH MOUSE SELECTION NOT POSITION AND MAKE SURE IT WORKS ALSO IF THE ITEM IS PLACED AT THE EDGE OF THE WORLD
 
@@ -33,6 +40,9 @@ TODO Maybe change camera, entity and block rendered Position to integer
 
 TODO Add utility functions to tools for 4 and 8 neighbor offset which just returns an array of offsets
 TODO Add Layer placement selection to block BOTH, FRONT, BACK
+
+TODO GUI REFACTOR ISFULL ADDITEM ETC. TO INCLUDE ALL INVENTORY LIKE INVENTORYS MAYBE ADD A INVENTORY INTERFACE? WHICH HAS A METHOD LIKE GETINVSLOTS ARRAY
+TODO GUI ADD BACKGROUND DESIGNS TO SCREENS LIKE CHARACTER AND CRAFTING SCREEN
 
 TODO Profile Component Refactor / Maybe include animations for the status bars / different Types of profiles, "player, boss, small enemy"
 TODO FIX GRASS OVERLAY AT THE EDGES AND ENTITIES

@@ -14,7 +14,7 @@ import java.util.HashMap;
 public class AnimationBlueprint extends ComponentBlueprint {
 
     private Setting defaultAnimation = new Setting(SettingType.String, "Default Animation", "Idle");
-    private Panel animations = new StringPanel("Animation", new Animation());
+    private Panel<Animation> animations = new StringPanel<>("Animation", new Animation());
 
     public AnimationBlueprint() {
         settings.addSettings(defaultAnimation, animations);
@@ -23,9 +23,7 @@ public class AnimationBlueprint extends ComponentBlueprint {
 
     @Override
     public Component createInstance(HashMap<ComponentType, ComponentParam> params) {
-        HashMap<String, Animation> animationList = new HashMap<>();
-        for(String key : animations.getPanelObjects().keySet()) animationList.put(key, (Animation) animations.getPanelObjects().get(key));
-        return new AnimationComponent(defaultAnimation.getString(), animationList);
+        return new AnimationComponent(defaultAnimation.getString(), animations.getPanelObjects());
     }
 
     @Override

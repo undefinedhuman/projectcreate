@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.camera.CameraManager;
 import de.undefinedhuman.sandboxgame.gui.GuiManager;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.MouseConstraint;
 import de.undefinedhuman.sandboxgame.inventory.InvItem;
 import de.undefinedhuman.sandboxgame.inventory.InvTarget;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
@@ -25,13 +26,12 @@ public class DragAndDrop {
 
     private boolean half = false, moving = false, isLeft = false, alreadyClicked = false;
 
-    public DragAndDrop() {
-
+    public DragAndDrop(OrthographicCamera camera) {
         targets = new ArrayList<>();
         lastSlot = null;
         currentItem = new InvItem(0);
         currentItem.parent = GuiManager.instance.screen;
-
+        currentItem.setPosition(new MouseConstraint(camera), new MouseConstraint(camera));
     }
 
     public void update(OrthographicCamera camera) {
@@ -164,15 +164,9 @@ public class DragAndDrop {
     }
 
     public void render(SpriteBatch batch, OrthographicCamera camera) {
-
-        Vector2 mousePosition = Tools.getMouseCoordsInWorldSpace(camera);
-
         if (moving && (currentItem.getID() != 0 && currentItem.getAmount() != 0)) {
-            // TODO EXCHANGE WITH A NEW FOLLOW MOUSE CONSTRAINT
-            currentItem.setCurrentPosition((int) (mousePosition.x - currentItem.getSize().x / 2), (int) (mousePosition.y - currentItem.getSize().y / 2));
             currentItem.render(batch, camera);
         }
-
     }
 
     public void resize(int width, int height) {

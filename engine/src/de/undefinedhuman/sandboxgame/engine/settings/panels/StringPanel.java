@@ -6,11 +6,11 @@ import de.undefinedhuman.sandboxgame.engine.utils.Tools;
 
 import javax.swing.*;
 
-public class StringPanel extends Panel {
+public class StringPanel<T extends PanelObject> extends Panel<T> {
 
     private JTextField objectName;
 
-    public StringPanel(String name, PanelObject panelObject) {
+    public StringPanel(String name, T panelObject) {
         super(name, panelObject);
     }
 
@@ -22,15 +22,16 @@ public class StringPanel extends Panel {
         panel.add(objectName);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void addObject() {
         if(objectList.contains(objectName.getText())) {
             Log.error(this.key + " with name " + objectName.getText() + " already exist!");
             return;
         }
-        PanelObject object = null;
+        T object = null;
         try {
-            object = this.panelObject.getClass().newInstance();
+            object = (T) this.panelObject.getClass().newInstance();
             object.setKey(objectName.getText());
             objects.put(object.getKey(), object);
         } catch (InstantiationException | IllegalAccessException ex) { ex.printStackTrace(); }
@@ -48,7 +49,7 @@ public class StringPanel extends Panel {
     }
 
     @Override
-    public void selectObject(PanelObject object) {
+    public void selectObject(T object) {
         objectName.setText(object.getKey());
         Tools.removeSettings(objectPanel);
         Tools.addSettings(objectPanel, object.getSettings());

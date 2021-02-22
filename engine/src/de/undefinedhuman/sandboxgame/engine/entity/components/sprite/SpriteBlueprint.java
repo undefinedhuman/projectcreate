@@ -14,7 +14,7 @@ import java.util.HashMap;
 public class SpriteBlueprint extends ComponentBlueprint {
 
     private Setting frameCount = new Setting(SettingType.Int, "Frame Count", 1);
-    private Panel spriteLayers = new StringPanel("Sprite Layer", new SpriteLayer());
+    private Panel<SpriteLayer> spriteLayers = new StringPanel<>("Sprite Layer", new SpriteLayer());
 
     public SpriteBlueprint() {
         settings.addSettings(frameCount, spriteLayers);
@@ -23,9 +23,7 @@ public class SpriteBlueprint extends ComponentBlueprint {
 
     @Override
     public Component createInstance(HashMap<ComponentType, ComponentParam> params) {
-        HashMap<String, SpriteLayer> spriteParams = new HashMap<>();
-        for(String key : spriteLayers.getPanelObjects().keySet()) spriteParams.put(key, (SpriteLayer) spriteLayers.getPanelObjects().get(key));
-        return new SpriteComponent(frameCount.getInt(), spriteParams);
+        return new SpriteComponent(frameCount.getInt(), spriteLayers.getPanelObjects());
     }
 
 }

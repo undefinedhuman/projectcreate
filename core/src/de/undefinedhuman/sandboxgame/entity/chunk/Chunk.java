@@ -5,7 +5,7 @@ import de.undefinedhuman.sandboxgame.collision.CollisionManager;
 import de.undefinedhuman.sandboxgame.engine.entity.ComponentType;
 import de.undefinedhuman.sandboxgame.engine.entity.EntityType;
 import de.undefinedhuman.sandboxgame.engine.entity.components.collision.CollisionComponent;
-import de.undefinedhuman.sandboxgame.engine.utils.MultiMap;
+import de.undefinedhuman.sandboxgame.engine.utils.ds.MultiMap;
 import de.undefinedhuman.sandboxgame.engine.utils.math.Vector4;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.ecs.system.RenderSystem;

@@ -31,11 +31,10 @@ public class InvItem extends Gui {
         this.id = id;
         this.amount = amount;
 
-        amountText = new Text(amount);
-        amountText.setFontSize(8);
-        amountText.setPosition(new RelativeConstraint(1.2f), new RelativeConstraint(0)).setOffsetX(new RelativeOffset(-1f));
+        amountText = (Text) new Text(amount)
+                .setFontSize(8)
+                .setPosition(new RelativeConstraint(1.2f), new RelativeConstraint(0)).setOffsetX(new RelativeOffset(-1f));
         amountText.parent = this;
-
     }
 
     public void setStats(int id, int amount) {
@@ -59,7 +58,8 @@ public class InvItem extends Gui {
     }
 
     public void removeItem() {
-        if (this.amount > 0) this.amount--;
+        if (this.amount > 0)
+            this.amount--;
         amountText.setText(amount);
     }
 

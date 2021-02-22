@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import de.undefinedhuman.sandboxgame.Main;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.gui.Gui;
-import de.undefinedhuman.sandboxgame.gui.event.ClickEvent;
+import de.undefinedhuman.sandboxgame.gui.event.ClickListener;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
 import de.undefinedhuman.sandboxgame.gui.transforms.GuiTransform;
@@ -15,18 +15,20 @@ import de.undefinedhuman.sandboxgame.gui.transforms.offset.CenterOffset;
 
 public abstract class MenuSlot extends Gui {
 
+    private String iconPreview;
     private boolean selected = false;
 
     public MenuSlot(String iconPreview, Constraint x, Constraint y) {
         super(GuiTemplate.SLOT);
+        this.iconPreview = iconPreview;
         set(x, y, new PixelConstraint(Variables.SLOT_SIZE), new PixelConstraint(Variables.SLOT_SIZE));
+        addListener((ClickListener) MenuSlot.this::onClick);
+    }
+
+    @Override
+    public void init() {
+        super.init();
         addChild(new Gui(iconPreview).set(new CenterConstraint(), new CenterConstraint(), new PixelConstraint(Variables.ITEM_SIZE), new PixelConstraint(Variables.ITEM_SIZE)).setOffset(new CenterOffset(), new CenterOffset()));
-        addEvent(new ClickEvent() {
-            @Override
-            public void onClick() {
-                MenuSlot.this.onClick();
-            }
-        });
     }
 
     @Override

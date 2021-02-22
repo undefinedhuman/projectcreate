@@ -25,29 +25,24 @@ public class Inventory extends Gui implements InvTarget {
 
         for (int i = 0; i < inventory.length; i++)
             for (int j = 0; j < inventory[i].length; j++) {
-                inventory[i][j] = new InvSlot();
-                inventory[i][j].parent = this;
-                inventory[i][j].setPosition(
-                        new PixelConstraint((Variables.SLOT_SIZE + Variables.SLOT_SPACE) * j),
-                        new PixelConstraint((Variables.SLOT_SIZE + Variables.SLOT_SPACE) * i));
+                addChild(
+                        inventory[i][j] = (InvSlot) new InvSlot()
+                                .setPosition(
+                                        new PixelConstraint((Variables.SLOT_SIZE + Variables.SLOT_SPACE) * j),
+                                        new PixelConstraint((Variables.SLOT_SIZE + Variables.SLOT_SPACE) * i)
+                                )
+                );
             }
     }
 
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
-        for (InvSlot[] inv : inventory)
-            for (InvSlot slot : inv)
-                slot.resize(width, height);
     }
 
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         super.render(batch, camera);
-        if (visible)
-            for (InvSlot[] slots : inventory)
-                for (InvSlot slot : slots)
-                    slot.render(batch, camera);
     }
 
     @Override
@@ -66,6 +61,20 @@ public class Inventory extends Gui implements InvTarget {
             int newAmount = slot.addItem(id, amount);
             return newAmount == 0 ? 0 : addItem(id, newAmount);
         }
+    }
+
+    public int removeItem(int id, int amountToBeRemoved) {
+        for (int i = row - 1; i >= 0; i--)
+            for (int j = 0; j < col; j++) {
+                InvItem currentItem = inventory[i][j].getItem();
+                if(currentItem == null || currentItem.getID() != id)
+                    continue;
+                int amountOfCurrentSlot = currentItem.getAmount();
+                inventory[i][j].removeItem(amountToBeRemoved);
+                amountToBeRemoved = Math.max(amountToBeRemoved - amountOfCurrentSlot, 0);
+            }
+
+        return amountToBeRemoved;
     }
 
     public boolean isFull(int id, int amount) {
@@ -95,6 +104,18 @@ public class Inventory extends Gui implements InvTarget {
         return null;
     }
 
+    public int amountOf(int id) {
+        int total = 0;
+        for (int i = row - 1; i >= 0; i--)
+            for (int j = 0; j < col; j++) {
+                InvSlot slot = inventory[i][j];
+                InvItem currentItem = slot.getItem();
+                if(currentItem != null && currentItem.getID() == id)
+                    total += currentItem.getAmount();
+            }
+        return total;
+    }
+
     public boolean contains(int id) {
         return this.contains(id, 1);
     }
@@ -110,14 +131,6 @@ public class Inventory extends Gui implements InvTarget {
             }
 
         return containsAmount <= 0;
-    }
-
-    public void removeItem(int x, int y) {
-        this.removeItem(inventory[x][y]);
-    }
-
-    public void removeItem(InvSlot slot) {
-        slot.deleteItem();
     }
 
     public InvSlot[][] getInventory() {

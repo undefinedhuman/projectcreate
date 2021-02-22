@@ -47,7 +47,6 @@ public class Window extends JFrame {
 
         Log.instance = new Log() {
             @Override
-
             public void displayMessage(String msg) {
                 if(!msg.contains("Error")) return;
                 errorMessage.setText(msg);

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.sandboxgame.engine.camera.CameraManager;
+import de.undefinedhuman.sandboxgame.engine.crafting.RecipeItem;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
 import de.undefinedhuman.sandboxgame.equip.EquipScreen;
 import de.undefinedhuman.sandboxgame.gui.Gui;
@@ -17,6 +18,7 @@ import de.undefinedhuman.sandboxgame.inventory.player.*;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
+import java.util.Collection;
 import java.util.Set;
 
 public class InventoryManager extends Manager {
@@ -30,7 +32,7 @@ public class InventoryManager extends Manager {
 
     public InventoryManager() {
         if (instance == null) instance = this;
-        dragAndDrop = new DragAndDrop();
+        dragAndDrop = new DragAndDrop(CameraManager.guiCamera);
         GuiManager.instance.addGui(new Selector(), new SidePanel(), new InspectScreen(), new EquipScreen(), new PlayerInventory());
         dragAndDrop.addTarget(PlayerInventory.instance, Selector.instance, EquipScreen.instance);
     }
@@ -47,9 +49,6 @@ public class InventoryManager extends Manager {
     public void resize(int width, int height) {
         dragAndDrop.resize(width, height);
     }
-
-    @Override
-    public void update(float delta) { }
 
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
@@ -140,14 +139,36 @@ public class InventoryManager extends Manager {
         maxSlot = -1;
     }
 
-    public boolean isFull(int id, int amount) {
+    public synchronized boolean isFull(int id, int amount) {
         return PlayerInventory.instance.isFull(id, amount) && Selector.instance.isFull(id, amount);
     }
 
-    public int addItem(int id, int amount) {
+    public synchronized int addItem(int id, int amount) {
         int i = Selector.instance.addItem(id, amount);
         if (i != 0) i = PlayerInventory.instance.addItem(id, i);
         return i;
+    }
+
+    public synchronized int removeItem(int id, int amount) {
+        int i = Selector.instance.removeItem(id, amount);
+        if (i != 0) i = PlayerInventory.instance.removeItem(id, i);
+        return i;
+    }
+
+    public synchronized boolean craftItem(int id, int quantity, Collection<RecipeItem> ingredients) {
+        for(RecipeItem ingredient : ingredients)
+            if(amountOf(ingredient.getID()) < ingredient.quantity.getInt())
+                return false;
+        if(isFull(id, quantity))
+            return false;
+        for(RecipeItem ingredient : ingredients)
+            removeItem(ingredient.getID(), ingredient.quantity.getInt());
+        addItem(id, quantity);
+        return true;
+    }
+
+    public synchronized int amountOf(int id) {
+        return PlayerInventory.instance.amountOf(id) + Selector.instance.amountOf(id);
     }
 
     public void openGui(Gui gui) {

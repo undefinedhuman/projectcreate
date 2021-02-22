@@ -151,4 +151,8 @@ public class GuiTransform {
         this.constraints.put(axis, constraint.setAxis(axis).setGui(this));
     }
 
+    public int getCornerSize() {
+        return 0;
+    }
+
 }

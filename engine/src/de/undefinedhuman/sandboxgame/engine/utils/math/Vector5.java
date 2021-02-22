@@ -1,4 +1,4 @@
-package de.undefinedhuman.sandboxgame.engine.utils;
+package de.undefinedhuman.sandboxgame.engine.utils.math;
 
 public class Vector5 {
 

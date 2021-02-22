@@ -1,4 +1,4 @@
-package de.undefinedhuman.sandboxgame.engine.utils;
+package de.undefinedhuman.sandboxgame.engine.utils.ds;
 
 import java.util.ArrayList;
 import java.util.Arrays;

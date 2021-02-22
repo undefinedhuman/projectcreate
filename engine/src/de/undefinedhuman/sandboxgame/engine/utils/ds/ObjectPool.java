@@ -1,5 +1,6 @@
-package de.undefinedhuman.sandboxgame.engine.utils;
+package de.undefinedhuman.sandboxgame.engine.utils.ds;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
@@ -31,7 +32,13 @@ public abstract class ObjectPool<T> {
     public abstract void delete(T object);
 
     public synchronized void add(T object) {
-        objects.put(object, System.currentTimeMillis());
+        this.objects.put(object, System.currentTimeMillis());
+    }
+
+    public synchronized void add(ArrayList<T> objects) {
+        long currentTime = System.currentTimeMillis();
+        for(T object : objects)
+            this.objects.put(object, currentTime);
     }
 
     public synchronized T get() {

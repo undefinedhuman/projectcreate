@@ -3,8 +3,10 @@ package de.undefinedhuman.sandboxgame;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import de.undefinedhuman.sandboxgame.engine.config.ConfigManager;
 import de.undefinedhuman.sandboxgame.engine.config.SettingsManager;
+import de.undefinedhuman.sandboxgame.engine.file.Paths;
 import de.undefinedhuman.sandboxgame.engine.language.LanguageManager;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.engine.resources.SoundManager;
@@ -93,6 +95,9 @@ public class Main extends Game {
 
     private void initGDX() {
         Gdx.app.setLogLevel(Variables.LOG_LEVEL);
+        Pixmap cursor = new Pixmap(Gdx.files.internal(Paths.GUI_PATH + "Cursor.png"));
+        Gdx.graphics.setCursor(Gdx.graphics.newCursor(cursor, 0, 0));
+        cursor.dispose();
     }
 
     private void initScreens() {

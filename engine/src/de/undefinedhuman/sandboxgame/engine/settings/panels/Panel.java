@@ -9,20 +9,20 @@ import de.undefinedhuman.sandboxgame.engine.settings.SettingsObject;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
+import java.util.Collection;
 import java.util.HashMap;
 
-public abstract class Panel extends Setting {
+public abstract class Panel<T extends PanelObject> extends Setting {
 
-    private JButton addObject, removeObject;
     private JList<String> objectSelectionList;
     private JScrollPane objectScrollPane;
 
-    protected HashMap<String, PanelObject> objects = new HashMap<>();
+    protected HashMap<String, T> objects = new HashMap<>();
     protected DefaultListModel<String> objectList;
-    protected PanelObject panelObject;
+    protected T panelObject;
     protected JPanel objectPanel;
 
-    public Panel(String key, PanelObject panelObject) {
+    public Panel(String key, T panelObject) {
         super(SettingType.Panel, key, "");
         this.panelObject = panelObject;
     }
@@ -57,17 +57,18 @@ public abstract class Panel extends Setting {
 
         panel.add(objectScrollPane);
         panel.add(objectPanel);
-        panel.add(addObject = addButton("Add", (int) position.x - 175, (int) position.y + 60, 180, 25, e -> addObject()));
-        panel.add(removeObject = addButton("Remove", (int) position.x + 15, (int) position.y + 60, 180, 25, e -> removeObject()));
+        panel.add(addButton("Add", (int) position.x - 175, (int) position.y + 60, e -> addObject()));
+        panel.add(addButton("Remove", (int) position.x + 15, (int) position.y + 60, e -> removeObject()));
     }
 
-    private JButton addButton(String text, int x, int y, int width, int height, ActionListener listener) {
+    private JButton addButton(String text, int x, int y, ActionListener listener) {
         JButton button = new JButton(text);
-        button.setBounds(x, y, width, height);
+        button.setBounds(x, y, 180, 25);
         button.addActionListener(listener);
         return button;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void load(FsFile parentDir, Object value) {
         if(!(value instanceof SettingsObject)) return;
@@ -77,7 +78,7 @@ public abstract class Panel extends Setting {
             Object panelObjectSettings = settings.get(key);
             if(!(panelObjectSettings instanceof SettingsObject)) continue;
             try {
-                objects.put(key, panelObject.getClass().newInstance().load(parentDir, (SettingsObject) panelObjectSettings).setKey(key));
+                objects.put(key, (T) panelObject.getClass().newInstance().load(parentDir, (SettingsObject) panelObjectSettings).setKey(key));
             } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
@@ -92,12 +93,16 @@ public abstract class Panel extends Setting {
         writer.writeString("}");
     }
 
-    public HashMap<String, PanelObject> getPanelObjects() {
+    public HashMap<String, T> getPanelObjects() {
         return objects;
+    }
+
+    public Collection<T> values() {
+        return objects.values();
     }
 
     public abstract void addObject();
     public abstract void removeObject();
-    public abstract void selectObject(PanelObject object);
+    public abstract void selectObject(T object);
 
 }

@@ -15,11 +15,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
-public class SelectionPanel extends Panel {
+public class SelectionPanel<T extends PanelObject> extends Panel<T> {
 
     private JComboBox<String> selection;
 
-    public SelectionPanel(String name, PanelObject panelObject) {
+    public SelectionPanel(String name, T panelObject) {
         super(name, panelObject);
     }
 
@@ -44,15 +44,16 @@ public class SelectionPanel extends Panel {
         panel.add(selection);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void addObject() {
         if(selection.getSelectedItem() == null) {
             Log.error("No selected Item!");
             return;
         }
-        PanelObject object = null;
+        T object = null;
         try {
-            object = this.panelObject.getClass().newInstance();
+            object = (T) this.panelObject.getClass().newInstance();
             object.setKey((String) selection.getSelectedItem());
             if(objects.containsKey(object.getKey())) {
                 Log.error(this.key + " with name " + object.getKey() + " already exist!");
@@ -74,7 +75,7 @@ public class SelectionPanel extends Panel {
     }
 
     @Override
-    public void selectObject(PanelObject object) {
+    public void selectObject(T object) {
         selection.setSelectedItem(object.getKey());
         Tools.removeSettings(objectPanel);
         Tools.addSettings(objectPanel, object.getSettings());

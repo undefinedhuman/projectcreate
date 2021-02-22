@@ -23,8 +23,16 @@ public class Gui extends GuiComponent {
     protected GuiTexture texture;
     private ArrayList<GuiTransform> children = new ArrayList<>();
 
+    public Gui() {
+        this(new GuiTexture());
+    }
+
     public Gui(String texture) {
         this(new GuiTexture(texture));
+    }
+
+    public Gui(GuiTemplate template) {
+        this(new GuiTexture(template));
     }
 
     public Gui(GuiTexture texture) {
@@ -32,13 +40,10 @@ public class Gui extends GuiComponent {
         this.texture = texture;
     }
 
-    public Gui(GuiTemplate template) {
-        this(new GuiTexture(template));
-    }
-
     @Override
     public void init() {
         super.init();
+        this.texture.init();
         for(GuiTransform transform : children)
             transform.init();
     }
@@ -89,6 +94,7 @@ public class Gui extends GuiComponent {
     public Gui addChild(GuiTransform... components) {
         for (GuiTransform component : components) {
             component.parent = this;
+            component.init();
             component.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             this.children.add(component);
         }
@@ -118,7 +124,10 @@ public class Gui extends GuiComponent {
 
     public Vector2 getOffset() { return texture.getOffset(); }
 
-    public int getCornerSize() { return texture.getCornerSize(); }
+    @Override
+    public int getCornerSize() {
+        return texture.getCornerSize();
+    }
 
     public int getBaseCornerSize() { return texture.getBaseCornerSize(); }
 

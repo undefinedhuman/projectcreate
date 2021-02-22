@@ -24,7 +24,8 @@ public abstract class Slot extends Gui {
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
-        if (invItem != null) invItem.resize(width, height);
+        if (invItem != null)
+            invItem.resize(width, height);
     }
 
     public boolean isCompatible(InvItem item) {
@@ -57,11 +58,14 @@ public abstract class Slot extends Gui {
     public void setItem(int id, int amount) {
         invItem = new InvItem(id, amount);
         invItem.parent = this;
+        invItem.init();
         invItem.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     public void removeItem(int amount) {
         this.invItem.setAmount(this.invItem.getAmount() - amount);
+        if(invItem.getAmount() <= 0)
+            deleteItem();
     }
 
     public void deleteItem() {

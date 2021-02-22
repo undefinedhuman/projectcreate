@@ -69,8 +69,8 @@ public class GuiManager extends Manager {
             if (hasGui(guiTransform))
                 continue;
             this.guiTransforms.add(guiTransform);
-            guiTransform.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             guiTransform.init();
+            guiTransform.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         }
     }
 

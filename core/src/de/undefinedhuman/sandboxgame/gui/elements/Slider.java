@@ -8,6 +8,7 @@ import de.undefinedhuman.sandboxgame.engine.resources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.GuiComponent;
 import de.undefinedhuman.sandboxgame.gui.event.ChangeListener;
+import de.undefinedhuman.sandboxgame.gui.event.Listener;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTexture;
 import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
@@ -17,8 +18,6 @@ import de.undefinedhuman.sandboxgame.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.sandboxgame.utils.Mouse;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
-import java.util.ArrayList;
-
 public class Slider extends Gui {
 
     private float progress, progressWidth = 0, progressHeight = 0;
@@ -27,7 +26,6 @@ public class Slider extends Gui {
 
     private Texture progressTexture;
 
-    private ArrayList<ChangeListener> changeListeners;
     private String progressPath, pointerPath;
     private boolean wrapProgress;
 
@@ -49,7 +47,6 @@ public class Slider extends Gui {
         this.progressPath = progressTexture;
         this.pointerPath = pointerTexture;
         this.wrapProgress = wrapProgress;
-        this.changeListeners = new ArrayList<>();
     }
 
     @Override
@@ -72,8 +69,11 @@ public class Slider extends Gui {
     }
 
     private void notifyChangeListener() {
-        for (ChangeListener changeListener : changeListeners)
-            changeListener.notify(progress);
+        for (Listener listener : listeners) {
+            if(!(listener instanceof ChangeListener))
+                continue;
+            ((ChangeListener) listener).notify(progress);
+        }
     }
 
     @Override
@@ -114,11 +114,6 @@ public class Slider extends Gui {
         this.progress = progress;
         resizePointer();
         notifyChangeListener();
-        return this;
-    }
-
-    public Slider addChangeListener(ChangeListener changeListener) {
-        this.changeListeners.add(changeListener);
         return this;
     }
 
