@@ -11,6 +11,7 @@ import de.undefinedhuman.sandboxgame.engine.utils.ds.MultiMap;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.elements.MenuSlot;
 import de.undefinedhuman.sandboxgame.gui.elements.scrollpanel.ScrollPanel;
+import de.undefinedhuman.sandboxgame.gui.pool.GuiPool;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.CenterConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
@@ -33,8 +34,6 @@ public class CraftingInventory extends Gui {
     private MultiMap<RecipeType, Integer> recipes = new MultiMap<>();
     private RecipeType currentRecipeType = null;
 
-    private RecipeGuiPool recipeGuiPool;
-
     public CraftingInventory() {
         super(GuiTemplate.SMALL_PANEL);
         if(instance == null)
@@ -44,8 +43,6 @@ public class CraftingInventory extends Gui {
         setOffset(new CenterOffset(), new CenterOffset());
         initBackgrounds();
         setTitle("Crafting", Font.Title, Color.WHITE);
-
-        recipeGuiPool = new RecipeGuiPool(300000);
     }
 
     @Override
@@ -55,7 +52,7 @@ public class CraftingInventory extends Gui {
     }
 
     private void initBackgrounds() {
-        recipesScrollPanel = new ScrollPanel<>(GuiTemplate.HOTBAR, recipeGuiPool);
+        recipesScrollPanel = new ScrollPanel<>(GuiTemplate.HOTBAR, RecipeGui.class);
         recipesScrollPanel.setSize(Tools.getInventoryConstraint(GuiTemplate.HOTBAR, 5), Tools.getInventoryConstraint(GuiTemplate.HOTBAR, 8));
 
         addChild(

@@ -60,6 +60,7 @@ public class GuiComponent extends GuiTransform {
 
     public GuiComponent setColor(Color color) {
         this.color = color;
+        resize();
         return this;
     }
 

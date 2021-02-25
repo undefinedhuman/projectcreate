@@ -11,9 +11,9 @@ public abstract class Editor {
         mainPanel = new JPanel(null, true);
         settingsPanel = new JPanel(null, true);
         middlePanel = new JPanel(null, true);
-        container.add(addPanel(mainPanel, "Main:", 20, 20, 820, 960));
-        container.add(addPanel(middlePanel, "Type:", 860, 20, 200, 960));
-        container.add(addPanel(settingsPanel, "Settings:", 1080, 20, 820, 960));
+        container.add(addPanel(mainPanel, "Main:", 20, 15, 820, 960));
+        container.add(addPanel(middlePanel, "Type:", 860, 15, 200, 960));
+        container.add(addPanel(settingsPanel, "Settings:", 1080, 15, 820, 960));
     }
 
     private JScrollPane addPanel(JPanel panel, String name, int x, int y, int width, int height) {

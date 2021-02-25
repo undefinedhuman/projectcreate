@@ -42,7 +42,7 @@ public class Window extends JFrame {
         canvas.getCanvas().setBounds(25, 300, 480, 345);
 
         errorMessage = new JLabel();
-        errorMessage.setBounds(22, 1007, 1880, 25);
+        errorMessage.setBounds(22, 1002, 1880, 25);
         errorMessage.setForeground(new Color(255, 85, 85));
 
         Log.instance = new Log() {

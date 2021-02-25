@@ -9,6 +9,7 @@ import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.elements.scrollpanel.ScrollPanel;
 import de.undefinedhuman.sandboxgame.gui.event.ClickListener;
+import de.undefinedhuman.sandboxgame.gui.pool.GuiPool;
 import de.undefinedhuman.sandboxgame.gui.text.Text;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.gui.transforms.GuiTransform;
@@ -28,7 +29,7 @@ public class RecipePreviewPanel extends Gui {
     private Gui itemPreview;
     private Text name, category, description;
     private ScrollPanel<IngredientGui> ingredients;
-    private IngredientGuiPool ingredientGuiPool;
+    private GuiPool ingredientGuiPool;
     private boolean childrenVisible;
 
     public RecipePreviewPanel() {

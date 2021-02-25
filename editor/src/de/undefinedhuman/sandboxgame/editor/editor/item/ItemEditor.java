@@ -37,7 +37,6 @@ public class ItemEditor extends Editor {
             if(itemComboBox.getSelectedItem() == null) return;
             Tools.removeSettings(settingsPanel);
             ItemType type = ItemType.valueOf(itemComboBox.getSelectedItem().toString());
-            if(type == null) return;
             currentItem = type.createInstance();
             Tools.addSettings(settingsPanel, currentItem.getSettings());
         });
@@ -85,7 +84,6 @@ public class ItemEditor extends Editor {
             SettingsObject settingsObject = Tools.loadSettings(reader);
             if(!settingsObject.containsKey("Type")) return;
             ItemType type = ItemType.valueOf(((LineSplitter) settingsObject.get("Type")).getNextString());
-            if(type == null) return;
             itemComboBox.setSelectedItem(type);
             Tools.removeSettings(settingsPanel);
             currentItem = type.createInstance();

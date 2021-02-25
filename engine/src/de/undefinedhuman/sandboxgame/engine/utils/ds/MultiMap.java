@@ -26,9 +26,9 @@ public class MultiMap<K, V> {
         map.remove(key);
     }
 
-    public void removeValue(K key, V value) {
-        if(!hasKey(key)) return;
-        map.get(key).remove(value);
+    public boolean removeValue(K key, V value) {
+        if(!hasKey(key)) return false;
+        return map.get(key).remove(value);
     }
 
     public boolean hasValue(K key, V value) {

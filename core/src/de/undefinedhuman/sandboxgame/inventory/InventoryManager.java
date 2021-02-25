@@ -5,7 +5,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.sandboxgame.engine.camera.CameraManager;
 import de.undefinedhuman.sandboxgame.engine.crafting.RecipeItem;
+import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
+import de.undefinedhuman.sandboxgame.engine.utils.ds.MultiMap;
 import de.undefinedhuman.sandboxgame.equip.EquipScreen;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.GuiManager;
@@ -16,6 +18,7 @@ import de.undefinedhuman.sandboxgame.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.sandboxgame.gui.transforms.offset.PixelOffset;
 import de.undefinedhuman.sandboxgame.inventory.player.*;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
+import de.undefinedhuman.sandboxgame.item.listener.ItemChangeListener;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
 import java.util.Collection;
@@ -27,6 +30,8 @@ public class InventoryManager extends Manager {
 
     private Gui[] slots = new Gui[4];
     private int maxSlot = -1;
+
+    private MultiMap<Integer, ItemChangeListener> listeners = new MultiMap<>();
 
     private DragAndDrop dragAndDrop;
 
@@ -43,6 +48,10 @@ public class InventoryManager extends Manager {
         addTempItems(Selector.instance, 1, 2);
         addTempItems(PlayerInventory.instance, ItemManager.instance.getItems().keySet());
         Selector.instance.setSelected(0);
+    }
+
+    private void updateItem(int id) {
+        Log.info(id);
     }
 
     @Override
@@ -146,12 +155,14 @@ public class InventoryManager extends Manager {
     public synchronized int addItem(int id, int amount) {
         int i = Selector.instance.addItem(id, amount);
         if (i != 0) i = PlayerInventory.instance.addItem(id, i);
+        notifyListeners(id, amount - i);
         return i;
     }
 
     public synchronized int removeItem(int id, int amount) {
         int i = Selector.instance.removeItem(id, amount);
         if (i != 0) i = PlayerInventory.instance.removeItem(id, i);
+        notifyListeners(id, amount - i);
         return i;
     }
 
@@ -169,6 +180,19 @@ public class InventoryManager extends Manager {
 
     public synchronized int amountOf(int id) {
         return PlayerInventory.instance.amountOf(id) + Selector.instance.amountOf(id);
+    }
+
+    public void addListener(int id, ItemChangeListener listener) {
+        this.listeners.add(id, listener);
+    }
+
+    public void removeListener(int id, ItemChangeListener listener) {
+        this.listeners.removeValue(id, listener);
+    }
+
+    private void notifyListeners(int id, int amount) {
+        for(ItemChangeListener listener : listeners.getValuesWithKey(id))
+            listener.notify(amount);
     }
 
     public void openGui(Gui gui) {

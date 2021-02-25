@@ -9,6 +9,7 @@ import de.undefinedhuman.sandboxgame.engine.utils.Tools;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.event.ChangeListener;
+import de.undefinedhuman.sandboxgame.gui.pool.GuiPool;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTexture;
 import de.undefinedhuman.sandboxgame.gui.transforms.Axis;
@@ -17,17 +18,29 @@ import de.undefinedhuman.sandboxgame.gui.transforms.constraints.RelativeConstrai
 import de.undefinedhuman.sandboxgame.gui.transforms.offset.PixelOffset;
 
 import java.util.ArrayList;
+import java.util.function.Supplier;
 
-public class ScrollPanel<T extends Gui> extends Gui {
+public class ScrollPanelPooled<T extends Gui> extends Gui {
 
     private Gui viewport;
     private ScrollBar scrollBar;
     private ArrayList<T> content = new ArrayList<>();
     private float offset, maxOffset;
     private Rectangle scissors = new Rectangle(), clipBounds = new Rectangle();
+    private GuiPool<T> contentPool;
 
-    public ScrollPanel(GuiTemplate template) {
+    public ScrollPanelPooled(Supplier<T> guiObject) {
+        super();
+        create(guiObject);
+    }
+
+    public ScrollPanelPooled(GuiTemplate template, Supplier<T> guiObject) {
         super(template);
+        create(guiObject);
+    }
+
+    private void create(Supplier<T> guiObject) {
+        this.contentPool = new GuiPool<>(guiObject, 600000);
         scrollBar = (ScrollBar) new ScrollBar(GuiTemplate.SCROLL_BAR, 10).addListener((ChangeListener) progress -> {
             if (maxOffset > 0)
                 updateOffset(Tools.clamp(Math.max(maxOffset * (1f / 0.9f), 1f) * progress, 0, maxOffset));
@@ -82,8 +95,9 @@ public class ScrollPanel<T extends Gui> extends Gui {
     }
 
     public void clear() {
-        for(T gui : content)
-            gui.delete();
+        if(contentPool != null)
+            contentPool.add(content);
+        else for(T gui : content) gui.delete();
         this.content.clear();
     }
 

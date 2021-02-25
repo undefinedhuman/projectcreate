@@ -8,6 +8,8 @@ TODO FIX SELECTOR SELECTION
 
 TODO FIX DRAG AND DROP
 
+TODO MAKE DRAG AND DROP UPDATE THE ITEM CHANGE LISTENER
+
 TODO AUTOMATE SET LOG_LEVEL IN VARIABLES FROM DEBUG TO NONE WHEN GOING INTO PRODUCTION
 
 TODO ART Create Palette File and add to repo change add a new gray scale range with the darkest scale but the darkest one should be the darkest one from Furnace.png (editor/Furnace.png)
