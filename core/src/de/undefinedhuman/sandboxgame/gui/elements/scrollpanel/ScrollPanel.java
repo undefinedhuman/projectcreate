@@ -18,16 +18,28 @@ import de.undefinedhuman.sandboxgame.gui.transforms.offset.PixelOffset;
 
 import java.util.ArrayList;
 
-public class ScrollPanel<T extends Gui> extends Gui {
+public class ScrollPanel extends Gui {
 
     private Gui viewport;
     private ScrollBar scrollBar;
-    private ArrayList<T> content = new ArrayList<>();
+    private ArrayList<Gui> content = new ArrayList<>();
     private float offset, maxOffset;
     private Rectangle scissors = new Rectangle(), clipBounds = new Rectangle();
 
+    public ScrollPanel() {
+        this(new GuiTexture());
+    }
+
+    public ScrollPanel(String texture) {
+        this(new GuiTexture(texture));
+    }
+
     public ScrollPanel(GuiTemplate template) {
-        super(template);
+        this(new GuiTexture(template));
+    }
+
+    private ScrollPanel(GuiTexture guiTexture) {
+        super(guiTexture);
         scrollBar = (ScrollBar) new ScrollBar(GuiTemplate.SCROLL_BAR, 10).addListener((ChangeListener) progress -> {
             if (maxOffset > 0)
                 updateOffset(Tools.clamp(Math.max(maxOffset * (1f / 0.9f), 1f) * progress, 0, maxOffset));
@@ -48,7 +60,7 @@ public class ScrollPanel<T extends Gui> extends Gui {
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
-        for(T gui : content)
+        for(Gui gui : content)
             gui.resize(width, height);
         float viewportHeight = viewport.getCurrentValue(Axis.HEIGHT);
         maxOffset = (calculateContentHeight() - viewportHeight) / viewportHeight;
@@ -59,7 +71,7 @@ public class ScrollPanel<T extends Gui> extends Gui {
     @Override
     public void update(float delta) {
         super.update(delta);
-        for(T gui : content)
+        for(Gui gui : content)
             gui.update(delta);
     }
 
@@ -69,7 +81,7 @@ public class ScrollPanel<T extends Gui> extends Gui {
         batch.flush();
         ScissorStack.calculateScissors(camera, batch.getTransformMatrix(), clipBounds, scissors);
         ScissorStack.pushScissors(scissors);
-        for(T gui : content)
+        for(Gui gui : content)
             gui.render(batch, camera);
         batch.flush();
         ScissorStack.popScissors();
@@ -82,7 +94,7 @@ public class ScrollPanel<T extends Gui> extends Gui {
     }
 
     public void clear() {
-        for(T gui : content)
+        for(Gui gui : content)
             gui.delete();
         this.content.clear();
     }
@@ -93,7 +105,7 @@ public class ScrollPanel<T extends Gui> extends Gui {
         updateOffset(Tools.clamp(offset - (float) (amount * Variables.MOUSE_SENSITIVITY) / scrollBar.getScrollBarHeight(), 0, maxOffset));
     }
 
-    public void addContent(T gui) {
+    public void addContent(Gui gui) {
         gui.setOffsetY(new PixelOffset(calculateContentHeight() / Main.guiScale + (content.size() > 0 ? Variables.SLOT_SPACE : 0)));
         gui.parent = viewport;
         this.content.add(gui);

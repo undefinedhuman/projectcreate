@@ -28,8 +28,8 @@ public class RecipePreviewPanel extends Gui {
 
     private Gui itemPreview;
     private Text name, category, description;
-    private ScrollPanel<IngredientGui> ingredients;
-    private GuiPool ingredientGuiPool;
+    private ScrollPanel ingredients;
+    private GuiPool<IngredientGui> ingredientGuiPool;
     private boolean childrenVisible;
 
     public RecipePreviewPanel() {
@@ -86,8 +86,8 @@ public class RecipePreviewPanel extends Gui {
                 .set(new RelativeConstraint(0.975f), new RelativeConstraint(0.025f), new PixelConstraint(50), new PixelConstraint(Variables.SLOT_SIZE))
                 .setOffsetX(new RelativeOffset(-1f));
 
-        ingredientGuiPool = new IngredientGuiPool(300000);
-        ingredients = new ScrollPanel<>(GuiTemplate.HOTBAR, ingredientGuiPool);
+        ingredientGuiPool = new GuiPool<>(IngredientGui::new, 300000);
+        ingredients = new ScrollPanel(GuiTemplate.HOTBAR);
         ingredients
                 .set(new CenterConstraint(), new RelativeConstraint(0.675f), new RelativeConstraint(0.95f), new RelativeConstraint(0.5f))
                 .setOffset(new CenterOffset(), new RelativeOffset(-1f));
