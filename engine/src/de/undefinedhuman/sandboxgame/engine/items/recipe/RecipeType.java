@@ -7,7 +7,7 @@ public enum RecipeType {
     WEAPON("Weapons"),
     ARMOR("Armor");
 
-    private String previewTexture;
+    private final String previewTexture;
 
     RecipeType(String previewTexture) {
         this.previewTexture = "gui/preview/crafting/" + previewTexture + ".png";

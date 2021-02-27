@@ -27,9 +27,7 @@ public class ItemEditor extends Editor {
     public JButton loadButton;
 
     public ItemEditor(Container container) {
-
         super(container);
-
         itemComboBox = new JComboBox<>(ItemType.values());
         itemComboBox.setBounds(20, 25, 150, 25);
         itemComboBox.setSelectedIndex(0);
