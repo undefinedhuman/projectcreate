@@ -16,8 +16,8 @@ public class RelativeConstraint extends Constraint {
     @Override
     public int getValue(float scale) {
         if(isPosition())
-            return (int) (currentTransform.parent.getCurrentValue(axis) + currentTransform.parent.getCornerSize() + (currentTransform.parent.getCurrentValue(getScaleAxis()) - currentTransform.parent.getCornerSize() * 2) * value + offset * scale);
-        else return (int) ((currentTransform.parent.getCurrentValue(axis) - currentTransform.parent.getCornerSize() * 2) * value + offset * scale);
+            return (int) Math.ceil(currentTransform.parent.getCurrentValue(axis) + currentTransform.parent.getCornerSize() + (currentTransform.parent.getCurrentValue(getScaleAxis()) - currentTransform.parent.getCornerSize() * 2) * value + offset * scale);
+        else return (int) Math.ceil((currentTransform.parent.getCurrentValue(axis) - currentTransform.parent.getCornerSize() * 2) * value + offset * scale);
     }
 
     public void setOffset(int offset) {

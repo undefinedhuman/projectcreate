@@ -49,7 +49,7 @@ public abstract class MenuSlot extends Gui {
     private void updateSelected(boolean selected) {
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         int selectedSize = (selected ? Variables.SELECTED_AMOUNT : 0) * Main.guiScale, selectedOffset = -(selected ? (Variables.SELECTED_AMOUNT / 2) : 0) * Main.guiScale;
-        texture.resize(getCurrentValue(Axis.X) + selectedOffset, getCurrentValue(Axis.Y) + selectedOffset, getCurrentValue(Axis.WIDTH) + selectedSize, getCurrentValue(Axis.HEIGHT) + selectedSize);
+        texture.resize(getCurrentValue(Axis.WIDTH) + selectedSize, getCurrentValue(Axis.HEIGHT) + selectedSize, Main.guiScale);
     }
 
     public abstract void onClick();

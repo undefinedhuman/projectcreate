@@ -1,11 +1,7 @@
 package de.undefinedhuman.sandboxgame.inventory;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.gui.Gui;
-import de.undefinedhuman.sandboxgame.gui.GuiComponent;
 import de.undefinedhuman.sandboxgame.gui.text.Text;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.CenterConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
@@ -25,23 +21,32 @@ public class InvItem extends Gui {
 
     public InvItem(int id, int amount) {
         super(ItemManager.instance.getItem(id).iconTexture.getString());
-        set(new CenterConstraint(), new CenterConstraint(), new PixelConstraint(Variables.ITEM_SIZE), new PixelConstraint(Variables.ITEM_SIZE))
-                .setOffset(new CenterOffset(), new CenterOffset());
-
-        this.id = id;
-        this.amount = amount;
-
-        amountText = (Text) new Text(amount)
-                .setFontSize(8)
-                .setPosition(new RelativeConstraint(1.2f), new RelativeConstraint(0)).setOffsetX(new RelativeOffset(-1f));
-        amountText.parent = this;
+        updateItem(id, amount);
+        set(new CenterConstraint(), new CenterConstraint(), new PixelConstraint(Variables.ITEM_SIZE), new PixelConstraint(Variables.ITEM_SIZE));
+        setOffset(new CenterOffset(), new CenterOffset());
+        addChild(
+                amountText = (Text) new Text(amount)
+                        .setFontSize(8)
+                        .setPosition(new RelativeConstraint(1.2f), new RelativeConstraint(0)).setOffsetX(new RelativeOffset(-1f))
+        );
     }
 
     public void setStats(int id, int amount) {
-        this.id = id;
-        this.amount = amount;
-        amountText.setText(amount);
+        updateItem(id, amount);
+        updateAmountText();
         setTexture(ItemManager.instance.getItem(id).iconTexture.getString());
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+        updateAmountText();
+    }
+
+    public void removeItem() {
+        if(amount <= 0)
+            return;
+        this.amount--;
+        updateAmountText();
     }
 
     public int getID() {
@@ -52,35 +57,15 @@ public class InvItem extends Gui {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    private void updateItem(int id, int amount) {
+        this.id = id;
         this.amount = amount;
-        amountText.setText(amount);
     }
 
-    public void removeItem() {
-        if (this.amount > 0)
-            this.amount--;
-        amountText.setText(amount);
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        super.resize(width, height);
-        amountText.resize(width, height);
-    }
-
-    @Override
-    public void render(SpriteBatch batch, OrthographicCamera camera) {
-        super.render(batch, camera);
-        if (amount > 1)
-            amountText.render(batch, camera);
-    }
-
-    @Override
-    public GuiComponent setCurrentPosition(int x, int y) {
-        super.setCurrentPosition(x, y);
-        amountText.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        return this;
+    private void updateAmountText() {
+        amountText
+                .setText(amount)
+                .setVisible(this.amount > 1);
     }
 
 }

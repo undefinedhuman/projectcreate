@@ -1,27 +1,45 @@
 package de.undefinedhuman.sandboxgame.engine.resources.texture;
 
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class TextureValue {
 
     public boolean remove = false;
+
     private int usages = 1;
-    private TextureRegion texture;
+    private Texture texture;
+    private TextureRegion textureRegion;
+    private Pixmap pixmap;
 
     public TextureValue(Texture texture) {
         if(texture == null)
             return;
         texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        this.texture = new TextureRegion(texture);
+        this.texture = texture;
+        this.textureRegion = new TextureRegion(texture);
+        if(!texture.getTextureData().isPrepared())
+            texture.getTextureData().prepare();
+        pixmap = texture.getTextureData().consumePixmap();
+        pixmap.setFilter(Pixmap.Filter.BiLinear);
+        pixmap.setBlending(Pixmap.Blending.None);
     }
 
     public void add() {
         usages++;
     }
 
-    public TextureRegion getTexture() {
+    public Texture getTexture() {
         return texture;
+    }
+
+    public TextureRegion getTextureRegion() {
+        return textureRegion;
+    }
+
+    public Pixmap getPixmap() {
+        return pixmap;
     }
 
     public void remove() {
@@ -32,7 +50,9 @@ public class TextureValue {
     }
 
     public void delete() {
-        texture.getTexture().dispose();
+        if(!pixmap.isDisposed())
+            pixmap.dispose();
+        texture.dispose();
     }
 
 }

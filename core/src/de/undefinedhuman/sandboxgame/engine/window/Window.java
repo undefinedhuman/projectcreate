@@ -17,7 +17,7 @@ public class Window {
     private LwjglApplicationConfiguration createLWJGLConfig() {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = "SandboxGame";
-        config.foregroundFPS = -1;
+        config.foregroundFPS = 400;
         config.backgroundFPS = 60;
         config.vSyncEnabled = false;
         config.width = Variables.BASE_WINDOW_WIDTH;

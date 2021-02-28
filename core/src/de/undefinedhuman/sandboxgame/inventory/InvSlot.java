@@ -21,7 +21,8 @@ public class InvSlot extends Slot {
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         super.render(batch, camera);
-        if (invItem == null) return;
+        if (invItem == null)
+            return;
         invItem.render(batch, camera);
     }
 
@@ -43,7 +44,7 @@ public class InvSlot extends Slot {
     private void updateSelected(boolean selected) {
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         int selectedSize = (selected ? Variables.SELECTED_AMOUNT : 0) * Main.guiScale, selectedOffset = -(selected ? (Variables.SELECTED_AMOUNT / 2) : 0) * Main.guiScale;
-        texture.resize(getCurrentValue(Axis.X) + selectedOffset, getCurrentValue(Axis.Y) + selectedOffset, getCurrentValue(Axis.WIDTH) + selectedSize, getCurrentValue(Axis.HEIGHT) + selectedSize);
+        texture.resize(getCurrentValue(Axis.WIDTH) + selectedSize, getCurrentValue(Axis.HEIGHT) + selectedSize, Main.guiScale);
     }
 
 }

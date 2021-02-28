@@ -3,11 +3,10 @@ package de.undefinedhuman.sandboxgame.inventory;
 import com.badlogic.gdx.Gdx;
 import de.undefinedhuman.sandboxgame.engine.items.Item;
 import de.undefinedhuman.sandboxgame.engine.items.ItemType;
-import de.undefinedhuman.sandboxgame.gui.Gui;
-import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
+import de.undefinedhuman.sandboxgame.gui.GuiComponent;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 
-public abstract class Slot extends Gui {
+public abstract class Slot extends GuiComponent {
 
     protected InvItem invItem = null;
     private ItemType itemType;
@@ -17,7 +16,7 @@ public abstract class Slot extends Gui {
     }
 
     public Slot(ItemType type) {
-        super(GuiTemplate.SLOT);
+        super();
         this.itemType = type;
     }
 

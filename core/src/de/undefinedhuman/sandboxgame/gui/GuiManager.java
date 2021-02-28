@@ -3,14 +3,17 @@ package de.undefinedhuman.sandboxgame.gui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.engine.resources.texture.TextureManager;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
+import de.undefinedhuman.sandboxgame.gui.texture.GuiTexture;
 import de.undefinedhuman.sandboxgame.gui.transforms.GuiTransform;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.ScreenConstraint;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GuiManager extends Manager {
 
@@ -18,6 +21,7 @@ public class GuiManager extends Manager {
     public GuiTransform screen = null;
 
     private ArrayList<GuiTransform> guiTransforms = new ArrayList<>();
+    private HashMap<String, HashMap<Vector2, GuiTexture>> guiTextures = new HashMap<>();
 
     public GuiManager() {
         if (instance == null) instance = this;

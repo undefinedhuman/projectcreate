@@ -1,5 +1,6 @@
 package de.undefinedhuman.sandboxgame.engine.resources.texture;
 
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import de.undefinedhuman.sandboxgame.engine.log.Log;
 import de.undefinedhuman.sandboxgame.engine.resources.ResourceManager;
@@ -60,8 +61,14 @@ public class TextureManager extends Manager {
     }
 
     public TextureRegion getTexture(String name) {
-        if (hasTexture(name) || addTexture(name)) return textures.get(name).getTexture();
+        if (hasTexture(name) || addTexture(name)) return textures.get(name).getTextureRegion();
         return hasTexture("Unknown.png") && !name.equals("Unknown.png") ? getTexture("Unknown.png") : null;
+    }
+
+    public Pixmap getPixmap(String name) {
+        if (hasTexture(name) || addTexture(name))
+            return textures.get(name).getPixmap();
+        return hasTexture("Unknown.png") && !name.equals("Unknown.png") ? getPixmap("Unknown.png") : null;
     }
 
 }

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.sandboxgame.Main;
 import de.undefinedhuman.sandboxgame.engine.resources.font.Font;
 import de.undefinedhuman.sandboxgame.gui.text.Text;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
@@ -51,7 +52,7 @@ public class Gui extends GuiComponent {
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
-        this.texture.resize(getCurrentValue(Axis.X), getCurrentValue(Axis.Y), getCurrentValue(Axis.WIDTH), getCurrentValue(Axis.HEIGHT));
+        this.texture.resize(getCurrentValue(Axis.WIDTH), getCurrentValue(Axis.HEIGHT), Main.guiScale);
         for (GuiTransform transform : children) transform.resize(width, height);
     }
 
@@ -66,7 +67,7 @@ public class Gui extends GuiComponent {
         super.render(batch, camera);
         if (!visible)
             return;
-        texture.render(batch, alpha);
+        texture.render(batch, getCurrentValue(Axis.X), getCurrentValue(Axis.Y), alpha);
         for (GuiTransform transform : children)
             transform.render(batch, camera);
     }
@@ -110,7 +111,7 @@ public class Gui extends GuiComponent {
     // TODO Remove this
     @Override
     public GuiTransform setCurrentPosition(int x, int y) {
-        texture.resize(x, y, getCurrentValue(Axis.WIDTH), getCurrentValue(Axis.HEIGHT));
+        texture.resize(getCurrentValue(Axis.WIDTH), getCurrentValue(Axis.HEIGHT), Main.guiScale);
         return super.setCurrentPosition(x, y);
     }
 

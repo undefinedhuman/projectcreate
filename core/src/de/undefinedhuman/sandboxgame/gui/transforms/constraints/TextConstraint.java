@@ -14,7 +14,7 @@ public class TextConstraint extends Constraint {
 
     @Override
     public int getValue(float guiScale) {
-        return (int) (axis == Axis.WIDTH ? layout.width : axis == Axis.HEIGHT ? layout.height : 0);
+        return (int) Math.ceil(axis == Axis.WIDTH ? layout.width : axis == Axis.HEIGHT ? layout.height : 0);
     }
 
 }

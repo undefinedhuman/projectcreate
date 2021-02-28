@@ -2,6 +2,7 @@ package de.undefinedhuman.sandboxgame.gui.texture;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.Main;
@@ -14,12 +15,14 @@ import java.util.Collections;
 public class GuiTexture {
 
     private GuiTemplate template = null;
-    private int cornerSize = 0, centerWidth, centerHeight;
+    private int cornerSize = 0;
     private Color color = Color.WHITE;
     private ArrayList<String> textureNames = new ArrayList<>();
     private ArrayList<Vector4i> bounds = new ArrayList<>();
 
-    private Pixmap pixmap;
+    private Texture internalTexture;
+
+    private int x, y;
 
     public GuiTexture() {}
 
@@ -34,40 +37,45 @@ public class GuiTexture {
     }
 
     public void init() {
-        for(String texture : textureNames) {
+        for(String texture : textureNames)
             TextureManager.instance.addTexture(texture);
-            bounds.add(new Vector4i());
-        }
     }
 
-    public void resize(int x, int y, int width, int height) {
-        if (template == null)
-            for(Vector4i bound : bounds)
-                bound.set(x, y, width, height);
+    public void resize(int width, int height, int scale) {
+        deleteInternalTexture();
+        if(width <= 0 || height <= 0)
+            return;
+        Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
+        pixmap.setFilter(Pixmap.Filter.NearestNeighbour);
+        if(template == null)
+            for (String textureName : textureNames) {
+                Pixmap source = TextureManager.instance.getPixmap(textureName);
+                pixmap.drawPixmap(source, 0, 0, source.getWidth(), source.getHeight(), 0, 0, width, height);
+            }
         else {
             this.cornerSize = template.cornerSize * Main.guiScale;
-            centerWidth = Math.max(0, width - cornerSize * 2);
-            centerHeight = Math.max(0, height - cornerSize * 2);
+            int centerWidth = Math.max(0, width - cornerSize * 2), centerHeight = Math.max(0, height - cornerSize * 2);
 
-            bounds.get(0).set(x, y + height - cornerSize, cornerSize, cornerSize);
-            bounds.get(1).set(x + width - cornerSize, y + height - cornerSize, cornerSize, cornerSize);
-            bounds.get(2).set(x + width - cornerSize, y, cornerSize, cornerSize);
-            bounds.get(3).set(x, y, cornerSize, cornerSize);
-            bounds.get(4).set(x + cornerSize, y + cornerSize + centerHeight, centerWidth, cornerSize);
-            bounds.get(5).set(x + centerWidth + cornerSize, y + cornerSize, cornerSize, centerHeight);
-            bounds.get(6).set(x + cornerSize, y, centerWidth, cornerSize);
-            bounds.get(7).set(x, y + cornerSize, cornerSize, centerHeight);
-            bounds.get(8).set(x + cornerSize, y + cornerSize, centerWidth, centerHeight);
+            drawToPixmap(pixmap, 0, 0, 0, cornerSize, cornerSize, scale);
+            drawToPixmap(pixmap, 1, cornerSize + centerWidth, 0, cornerSize, cornerSize, scale);
+            drawToPixmap(pixmap, 2, cornerSize + centerWidth, height - cornerSize, cornerSize, cornerSize, scale);
+            drawToPixmap(pixmap, 3, 0, height - cornerSize, cornerSize, cornerSize, scale);
+            drawToPixmap(pixmap, 4, cornerSize, 0, centerWidth, cornerSize, scale);
+            drawToPixmap(pixmap, 5, width - cornerSize, cornerSize, cornerSize, centerHeight, scale);
+            drawToPixmap(pixmap, 6, cornerSize, height - cornerSize, centerWidth, cornerSize, scale);
+            drawToPixmap(pixmap, 7, 0, cornerSize, cornerSize, centerHeight, scale);
+            drawToPixmap(pixmap, 8, cornerSize, cornerSize, centerWidth, centerHeight, scale);
         }
+        internalTexture = new Texture(pixmap);
+        pixmap.dispose();
     }
 
-    public void render(SpriteBatch batch, float alpha) {
+    public void render(SpriteBatch batch, int x, int y, float alpha) {
+        if(textureNames.size() == 0 || internalTexture == null)
+            return;
         Color batchColor = batch.getColor();
         batch.setColor(color.r, color.g, color.b, alpha);
-        for(int i = 0; i < textureNames.size(); i++) {
-            Vector4i bound = bounds.get(i);
-            batch.draw(TextureManager.instance.getTexture(textureNames.get(i)), bound.x, bound.y, bound.z, bound.w);
-        }
+        batch.draw(internalTexture, x, y);
         batch.setColor(batchColor);
     }
 
@@ -76,6 +84,7 @@ public class GuiTexture {
             template = null;
         for (String textureName : textureNames)
             TextureManager.instance.removeTexture(textureName);
+        deleteInternalTexture();
         textureNames.clear();
         bounds.clear();
     }
@@ -95,5 +104,18 @@ public class GuiTexture {
     public int getBaseCornerSize() { return template == null ? 0 : template.cornerSize; }
 
     public Vector2 getOffset() { return new Vector2(cornerSize, cornerSize); }
+
+    private void drawToPixmap(Pixmap pixmap, int textureIndex, int x, int y, int width, int height, int scale) {
+        Pixmap source = TextureManager.instance.getPixmap(textureNames.get(textureIndex));
+        for(int i = 0; i < width; i++)
+            for(int j = 0; j < height; j++)
+                pixmap.drawPixel(x + i, y + j, source.getPixel((i / scale) % source.getWidth(), (j / scale) % source.getHeight()));
+    }
+
+    private void deleteInternalTexture() {
+        if(internalTexture == null)
+            return;
+        internalTexture.dispose();
+    }
 
 }

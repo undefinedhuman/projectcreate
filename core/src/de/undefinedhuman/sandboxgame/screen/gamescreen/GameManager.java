@@ -8,9 +8,7 @@ import de.undefinedhuman.sandboxgame.engine.utils.ManagerList;
 import de.undefinedhuman.sandboxgame.entity.Entity;
 import de.undefinedhuman.sandboxgame.entity.EntityManager;
 import de.undefinedhuman.sandboxgame.entity.ecs.blueprint.BlueprintManager;
-import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.GuiManager;
-import de.undefinedhuman.sandboxgame.gui.elements.scrollpanel.ScrollPanel;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.item.drop.DropItemManager;
@@ -26,8 +24,6 @@ public class GameManager {
     public Projectile projectile = null;
 
     private ManagerList manager;
-
-    public ScrollPanel<Gui> panel;
 
     public GameManager() {
         batch = new SpriteBatch();
@@ -94,15 +90,13 @@ public class GameManager {
     }
 
     public void delete() {
-
         manager.delete();
-
         BackgroundManager.instance.delete();
         BlueprintManager.instance.delete();
         DropItemManager.instance.delete();
         EntityManager.instance.delete();
         ItemManager.instance.delete();
-
+        batch.dispose();
     }
 
     private void loadManager() {
