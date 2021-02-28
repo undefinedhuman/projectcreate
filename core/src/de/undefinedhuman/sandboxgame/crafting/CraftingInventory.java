@@ -2,7 +2,6 @@ package de.undefinedhuman.sandboxgame.crafting;
 
 import com.badlogic.gdx.graphics.Color;
 import de.undefinedhuman.sandboxgame.crafting.recipe.RecipeGui;
-import de.undefinedhuman.sandboxgame.crafting.recipe.RecipeGuiPool;
 import de.undefinedhuman.sandboxgame.crafting.recipe.RecipePreviewPanel;
 import de.undefinedhuman.sandboxgame.engine.items.recipe.RecipeType;
 import de.undefinedhuman.sandboxgame.engine.resources.font.Font;
@@ -10,8 +9,7 @@ import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.engine.utils.ds.MultiMap;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.elements.MenuSlot;
-import de.undefinedhuman.sandboxgame.gui.elements.scrollpanel.ScrollPanel;
-import de.undefinedhuman.sandboxgame.gui.pool.GuiPool;
+import de.undefinedhuman.sandboxgame.gui.elements.scrollpanel.PooledScrollPanel;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.CenterConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
@@ -28,7 +26,8 @@ public class CraftingInventory extends Gui {
     public static CraftingInventory instance;
 
     private Gui menuBackground;
-    private ScrollPanel<RecipeGui> recipesScrollPanel;
+    private PooledScrollPanel<RecipeGui> recipesScrollPanel;
+
     private RecipePreviewPanel recipePreviewPanel;
 
     private MultiMap<RecipeType, Integer> recipes = new MultiMap<>();
@@ -52,7 +51,7 @@ public class CraftingInventory extends Gui {
     }
 
     private void initBackgrounds() {
-        recipesScrollPanel = new ScrollPanel<>(GuiTemplate.HOTBAR, RecipeGui.class);
+        recipesScrollPanel = new PooledScrollPanel<>(GuiTemplate.HOTBAR, RecipeGui::new);
         recipesScrollPanel.setSize(Tools.getInventoryConstraint(GuiTemplate.HOTBAR, 5), Tools.getInventoryConstraint(GuiTemplate.HOTBAR, 8));
 
         addChild(
@@ -96,9 +95,8 @@ public class CraftingInventory extends Gui {
 
     public void updateRecipes() {
         recipesScrollPanel.clear();
-        for(int itemID : recipes.getValuesWithKey(currentRecipeType)) {
-            recipesScrollPanel.addContent(recipeGuiPool.get().update(itemID));
-        }
+        for(int itemID : recipes.getValuesWithKey(currentRecipeType))
+            recipesScrollPanel.addContent().update(itemID);
     }
 
     public void updateRecipe(int itemID) {

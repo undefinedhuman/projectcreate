@@ -18,11 +18,12 @@ import de.undefinedhuman.sandboxgame.gui.transforms.offset.PixelOffset;
 
 import java.util.ArrayList;
 
-public class ScrollPanel extends Gui {
+public class ScrollPanel<T extends Gui> extends Gui {
+
+    protected ArrayList<T> content = new ArrayList<>();
 
     private Gui viewport;
     private ScrollBar scrollBar;
-    private ArrayList<Gui> content = new ArrayList<>();
     private float offset, maxOffset;
     private Rectangle scissors = new Rectangle(), clipBounds = new Rectangle();
 
@@ -94,9 +95,13 @@ public class ScrollPanel extends Gui {
     }
 
     public void clear() {
-        for(Gui gui : content)
-            gui.delete();
+        for(T gui : content)
+            removeGui(gui);
         this.content.clear();
+    }
+
+    public void removeGui(T gui) {
+        gui.delete();
     }
 
     public void scroll(int amount) {
@@ -105,7 +110,7 @@ public class ScrollPanel extends Gui {
         updateOffset(Tools.clamp(offset - (float) (amount * Variables.MOUSE_SENSITIVITY) / scrollBar.getScrollBarHeight(), 0, maxOffset));
     }
 
-    public void addContent(Gui gui) {
+    public void addContent(T gui) {
         gui.setOffsetY(new PixelOffset(calculateContentHeight() / Main.guiScale + (content.size() > 0 ? Variables.SLOT_SPACE : 0)));
         gui.parent = viewport;
         this.content.add(gui);
@@ -124,7 +129,6 @@ public class ScrollPanel extends Gui {
 
     private void updateOffset(float offset) {
         scrollBar.updateThumbY(Tools.clamp((offset / Math.max(maxOffset, 0.9f)) * 0.9f, 0, 0.9f));
-
         for (Gui gui : content)
             gui.setValue(Axis.Y, -offset).resize();
         this.offset = offset;
