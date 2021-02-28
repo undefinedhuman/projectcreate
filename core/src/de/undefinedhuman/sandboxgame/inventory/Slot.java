@@ -1,11 +1,11 @@
 package de.undefinedhuman.sandboxgame.inventory;
 
 import com.badlogic.gdx.Gdx;
+import de.undefinedhuman.sandboxgame.engine.items.Item;
+import de.undefinedhuman.sandboxgame.engine.items.ItemType;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
-import de.undefinedhuman.sandboxgame.engine.items.Item;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
-import de.undefinedhuman.sandboxgame.engine.items.ItemType;
 
 public abstract class Slot extends Gui {
 

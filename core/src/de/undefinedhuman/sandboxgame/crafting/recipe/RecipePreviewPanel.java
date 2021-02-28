@@ -7,9 +7,8 @@ import de.undefinedhuman.sandboxgame.engine.resources.font.Font;
 import de.undefinedhuman.sandboxgame.engine.utils.Colors;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.gui.Gui;
-import de.undefinedhuman.sandboxgame.gui.elements.scrollpanel.ScrollPanel;
+import de.undefinedhuman.sandboxgame.gui.elements.scrollpanel.PooledScrollPanel;
 import de.undefinedhuman.sandboxgame.gui.event.ClickListener;
-import de.undefinedhuman.sandboxgame.gui.pool.GuiPool;
 import de.undefinedhuman.sandboxgame.gui.text.Text;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.gui.transforms.GuiTransform;
@@ -28,8 +27,7 @@ public class RecipePreviewPanel extends Gui {
 
     private Gui itemPreview;
     private Text name, category, description;
-    private ScrollPanel ingredients;
-    private GuiPool<IngredientGui> ingredientGuiPool;
+    private PooledScrollPanel<IngredientGui> ingredients;
     private boolean childrenVisible;
 
     public RecipePreviewPanel() {
@@ -86,8 +84,7 @@ public class RecipePreviewPanel extends Gui {
                 .set(new RelativeConstraint(0.975f), new RelativeConstraint(0.025f), new PixelConstraint(50), new PixelConstraint(Variables.SLOT_SIZE))
                 .setOffsetX(new RelativeOffset(-1f));
 
-        ingredientGuiPool = new GuiPool<>(IngredientGui::new, 300000);
-        ingredients = new ScrollPanel(GuiTemplate.HOTBAR);
+        ingredients = new PooledScrollPanel<>(GuiTemplate.HOTBAR, IngredientGui::new);
         ingredients
                 .set(new CenterConstraint(), new RelativeConstraint(0.675f), new RelativeConstraint(0.95f), new RelativeConstraint(0.5f))
                 .setOffset(new CenterOffset(), new RelativeOffset(-1f));
@@ -103,7 +100,7 @@ public class RecipePreviewPanel extends Gui {
         Item currentItem = ItemManager.instance.getItem(itemID);
         itemPreview.setTexture(currentItem.previewTexture.getString());
         for(RecipeItem item : currentItem.recipeItems.values())
-            ingredients.addContent(ingredientGuiPool.get().update(item));
+                ingredients.addContent().update(item);
         name
                 .setText(currentItem.name.getString())
                 .setColor(currentItem.rarity.getRarity().getColor());

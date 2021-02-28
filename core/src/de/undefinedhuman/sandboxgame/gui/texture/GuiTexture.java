@@ -1,6 +1,7 @@
 package de.undefinedhuman.sandboxgame.gui.texture;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.Main;
@@ -17,6 +18,8 @@ public class GuiTexture {
     private Color color = Color.WHITE;
     private ArrayList<String> textureNames = new ArrayList<>();
     private ArrayList<Vector4i> bounds = new ArrayList<>();
+
+    private Pixmap pixmap;
 
     public GuiTexture() {}
 
