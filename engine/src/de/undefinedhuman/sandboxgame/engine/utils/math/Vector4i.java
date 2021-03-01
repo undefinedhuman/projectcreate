@@ -1,5 +1,7 @@
 package de.undefinedhuman.sandboxgame.engine.utils.math;
 
+import java.util.Objects;
+
 public class Vector4i {
 
     public int x, y, z, w;
@@ -58,14 +60,17 @@ public class Vector4i {
         return this;
     }
 
-    public boolean isEqual(Vector4i other) {
-        if(this == other) return true;
-        if(other == null) return false;
-        return x == other.x && y == other.y && z == other.z && w == other.w;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vector4i vector4i = (Vector4i) o;
+        return x == vector4i.x && y == vector4i.y && z == vector4i.z && w == vector4i.w;
     }
 
-    public boolean isEqual(int x, int y, int z, int w) {
-        return this.x == x && this.y == y && this.z == z && this.w == w;
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, z, w);
     }
 
     @Override

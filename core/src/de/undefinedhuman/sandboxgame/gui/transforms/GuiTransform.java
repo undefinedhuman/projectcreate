@@ -11,13 +11,14 @@ import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.offset.Offset;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class GuiTransform {
 
     public GuiTransform parent;
 
-    protected HashMap<Axis, Integer> currentValues = new HashMap<>();
+    protected int[] currentValues = new int[Axis.values().length];
     protected boolean visible = true;
 
     private HashMap<Axis, Constraint> constraints = new HashMap<>();
@@ -25,6 +26,7 @@ public class GuiTransform {
     public GuiTransform() {
         this.parent = GuiManager.instance.screen;
         set(new PixelConstraint(0), new PixelConstraint(0), new PixelConstraint(0), new PixelConstraint(0));
+        Arrays.fill(currentValues, 0);
     }
 
     public void init() { }
@@ -40,8 +42,8 @@ public class GuiTransform {
 
     public void resize(int width, int height) {
         calculateCurrentValues(Axis.WIDTH, Axis.HEIGHT);
-        this.currentValues.put(Axis.X, calculateConstraintValue(Axis.X) + calculateConstraintValue(Axis.OFFSET_X));
-        this.currentValues.put(Axis.Y, calculateConstraintValue(Axis.Y) + calculateConstraintValue(Axis.OFFSET_Y));
+        currentValues[Axis.X.ordinal()] = calculateConstraintValue(Axis.X) + calculateConstraintValue(Axis.OFFSET_X);
+        currentValues[Axis.Y.ordinal()] = calculateConstraintValue(Axis.Y) + calculateConstraintValue(Axis.OFFSET_Y);
     }
 
     public void update(float delta) {}
@@ -90,6 +92,12 @@ public class GuiTransform {
         return constraints.get(axis);
     }
 
+    public GuiTransform setSize(float width, float height) {
+        constraints.get(Axis.WIDTH).setValue(width);
+        constraints.get(Axis.HEIGHT).setValue(height);
+        return this;
+    }
+
     public GuiTransform setValue(Axis axis, float value) {
         constraints.get(axis).setValue(value);
         return this;
@@ -103,8 +111,8 @@ public class GuiTransform {
     // TODO REMOVE THIS FUNCTION AND REPLACE WITH CONSTRAINT
 
     public GuiTransform setCurrentPosition(int x, int y) {
-        this.currentValues.put(Axis.X, x);
-        this.currentValues.put(Axis.Y, y);
+        currentValues[Axis.X.ordinal()] = x;
+        currentValues[Axis.Y.ordinal()] = y;
         return this;
     }
 
@@ -121,21 +129,21 @@ public class GuiTransform {
     public boolean isVisible() { return visible; }
 
     public Vector2 getPosition() {
-        return new Vector2(currentValues.get(Axis.X), currentValues.get(Axis.Y));
+        return new Vector2(currentValues[Axis.X.ordinal()], currentValues[Axis.Y.ordinal()]);
     }
 
     public Vector2 getSize() {
-        return new Vector2(currentValues.get(Axis.WIDTH), currentValues.get(Axis.HEIGHT));
+        return new Vector2(currentValues[Axis.WIDTH.ordinal()], currentValues[Axis.HEIGHT.ordinal()]);
     }
 
     public int getCurrentValue(Axis axis) {
-        Integer value = currentValues.get(axis);
-        return value != null ? value : 0;
+        return currentValues[axis.ordinal()];
     }
 
     private void calculateCurrentValues(Axis... axes) {
+        Arrays.fill(currentValues, 0);
         for(Axis axis : axes)
-            this.currentValues.put(axis, calculateConstraintValue(axis));
+            currentValues[axis.ordinal()] = calculateConstraintValue(axis);
     }
 
     public int calculateConstraintValue(Axis axis) {
