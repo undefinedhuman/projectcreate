@@ -19,6 +19,7 @@ import de.undefinedhuman.sandboxgame.entity.EntityManager;
 import de.undefinedhuman.sandboxgame.entity.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.sandboxgame.equip.EquipManager;
 import de.undefinedhuman.sandboxgame.gui.GuiManager;
+import de.undefinedhuman.sandboxgame.gui.texture.GuiTextureManager;
 import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.network.ClientManager;
@@ -42,7 +43,7 @@ public class Main extends Game {
     public Main() {
         instance = this;
         managerList = new ManagerList();
-        managerList.addManager(new Log(), new SettingsManager(), new ConfigManager(), new LanguageManager(), new TextureManager(), new SoundManager(), new FontManager(), new Inputs(), new GuiManager(), new BlueprintManager(), new ItemManager());
+        managerList.addManager(new Log(), new SettingsManager(), new ConfigManager(), new LanguageManager(), new TextureManager(), new SoundManager(), new FontManager(), new Inputs(), new GuiManager(), new GuiTextureManager(), new BlueprintManager(), new ItemManager());
         timer = new Timer(1, true, () -> Window.instance.update());
     }
 

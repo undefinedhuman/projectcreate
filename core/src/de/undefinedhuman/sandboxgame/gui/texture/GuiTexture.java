@@ -7,22 +7,19 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.sandboxgame.Main;
 import de.undefinedhuman.sandboxgame.engine.resources.texture.TextureManager;
-import de.undefinedhuman.sandboxgame.engine.utils.math.Vector4i;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class GuiTexture {
 
+    public boolean remove = false;
+
     private GuiTemplate template = null;
-    private int cornerSize = 0;
+    private int cornerSize = 0, usages = 1;
     private Color color = Color.WHITE;
     private ArrayList<String> textureNames = new ArrayList<>();
-    private ArrayList<Vector4i> bounds = new ArrayList<>();
-
     private Texture internalTexture;
-
-    private int x, y;
 
     public GuiTexture() {}
 
@@ -86,7 +83,17 @@ public class GuiTexture {
             TextureManager.instance.removeTexture(textureName);
         deleteInternalTexture();
         textureNames.clear();
-        bounds.clear();
+    }
+
+    public void add() {
+        usages++;
+    }
+
+    public void remove() {
+        usages--;
+        if (usages > 0) return;
+        delete();
+        remove = true;
     }
 
     public void setColor(Color color) {
