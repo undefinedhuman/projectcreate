@@ -51,7 +51,7 @@ public class Variables {
     public static final int SLOT_SIZE = 22;
     public static final int ITEM_SIZE = 16;
     public static final int SLOT_SPACE = 2;
-    public static final int SELECTED_AMOUNT = 2;
+    public static final int SELECTED_SIZE = 2;
     public static final int MOUSE_SENSITIVITY = 10;
 
     // Editor
