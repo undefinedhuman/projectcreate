@@ -5,6 +5,7 @@ import de.undefinedhuman.sandboxgame.engine.items.Item;
 import de.undefinedhuman.sandboxgame.engine.resources.font.Font;
 import de.undefinedhuman.sandboxgame.engine.utils.Colors;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
+import de.undefinedhuman.sandboxgame.engine.utils.ds.Poolable;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.text.Text;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
@@ -17,7 +18,7 @@ import de.undefinedhuman.sandboxgame.inventory.InventoryManager;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.item.listener.ItemChangeListener;
 
-public class IngredientGui extends Gui {
+public class IngredientGui extends Gui implements Poolable {
 
     public static final int CHILD_AMOUNT = 2;
 
@@ -56,6 +57,11 @@ public class IngredientGui extends Gui {
         );
 
         listener = amount -> updateAmountText(currentItemID, currentAmount);
+    }
+
+    @Override
+    public boolean validate() {
+        return getChildren().size() == CHILD_AMOUNT && icon != null && name != null && amount != null;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package de.undefinedhuman.sandboxgame.gui.texture;
 
+import de.undefinedhuman.sandboxgame.Main;
 import de.undefinedhuman.sandboxgame.engine.utils.Manager;
 import de.undefinedhuman.sandboxgame.engine.utils.ds.Key;
 import de.undefinedhuman.sandboxgame.engine.utils.math.Vector2i;
@@ -47,7 +48,9 @@ public class GuiTextureManager extends Manager {
             guiTextures.get(tempKey).add();
             return;
         }
-        guiTextures.put(new Key<>(textureName, new Vector2i(width, height)), new GuiTexture(textureName));
+        GuiTexture texture = new GuiTexture(textureName).init();
+        texture.resize(width, height, Main.guiScale);
+        guiTextures.put(new Key<>(textureName, new Vector2i(width, height)), texture);
     }
 
     public void addGuiTexture(GuiTemplate template, int width, int height) {
@@ -55,7 +58,9 @@ public class GuiTextureManager extends Manager {
             guiTextures.get(tempKey).add();
             return;
         }
-        guiTextures.put(new Key<>(template.templateName, new Vector2i(width, height)), new GuiTexture(template));
+        GuiTexture texture = new GuiTexture(template).init();
+        texture.resize(width, height, Main.guiScale);
+        guiTextures.put(new Key<>(template.templateName, new Vector2i(width, height)), texture);
     }
 
     public GuiTexture getGuiTexture(String textureName, int width, int height) {

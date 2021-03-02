@@ -6,6 +6,7 @@ import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
+import de.undefinedhuman.sandboxgame.inventory.slot.InvSlot;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
@@ -26,11 +27,10 @@ public class Inventory extends Gui implements InvTarget {
         for (int i = 0; i < inventory.length; i++)
             for (int j = 0; j < inventory[i].length; j++) {
                 addChild(
-                        inventory[i][j] = (InvSlot) new InvSlot()
-                                .setPosition(
-                                        new PixelConstraint((Variables.SLOT_SIZE + Variables.SLOT_SPACE) * j),
-                                        new PixelConstraint((Variables.SLOT_SIZE + Variables.SLOT_SPACE) * i)
-                                )
+                        inventory[i][j] = new InvSlot(
+                                new PixelConstraint((Variables.SLOT_SIZE + Variables.SLOT_SPACE) * j),
+                                new PixelConstraint((Variables.SLOT_SIZE + Variables.SLOT_SPACE) * i)
+                        )
                 );
             }
     }
@@ -46,7 +46,7 @@ public class Inventory extends Gui implements InvTarget {
     }
 
     @Override
-    public Slot getClickedSlot(OrthographicCamera camera) {
+    public InvSlot getClickedSlot(OrthographicCamera camera) {
         if (!visible) return null;
         for (InvSlot[] invSlots : inventory)
             for (InvSlot invSlot : invSlots)
@@ -56,7 +56,8 @@ public class Inventory extends Gui implements InvTarget {
 
     public int addItem(int id, int amount) {
         InvSlot slot = isFull(id);
-        if (slot == null) return amount;
+        if (slot == null)
+            return amount;
         else {
             int newAmount = slot.addItem(id, amount);
             return newAmount == 0 ? 0 : addItem(id, newAmount);
@@ -83,7 +84,7 @@ public class Inventory extends Gui implements InvTarget {
         for (int i = row - 1; i >= 0; i--)
             for (int j = 0; j < col; j++) {
                 InvItem currentItem = inventory[i][j].getItem();
-                if(currentItem == null) {
+                if(currentItem.getAmount() == -1) {
                     currentAmount += maxAmount;
                     continue;
                 }
@@ -99,7 +100,7 @@ public class Inventory extends Gui implements InvTarget {
             for (int j = 0; j < col; j++) {
                 InvSlot slot = inventory[i][j];
                 InvItem currentItem = slot.getItem();
-                if(currentItem == null || (currentItem.getID() == id && currentItem.getAmount() < ItemManager.instance.getItem(id).maxAmount.getInt())) return slot;
+                if(currentItem.getAmount() == -1 || (currentItem.getID() == id && currentItem.getAmount() < ItemManager.instance.getItem(id).maxAmount.getInt())) return slot;
             }
         return null;
     }
@@ -110,7 +111,7 @@ public class Inventory extends Gui implements InvTarget {
             for (int j = 0; j < col; j++) {
                 InvSlot slot = inventory[i][j];
                 InvItem currentItem = slot.getItem();
-                if(currentItem != null && currentItem.getID() == id)
+                if(currentItem.getAmount() != -1 && currentItem.getID() == id)
                     total += currentItem.getAmount();
             }
         return total;

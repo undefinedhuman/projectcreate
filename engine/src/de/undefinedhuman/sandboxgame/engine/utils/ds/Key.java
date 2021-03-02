@@ -11,13 +11,11 @@ public class Key<K1, K2> {
         this.key2 = key2;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null) return false;
-        if (!(o instanceof Key)) return false;
-        Key key = (Key) o;
+        if (o == null || getClass() != o.getClass()) return false;
+        Key<?, ?> key = (Key<?, ?>) o;
         return Objects.equals(key1, key.key1) && Objects.equals(key2, key.key2);
     }
 

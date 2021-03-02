@@ -8,7 +8,7 @@ import de.undefinedhuman.sandboxgame.engine.resources.font.Font;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.inventory.InvTarget;
-import de.undefinedhuman.sandboxgame.inventory.Slot;
+import de.undefinedhuman.sandboxgame.inventory.slot.InvSlot;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
 public class EquipScreen extends Gui implements InvTarget {
@@ -43,9 +43,9 @@ public class EquipScreen extends Gui implements InvTarget {
     }
 
     @Override
-    public Slot getClickedSlot(OrthographicCamera camera) {
+    public InvSlot getClickedSlot(OrthographicCamera camera) {
         if (!visible) return null;
-        // for (EquipSlot equipSlot : slots) if (equipSlot.isClicked(camera)) return equipSlot;
+        for (EquipSlot equipSlot : slots) if (equipSlot.isClicked(camera)) return equipSlot;
         return null;
     }
 

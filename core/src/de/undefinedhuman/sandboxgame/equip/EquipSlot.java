@@ -2,24 +2,32 @@ package de.undefinedhuman.sandboxgame.equip;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import de.undefinedhuman.sandboxgame.engine.items.ItemType;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.gui.Gui;
-import de.undefinedhuman.sandboxgame.engine.items.ItemType;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.CenterConstraint;
+import de.undefinedhuman.sandboxgame.gui.transforms.constraints.Constraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
-import de.undefinedhuman.sandboxgame.inventory.Slot;
+import de.undefinedhuman.sandboxgame.gui.transforms.offset.CenterOffset;
+import de.undefinedhuman.sandboxgame.inventory.slot.InvSlot;
 
-public abstract class EquipSlot extends Slot {
+public abstract class EquipSlot extends InvSlot {
 
     private Gui previewGui;
 
-    public EquipSlot(String previewTexture, ItemType equipType) {
-        super(equipType);
-        setSize(new PixelConstraint(Variables.SLOT_SIZE), new PixelConstraint(Variables.SLOT_SIZE));
-        previewGui = new Gui(previewTexture);
-        previewGui.set(new CenterConstraint(), new CenterConstraint(), new PixelConstraint(Variables.ITEM_SIZE), new PixelConstraint(Variables.ITEM_SIZE));
-        previewGui.setAlpha(0.5f);
+    public EquipSlot(Constraint x, Constraint y, ItemType equipType, String previewTexture) {
+        super(x, y, equipType);
+        previewGui = (Gui) new Gui(previewTexture)
+                .setAlpha(0.5f)
+                .set(new CenterConstraint(), new CenterConstraint(), new PixelConstraint(Variables.ITEM_SIZE), new PixelConstraint(Variables.ITEM_SIZE))
+                .setOffset(new CenterOffset(), new CenterOffset());
         previewGui.parent = this;
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        previewGui.init();
     }
 
     @Override
@@ -29,28 +37,38 @@ public abstract class EquipSlot extends Slot {
     }
 
     @Override
-    public void render(SpriteBatch batch, OrthographicCamera camera) {
-        super.render(batch, camera);
-        if (invItem != null) {
-            if (invItem.getAmount() > 0) invItem.render(batch, camera);
-            else this.deleteItem();
-        } else previewGui.render(batch, camera);
+    public void update(float delta) {
+        super.update(delta);
+        previewGui.update(delta);
     }
 
     @Override
-    public void setItem(int id, int amount) {
-        super.setItem(id, amount);
+    public void render(SpriteBatch batch, OrthographicCamera camera) {
+        super.render(batch, camera);
+        if(invItem.getAmount() == -1)
+            previewGui.render(batch, camera);
+    }
+
+    @Override
+    public void delete() {
+        super.delete();
+        previewGui.delete();
+    }
+
+    @Override
+    public void setInvItem(int id, int amount) {
+        super.setInvItem(id, amount);
         equip();
     }
 
     @Override
     public void deleteItem() {
-        unequip();
+        unEquip();
         super.deleteItem();
     }
 
     public abstract void equip();
 
-    public abstract void unequip();
+    public abstract void unEquip();
 
 }

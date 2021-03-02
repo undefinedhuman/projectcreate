@@ -8,7 +8,6 @@ import de.undefinedhuman.sandboxgame.engine.resources.font.Font;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.engine.utils.ds.MultiMap;
 import de.undefinedhuman.sandboxgame.gui.Gui;
-import de.undefinedhuman.sandboxgame.gui.elements.MenuSlot;
 import de.undefinedhuman.sandboxgame.gui.elements.scrollpanel.PooledScrollPanel;
 import de.undefinedhuman.sandboxgame.gui.texture.GuiTemplate;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.CenterConstraint;
@@ -16,6 +15,7 @@ import de.undefinedhuman.sandboxgame.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.constraints.RelativeConstraint;
 import de.undefinedhuman.sandboxgame.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.sandboxgame.gui.transforms.offset.RelativeOffset;
+import de.undefinedhuman.sandboxgame.inventory.slot.MenuSlot;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 import de.undefinedhuman.sandboxgame.utils.Tools;
 
@@ -72,7 +72,7 @@ public class CraftingInventory extends Gui {
         addRecipeTypesToMenu(recipeTypes);
         if(menuBackground.getChildren().size() <= 0)
             return;
-        ((MenuSlot) menuBackground.getChildren().get(0)).onClick();
+        ((MenuSlot) menuBackground.getChildren().get(0)).listener.onClick();
     }
 
     private void addRecipeTypesToMenu(ArrayList<RecipeType> recipeTypes) {
@@ -80,16 +80,13 @@ public class CraftingInventory extends Gui {
         for(RecipeType recipeType : RecipeType.values()) {
             if(!recipeTypes.contains(recipeType))
                 continue;
-            this.menuBackground.addChild(new MenuSlot(recipeType.getPreviewTexture(), new PixelConstraint((Variables.SLOT_SIZE + Variables.SLOT_SPACE) * i++), new RelativeConstraint(0.5f)) {
-                @Override
-                public void onClick() {
-                    if(currentRecipeType == recipeType)
-                        return;
+            this.menuBackground.addChild(new MenuSlot(new PixelConstraint((Variables.SLOT_SIZE + Variables.SLOT_SPACE) * i++), new RelativeConstraint(0.5f), recipeType.getPreviewTexture(), () -> {
+                if(currentRecipeType == recipeType)
+                    return;
 
-                    currentRecipeType = recipeType;
-                    updateRecipes();
-                }
-            }.setOffsetY(new CenterOffset()));
+                currentRecipeType = recipeType;
+                updateRecipes();
+            }).setOffsetY(new CenterOffset()));
         }
     }
 

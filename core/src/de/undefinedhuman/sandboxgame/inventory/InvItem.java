@@ -1,5 +1,7 @@
 package de.undefinedhuman.sandboxgame.inventory;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.text.Text;
@@ -16,7 +18,7 @@ public class InvItem extends Gui {
     private Text amountText;
 
     public InvItem(int id) {
-        this(id, 0);
+        this(id, -1);
     }
 
     public InvItem(int id, int amount) {
@@ -31,10 +33,18 @@ public class InvItem extends Gui {
         );
     }
 
+    @Override
+    public void render(SpriteBatch batch, OrthographicCamera camera) {
+        if(amount == -1)
+            return;
+        super.render(batch, camera);
+    }
+
     public void setStats(int id, int amount) {
         updateItem(id, amount);
         updateAmountText();
         setTexture(ItemManager.instance.getItem(id).iconTexture.getString());
+        resize();
     }
 
     public void setAmount(int amount) {

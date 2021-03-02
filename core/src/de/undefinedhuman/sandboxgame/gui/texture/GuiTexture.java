@@ -33,9 +33,10 @@ public class GuiTexture {
         Collections.addAll(textureNames, template.textures);
     }
 
-    public void init() {
+    public GuiTexture init() {
         for(String texture : textureNames)
             TextureManager.instance.addTexture(texture);
+        return this;
     }
 
     public void resize(int width, int height, int scale) {
@@ -91,9 +92,8 @@ public class GuiTexture {
 
     public void remove() {
         usages--;
-        if (usages > 0) return;
-        delete();
-        remove = true;
+        if (usages <= 0)
+            remove = true;
     }
 
     public void setColor(Color color) {

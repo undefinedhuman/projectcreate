@@ -5,6 +5,7 @@ import de.undefinedhuman.sandboxgame.crafting.CraftingInventory;
 import de.undefinedhuman.sandboxgame.engine.items.Item;
 import de.undefinedhuman.sandboxgame.engine.resources.font.Font;
 import de.undefinedhuman.sandboxgame.engine.utils.Variables;
+import de.undefinedhuman.sandboxgame.engine.utils.ds.Poolable;
 import de.undefinedhuman.sandboxgame.gui.Gui;
 import de.undefinedhuman.sandboxgame.gui.event.ClickListener;
 import de.undefinedhuman.sandboxgame.gui.text.Text;
@@ -15,7 +16,7 @@ import de.undefinedhuman.sandboxgame.gui.transforms.constraints.RelativeConstrai
 import de.undefinedhuman.sandboxgame.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.sandboxgame.item.ItemManager;
 
-public class RecipeGui extends Gui {
+public class RecipeGui extends Gui implements Poolable {
 
     public static final int CHILD_AMOUNT = 2;
 
@@ -60,4 +61,8 @@ public class RecipeGui extends Gui {
         return this;
     }
 
+    @Override
+    public boolean validate() {
+        return getChildren().size() == CHILD_AMOUNT && icon != null && name != null;
+    }
 }

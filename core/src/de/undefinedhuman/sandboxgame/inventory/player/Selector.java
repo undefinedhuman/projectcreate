@@ -32,35 +32,30 @@ public class Selector extends Inventory {
     public void update(float delta) {
         super.update(delta);
         ItemManager.instance.useItem(getSelectedItemID());
-        if (inventory[0][selected].getItem() == null)
+        if (inventory[0][selected].getItem().getAmount() == -1)
             EquipManager.instance.unEquipItemNetwork(GameManager.instance.player, 0, false);
     }
 
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
-        refresh();
         super.render(batch, camera);
     }
 
     public int getSelectedItemID() {
         InvItem item = inventory[0][selected].getItem();
-        return item != null ? item.getID() : 0;
+        return item.getAmount() != -1 ? item.getID() : 0;
     }
 
     public void setSelected(int index) {
-        if (!InventoryManager.instance.isInventoryOpened())
-            this.selected = index;
+        if(InventoryManager.instance.isInventoryOpened())
+            return;
+        inventory[0][selected].setSelected(false);
+        this.selected = index;
         InvItem item = inventory[0][selected].getItem();
-        if (item != null)
+        if (item.getAmount() != -1)
             EquipManager.instance.equipItemNetwork(GameManager.instance.player, item.getID(), false);
         else EquipManager.instance.unEquipItemNetwork(GameManager.instance.player, 0, false);
-    }
-
-    private void refresh() {
-        for (int i = 0; i < inventory[0].length; i++)
-            inventory[0][i].setSelected(false);
-        if (!InventoryManager.instance.isInventoryOpened())
-            inventory[0][selected].setSelected(true);
+        inventory[0][selected].setSelected(true);
     }
 
     public Item getSelectedItem() {
