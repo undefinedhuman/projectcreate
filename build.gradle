@@ -11,12 +11,16 @@ buildscript {
     dependencies {}
 }
 
+plugins {
+    id "org.sonarqube" version "3.0"
+}
+
 allprojects {
     apply plugin: "idea"
 
     version = '1.0'
     ext {
-        appName = "SandboxGame"
+        appName = "Project Create"
         gdxVersion = '1.9.11'
         roboVMVersion = '2.3.5'
         box2DLightsVersion = '1.4'
