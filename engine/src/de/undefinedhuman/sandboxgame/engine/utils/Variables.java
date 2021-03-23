@@ -6,8 +6,8 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Variables {
     // General
-    public static final String NAME = "SandboxGame";
-    public static final Version VERSION = new Version(0, 1, 0);
+    public static final String NAME = "ProjectCreate";
+    public static final Version VERSION = new Version(0, 0, 0);
 
     // Engine
     public static final int LOG_LEVEL = Application.LOG_DEBUG;
