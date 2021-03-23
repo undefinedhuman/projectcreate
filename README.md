@@ -1,14 +1,14 @@
-<h1 align="center">Welcome to my 2D Sandbox Game (working title) 👋</h1>
+<h1 align="center">Project Create</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-0.0.5-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-0.0.5-blue.svg?style=for-the-badge" />
   <a href="https://github.com/undefinedhuman/Eternity/wiki" target="_blank">
-    <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
+    <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg?style=for-the-badge" />
   </a>
 </p>
 
-> This will be a 2D Sandbox game.
+> 2D Sandbox Game heavily focused on freedom of gameplay and exploration.
 
-### 🏠 [Homepage](https://github.com/undefinedhuman/SandboxGame)
+## Installation
 
 ## Usage
 
@@ -16,24 +16,11 @@
 gradle run
 ```
 
-## Run tests
-
-```sh
-gradle test
-```
-
 ## Author
 
-👤 **Alexander Padberg**
-
-* Website: https://github.com/undefinedhuman
-* Github: [@undefinedhuman](https://github.com/undefinedhuman)
-
-## Show your support
-
-Give a ⭐️ if this project helped you!
+**Alexander Padberg [@undefinedhuman](https://github.com/undefinedhuman)**
 
 ## 📝 License
 
-Copyright © 2020 [Alexander Padberg](https://github.com/undefinedhuman).<br />
-This project is [MIT](https://github.com/undefinedhuman/SandboxGame/blob/master/LICENSE) licensed.
+Copyright © 2021 [Alexander Padberg](https://github.com/undefinedhuman).<br />
+This project is [MIT](https://github.com/undefinedhuman/project-create/blob/master/LICENSE) licensed.
