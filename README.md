@@ -8,19 +8,23 @@
 
 > 2D Sandbox Game heavily focused on freedom of gameplay and exploration.
 
+## Table of Contents
+1. [Requirements](#requirements)
+2. [Installation](#installation)
+3. [Usage](#usage)
+4. [Documentation](#documentation)
+5. [License](#license)
+
 ## Installation
+> The project requires Java Version 8 and Gradle Version 6.8.3 (wrapper already included)
 
 ## Usage
-
 ```sh
-gradle run
+# Run either part of the game by replacing "NAME" with either "desktop, editor or server"
+./gradlew :NAME:run
 ```
+## Documentation
 
-## Author
+## License
 
-**Alexander Padberg [@undefinedhuman](https://github.com/undefinedhuman)**
-
-## 📝 License
-
-Copyright © 2021 [Alexander Padberg](https://github.com/undefinedhuman).<br />
-This project is [MIT](https://github.com/undefinedhuman/project-create/blob/master/LICENSE) licensed.
+Copyright © 2021 [Alexander Padberg](https://github.com/undefinedhuman)
