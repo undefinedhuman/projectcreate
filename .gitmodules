@@ -1,0 +1,3 @@
+[submodule "project-create.wiki"]
+	path = project-create.wiki
+	url = git@github.com:undefinedhuman/project-create.wiki.git
