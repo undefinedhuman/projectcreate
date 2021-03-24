@@ -16,8 +16,8 @@ de/undefinedhuman/sandboxgame/engine/crafting/RecipeItem.java
  de.undefinedhuman.sandboxgame.engine.crafting.RecipeItem
 de/undefinedhuman/sandboxgame/engine/items/type/Armor/Armor.java
  de.undefinedhuman.sandboxgame.engine.items.type.Armor.Armor
-de/undefinedhuman/sandboxgame/engine/entity/components/equip/EquipBlueprint.java
- de.undefinedhuman.sandboxgame.engine.entity.components.equip.EquipBlueprint
+de/undefinedhuman/sandboxgame/engine/entity/components/stats/mana/ManaBlueprint.java
+ de.undefinedhuman.sandboxgame.engine.entity.components.stats.mana.ManaBlueprint
 de/undefinedhuman/sandboxgame/engine/settings/SettingsObject.java
  de.undefinedhuman.sandboxgame.engine.settings.SettingsObject
 de/undefinedhuman/sandboxgame/engine/entity/components/name/NameParam.java
@@ -61,9 +61,8 @@ de/undefinedhuman/sandboxgame/engine/settings/types/Vector2ArraySetting.java
  de.undefinedhuman.sandboxgame.engine.settings.types.Vector2ArraySetting$1
 de/undefinedhuman/sandboxgame/engine/items/type/tools/Tool.java
  de.undefinedhuman.sandboxgame.engine.items.type.tools.Tool
-de/undefinedhuman/sandboxgame/engine/settings/types/TextureOffsetSetting.java
- de.undefinedhuman.sandboxgame.engine.settings.types.TextureOffsetSetting
- de.undefinedhuman.sandboxgame.engine.settings.types.TextureOffsetSetting$1
+de/undefinedhuman/sandboxgame/engine/items/recipe/RecipeType.java
+ de.undefinedhuman.sandboxgame.engine.items.recipe.RecipeType
 de/undefinedhuman/sandboxgame/engine/entity/components/collision/CollisionBlueprint.java
  de.undefinedhuman.sandboxgame.engine.entity.components.collision.CollisionBlueprint
 de/undefinedhuman/sandboxgame/engine/settings/panels/Panel.java
@@ -79,11 +78,10 @@ de/undefinedhuman/sandboxgame/engine/resources/SoundManager.java
 de/undefinedhuman/sandboxgame/engine/settings/types/StringArraySetting.java
  de.undefinedhuman.sandboxgame.engine.settings.types.StringArraySetting
  de.undefinedhuman.sandboxgame.engine.settings.types.StringArraySetting$1
-de/undefinedhuman/sandboxgame/engine/settings/types/TextureSetting.java
- de.undefinedhuman.sandboxgame.engine.settings.types.TextureSetting
- de.undefinedhuman.sandboxgame.engine.settings.types.TextureSetting$1
-de/undefinedhuman/sandboxgame/engine/entity/components/sprite/SpriteLayer.java
- de.undefinedhuman.sandboxgame.engine.entity.components.sprite.SpriteLayer
+de/undefinedhuman/sandboxgame/engine/utils/math/Vector4.java
+ de.undefinedhuman.sandboxgame.engine.utils.math.Vector4
+de/undefinedhuman/sandboxgame/engine/entity/components/stats/food/FoodComponent.java
+ de.undefinedhuman.sandboxgame.engine.entity.components.stats.food.FoodComponent
 de/undefinedhuman/sandboxgame/engine/utils/ds/MultiMap.java
  de.undefinedhuman.sandboxgame.engine.utils.ds.MultiMap
 de/undefinedhuman/sandboxgame/engine/entity/components/movement/MovementBlueprint.java
@@ -145,8 +143,8 @@ de/undefinedhuman/sandboxgame/engine/items/Rarity.java
  de.undefinedhuman.sandboxgame.engine.items.Rarity
 de/undefinedhuman/sandboxgame/engine/items/type/weapons/Bow.java
  de.undefinedhuman.sandboxgame.engine.items.type.weapons.Bow
-de/undefinedhuman/sandboxgame/engine/items/Item.java
- de.undefinedhuman.sandboxgame.engine.items.Item
+de/undefinedhuman/sandboxgame/engine/entity/ComponentList.java
+ de.undefinedhuman.sandboxgame.engine.entity.ComponentList
 de/undefinedhuman/sandboxgame/engine/file/LineWriter.java
  de.undefinedhuman.sandboxgame.engine.file.LineWriter
 de/undefinedhuman/sandboxgame/engine/base/GameObject.java
@@ -159,8 +157,8 @@ de/undefinedhuman/sandboxgame/engine/resources/font/Font.java
  de.undefinedhuman.sandboxgame.engine.resources.font.Font
 de/undefinedhuman/sandboxgame/engine/settings/types/BooleanSetting.java
  de.undefinedhuman.sandboxgame.engine.settings.types.BooleanSetting
-de/undefinedhuman/sandboxgame/engine/entity/components/arm/ShoulderBlueprint.java
- de.undefinedhuman.sandboxgame.engine.entity.components.arm.ShoulderBlueprint
+de/undefinedhuman/sandboxgame/engine/entity/components/stats/health/HealthComponent.java
+ de.undefinedhuman.sandboxgame.engine.entity.components.stats.health.HealthComponent
 de/undefinedhuman/sandboxgame/engine/settings/types/Vector2Setting.java
  de.undefinedhuman.sandboxgame.engine.settings.types.Vector2Setting
  de.undefinedhuman.sandboxgame.engine.settings.types.Vector2Setting$1
@@ -196,15 +194,17 @@ de/undefinedhuman/sandboxgame/engine/file/Serializable.java
  de.undefinedhuman.sandboxgame.engine.file.Serializable
 de/undefinedhuman/sandboxgame/engine/entity/components/movement/MovementComponent.java
  de.undefinedhuman.sandboxgame.engine.entity.components.movement.MovementComponent
-de/undefinedhuman/sandboxgame/engine/entity/components/stats/food/FoodComponent.java
- de.undefinedhuman.sandboxgame.engine.entity.components.stats.food.FoodComponent
-de/undefinedhuman/sandboxgame/engine/entity/components/stats/mana/ManaBlueprint.java
- de.undefinedhuman.sandboxgame.engine.entity.components.stats.mana.ManaBlueprint
-de/undefinedhuman/sandboxgame/engine/entity/ComponentList.java
- de.undefinedhuman.sandboxgame.engine.entity.ComponentList
-de/undefinedhuman/sandboxgame/engine/items/recipe/RecipeType.java
- de.undefinedhuman.sandboxgame.engine.items.recipe.RecipeType
-de/undefinedhuman/sandboxgame/engine/entity/components/stats/health/HealthComponent.java
- de.undefinedhuman.sandboxgame.engine.entity.components.stats.health.HealthComponent
-de/undefinedhuman/sandboxgame/engine/utils/math/Vector4.java
- de.undefinedhuman.sandboxgame.engine.utils.math.Vector4
+de/undefinedhuman/sandboxgame/engine/entity/components/equip/EquipBlueprint.java
+ de.undefinedhuman.sandboxgame.engine.entity.components.equip.EquipBlueprint
+de/undefinedhuman/sandboxgame/engine/entity/components/arm/ShoulderBlueprint.java
+ de.undefinedhuman.sandboxgame.engine.entity.components.arm.ShoulderBlueprint
+de/undefinedhuman/sandboxgame/engine/settings/types/TextureOffsetSetting.java
+ de.undefinedhuman.sandboxgame.engine.settings.types.TextureOffsetSetting
+ de.undefinedhuman.sandboxgame.engine.settings.types.TextureOffsetSetting$1
+de/undefinedhuman/sandboxgame/engine/settings/types/TextureSetting.java
+ de.undefinedhuman.sandboxgame.engine.settings.types.TextureSetting
+ de.undefinedhuman.sandboxgame.engine.settings.types.TextureSetting$1
+de/undefinedhuman/sandboxgame/engine/items/Item.java
+ de.undefinedhuman.sandboxgame.engine.items.Item
+de/undefinedhuman/sandboxgame/engine/entity/components/sprite/SpriteLayer.java
+ de.undefinedhuman.sandboxgame.engine.entity.components.sprite.SpriteLayer

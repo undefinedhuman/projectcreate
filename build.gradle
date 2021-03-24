@@ -90,3 +90,10 @@ project(":editor") {
         testImplementation 'junit:junit:4.12'
     }
 }
+
+project(":launcher") {
+    dependencies {
+        implementation 'com.formdev:flatlaf:0.36'
+        testImplementation 'junit:junit:4.12'
+    }
+}
