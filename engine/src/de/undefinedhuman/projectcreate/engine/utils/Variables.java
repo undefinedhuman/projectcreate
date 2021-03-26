@@ -6,11 +6,10 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Variables {
     // General
-    public static final String NAME = "ProjectCreate";
-    public static final Version VERSION = new Version(0, 0, 0);
+    public static String NAME = "ProjectCreate";
+    public static Version VERSION = new Version(0, 0, 0);
 
     // Engine
-    public static final int LOG_LEVEL = Application.LOG_DEBUG;
     public static final float GAME_CAMERA_ZOOM = 3f;
     public static final float DELTA_MULTIPLIER = 1.0f;
 
@@ -22,6 +21,8 @@ public class Variables {
     public static final String DEFAULT_LANGUAGE = "eu_DE";
 
     // Log
+    public static final int LOG_DELETION_TIME_DAYS = 14;
+    public static final int LOG_LEVEL = Application.LOG_DEBUG;
     public static final String LOG_MESSAGE_FORMAT = "[%prefix% - %time%] %message%";
     public static final String LOG_DATE_FORMAT = "dd-MM-yyyy - HH-mm-ss";
 

@@ -52,7 +52,7 @@ public class ItemEditor extends Editor {
 
         for (FileHandle itemDir : itemDirs) {
             if (!itemDir.isDirectory()) continue;
-            FsFile itemFile = new FsFile(Paths.ITEM_PATH, itemDir.name() + "/settings.item", Files.FileType.Internal, true);
+            FsFile itemFile = new FsFile(Paths.ITEM_PATH, itemDir.name() + "/settings.item", Files.FileType.Internal);
             if(itemFile.isEmpty()) continue;
             FileReader reader = itemFile.getFileReader(true);
             SettingsObject settings = Tools.loadSettings(reader);
@@ -101,11 +101,11 @@ public class ItemEditor extends Editor {
     @Override
     public void save() {
         if(currentItem == null) return;
-        FsFile itemDir = new FsFile(Paths.ITEM_PATH, currentItem.getSettings().get(0).getInt() + Variables.FILE_SEPARATOR, Files.FileType.Local, true);
+        FsFile itemDir = new FsFile(Paths.ITEM_PATH, currentItem.getSettings().get(0).getInt() + Variables.FILE_SEPARATOR, Files.FileType.Local);
         if(itemDir.exists())
             FileUtils.deleteFile(itemDir);
 
-        FileWriter writer = new FsFile(itemDir.getPath(), "settings.item", Files.FileType.Local, false).getFileWriter(true);
+        FileWriter writer = new FsFile(itemDir.path(), "settings.item", Files.FileType.Local).getFileWriter(true);
         writer.writeString("Type").writeString(currentItem.type.name());
         writer.nextLine();
         Tools.saveSettings(writer, currentItem.getSettings());

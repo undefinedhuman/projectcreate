@@ -25,7 +25,7 @@ public class TextureOffsetSetting extends Vector2ArraySetting {
 
     public TextureOffsetSetting(String key, Vector2[] value, boolean offset) {
         super(SettingType.Texture, key, value);
-        try { texture = ImageIO.read(new FsFile("Unknown.png", Files.FileType.Internal, false).getFile());
+        try { texture = ImageIO.read(new FsFile("Unknown.png", Files.FileType.Internal).read());
         } catch (IOException e) { e.printStackTrace(); }
         this.offset = offset;
     }
@@ -39,7 +39,7 @@ public class TextureOffsetSetting extends Vector2ArraySetting {
             @Override
             public void mouseClicked(MouseEvent arg0) {
                 JFileChooser chooser = new JFileChooser();
-                chooser.setCurrentDirectory(new FsFile("editor/", Files.FileType.Internal, false).getFile());
+                chooser.setCurrentDirectory(new FsFile("editor/", Files.FileType.Internal).file());
                 chooser.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));
 
                 int returnVal = chooser.showOpenDialog(null);

@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.engine.camera.CameraManager;
 import de.undefinedhuman.projectcreate.engine.crafting.RecipeItem;
-import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
 import de.undefinedhuman.projectcreate.engine.utils.ds.MultiMap;
 import de.undefinedhuman.projectcreate.equip.EquipScreen;
@@ -48,10 +47,6 @@ public class InventoryManager extends Manager {
         addTempItems(Selector.instance, 1, 2);
         addTempItems(PlayerInventory.instance, ItemManager.instance.getItems().keySet());
         Selector.instance.setSelected(0);
-    }
-
-    private void updateItem(int id) {
-        Log.info(id);
     }
 
     @Override

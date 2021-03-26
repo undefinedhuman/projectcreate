@@ -8,20 +8,17 @@ public abstract class Editor {
     protected JPanel mainPanel, middlePanel, settingsPanel;
 
     public Editor(Container container) {
-        mainPanel = new JPanel(null, true);
-        settingsPanel = new JPanel(null, true);
-        middlePanel = new JPanel(null, true);
-        container.add(addPanel(mainPanel, "Main:", 20, 15, 820, 960));
-        container.add(addPanel(middlePanel, "Type:", 860, 15, 200, 960));
-        container.add(addPanel(settingsPanel, "Settings:", 1080, 15, 820, 960));
+        addPanel(container, mainPanel = new JPanel(null, true), "Main:", 20, 820);
+        addPanel(container, middlePanel = new JPanel(null, true), "Type:", 860, 200);
+        addPanel(container, settingsPanel = new JPanel(null, true), "Settings:", 1080, 820);
     }
 
-    private JScrollPane addPanel(JPanel panel, String name, int x, int y, int width, int height) {
-        panel.setPreferredSize(new Dimension(width - 25, height - 25));
+    private void addPanel(Container container, JPanel panel, String name, int x, int width) {
+        panel.setPreferredSize(new Dimension(width - 25, 960 - 25));
         JScrollPane scrollPane = new JScrollPane(panel);
-        scrollPane.setBounds(x, y, width, 990);
+        scrollPane.setBounds(x, 15, width, 990);
         scrollPane.setBorder(BorderFactory.createTitledBorder(name));
-        return scrollPane;
+        container.add(scrollPane);
     }
 
     public abstract void save();

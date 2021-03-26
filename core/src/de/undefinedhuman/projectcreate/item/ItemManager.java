@@ -2,10 +2,7 @@ package de.undefinedhuman.projectcreate.item;
 
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
-import de.undefinedhuman.projectcreate.engine.file.FileReader;
-import de.undefinedhuman.projectcreate.engine.file.FsFile;
-import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
-import de.undefinedhuman.projectcreate.engine.file.Paths;
+import de.undefinedhuman.projectcreate.engine.file.*;
 import de.undefinedhuman.projectcreate.engine.items.Item;
 import de.undefinedhuman.projectcreate.engine.items.ItemType;
 import de.undefinedhuman.projectcreate.engine.log.Log;
@@ -94,7 +91,7 @@ public class ItemManager extends Manager {
     }
 
     private Item loadItem(int id) {
-        FileReader reader = new FsFile(Paths.ITEM_PATH, id + "/settings.item", Files.FileType.Internal, false).getFileReader(true);
+        FileReader reader = new FsFile(Paths.ITEM_PATH, id + "/settings.item", Files.FileType.Internal).getFileReader(true);
         SettingsObject settingsObject = Tools.loadSettings(reader);
         if(!settingsObject.containsKey("Type")) return null;
         ItemType type = ItemType.valueOf(((LineSplitter) settingsObject.get("Type")).getNextString());

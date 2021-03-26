@@ -3,12 +3,12 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 
 sourceSets.main.java.srcDirs = ["src/"]
 
-project.ext.mainClassName = "de.undefinedhuman.sandboxgame.desktop.DesktopLauncher"
+project.ext.mainClassName = "de.undefinedhuman.projectcreate.launcher.Main"
 project.ext.assetsDir = new File("../assets");
 
 jar {
     manifest {
-        attributes 'Main-Class': 'de.undefinedhuman.sandboxgame.desktop.DesktopLauncher'
+        attributes 'Main-Class': 'de.undefinedhuman.projectcreate.launcher.Main'
     }
 }
 

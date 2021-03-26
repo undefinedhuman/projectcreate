@@ -93,6 +93,10 @@ project(":editor") {
 
 project(":launcher") {
     dependencies {
+        compile project(":engine")
+        compile 'com.badlogicgames.gdx:gdx-backend-headless:1.9.4'
+
+        implementation 'org.jsoup:jsoup:1.13.1'
         implementation 'com.formdev:flatlaf:0.36'
         testImplementation 'junit:junit:4.12'
     }

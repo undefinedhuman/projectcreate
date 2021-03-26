@@ -2,12 +2,9 @@ package de.undefinedhuman.projectcreate.engine.resources.texture;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.resources.ResourceManager;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
 
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class TextureManager extends Manager {
@@ -40,8 +37,6 @@ public class TextureManager extends Manager {
                 loaded |= hasTexture(name);
             } else textures.get(name).add();
         }
-        if (loaded)
-            Log.info("Texture" + Tools.appendSToString(names.length) + " loaded successfully: " + Arrays.toString(names));
         return loaded;
     }
 

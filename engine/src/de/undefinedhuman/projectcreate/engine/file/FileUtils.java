@@ -14,18 +14,18 @@ public class FileUtils {
 
     public static BufferedReader getBufferedReader(FsFile file) {
         try {
-            return new BufferedReader(file.getFileHandle().reader());
+            return new BufferedReader(file.reader());
         } catch (Exception ex) {
-            Log.instance.crash("Can't create file reader \n" + ex.getMessage());
+            Log.instance.exit("Can't create file reader: \n" + ex.getMessage());
         }
         return null;
     }
 
     public static BufferedWriter getBufferedWriter(FsFile file) {
         try {
-            return new BufferedWriter(file.getFileHandle().writer(false));
+            return new BufferedWriter(file.writer(false));
         } catch (Exception ex) {
-            Log.instance.crash("Can't create file writer \n" + ex.getMessage());
+            Log.instance.exit("Can't create file writer: \n" + ex.getMessage());
         }
         return null;
     }
@@ -34,7 +34,7 @@ public class FileUtils {
         try {
             reader.close();
         } catch (Exception ex) {
-            Log.instance.crash(ex.getMessage());
+            Log.instance.exit(ex.getMessage());
         }
     }
 
@@ -42,7 +42,7 @@ public class FileUtils {
         try {
             writer.close();
         } catch (Exception ex) {
-            Log.instance.crash(ex.getMessage());
+            Log.instance.exit(ex.getMessage());
         }
     }
 
@@ -59,7 +59,7 @@ public class FileUtils {
     public static void deleteFile(FsFile... filesToDelete) {
         for(FsFile file : filesToDelete) {
             ArrayList<String> deletedFileNames = new ArrayList<>();
-            deleteFile(deletedFileNames, file.getFile());
+            deleteFile(deletedFileNames, file.file());
             Collections.reverse(deletedFileNames);
             Log.info("File" + Tools.appendSToString(deletedFileNames.size()) + " deleted succesfully: " + Arrays.toString(deletedFileNames.toArray()));
         }

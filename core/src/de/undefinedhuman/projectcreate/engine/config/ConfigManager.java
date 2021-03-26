@@ -17,9 +17,9 @@ public class ConfigManager extends Manager implements Serializable {
 
     @Override
     public void init() {
-        String fileName = "config.txt";
-        file = new FsFile(Paths.CONFIG_PATH, fileName, Files.FileType.Local, false);
-        if (!file.isEmpty()) load();
+        String fileName = "game.config";
+        file = new FsFile(Paths.CONFIG_PATH, fileName, Files.FileType.External);
+        if (file.length() != 0) load();
     }
 
     @Override

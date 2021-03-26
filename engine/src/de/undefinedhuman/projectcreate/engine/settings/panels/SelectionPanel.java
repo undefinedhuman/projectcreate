@@ -3,10 +3,7 @@ package de.undefinedhuman.projectcreate.engine.settings.panels;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.engine.file.FileReader;
-import de.undefinedhuman.projectcreate.engine.file.FsFile;
-import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
-import de.undefinedhuman.projectcreate.engine.file.Paths;
+import de.undefinedhuman.projectcreate.engine.file.*;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.resources.ResourceManager;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
@@ -32,7 +29,7 @@ public class SelectionPanel<T extends PanelObject> extends Panel<T> {
 
         for (FileHandle itemDir : itemDirs) {
             if (!itemDir.isDirectory()) continue;
-            FileReader reader = new FileReader(new FsFile(Paths.ITEM_PATH, itemDir.name() + "/settings.item", Files.FileType.Internal, false), true);
+            FileReader reader = new FileReader(new FsFile(Paths.ITEM_PATH, itemDir.name() + "/settings.item", Files.FileType.Internal), true);
             ids.add(itemDir.name() + "-" + ((LineSplitter) Tools.loadSettings(reader).get("Name")).getNextString());
             reader.close();
         }

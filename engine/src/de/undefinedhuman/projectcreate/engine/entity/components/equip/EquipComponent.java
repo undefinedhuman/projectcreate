@@ -5,10 +5,7 @@ import de.undefinedhuman.projectcreate.engine.entity.Component;
 import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.LineWriter;
-import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
-
-import java.util.Arrays;
 
 public class EquipComponent extends Component {
 
@@ -21,7 +18,6 @@ public class EquipComponent extends Component {
         this.itemOffsets = itemOffsets;
         this.itemPositions = itemPositions;
         this.invisibleSprites = invisibleSprites;
-        Log.info(Arrays.toString(invisibleSprites));
         this.type = ComponentType.EQUIP;
     }
 

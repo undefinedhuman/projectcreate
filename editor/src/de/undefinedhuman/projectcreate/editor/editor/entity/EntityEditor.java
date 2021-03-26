@@ -102,8 +102,8 @@ public class EntityEditor extends Editor {
 
         for (FileHandle entityDir : entityDirs) {
             if (!entityDir.isDirectory()) continue;
-            FsFile entityFile = new FsFile(Paths.ENTITY_PATH, entityDir.name() + "/settings.entity", Files.FileType.Internal, true);
-            if(entityFile.isEmpty()) continue;
+            FsFile entityFile = new FsFile(Paths.ENTITY_PATH, entityDir.name() + "/settings.entity", Files.FileType.Internal);
+            if(entityFile.length() == 0) continue;
             FileReader reader = entityFile.getFileReader(true);
             SettingsObject settings = Tools.loadSettings(reader);
             ids.add(entityDir.name() + "-" + ((LineSplitter) settings.get("Name")).getNextString());
@@ -158,11 +158,11 @@ public class EntityEditor extends Editor {
 
     @Override
     public void save() {
-        FsFile entityDir = new FsFile(Paths.ENTITY_PATH, baseSettings.getSettings().get(0).getString() + Variables.FILE_SEPARATOR, Files.FileType.Local, true);
+        FsFile entityDir = new FsFile(Paths.ENTITY_PATH, baseSettings.getSettings().get(0).getString() + Variables.FILE_SEPARATOR, Files.FileType.Local);
         if(entityDir.exists())
             FileUtils.deleteFile(entityDir);
 
-        FileWriter writer = new FsFile(entityDir.getPath(), "settings.entity", Files.FileType.Local, false).getFileWriter(true);
+        FileWriter writer = new FsFile(entityDir.path(), "settings.entity", Files.FileType.Local).getFileWriter(true);
         Tools.saveSettings(writer, baseSettings.getSettings());
         for(ComponentBlueprint componentBlueprint : this.components.values())
             componentBlueprint.save(writer);

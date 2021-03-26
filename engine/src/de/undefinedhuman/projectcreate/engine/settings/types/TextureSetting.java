@@ -27,7 +27,7 @@ public class TextureSetting extends Setting {
 
     public TextureSetting(String key, Object value) {
         super(SettingType.Texture, key, value);
-        try { texture = ImageIO.read(new FsFile("Unknown.png", Files.FileType.Internal, false).getFile());
+        try { loadTexture("Unknown.png");
         } catch (IOException e) { e.printStackTrace(); }
         setValue("Unknown.png");
     }
@@ -48,9 +48,9 @@ public class TextureSetting extends Setting {
     @Override
     public void save(FileWriter writer) {
         writer.writeString(key).writeString(value.toString());
-        FsFile file = new FsFile(writer.getParentDirectory().getPath() + Variables.FILE_SEPARATOR + getString(), Files.FileType.Local, false);
-        try { ImageIO.write(texture, "png", file.getFile());
-        } catch (IOException e) { Log.instance.crash(e.getMessage()); }
+        FsFile file = new FsFile(writer.getParentDirectory().path() + Variables.FILE_SEPARATOR + getString(),  Files.FileType.Local);
+        try { ImageIO.write(texture, "png", file.file());
+        } catch (IOException e) { Log.instance.exit(e.getMessage()); }
     }
 
     @Override
@@ -58,17 +58,17 @@ public class TextureSetting extends Setting {
         if(!(value instanceof LineSplitter)) return;
         setValue(((LineSplitter) value).getNextString());
         try {
-            loadTexture(parentDir.getPath() + Variables.FILE_SEPARATOR + getString());
+            loadTexture(parentDir.path() + Variables.FILE_SEPARATOR + getString());
             if(texture == null) loadTexture("Unknown.png");
-        } catch (Exception e) { Log.instance.crash(e.getMessage()); }
+        } catch (Exception e) { Log.instance.exit(e.getMessage()); }
         if(TextureManager.instance != null) {
-            setValue(parentDir.getPath() + Variables.FILE_SEPARATOR + getString());
+            setValue(parentDir.path() + Variables.FILE_SEPARATOR + getString());
             TextureManager.instance.addTexture(getString());
         }
     }
 
     private void loadTexture(String path) throws IOException {
-        texture = ImageIO.read(new FsFile(path, Files.FileType.Internal, false).getFileHandle().read());
+        texture = ImageIO.read(new FsFile(path, Files.FileType.Internal).read());
     }
 
     @Override
@@ -83,11 +83,12 @@ public class TextureSetting extends Setting {
 
     public void mouseClickEvent(MouseEvent event) {
         JFileChooser chooser = new JFileChooser();
-        chooser.setCurrentDirectory(new FsFile("editor/", Files.FileType.Internal, false).getFile());
+        chooser.setCurrentDirectory(new FsFile("editor/", Files.FileType.Internal).file());
         chooser.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));
 
         int returnVal = chooser.showOpenDialog(null);
-        if(returnVal != JFileChooser.APPROVE_OPTION) return;
+        if(returnVal != JFileChooser.APPROVE_OPTION)
+            return;
         File textureFile = chooser.getSelectedFile();
         if(textureFile == null) return;
         loadTexture(textureFile);
@@ -95,7 +96,7 @@ public class TextureSetting extends Setting {
 
     public void loadTexture(File textureFile) {
         try { texture = ImageIO.read(textureFile);
-        } catch (Exception e) { Log.instance.crash(e.getMessage()); }
+        } catch (Exception e) { Log.instance.exit(e.getMessage()); }
         textureLabel.setIcon(new ImageIcon(texture));
         setValue(textureFile.getName());
     }

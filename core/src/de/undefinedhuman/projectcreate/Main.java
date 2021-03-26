@@ -95,6 +95,7 @@ public class Main extends Game {
     }
 
     private void initGDX() {
+        Gdx.app.setApplicationLogger(Log.instance);
         Gdx.app.setLogLevel(Variables.LOG_LEVEL);
         Pixmap cursor = new Pixmap(Gdx.files.internal(Paths.GUI_PATH + "Cursor.png"));
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(cursor, 0, 0));

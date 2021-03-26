@@ -49,18 +49,18 @@ public class FileWriter {
     }
 
     public FsFile getParentDirectory() {
-        return new FsFile(file.getFileHandle().parent().path(), file.getFileHandle().type(), true);
+        return new FsFile(file.parent().path(), file.type());
     }
 
     public FileWriter writeValue(Object v) {
         try { writer.write(base ? Base64Coder.encodeString(String.valueOf(v)) + this.separator : v + this.separator);
-        } catch (IOException ex) { Log.instance.crash(ex.getMessage()); }
+        } catch (IOException ex) { Log.instance.exit(ex.getMessage()); }
         return this;
     }
 
     public FileWriter nextLine() {
         try { writer.newLine();
-        } catch (IOException ex) { Log.instance.crash(ex.getMessage()); }
+        } catch (IOException ex) { Log.instance.exit(ex.getMessage()); }
         return this;
     }
 

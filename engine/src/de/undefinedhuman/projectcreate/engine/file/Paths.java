@@ -1,9 +1,7 @@
 package de.undefinedhuman.projectcreate.engine.file;
 
-import de.undefinedhuman.projectcreate.engine.utils.Variables;
-
 public class Paths {
-    public static final String GAME_PATH = "../" + Variables.NAME + "/";
+    public static final String GAME_PATH = ".projectcreate/";
     public static final String LOG_PATH = GAME_PATH + "log/";
     public static final String CONFIG_PATH = GAME_PATH + "config/";
     public static final String SCREENSHOT_PATH = GAME_PATH + "screenshots/";
