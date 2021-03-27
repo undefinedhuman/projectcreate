@@ -9,7 +9,7 @@ import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
-import de.undefinedhuman.projectcreate.utils.Tools;
+import de.undefinedhuman.projectcreate.utils.Utils;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -38,7 +38,7 @@ public class BlueprintManager extends Manager {
             loaded |= hasBlueprint(id);
         }
         if (loaded)
-            Log.info("Blueprint" + Tools.appendSToString(ids.length) + " loaded successfully: " + Arrays.toString(ids));
+            Log.info("Blueprint" + Utils.appendSToString(ids.length) + " loaded successfully: " + Arrays.toString(ids));
         return loaded;
     }
 
@@ -73,7 +73,7 @@ public class BlueprintManager extends Manager {
     public static Blueprint loadBlueprint(FsFile file) {
         Blueprint blueprint = new Blueprint();
         FileReader reader = file.getFileReader(true);
-        SettingsObject object = Tools.loadSettings(reader);
+        SettingsObject object = Utils.loadSettings(reader);
 
         for(Setting setting : blueprint.settings.getSettings())
             setting.loadSetting(reader.getParentDirectory(), object);

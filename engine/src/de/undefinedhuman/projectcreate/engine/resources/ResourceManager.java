@@ -10,6 +10,9 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+
 public class ResourceManager {
 
     public static Texture loadTexture(String path) {
@@ -21,6 +24,17 @@ public class ResourceManager {
         if(texture == null && path.equals("Unknown.png"))
             Log.instance.exit("Can't load default texture!");
         return texture != null ? texture : loadTexture("Unknown.png");
+    }
+
+    public static BufferedImage loadImage(String path) {
+        BufferedImage image = null;
+        try { image = ImageIO.read(Gdx.files.internal(path).read());
+        } catch (Exception ex) {
+            Log.error("Error while loading image: " + path + "\n" + ex.getMessage());
+        }
+        if(image == null && path.equals("Unknown.png"))
+            Log.instance.exit("Can't load default image!");
+        return image != null ? image : loadImage("Unknown.png");
     }
 
     public static Music loadMusic(String path) {

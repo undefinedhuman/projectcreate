@@ -1,14 +1,15 @@
 sourceCompatibility = JavaVersion.VERSION_1_8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-sourceSets.main.java.srcDirs = ["src/"]
-
 project.ext.mainClassName = "de.undefinedhuman.projectcreate.launcher.Main"
-project.ext.assetsDir = new File("../assets");
+project.ext.assetsDir = new File("../assets")
+
+sourceSets.main.java.srcDirs = ["src/"]
+sourceSets.main.resources.srcDirs = [ project.assetsDir ]
 
 jar {
     manifest {
-        attributes 'Main-Class': 'de.undefinedhuman.projectcreate.launcher.Main'
+        attributes 'Main-Class': project.mainClassName
     }
 }
 

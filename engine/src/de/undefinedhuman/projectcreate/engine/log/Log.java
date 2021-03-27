@@ -43,9 +43,10 @@ public class Log extends Manager implements ApplicationLogger {
     }
 
     public void save() {
-        if(file == null) return;
-        FileWriter writer = file.getFileWriter(false, "");
+        if(file == null)
+            return;
         info("Log file successfully saved!");
+        FileWriter writer = file.getFileWriter(false, "");
         for (String message : logMessages)
             writer.writeString(message).nextLine();
         logMessages.clear();

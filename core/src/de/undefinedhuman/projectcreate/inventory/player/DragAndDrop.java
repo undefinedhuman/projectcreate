@@ -13,7 +13,7 @@ import de.undefinedhuman.projectcreate.inventory.InventoryManager;
 import de.undefinedhuman.projectcreate.inventory.slot.InvSlot;
 import de.undefinedhuman.projectcreate.item.drop.DropItemManager;
 import de.undefinedhuman.projectcreate.utils.Mouse;
-import de.undefinedhuman.projectcreate.utils.Tools;
+import de.undefinedhuman.projectcreate.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -83,7 +83,7 @@ public class DragAndDrop {
 
                     if (InventoryManager.instance.overGui()) cancelMoving();
                     else {
-                        DropItemManager.instance.addDropItem((byte) currentItem.getID(), currentItem.getAmount(), Tools.getWorldPos(CameraManager.gameCamera, new Vector2(Mouse.getX() - 8, Mouse.getY() - 8)));
+                        DropItemManager.instance.addDropItem((byte) currentItem.getID(), currentItem.getAmount(), Utils.getWorldPos(CameraManager.gameCamera, new Vector2(Mouse.getX() - 8, Mouse.getY() - 8)));
                         removeTempItem();
                     }
 

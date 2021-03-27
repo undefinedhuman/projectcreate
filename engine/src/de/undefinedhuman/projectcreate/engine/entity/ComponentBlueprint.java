@@ -5,7 +5,7 @@ import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +30,7 @@ public abstract class ComponentBlueprint {
 
     public void save(FileWriter writer) {
         writer.writeString("{:" + type.name()).nextLine();
-        Tools.saveSettings(writer, settings.getSettings());
+        Utils.saveSettings(writer, settings.getSettings());
         writer.writeString("}").nextLine();
     }
 

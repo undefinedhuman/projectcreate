@@ -16,7 +16,7 @@ import de.undefinedhuman.projectcreate.engine.utils.Manager;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.entity.Entity;
 import de.undefinedhuman.projectcreate.screen.gamescreen.GameManager;
-import de.undefinedhuman.projectcreate.utils.Tools;
+import de.undefinedhuman.projectcreate.utils.Utils;
 
 public class BackgroundManager extends Manager {
 
@@ -65,9 +65,10 @@ public class BackgroundManager extends Manager {
         layers[0].update(delta, 5f);
         Entity player = GameManager.instance.player;
         if(player == null) return;
-        speed = Math.abs(Tools.floorBackgroundSpeed(lastX - player.getX())) * -((MovementComponent) player.getComponent(ComponentType.MOVEMENT)).velocity.x;
+        speed = Math.abs(Utils.floorBackgroundSpeed(lastX - player.getX())) * -((MovementComponent) player.getComponent(ComponentType.MOVEMENT)).velocity.x;
         lastX = player.getX();
-        for(int i = 1; i < layers.length; i++) layers[i].update(delta, speed);
+        for(int i = 1; i < layers.length; i++)
+            layers[i].update(delta, speed);
     }
 
     @Override

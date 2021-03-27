@@ -2,7 +2,7 @@ package de.undefinedhuman.projectcreate.engine.collision;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 public class Hitbox {
@@ -40,7 +40,7 @@ public class Hitbox {
 
     public void render(SpriteBatch batch) {
         for(int i = 0; i < verticesLength; i++)
-            Tools.drawLine(batch, collisionData[VERTICES_CURRENT][i], collisionData[VERTICES_CURRENT][(i+1)%verticesLength], 1, Variables.HITBOX_COLOR);
+            Utils.drawLine(batch, collisionData[VERTICES_CURRENT][i], collisionData[VERTICES_CURRENT][(i+1)%verticesLength], 1, Variables.HITBOX_COLOR);
     }
 
     public Vector2 getCenter() {

@@ -9,7 +9,7 @@ import de.undefinedhuman.projectcreate.gui.Gui;
 import de.undefinedhuman.projectcreate.gui.texture.GuiTemplate;
 import de.undefinedhuman.projectcreate.inventory.InvTarget;
 import de.undefinedhuman.projectcreate.inventory.slot.InvSlot;
-import de.undefinedhuman.projectcreate.utils.Tools;
+import de.undefinedhuman.projectcreate.utils.Utils;
 
 public class EquipScreen extends Gui implements InvTarget {
 
@@ -23,7 +23,7 @@ public class EquipScreen extends Gui implements InvTarget {
     public EquipScreen() {
         super(GuiTemplate.SMALL_PANEL);
         if(instance == null) instance = this;
-        setSize(Tools.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 5), Tools.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 10));
+        setSize(Utils.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 5), Utils.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 10));
         setTitle("Character", Font.Title, Color.WHITE);
 
         /*addChild(new Gui("gui/preview/equip/Human-Preview.png").set(new CenterConstraint(), new CenterConstraint(), new PixelConstraint(64), new PixelConstraint(128)).setOffset(new CenterOffset(), new PixelOffset(48)));

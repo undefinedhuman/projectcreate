@@ -17,7 +17,7 @@ import de.undefinedhuman.projectcreate.network.ClientManager;
 import de.undefinedhuman.projectcreate.network.utils.PacketUtils;
 import de.undefinedhuman.projectcreate.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.utils.Mouse;
-import de.undefinedhuman.projectcreate.utils.Tools;
+import de.undefinedhuman.projectcreate.utils.Utils;
 
 public class WorldManager {
 
@@ -66,9 +66,9 @@ public class WorldManager {
         if (!canPlace) return;
         int id = Selector.instance.getSelectedItemID();
         Block block = (Block) ItemManager.instance.getItem(id);
-        Vector2i blockPos = Tools.convertToBlockPos(Tools.getWorldPos(CameraManager.gameCamera, Mouse.getMouseCoords()));
+        Vector2i blockPos = Utils.convertToBlockPos(Utils.getWorldPos(CameraManager.gameCamera, Mouse.getMouseCoords()));
 
-        if(id == 0 || !isInRange(blockPos, Tools.convertToBlockPos(GameManager.instance.player.getCenterPosition()), Variables.BLOCK_PLACEMENT_RANGE)) return;
+        if(id == 0 || !isInRange(blockPos, Utils.convertToBlockPos(GameManager.instance.player.getCenterPosition()), Variables.BLOCK_PLACEMENT_RANGE)) return;
         if(worldLayer == World.MAIN_LAYER) placeBlockInMainLayer(blockPos.x, blockPos.y, block);
         if(worldLayer == World.BACK_LAYER) placeBlockInBackLayer(blockPos.x, blockPos.y, block);
     }
@@ -101,7 +101,7 @@ public class WorldManager {
         if (!canDestroy) return;
 
         Pickaxe pickaxe = (Pickaxe) Selector.instance.getSelectedItem();
-        Vector2i blockPos = Tools.convertToBlockPos(Tools.getWorldPos(CameraManager.gameCamera, Mouse.getMouseCoords())), playerCenter = Tools.convertToBlockPos(new Vector2().add(GameManager.instance.player.getPosition()).add(GameManager.instance.player.getCenter()));
+        Vector2i blockPos = Utils.convertToBlockPos(Utils.getWorldPos(CameraManager.gameCamera, Mouse.getMouseCoords())), playerCenter = Utils.convertToBlockPos(new Vector2().add(GameManager.instance.player.getPosition()).add(GameManager.instance.player.getCenter()));
         Block currentBlock = (Block) ItemManager.instance.getItem(World.instance.getBlock(blockPos.x, blockPos.y, World.MAIN_LAYER));
 
         if (currentBlock.id.getInt() == 0 || !isInRange(blockPos, playerCenter, pickaxe.range.getInt()) || currentBlock.durability.getInt() == -1)

@@ -9,7 +9,7 @@ import de.undefinedhuman.projectcreate.gui.GuiManager;
 import de.undefinedhuman.projectcreate.gui.transforms.constraints.Constraint;
 import de.undefinedhuman.projectcreate.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.projectcreate.gui.transforms.offset.Offset;
-import de.undefinedhuman.projectcreate.utils.Tools;
+import de.undefinedhuman.projectcreate.utils.Utils;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -117,7 +117,7 @@ public class GuiTransform {
     }
 
     public boolean isClicked(OrthographicCamera camera) {
-        Vector2 coords = Tools.getMouseCoordsInWorldSpace(camera);
+        Vector2 coords = Utils.getMouseCoordsInWorldSpace(camera);
         return (coords.x >= getCurrentValue(Axis.X) && coords.x <= getCurrentValue(Axis.X) + getCurrentValue(Axis.WIDTH)) && (coords.y >= getCurrentValue(Axis.Y) && coords.y <= getCurrentValue(Axis.Y) + getCurrentValue(Axis.HEIGHT));
     }
 

@@ -8,7 +8,7 @@ import de.undefinedhuman.projectcreate.gui.texture.GuiTemplate;
 import de.undefinedhuman.projectcreate.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.projectcreate.inventory.slot.InvSlot;
 import de.undefinedhuman.projectcreate.item.ItemManager;
-import de.undefinedhuman.projectcreate.utils.Tools;
+import de.undefinedhuman.projectcreate.utils.Utils;
 
 public class Inventory extends Gui implements InvTarget {
 
@@ -22,7 +22,7 @@ public class Inventory extends Gui implements InvTarget {
     public Inventory(int row, int col, GuiTemplate template) {
         super(template);
         inventory = new InvSlot[this.row = row][this.col = col];
-        setSize(Tools.getInventoryConstraint(template, col), Tools.getInventoryConstraint(template, row));
+        setSize(Utils.getInventoryConstraint(template, col), Utils.getInventoryConstraint(template, row));
 
         for (int i = 0; i < inventory.length; i++)
             for (int j = 0; j < inventory[i].length; j++) {

@@ -13,7 +13,7 @@ import de.undefinedhuman.projectcreate.engine.utils.math.Vector4;
 import de.undefinedhuman.projectcreate.entity.chunk.Chunk;
 import de.undefinedhuman.projectcreate.entity.ecs.System;
 import de.undefinedhuman.projectcreate.entity.ecs.system.*;
-import de.undefinedhuman.projectcreate.utils.Tools;
+import de.undefinedhuman.projectcreate.utils.Utils;
 import de.undefinedhuman.projectcreate.world.World;
 
 import java.util.ArrayList;
@@ -91,7 +91,7 @@ public class EntityManager extends Manager {
     }
 
     public Chunk getChunk(int x, int y) {
-        y = Tools.clamp(y, 0, chunks[0].length-1);
+        y = Utils.clamp(y, 0, chunks[0].length-1);
         return chunks[(chunkSize.x + x) % chunkSize.x][y];
     }
 
@@ -103,7 +103,7 @@ public class EntityManager extends Manager {
         ArrayList<Entity> entities = new ArrayList<>();
         for(int chunkX = CameraManager.instance.chunkBounds.x; chunkX <= CameraManager.instance.chunkBounds.z; chunkX++)
             for(int chunkY = CameraManager.instance.chunkBounds.y; chunkY <= CameraManager.instance.chunkBounds.w; chunkY++) {
-                Collection<Entity> entitiesOfChunk = chunks[Tools.getWorldPositionX(chunkX, chunkSize.x)][chunkY].getEntitiesByType(type);
+                Collection<Entity> entitiesOfChunk = chunks[Utils.getWorldPositionX(chunkX, chunkSize.x)][chunkY].getEntitiesByType(type);
                 if(entitiesOfChunk != null) entities.addAll(entitiesOfChunk);
             }
         return entities;

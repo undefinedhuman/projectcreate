@@ -12,7 +12,7 @@ import de.undefinedhuman.projectcreate.entity.Entity;
 import de.undefinedhuman.projectcreate.item.ItemManager;
 import de.undefinedhuman.projectcreate.network.ClientManager;
 import de.undefinedhuman.projectcreate.network.utils.PacketUtils;
-import de.undefinedhuman.projectcreate.utils.Tools;
+import de.undefinedhuman.projectcreate.utils.Utils;
 
 public class EquipManager {
 
@@ -33,7 +33,7 @@ public class EquipManager {
         EquipComponent equipComponent = (EquipComponent) entity.getComponent(ComponentType.EQUIP);
         Item item = ItemManager.instance.getItem(id);
         equipComponent.setItemID(armor ? getItemIndex(item.type) : 0, id);
-        setSpriteData(spriteComponent, armor ? Tools.capitalizeFirstLetter(item.type.name()) : "Item", item.useIconAsHandTexture.getBoolean() ? item.iconTexture.getString() : item.itemTexture.getString(), item.useIconAsHandTexture.getBoolean() ? new Vector2(16, 16) : new Vector2(128, 64), true);
+        setSpriteData(spriteComponent, armor ? Utils.capitalizeFirstLetter(item.type.name()) : "Item", item.useIconAsHandTexture.getBoolean() ? item.iconTexture.getString() : item.itemTexture.getString(), item.useIconAsHandTexture.getBoolean() ? new Vector2(16, 16) : new Vector2(128, 64), true);
         if (armor) setVisible(spriteComponent, false, ((Armor) item).inVisibleSprites.getStringArray());
         else setSpriteData(spriteComponent, "Item Hitbox", null, new Vector2(0, 0), true);
     }
@@ -65,7 +65,7 @@ public class EquipManager {
         EquipComponent equipComponent = (EquipComponent) entity.getComponent(ComponentType.EQUIP);
         Item item = ItemManager.instance.getItem(id);
         equipComponent.setItemID(armor ? getItemIndex(item.type) : 0, -1);
-        setVisible(spriteComponent, false, armor ? Tools.capitalizeFirstLetter(item.type.name()) : "Item");
+        setVisible(spriteComponent, false, armor ? Utils.capitalizeFirstLetter(item.type.name()) : "Item");
         if (armor) setVisible(spriteComponent, true, ((Armor) item).inVisibleSprites.getStringArray());
     }
 

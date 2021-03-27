@@ -20,7 +20,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Tools {
+public class Utils {
 
     public static SettingsObject loadSettings(FileReader reader) {
         SettingsObject settingsObject = new SettingsObject();
@@ -33,6 +33,12 @@ public class Tools {
         return settingsObject;
     }
 
+    public static void loadSettings(FileReader reader, Setting... settings) {
+        SettingsObject object = loadSettings(reader);
+        for(Setting setting : settings)
+            setting.loadSetting(reader.getParentDirectory(), object);
+    }
+
     private static String loadKey(String key) {
         String[] values = key.split(":");
         if(values.length < 2)
@@ -41,6 +47,13 @@ public class Tools {
     }
 
     public static void saveSettings(FileWriter writer, List<Setting> settings) {
+        for(Setting setting : settings) {
+            setting.save(writer);
+            writer.nextLine();
+        }
+    }
+
+    public static void saveSettings(FileWriter writer, Setting... settings) {
         for(Setting setting : settings) {
             setting.save(writer);
             writer.nextLine();

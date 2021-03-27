@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.file.*;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.resources.ResourceManager;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class SelectionPanel<T extends PanelObject> extends Panel<T> {
         for (FileHandle itemDir : itemDirs) {
             if (!itemDir.isDirectory()) continue;
             FileReader reader = new FileReader(new FsFile(Paths.ITEM_PATH, itemDir.name() + "/settings.item", Files.FileType.Internal), true);
-            ids.add(itemDir.name() + "-" + ((LineSplitter) Tools.loadSettings(reader).get("Name")).getNextString());
+            ids.add(itemDir.name() + "-" + ((LineSplitter) Utils.loadSettings(reader).get("Name")).getNextString());
             reader.close();
         }
 
@@ -75,8 +75,8 @@ public class SelectionPanel<T extends PanelObject> extends Panel<T> {
     @Override
     public void selectObject(T object) {
         selection.setSelectedItem(object.getKey());
-        Tools.removeSettings(objectPanel);
-        Tools.addSettings(objectPanel, object.getSettings());
+        Utils.removeSettings(objectPanel);
+        Utils.addSettings(objectPanel, object.getSettings());
     }
 
 }

@@ -10,7 +10,7 @@ import de.undefinedhuman.projectcreate.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.projectcreate.gui.transforms.offset.PixelOffset;
 import de.undefinedhuman.projectcreate.inventory.InventoryManager;
 import de.undefinedhuman.projectcreate.inventory.slot.MenuSlot;
-import de.undefinedhuman.projectcreate.utils.Tools;
+import de.undefinedhuman.projectcreate.utils.Utils;
 
 public class SidePanel extends Gui {
 
@@ -32,7 +32,7 @@ public class SidePanel extends Gui {
         super(GuiTemplate.SMALL_PANEL);
         if(instance == null) instance = this;
 
-        set(new RelativeConstraint(1), new CenterConstraint(), Tools.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 1), Tools.getInventoryConstraint(GuiTemplate.SMALL_PANEL, textures.length)).setOffset(new PixelOffset(-Tools.getInventorySize(GuiTemplate.SMALL_PANEL, 1) - 25), new CenterOffset());
+        set(new RelativeConstraint(1), new CenterConstraint(), Utils.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 1), Utils.getInventoryConstraint(GuiTemplate.SMALL_PANEL, textures.length)).setOffset(new PixelOffset(-Utils.getInventorySize(GuiTemplate.SMALL_PANEL, 1) - 25), new CenterOffset());
         for (int i = textures.length-1; i >= 0; i--)
             addMenuItem(i, textures.length - i - 1);
     }

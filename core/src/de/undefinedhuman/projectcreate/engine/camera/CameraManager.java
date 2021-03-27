@@ -7,7 +7,7 @@ import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector4i;
 import de.undefinedhuman.projectcreate.entity.EntityManager;
 import de.undefinedhuman.projectcreate.screen.gamescreen.GameManager;
-import de.undefinedhuman.projectcreate.utils.Tools;
+import de.undefinedhuman.projectcreate.utils.Utils;
 import de.undefinedhuman.projectcreate.world.World;
 
 public class CameraManager extends Manager {
@@ -57,7 +57,7 @@ public class CameraManager extends Manager {
         // If lerp gets added again, make sure, that if the player gets teleported to the other side of the world the camera sets with him, otherwise there will be some kind of laggy movement
         gameCamera.position
                 .set(new Vector3(GameManager.instance.player.getCenterPosition(), 0))
-                .y = Tools.clamp(gameCamera.position.y, cameraYBounds, World.instance.pixelSize.y - cameraYBounds);
+                .y = Utils.clamp(gameCamera.position.y, cameraYBounds, World.instance.pixelSize.y - cameraYBounds);
         gameCamera.update();
     }
 

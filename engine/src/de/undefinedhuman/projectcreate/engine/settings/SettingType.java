@@ -6,6 +6,7 @@ public enum SettingType {
     Int,
     Boolean,
     Rarity,
+    Version,
     Vector2,
     StringArray,
     Selection,

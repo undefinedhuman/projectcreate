@@ -11,7 +11,7 @@ import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
 import de.undefinedhuman.projectcreate.inventory.InventoryManager;
-import de.undefinedhuman.projectcreate.utils.Tools;
+import de.undefinedhuman.projectcreate.utils.Utils;
 import de.undefinedhuman.projectcreate.world.World;
 import de.undefinedhuman.projectcreate.world.WorldManager;
 
@@ -43,7 +43,7 @@ public class ItemManager extends Manager {
             loaded = true;
         }
         if(loaded)
-            Log.info("Item" + Tools.appendSToString(ids.length) + " loaded successfully: " + Arrays.toString(ids));
+            Log.info("Item" + Utils.appendSToString(ids.length) + " loaded successfully: " + Arrays.toString(ids));
         return loaded;
     }
 
@@ -92,7 +92,7 @@ public class ItemManager extends Manager {
 
     private Item loadItem(int id) {
         FileReader reader = new FsFile(Paths.ITEM_PATH, id + "/settings.item", Files.FileType.Internal).getFileReader(true);
-        SettingsObject settingsObject = Tools.loadSettings(reader);
+        SettingsObject settingsObject = Utils.loadSettings(reader);
         if(!settingsObject.containsKey("Type")) return null;
         ItemType type = ItemType.valueOf(((LineSplitter) settingsObject.get("Type")).getNextString());
         Item item = type.createInstance();

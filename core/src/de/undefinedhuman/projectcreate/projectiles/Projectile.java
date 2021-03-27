@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
 import de.undefinedhuman.projectcreate.entity.Entity;
-import de.undefinedhuman.projectcreate.utils.Tools;
+import de.undefinedhuman.projectcreate.utils.Utils;
 
 public class Projectile {
 
@@ -38,7 +38,7 @@ public class Projectile {
         velocity.clamp(0, 5000);
 
         if (Math.abs(velocity.x) > 0.01f || Math.abs(velocity.y) > 0.01f)
-            rotation = Tools.swordLerp(rotation, velocity.angle() - 45, 10);
+            rotation = Utils.swordLerp(rotation, velocity.angle() - 45, 10);
 
     }
 

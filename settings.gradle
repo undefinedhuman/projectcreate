@@ -1,3 +1,4 @@
 include 'desktop', 'engine', 'core', 'server', 'editor'
 include 'launcher'
+include 'updater'
 

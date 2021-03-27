@@ -8,7 +8,7 @@ import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
 import de.undefinedhuman.projectcreate.engine.entity.EntityType;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.LineWriter;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 import de.undefinedhuman.projectcreate.entity.ecs.blueprint.Blueprint;
@@ -87,7 +87,7 @@ public class Entity extends GameObject implements NetworkComponent {
 
     public void updateChunkPosition() {
         tempChunkPosition.set(position).div(Variables.BLOCK_SIZE).div(Variables.CHUNK_SIZE);
-        tempChunkPosition.x = Tools.getWorldPositionX(tempChunkPosition.x, EntityManager.instance.getChunkSize().x);
+        tempChunkPosition.x = Utils.getWorldPositionX(tempChunkPosition.x, EntityManager.instance.getChunkSize().x);
         int newChunkID = tempChunkPosition.x + EntityManager.instance.getChunkSize().x * tempChunkPosition.y;
         if(newChunkID == chunkID) return;
         EntityManager.instance.getChunk(chunkPosition.x, chunkPosition.y).removeEntity(this);

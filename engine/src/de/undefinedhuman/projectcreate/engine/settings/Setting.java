@@ -10,6 +10,7 @@ import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.items.Rarity;
 import de.undefinedhuman.projectcreate.engine.items.type.blocks.BlockType;
+import de.undefinedhuman.projectcreate.engine.utils.Version;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
@@ -54,6 +55,7 @@ public class Setting {
     }
     public EntityType getEntityType() { return EntityType.valueOf(getString()); }
     public BlockType getBlockType() { return BlockType.valueOf(getString()); }
+    public Version getVersion() { return Version.parse(getString()); }
 
     public SettingType getType() { return type; }
 

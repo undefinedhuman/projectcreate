@@ -13,7 +13,6 @@ buildscript {
 
 allprojects {
     apply plugin: "idea"
-    apply plugin: "java"
 
     version = '1.0'
     ext {
@@ -32,6 +31,10 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
+}
+
+subprojects {
+    apply plugin: "java"
 }
 
 project(":desktop") {
@@ -86,6 +89,17 @@ project(":editor") {
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
 
+        implementation 'com.formdev:flatlaf:0.36'
+        testImplementation 'junit:junit:4.12'
+    }
+}
+
+project(":updater") {
+    dependencies {
+        compile project(":engine")
+        compile 'com.badlogicgames.gdx:gdx-backend-headless:1.9.4'
+
+        implementation 'org.jsoup:jsoup:1.13.1'
         implementation 'com.formdev:flatlaf:0.36'
         testImplementation 'junit:junit:4.12'
     }

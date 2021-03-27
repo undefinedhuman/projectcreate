@@ -11,7 +11,7 @@ import de.undefinedhuman.projectcreate.entity.Entity;
 import de.undefinedhuman.projectcreate.entity.EntityManager;
 import de.undefinedhuman.projectcreate.inventory.InventoryManager;
 import de.undefinedhuman.projectcreate.item.ItemManager;
-import de.undefinedhuman.projectcreate.utils.Tools;
+import de.undefinedhuman.projectcreate.utils.Utils;
 import de.undefinedhuman.projectcreate.world.World;
 
 public class DropItem {
@@ -47,7 +47,7 @@ public class DropItem {
 
             if (newTarget != null) target = newTarget;
             else {
-                velocity.set(0, Tools.clamp(collide(position, 0, 8) ? 120 : !collide(position, 0, 7) ? velocity.y - gravity * delta : 0, -speed * 2, speed * 2));
+                velocity.set(0, Utils.clamp(collide(position, 0, 8) ? 120 : !collide(position, 0, 7) ? velocity.y - gravity * delta : 0, -speed * 2, speed * 2));
                 velocity.scl(1 - 1f * delta);
                 position.mulAdd(velocity, delta);
                 position.y = Math.max(position.y, 0);
@@ -92,7 +92,7 @@ public class DropItem {
     }
 
     public boolean collide(Vector2 position, float xDistance, float yDistance) {
-        return CollisionManager.collide(World.instance.getBlock(Tools.floor((position.x + sprite.getWidth() / 2 + xDistance) / Variables.BLOCK_SIZE), Tools.floor((position.y + yDistance) / Variables.BLOCK_SIZE), World.MAIN_LAYER));
+        return CollisionManager.collide(World.instance.getBlock(Utils.floor((position.x + sprite.getWidth() / 2 + xDistance) / Variables.BLOCK_SIZE), Utils.floor((position.y + yDistance) / Variables.BLOCK_SIZE), World.MAIN_LAYER));
     }
 
     public Vector2 getCenter() {

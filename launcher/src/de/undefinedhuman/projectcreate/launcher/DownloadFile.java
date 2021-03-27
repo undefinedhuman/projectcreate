@@ -1,7 +1,10 @@
 package de.undefinedhuman.projectcreate.launcher;
 
 import java.io.*;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLConnection;
 
 public class DownloadFile {
 
@@ -10,21 +13,6 @@ public class DownloadFile {
         URLConnection downloadFileConnection = new URI(downloadUrl).toURL()
                 .openConnection();
         return transferDataAndGetBytesDownloaded(downloadFileConnection, outputFile);
-    }
-
-    private static long transferDataAndGetBytesDownloaded(URLConnection downloadFileConnection, File outputFile) throws IOException {
-        long bytesDownloaded = 0;
-        try (InputStream is = downloadFileConnection.getInputStream(); OutputStream os = new FileOutputStream(outputFile, true)) {
-
-            byte[] buffer = new byte[1024];
-
-            int bytesCount;
-            while ((bytesCount = is.read(buffer)) > 0) {
-                os.write(buffer, 0, bytesCount);
-                bytesDownloaded += bytesCount;
-            }
-        }
-        return bytesDownloaded;
     }
 
     public static long downloadFileWithResume(String downloadUrl, String saveAsFileName) throws IOException, URISyntaxException {
@@ -55,6 +43,21 @@ public class DownloadFile {
             }
         }
         return downloadFileConnection;
+    }
+
+    private static long transferDataAndGetBytesDownloaded(URLConnection downloadFileConnection, File outputFile) throws IOException {
+        long bytesDownloaded = 0;
+        try (InputStream is = downloadFileConnection.getInputStream(); OutputStream os = new FileOutputStream(outputFile, true)) {
+
+            byte[] buffer = new byte[1024];
+
+            int bytesCount;
+            while ((bytesCount = is.read(buffer)) > 0) {
+                os.write(buffer, 0, bytesCount);
+                bytesDownloaded += bytesCount;
+            }
+        }
+        return bytesDownloaded;
     }
 
 }
