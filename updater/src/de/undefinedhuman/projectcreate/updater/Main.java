@@ -37,9 +37,8 @@ public class Main extends JFrame {
     private static final Vector2i LOGO_SIZE = new Vector2i(128, 32).mul(LOGO_SCALE);
     private static final int WINDOW_WIDTH = LOGO_SIZE.x;
     private static final String DEFAULT_INSTALLATION_PATH = Paths.GAME_PATH + "launcher/";
-    private static final String DOWNLOAD_DIRECTORY_URL = "http://alexanderpadberg.de/launcher/";
+    private static final String DOWNLOAD_LAUNCHER_URL = "http://alexanderpadberg.de/launcher/";
 
-    private JProgressBar progressBar;
     private JLabel progressLabel;
 
     private Setting installationPath = new Setting(SettingType.String, "installationPath", new FsFile(DEFAULT_INSTALLATION_PATH, Files.FileType.External).path()),
@@ -51,24 +50,27 @@ public class Main extends JFrame {
             instance = this;
         new HeadlessApplication(new HeadlessApplicationListener());
         init();
-
         FlatDarkLaf.install();
+
         setResizable(false);
         setSize(LOGO_SIZE.x, LOGO_SIZE.y + 40);
         setLocationRelativeTo(null);
+        setAlwaysOnTop(true);
         setUndecorated(true);
-        setBackground(new Color(1f, 1f, 1f, 0f));
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         Container container = getContentPane();
         container.setLayout(null);
+        container.setBackground(new Color(60, 63, 65));
+        setContentPane(container);
 
         JLabel icon = new JLabel(new ImageIcon(Utils.scaleNearest(ResourceManager.loadImage("logo.png"), LOGO_SCALE)));
         icon.setBounds(0, 0, WINDOW_WIDTH, LOGO_SIZE.y);
         container.add(icon);
 
-        progressBar = new JProgressBar(0, 100);
+        JProgressBar progressBar = new JProgressBar();
         progressBar.setBounds(0, LOGO_SIZE.y + 5, WINDOW_WIDTH, 10);
+        progressBar.setIndeterminate(true);
         container.add(progressBar);
 
         progressLabel = new JLabel("");
@@ -78,8 +80,6 @@ public class Main extends JFrame {
 
         setVisible(true);
 
-        updateLauncher();
-
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
@@ -88,43 +88,52 @@ public class Main extends JFrame {
         });
     }
 
-    private void updateLauncher() {
-        updateProgress("Checking for main dot directory...", 0);
+    public void updateLauncher() {
+        updateProgress("Checking for main dot directory...");
         FsFile projectDotFile = new FsFile(Paths.GAME_PATH, Files.FileType.External);
         projectDotFile.mkdirs();
         if(!projectDotFile.exists())
             crash("Crash", "Root directory for the launcher cannot be generated. \nPlease restart, if the error persists, please contact the author.", false);
-        updateProgress("Checking the installation directory...", 10);
+        updateProgress("Checking the installation directory...");
         InstallationUtils.loadInstallationDirectory(config = new FsFile(projectDotFile, "launcher.config", Files.FileType.External), DEFAULT_INSTALLATION_PATH, installationPath, version);
         FsFile installationDirectory = new FsFile(installationPath.getString(), Files.FileType.Absolute);
         if(!installationDirectory.exists())
             crash("Crash", "Installation directory is nonexistent. \nPlease restart.", true);
-        updateProgress("Checking for installed version...", 20);
+        updateProgress("Checking for installed version...");
         FsFile installationFile = new FsFile(installationDirectory, version.getString() + ".jar", Files.FileType.Absolute);
-        ArrayList<Version> versions = InstallationUtils.fetchAvailableVersions(DOWNLOAD_DIRECTORY_URL);
+        ArrayList<Version> versions = InstallationUtils.fetchAvailableVersions(DOWNLOAD_LAUNCHER_URL);
         if(versions.isEmpty())
             crash("Crash", "Error while fetching available launcher versions. \nPlease restart, if the error persists, please contact the author.", true);
 
         Version maxVersion = Collections.max(versions);
-        String downloadUrl = DOWNLOAD_DIRECTORY_URL + version.getString() + ".jar";
+        String loggableVersion = maxVersion.toString().substring(1);
+        String downloadUrl = DOWNLOAD_LAUNCHER_URL + maxVersion.toString() + ".jar";
         if(!(installationFile.exists() && version.getVersion().equals(maxVersion) && DownloadUtils.fetchFileSize(downloadUrl) == installationFile.length())) {
-            updateProgress("Download launcher version " + maxVersion.toString().substring(1) + "...", 30);
+            updateProgress("Download launcher version " + loggableVersion + "...");
+            Log.info("Downloading newest launcher version " + loggableVersion);
             FileUtils.deleteFile(installationFile);
+            installationFile = new FsFile(installationDirectory, maxVersion.toString() + ".jar", Files.FileType.Absolute);
             try {
                 DownloadUtils.downloadFile(downloadUrl, installationFile);
             } catch (IOException | URISyntaxException e) {
-                crash("Crash", "Error while downloading launcher version " + maxVersion.toString().substring(1) + "\nPlease restart, if the error persists, please contact the author.", true);
+                crash("Crash", "Error while downloading launcher version " + loggableVersion + "\nPlease restart, if the error persists, please contact the author.", true);
             }
-        }
+        } else Log.info("Launcher already up to date. Version: " + loggableVersion);
 
-        updateProgress("Start launcher...", 90);
+        version.setValue(maxVersion.toString());
+
+        updateProgress("Start launcher...");
+        try {
+            Runtime.getRuntime().exec("java -jar " + installationFile.path());
+            setVisible(false);
+            dispose();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void updateProgress(String message, int progress) {
-        progressBar.setValue(progress);
+    private void updateProgress(String message) {
         progressLabel.setText(message);
-        revalidate();
-        repaint();
     }
 
     private void init() {
@@ -155,5 +164,6 @@ public class Main extends JFrame {
 
     public static void main(String[] args) {
         new Main();
+        Main.instance.updateLauncher();
     }
 }

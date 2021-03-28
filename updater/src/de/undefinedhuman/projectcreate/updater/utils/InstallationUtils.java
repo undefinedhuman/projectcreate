@@ -61,7 +61,7 @@ public class InstallationUtils {
             String fileName = file.attr("href");
             if(!fileName.startsWith("v"))
                 continue;
-            availableVersions.add(Version.parse(fileName));
+            availableVersions.add(Version.parse(fileName.split("\\.jar")[0]));
         }
         return availableVersions;
     }

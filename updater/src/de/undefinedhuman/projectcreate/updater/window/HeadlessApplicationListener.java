@@ -5,7 +5,7 @@ import com.badlogic.gdx.ApplicationListener;
 public class HeadlessApplicationListener implements ApplicationListener {
 
     @Override
-    public void create() {}
+    public void create() { }
 
     @Override
     public void resize(int width, int height) {}

@@ -53,16 +53,18 @@ public class FileUtils {
             assert files != null;
             if (files.length != 0) for (File file1 : files) deleteFile(deletedFileNames, file1);
         }
-        if(fileToDelete.delete()) deletedFileNames.add(fileToDelete.getName());
+        if(fileToDelete.delete())
+            deletedFileNames.add(fileToDelete.getName());
     }
 
     public static void deleteFile(FsFile... filesToDelete) {
-        for(FsFile file : filesToDelete) {
-            ArrayList<String> deletedFileNames = new ArrayList<>();
+        ArrayList<String> deletedFileNames = new ArrayList<>();
+        for(FsFile file : filesToDelete)
             deleteFile(deletedFileNames, file.file());
-            Collections.reverse(deletedFileNames);
+        Collections.reverse(deletedFileNames);
+        if(deletedFileNames.size() > 0)
             Log.info("File" + Utils.appendSToString(deletedFileNames.size()) + " deleted successfully: " + Arrays.toString(deletedFileNames.toArray()));
-        }
+        deletedFileNames.clear();
     }
 
     public static boolean readBoolean(String value) {

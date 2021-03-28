@@ -10,9 +10,6 @@ import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.log.Log;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +21,7 @@ import java.util.ArrayList;
 
 public class Main extends JFrame implements ApplicationListener {
 
-    private static final String GAME_VERSION_URL = "http://alexanderpadberg.de/versions/";
+    private static final String DOWNLOAD_GAME_URL = "http://alexanderpadberg.de/versions/";
 
     private FsFile gameVersionDir;
     private Container container;
