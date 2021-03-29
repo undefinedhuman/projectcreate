@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.background.BackgroundManager;
 import de.undefinedhuman.projectcreate.engine.base.GameObject;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
-import de.undefinedhuman.projectcreate.utils.Utils;
+import de.undefinedhuman.projectcreate.utils.Tools;
 import de.undefinedhuman.projectcreate.world.World;
 
 public class Bird extends GameObject {
@@ -17,7 +17,7 @@ public class Bird extends GameObject {
     public Bird(Vector2 startPos, float speedMultiplier) {
         this.position.set(startPos);
         this.speedMultiplier = speedMultiplier;
-        currentIndex = Utils.random.nextInt(BackgroundManager.instance.birdTexture.length);
+        currentIndex = Tools.random.nextInt(BackgroundManager.instance.birdTexture.length);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class Bird extends GameObject {
     public void update(float delta) {
         animationTime += delta;
         if(animationTime >= Variables.BIRD_ANIMATION_SPEED) {
-            currentIndex = Utils.loop(++currentIndex, 10);
+            currentIndex = Tools.loop(++currentIndex, 10);
             animationTime = 0;
         }
         position.x += Variables.BIRD_SPEED * speedMultiplier * delta;
@@ -39,7 +39,7 @@ public class Bird extends GameObject {
 
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
-        if (!Utils.isInRange(position.x, -size.x, camera.viewportWidth + size.x)) return;
+        if (!Tools.isInRange(position.x, -size.x, camera.viewportWidth + size.x)) return;
         batch.draw(BackgroundManager.instance.birdTexture[currentIndex], (int) ((camera.position.x - camera.viewportWidth * 0.5f) + position.x), position.y, size.x, size.y);
     }
 

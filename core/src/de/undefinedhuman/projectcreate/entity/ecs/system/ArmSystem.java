@@ -22,7 +22,7 @@ import de.undefinedhuman.projectcreate.entity.ecs.System;
 import de.undefinedhuman.projectcreate.inventory.InventoryManager;
 import de.undefinedhuman.projectcreate.inventory.player.Selector;
 import de.undefinedhuman.projectcreate.item.ItemManager;
-import de.undefinedhuman.projectcreate.utils.Utils;
+import de.undefinedhuman.projectcreate.utils.Tools;
 
 import java.util.ArrayList;
 
@@ -76,7 +76,7 @@ public class ArmSystem extends System {
 
         }
 
-        boolean selected = Utils.isItemSelected(entity);
+        boolean selected = Tools.isItemSelected(entity);
 
         spriteComponent.getSpriteData(rightArmComponent.getTextureName()).setVisible(!selected);
         spriteComponent.getSpriteData(rightArmComponent.getSelectedTexture()).setVisible(selected);
@@ -116,7 +116,7 @@ public class ArmSystem extends System {
                     combatComponent.charged = false;
                     combatComponent.canAttack = true;
                     combatComponent.currentDamage -= Main.delta * sword.damage.getFloat() * 24 / 30;
-                    currentAngle = Utils.swordLerpTurned(angleComponentAngle, 0, 24, !isTurned);
+                    currentAngle = Tools.swordLerpTurned(angleComponentAngle, 0, 24, !isTurned);
 
                     // TODO Make the collision with the hitbox not the entity itself
 
@@ -137,7 +137,7 @@ public class ArmSystem extends System {
 
                 if (Gdx.input.isButtonPressed(0)) {
 
-                    currentAngle = Utils.swordLerpTurned(angleComponentAngle, 180, 16 * sword.speed.getFloat(), isTurned);
+                    currentAngle = Tools.swordLerpTurned(angleComponentAngle, 180, 16 * sword.speed.getFloat(), isTurned);
                     if (currentAngle == 180) combatComponent.charged = true;
                     combatComponent.currentDamage += 16 * sword.speed.getFloat() * Main.delta * sword.damage.getFloat() / 10;
 

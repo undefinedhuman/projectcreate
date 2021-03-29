@@ -3,7 +3,7 @@ package de.undefinedhuman.projectcreate.gui.elements.scrollpanel;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import de.undefinedhuman.projectcreate.engine.utils.Utils;
+import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.gui.Gui;
 import de.undefinedhuman.projectcreate.gui.event.ChangeListener;
 import de.undefinedhuman.projectcreate.gui.event.Listener;
@@ -51,7 +51,7 @@ public class ScrollBar extends Gui {
 
     public void updateThumbHeight(float height) {
         this.thumb
-                .setValue(Axis.HEIGHT, Utils.clamp(height, 0.1f, 1f))
+                .setValue(Axis.HEIGHT, Tools.clamp(height, 0.1f, 1f))
                 .resize();
     }
 

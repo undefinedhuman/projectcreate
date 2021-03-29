@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.base.GameObject;
-import de.undefinedhuman.projectcreate.utils.Utils;
+import de.undefinedhuman.projectcreate.utils.Tools;
 import de.undefinedhuman.projectcreate.world.World;
 
 public class BackgroundObject extends GameObject {
@@ -36,7 +36,7 @@ public class BackgroundObject extends GameObject {
 
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
-        if (!Utils.isInRange(position.x, -size.x, camera.viewportWidth + size.x))
+        if (!Tools.isInRange(position.x, -size.x, camera.viewportWidth + size.x))
             return;
     }
 

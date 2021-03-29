@@ -19,7 +19,7 @@ import de.undefinedhuman.projectcreate.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.projectcreate.gui.transforms.offset.RelativeOffset;
 import de.undefinedhuman.projectcreate.inventory.InventoryManager;
 import de.undefinedhuman.projectcreate.item.ItemManager;
-import de.undefinedhuman.projectcreate.utils.Utils;
+import de.undefinedhuman.projectcreate.utils.Tools;
 
 public class RecipePreviewPanel extends Gui {
 
@@ -32,7 +32,7 @@ public class RecipePreviewPanel extends Gui {
 
     public RecipePreviewPanel() {
         super(GuiTemplate.HOTBAR);
-        set(new RelativeConstraint(1), new PixelConstraint(0), Utils.getInventoryConstraint(GuiTemplate.HOTBAR, 9), Utils.getInventoryConstraint(GuiTemplate.HOTBAR, 8));
+        set(new RelativeConstraint(1), new PixelConstraint(0), Tools.getInventoryConstraint(GuiTemplate.HOTBAR, 9), Tools.getInventoryConstraint(GuiTemplate.HOTBAR, 8));
         setOffsetX(new RelativeOffset(-1f));
 
         int itemPreviewSize = 48 + GuiTemplate.SLOT.cornerSize * 2;

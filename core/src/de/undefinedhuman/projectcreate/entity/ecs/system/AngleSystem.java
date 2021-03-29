@@ -7,7 +7,7 @@ import de.undefinedhuman.projectcreate.engine.entity.components.sprite.SpriteCom
 import de.undefinedhuman.projectcreate.engine.entity.components.sprite.SpriteData;
 import de.undefinedhuman.projectcreate.entity.Entity;
 import de.undefinedhuman.projectcreate.entity.ecs.System;
-import de.undefinedhuman.projectcreate.utils.Utils;
+import de.undefinedhuman.projectcreate.utils.Tools;
 
 public class AngleSystem extends System {
 
@@ -25,7 +25,7 @@ public class AngleSystem extends System {
         if ((angleComponent = (AngleComponent) entity.getComponent(ComponentType.ANGLE)) == null) return;
 
         if (entity.mainPlayer) {
-            angleComponent.mousePos = Utils.getMouseCoordsInWorldSpace(CameraManager.gameCamera);
+            angleComponent.mousePos = Tools.getMouseCoordsInWorldSpace(CameraManager.gameCamera);
             boolean turned = angleComponent.mousePos.x < entity.getCenterPosition().x;
             angleComponent.angle = ((turned ? -1 : 1) * angleComponent.angle) % 360;
             angleComponent.isTurned = !turned;

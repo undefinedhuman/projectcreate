@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.engine.file;
 
 import de.undefinedhuman.projectcreate.engine.log.Log;
-import de.undefinedhuman.projectcreate.engine.utils.Utils;
+import de.undefinedhuman.projectcreate.engine.utils.Tools;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -63,13 +63,13 @@ public class FileUtils {
             deleteFile(deletedFileNames, file.file());
         Collections.reverse(deletedFileNames);
         if(deletedFileNames.size() > 0)
-            Log.info("File" + Utils.appendSToString(deletedFileNames.size()) + " deleted successfully: " + Arrays.toString(deletedFileNames.toArray()));
+            Log.info("File" + Tools.appendSToString(deletedFileNames.size()) + " deleted successfully: " + Arrays.toString(deletedFileNames.toArray()));
         deletedFileNames.clear();
     }
 
     public static boolean readBoolean(String value) {
         if (value.equalsIgnoreCase("false") || value.equalsIgnoreCase("true")) return Boolean.parseBoolean(value);
-        else if(Utils.isDigit(value)) return Integer.parseInt(value) == 1;
+        else if(Tools.isDigit(value)) return Integer.parseInt(value) == 1;
         else return false;
     }
 

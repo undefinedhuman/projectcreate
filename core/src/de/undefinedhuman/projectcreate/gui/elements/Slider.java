@@ -16,7 +16,7 @@ import de.undefinedhuman.projectcreate.gui.transforms.constraints.PixelConstrain
 import de.undefinedhuman.projectcreate.gui.transforms.constraints.RelativeConstraint;
 import de.undefinedhuman.projectcreate.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.projectcreate.utils.Mouse;
-import de.undefinedhuman.projectcreate.utils.Utils;
+import de.undefinedhuman.projectcreate.utils.Tools;
 
 public class Slider extends Gui {
 
@@ -88,7 +88,7 @@ public class Slider extends Gui {
         else if (!Mouse.isLeftClicked()) grabbed = false;
 
         if (grabbed) {
-            this.progress = Utils.clamp((Mouse.getX() - getCurrentValue(Axis.X)) / getCurrentValue(Axis.WIDTH), 0, 1f);
+            this.progress = Tools.clamp((Mouse.getX() - getCurrentValue(Axis.X)) / getCurrentValue(Axis.WIDTH), 0, 1f);
             resizePointer();
             notifyChangeListener();
         }

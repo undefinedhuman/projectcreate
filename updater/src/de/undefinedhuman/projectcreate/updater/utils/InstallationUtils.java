@@ -5,7 +5,7 @@ import de.undefinedhuman.projectcreate.engine.file.FileReader;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
-import de.undefinedhuman.projectcreate.engine.utils.Utils;
+import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.Version;
 import de.undefinedhuman.projectcreate.updater.Main;
 import org.jsoup.Jsoup;
@@ -23,7 +23,7 @@ public class InstallationUtils {
             installationPath.setValue(chooseInstallationDirectory(defaultInstallationPath));
         else {
             FileReader reader = config.getFileReader(true);
-            Utils.loadSettings(reader, installationPath, version);
+            Tools.loadSettings(reader, installationPath, version);
             if(!new FsFile(installationPath.getString(), Files.FileType.Absolute).exists())
                 installationPath.setValue(chooseInstallationDirectory(defaultInstallationPath));
             reader.close();

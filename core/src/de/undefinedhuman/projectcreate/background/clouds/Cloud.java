@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.background.BackgroundObject;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
-import de.undefinedhuman.projectcreate.utils.Utils;
+import de.undefinedhuman.projectcreate.utils.Tools;
 
 public class Cloud extends BackgroundObject {
 
@@ -15,7 +15,7 @@ public class Cloud extends BackgroundObject {
     private TextureRegion texture;
 
     public Cloud(String texture, Vector2 startPos, int layerID) {
-        super(Utils.getTextureSize(TextureManager.instance.getTexture(texture)), startPos, -(Utils.random.nextFloat() * 7f + 1), layerID);
+        super(Tools.getTextureSize(TextureManager.instance.getTexture(texture)), startPos, -(Tools.random.nextFloat() * 7f + 1), layerID);
         this.texture = TextureManager.instance.getTexture(texture);
         this.alpha = 1f - layerID * 0.2f;
     }

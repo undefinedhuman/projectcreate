@@ -1,6 +1,6 @@
 package de.undefinedhuman.projectcreate.world;
 
-import de.undefinedhuman.projectcreate.utils.Utils;
+import de.undefinedhuman.projectcreate.utils.Tools;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -79,10 +79,10 @@ public class NoiseTest extends JFrame {
         JButton random = new JButton("Random");
         random.setBounds(810, 305, 100, 25);
         random.addActionListener(e -> setNoise(
-                Utils.clamp(new Random().nextInt(12), 5, 10),
-                Utils.clamp(new Random().nextFloat() * 2f, 0.1f, 1.8f),
-                Utils.clamp(new Random().nextFloat() * 1.5f, 0.2f, 1.5f),
-                Utils.clamp(new Random().nextFloat(), 0.25f, 0.75f),
+                Tools.clamp(new Random().nextInt(12), 5, 10),
+                Tools.clamp(new Random().nextFloat() * 2f, 0.1f, 1.8f),
+                Tools.clamp(new Random().nextFloat() * 1.5f, 0.2f, 1.5f),
+                Tools.clamp(new Random().nextFloat(), 0.25f, 0.75f),
                 new Random().nextInt(1000000000)));
         label2.add(random);
 

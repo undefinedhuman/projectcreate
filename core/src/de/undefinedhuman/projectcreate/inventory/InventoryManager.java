@@ -18,7 +18,7 @@ import de.undefinedhuman.projectcreate.gui.transforms.offset.PixelOffset;
 import de.undefinedhuman.projectcreate.inventory.player.*;
 import de.undefinedhuman.projectcreate.item.ItemManager;
 import de.undefinedhuman.projectcreate.item.listener.ItemChangeListener;
-import de.undefinedhuman.projectcreate.utils.Utils;
+import de.undefinedhuman.projectcreate.utils.Tools;
 
 import java.util.Collection;
 import java.util.Set;
@@ -72,7 +72,7 @@ public class InventoryManager extends Manager {
     public void addGuiToSlot(Gui gui) {
         if (gui == null) return;
         if (!SidePanel.instance.isVisible()) SidePanel.instance.setVisible(true);
-        maxSlot = Utils.clamp(maxSlot + 1, 0, 3);
+        maxSlot = Tools.clamp(maxSlot + 1, 0, 3);
         if (slots[maxSlot] != null) removeGui(maxSlot);
         this.slots[maxSlot] = gui;
         setGuiVisible(maxSlot, gui);
@@ -95,13 +95,13 @@ public class InventoryManager extends Manager {
         maxSlot = 3;
         for (int i = 0; i < slots.length; i++)
             if (slots[i] == null) {
-                maxSlot = Utils.clamp(i - 1, -1, 3);
+                maxSlot = Tools.clamp(i - 1, -1, 3);
                 break;
             }
     }
 
     public void removeGuiFromSlot(int id) {
-        if (Utils.isInRange(id, 0, 3) && slots[id] != null) {
+        if (Tools.isInRange(id, 0, 3) && slots[id] != null) {
             slots[id].setVisible(false);
             slots[id] = null;
         }
@@ -112,7 +112,7 @@ public class InventoryManager extends Manager {
     public void addGuiToSlot(int id, Gui gui) {
         if (gui == null) return;
         if (!SidePanel.instance.isVisible()) SidePanel.instance.setVisible(true);
-        if (!Utils.isInRange(id, 0, 3)) return;
+        if (!Tools.isInRange(id, 0, 3)) return;
         if (slots[id] == null) this.slots[id] = gui;
         for (int i = 0; i < slots.length; i++) if (slots[i] != null) maxSlot = i;
         setGuiVisible(id, gui);
@@ -205,7 +205,7 @@ public class InventoryManager extends Manager {
     }
 
     public boolean overGui() {
-        return Utils.isOverGuis(CameraManager.guiCamera, Selector.instance, SidePanel.instance, slots[0], slots[1], slots[2], slots[3]);
+        return Tools.isOverGuis(CameraManager.guiCamera, Selector.instance, SidePanel.instance, slots[0], slots[1], slots[2], slots[3]);
     }
 
     public void handleClick(int id) {

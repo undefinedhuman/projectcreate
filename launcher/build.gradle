@@ -2,7 +2,7 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 project.ext.mainClassName = "de.undefinedhuman.projectcreate.launcher.Main"
-project.ext.assetsDir = new File("../assets")
+project.ext.assetsDir = new File("../updater/assets")
 
 sourceSets.main.java.srcDirs = ["src/"]
 sourceSets.main.resources.srcDirs = [ project.assetsDir ]

@@ -1,25 +1,27 @@
 package de.undefinedhuman.projectcreate.launcher;
 
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.formdev.flatlaf.FlatDarculaLaf;
-import de.undefinedhuman.projectcreate.engine.file.FileReader;
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.log.Log;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.engine.utils.Version;
+import de.undefinedhuman.projectcreate.updater.utils.InstallationUtils;
+import de.undefinedhuman.projectcreate.updater.window.HeadlessApplicationListener;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
 
-public class Main extends JFrame implements ApplicationListener {
+public class Main extends JFrame {
+
+    public static Main instance;
 
     private static final String DOWNLOAD_GAME_URL = "http://alexanderpadberg.de/versions/";
 
@@ -27,8 +29,11 @@ public class Main extends JFrame implements ApplicationListener {
     private Container container;
 
     public Main() {
-        new HeadlessApplication(this);
+        if(instance == null)
+            instance = this;
+        new HeadlessApplication(new HeadlessApplicationListener());
         new Log().init();
+        styleUI();
         FlatDarculaLaf.install();
         FsFile projectDotFile = new FsFile(Paths.GAME_PATH, Files.FileType.External);
         projectDotFile.mkdirs();
@@ -36,7 +41,7 @@ public class Main extends JFrame implements ApplicationListener {
             crash("Can't create the main launcher directory. \nPlease contact the author.");
 
         FsFile launcherConfig = new FsFile(projectDotFile, "launcher.config", Files.FileType.External);
-        loadGameVersionDirectory(launcherConfig);
+        //loadGameVersionDirectory(launcherConfig);
 
         setResizable(false);
         setSize(1280, 720);
@@ -46,14 +51,20 @@ public class Main extends JFrame implements ApplicationListener {
         container.setBackground(new Color(60, 63, 65));
         container.setLayout(null);
 
-        JComboBox<String> versionSelection = new JComboBox<>(getGameVersions().toArray(new String[0]));
+        JComboBox<Version> versionSelection = new JComboBox<>(InstallationUtils.fetchAvailableVersions(DOWNLOAD_GAME_URL).toArray(new Version[0]));
         versionSelection.setBounds(100, 100, 100, 25);
-
         container.add(versionSelection);
+
+        FlatSVGIcon icon = new FlatSVGIcon("icon/download.svg");
+        JLabel label = new JLabel(icon);
+        label.setBounds(0, 0, 32, 32);
+        container.add(label);
 
         JButton installButton = new JButton("Install");
         installButton.setBounds(205, 100, 100, 25);
-        installButton.addActionListener(e -> {
+        installButton.setBackground(Color.GREEN);
+        installButton.setForeground(Color.WHITE);
+        /*installButton.addActionListener(e -> {
             try {
                 if(versionSelection.getSelectedItem() == null)
                     return;
@@ -61,7 +72,7 @@ public class Main extends JFrame implements ApplicationListener {
             } catch (IOException | URISyntaxException ex) {
                 Log.instance.error("Error", "Error while downloading game version: " + versionSelection.getSelectedItem(), ex);
             }
-        });
+        });*/
         container.add(installButton);
 
         setVisible(true);
@@ -82,74 +93,49 @@ public class Main extends JFrame implements ApplicationListener {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
 
-    private ArrayList<String> getGameVersions() {
-        ArrayList<String> gameVersions = new ArrayList<>();
-        Document doc = null;
-        try {
-            doc = Jsoup.connect(GAME_VERSION_URL).get();
-        } catch (IOException ex) {
-            Log.instance.error("Error", "Error connecting to versions server:", ex);
-        }
-        if(doc == null)
-            return gameVersions;
-        for (Element file : doc.select("pre a")) {
-            String name = file.attr("href");
-            if(!name.startsWith("v"))
-                continue;
-            gameVersions.add(name);
-        }
-        return gameVersions;
-    }
-
-    private void loadGameVersionDirectory(FsFile launcherConfig) {
-        if(!launcherConfig.exists())
-            gameVersionDir = chooseGameVersionDir();
-        else {
-            FileReader reader = launcherConfig.getFileReader(false);
-            if(reader.nextLine() != null) {
-                String[] data = reader.getNextString().split("=", 2);
-                if(data.length != 2 || !data[0].equalsIgnoreCase("gameVersionsDirectoryPath") || !(gameVersionDir = new FsFile(data[1], Files.FileType.Absolute)).exists())
-                    gameVersionDir = chooseGameVersionDir();
-            } else gameVersionDir = chooseGameVersionDir();
-            reader.close();
-        }
-    }
-
-    private FsFile chooseGameVersionDir() {
-        JFileChooser chooser = new JFileChooser();
-        FsFile versionsDirectory = new FsFile(".projectcreate/versions/", Files.FileType.External);
-        versionsDirectory.mkdirs();
-        if(!versionsDirectory.exists())
-            JOptionPane.showMessageDialog(null, "Can't create default versions folder in launcher directory! Choose a different directory to install game versions!", "Error!", JOptionPane.ERROR_MESSAGE);
-        else chooser.setCurrentDirectory(versionsDirectory.file());
-        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-
-        if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION)
-            crash("Choose a writable folder to install game versions! \nPlease restart the launcher!");
-        if(!chooser.getSelectedFile().equals(versionsDirectory.file()) && versionsDirectory.delete())
-            Log.info("Deleted temporary versions folder!");
-        return new FsFile(chooser.getSelectedFile().getAbsolutePath(), Files.FileType.Absolute);
-    }
-
     private void crash(String errorMessage) {
         JOptionPane.showMessageDialog(null, errorMessage, "Crash", JOptionPane.ERROR_MESSAGE);
         Log.instance.exit(errorMessage);
     }
 
+    private void init() {
+        Variables.NAME = "Updater";
+        new Log().init();
+        Gdx.app.setApplicationLogger(Log.instance);
+        Gdx.app.setLogLevel(Variables.LOG_LEVEL);
+    }
+
+    public void styleUI() {
+        UIManager.put( "Button.arc", 0 );
+        UIManager.put( "Component.arc", 0 );
+        UIManager.put( "CheckBox.arc", 0 );
+        UIManager.put( "ProgressBar.arc", 0 );
+
+        UIManager.put( "Component.arrowType", "chevron" );
+        UIManager.put( "Component.focusWidth", 1 );
+    }
+
+    public void saveConfig() {
+        /*FileWriter writer = config.getFileWriter(true);
+        Utils.saveSettings(writer, installationPath, version);
+        writer.close();*/
+    }
+
+    public static void close() {
+        Main.instance.saveConfig();
+        Gdx.app.exit();
+        Log.instance.exit();
+    }
+
+    public static void crash(String title, String errorMessage, boolean close) {
+        Log.instance.error(title, errorMessage);
+        JOptionPane.showMessageDialog(null, errorMessage, title, JOptionPane.ERROR_MESSAGE);
+        if(close)
+            Main.close();
+    }
+
     public static void main(String[] args) {
         new Main();
     }
-
-    @Override
-    public void create() {}
-
-    @Override
-    public void render() {}
-
-    @Override
-    public void pause() {}
-
-    @Override
-    public void resume() {}
 
 }

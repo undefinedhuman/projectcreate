@@ -15,7 +15,7 @@ import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
 import de.undefinedhuman.projectcreate.engine.settings.types.SelectionSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.Vector2Setting;
-import de.undefinedhuman.projectcreate.engine.utils.Utils;
+import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
@@ -49,7 +49,7 @@ public class EntityEditor extends Editor {
                 new Setting(SettingType.String, "Name", "Temp Name"),
                 new Vector2Setting("Size", new Vector2(0, 0)),
                 new SelectionSetting("Type", EntityType.values()));
-        Utils.addSettings(mainPanel, baseSettings.getSettings());
+        Tools.addSettings(mainPanel, baseSettings.getSettings());
 
         componentList = new DefaultListModel<>();
 
@@ -58,8 +58,8 @@ public class EntityEditor extends Editor {
         listPanel.addListSelectionListener(e -> {
             selectedComponent = listPanel.getSelectedValue() != null ? ComponentType.valueOf(listPanel.getSelectedValue()) : null;
             if(selectedComponent != null) {
-                Utils.removeSettings(settingsPanel);
-                Utils.addSettings(settingsPanel, components.get(selectedComponent).getSettings());
+                Tools.removeSettings(settingsPanel);
+                Tools.addSettings(settingsPanel, components.get(selectedComponent).getSettings());
             }
         });
 
@@ -70,7 +70,7 @@ public class EntityEditor extends Editor {
         addComponent.setBounds(20, 55, 150, 25);
         addComponent.addActionListener(e -> {
             if(componentComboBox.getSelectedItem() == null) return;
-            Utils.removeSettings(settingsPanel);
+            Tools.removeSettings(settingsPanel);
             ComponentType type = ComponentType.valueOf(componentComboBox.getSelectedItem().toString());
             if(componentList.contains(type.toString())) return;
             componentList.addElement(type.toString());
@@ -82,7 +82,7 @@ public class EntityEditor extends Editor {
         removeComponent.addActionListener(e -> {
             if(listPanel.getSelectedValue() == null) return;
             ComponentType type = ComponentType.valueOf(listPanel.getSelectedValue());
-            Utils.removeSettings(settingsPanel);
+            Tools.removeSettings(settingsPanel);
             components.remove(type);
             if(componentList.contains(type.toString())) componentList.removeElement(type.toString());
         });
@@ -105,7 +105,7 @@ public class EntityEditor extends Editor {
             FsFile entityFile = new FsFile(Paths.ENTITY_PATH, entityDir.name() + "/settings.entity", Files.FileType.Internal);
             if(entityFile.length() == 0) continue;
             FileReader reader = entityFile.getFileReader(true);
-            SettingsObject settings = Utils.loadSettings(reader);
+            SettingsObject settings = Tools.loadSettings(reader);
             ids.add(entityDir.name() + "-" + ((LineSplitter) settings.get("Name")).getNextString());
             reader.close();
         }
@@ -128,10 +128,10 @@ public class EntityEditor extends Editor {
             if(comboBox.getSelectedItem() == null) return;
             componentList.clear();
             components.clear();
-            Utils.removeSettings(settingsPanel);
+            Tools.removeSettings(settingsPanel);
 
             FileReader reader = new FileReader(ResourceManager.loadFile(Paths.ENTITY_PATH, Integer.parseInt(((String) comboBox.getSelectedItem()).split("-")[0]) + "/settings.entity"), true);
-            SettingsObject settingsObject = Utils.loadSettings(reader);
+            SettingsObject settingsObject = Tools.loadSettings(reader);
 
             for(Setting setting : baseSettings.getSettings())
                 setting.loadSetting(reader.getParentDirectory(), settingsObject);
@@ -163,7 +163,7 @@ public class EntityEditor extends Editor {
             FileUtils.deleteFile(entityDir);
 
         FileWriter writer = new FsFile(entityDir.path(), "settings.entity", Files.FileType.Local).getFileWriter(true);
-        Utils.saveSettings(writer, baseSettings.getSettings());
+        Tools.saveSettings(writer, baseSettings.getSettings());
         for(ComponentBlueprint componentBlueprint : this.components.values())
             componentBlueprint.save(writer);
         writer.close();

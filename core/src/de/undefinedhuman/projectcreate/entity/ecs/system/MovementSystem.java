@@ -10,7 +10,7 @@ import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.entity.Entity;
 import de.undefinedhuman.projectcreate.entity.ecs.System;
 import de.undefinedhuman.projectcreate.screen.CollisionUtils;
-import de.undefinedhuman.projectcreate.utils.Utils;
+import de.undefinedhuman.projectcreate.utils.Tools;
 
 public class MovementSystem extends System {
 
@@ -34,15 +34,15 @@ public class MovementSystem extends System {
                 || (animationComponent = (AnimationComponent) entity.getComponent(ComponentType.ANIMATION)) == null) return;
 
         movementComponent.velocity.x += ((movementComponent.getDirection() * movementComponent.getSpeed()) - movementComponent.velocity.x) * 0.175f;
-        if(movementComponent.getDirection() == 0 && Utils.isInRange(movementComponent.velocity.x, -5, 5)) movementComponent.velocity.x = 0;
+        if(movementComponent.getDirection() == 0 && Tools.isInRange(movementComponent.velocity.x, -5, 5)) movementComponent.velocity.x = 0;
         movementComponent.velocity.y -= movementComponent.getGravity() * delta;
 
         animationComponent.setAnimationTimeMultiplier(movementComponent.velocity.x != 0 ? Math.abs(movementComponent.velocity.x) / movementComponent.getSpeed() : 1);
 
         currentPosition.set(entity.getPosition());
 
-        float velX = Utils.clamp(movementComponent.velocity.x * delta, -Variables.COLLISION_SIZE, Variables.COLLISION_SIZE);
-        float velY = Utils.clamp(movementComponent.velocity.y * delta, -Variables.COLLISION_SIZE, Variables.COLLISION_SIZE);
+        float velX = Tools.clamp(movementComponent.velocity.x * delta, -Variables.COLLISION_SIZE, Variables.COLLISION_SIZE);
+        float velY = Tools.clamp(movementComponent.velocity.y * delta, -Variables.COLLISION_SIZE, Variables.COLLISION_SIZE);
 
         collisionComponent.update(currentPosition.add(velX, 0));
         Vector3 response = CollisionUtils.calculateCollisionX(collisionComponent);

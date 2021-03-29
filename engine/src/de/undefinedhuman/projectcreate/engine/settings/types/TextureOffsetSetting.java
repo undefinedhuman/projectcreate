@@ -4,7 +4,7 @@ import com.badlogic.gdx.Files;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.settings.SettingType;
-import de.undefinedhuman.projectcreate.engine.utils.Utils;
+import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.imageio.ImageIO;
@@ -56,12 +56,12 @@ public class TextureOffsetSetting extends Vector2ArraySetting {
 
         });
         panel.add(textureLabel);
-        valueField = createTextField(Utils.convertArrayToString(getVector2Array()), new Vector2(position).add(30, 0), new Vector2(170, 25), null);
+        valueField = createTextField(Tools.convertArrayToString(getVector2Array()), new Vector2(position).add(30, 0), new Vector2(170, 25), null);
         panel.add(valueField);
     }
 
     private Vector2[] calculateVectors(BufferedImage currentImage) {
-        BufferedImage image = Utils.scaleNearest(currentImage, 0.5f);
+        BufferedImage image = Tools.scaleNearest(currentImage, 0.5f);
         int size = image.getWidth() / Variables.PLAYER_TEXTURE_OFFSET;
         Vector2[] vectors = new Vector2[size];
 

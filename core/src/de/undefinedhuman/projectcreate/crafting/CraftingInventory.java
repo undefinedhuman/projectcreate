@@ -17,7 +17,7 @@ import de.undefinedhuman.projectcreate.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.projectcreate.gui.transforms.offset.RelativeOffset;
 import de.undefinedhuman.projectcreate.inventory.slot.MenuSlot;
 import de.undefinedhuman.projectcreate.item.ItemManager;
-import de.undefinedhuman.projectcreate.utils.Utils;
+import de.undefinedhuman.projectcreate.utils.Tools;
 
 import java.util.ArrayList;
 
@@ -38,7 +38,7 @@ public class CraftingInventory extends Gui {
         if(instance == null)
             instance = this;
         setPosition(new CenterConstraint(), new CenterConstraint());
-        setSize(Utils.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 15), Utils.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 10));
+        setSize(Tools.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 15), Tools.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 10));
         setOffset(new CenterOffset(), new CenterOffset());
         initBackgrounds();
         setTitle("Crafting", Font.Title, Color.WHITE);
@@ -52,11 +52,11 @@ public class CraftingInventory extends Gui {
 
     private void initBackgrounds() {
         recipesScrollPanel = new PooledScrollPanel<>(GuiTemplate.HOTBAR, RecipeGui::new);
-        recipesScrollPanel.setSize(Utils.getInventoryConstraint(GuiTemplate.HOTBAR, 5), Utils.getInventoryConstraint(GuiTemplate.HOTBAR, 8));
+        recipesScrollPanel.setSize(Tools.getInventoryConstraint(GuiTemplate.HOTBAR, 5), Tools.getInventoryConstraint(GuiTemplate.HOTBAR, 8));
 
         addChild(
                 menuBackground = (Gui) new Gui(GuiTemplate.HOTBAR)
-                        .set(new PixelConstraint(0), new RelativeConstraint(1), new RelativeConstraint(1f), Utils.getInventoryConstraint(GuiTemplate.HOTBAR, 1))
+                        .set(new PixelConstraint(0), new RelativeConstraint(1), new RelativeConstraint(1f), Tools.getInventoryConstraint(GuiTemplate.HOTBAR, 1))
                         .setOffsetY(new RelativeOffset(-1)),
                 recipesScrollPanel,
                 recipePreviewPanel = new RecipePreviewPanel()

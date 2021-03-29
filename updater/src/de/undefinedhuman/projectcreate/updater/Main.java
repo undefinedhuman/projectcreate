@@ -12,7 +12,7 @@ import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.resources.ResourceManager;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingType;
-import de.undefinedhuman.projectcreate.engine.utils.Utils;
+import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.Version;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
@@ -64,7 +64,7 @@ public class Main extends JFrame {
         container.setBackground(new Color(60, 63, 65));
         setContentPane(container);
 
-        JLabel icon = new JLabel(new ImageIcon(Utils.scaleNearest(ResourceManager.loadImage("logo.png"), LOGO_SCALE)));
+        JLabel icon = new JLabel(new ImageIcon(Tools.scaleNearest(ResourceManager.loadImage("logo.png"), LOGO_SCALE)));
         icon.setBounds(0, 0, WINDOW_WIDTH, LOGO_SIZE.y);
         container.add(icon);
 
@@ -145,7 +145,7 @@ public class Main extends JFrame {
 
     public void saveConfig() {
         FileWriter writer = config.getFileWriter(true);
-        Utils.saveSettings(writer, installationPath, version);
+        Tools.saveSettings(writer, installationPath, version);
         writer.close();
     }
 

@@ -1,6 +1,6 @@
 package de.undefinedhuman.projectcreate.world.layer;
 
-import de.undefinedhuman.projectcreate.utils.Utils;
+import de.undefinedhuman.projectcreate.utils.Tools;
 
 public class Layer {
 
@@ -14,6 +14,6 @@ public class Layer {
         this.trans = trans;
     }
 
-    public boolean isMaxY(byte worldLayer, int x, int y) { return Utils.getLayerTransitionMaxY(worldLayer, x, y, maxY, trans); }
+    public boolean isMaxY(byte worldLayer, int x, int y) { return Tools.getLayerTransitionMaxY(worldLayer, x, y, maxY, trans); }
 
 }

@@ -33,7 +33,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Random;
 
-public class Utils extends de.undefinedhuman.projectcreate.engine.utils.Utils {
+public class Tools extends de.undefinedhuman.projectcreate.engine.utils.Tools {
 
     public static boolean isMac = System.getProperty("os.name").contains("OS X");
     public static boolean isWindows = System.getProperty("os.name").contains("Windows");
@@ -322,7 +322,7 @@ public class Utils extends de.undefinedhuman.projectcreate.engine.utils.Utils {
     }
 
     public static int calculateRandomValue(int value) {
-        return Utils.random.nextInt(value) + value;
+        return Tools.random.nextInt(value) + value;
     }
 
 }

@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.world;
 
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.utils.Utils;
+import de.undefinedhuman.projectcreate.utils.Tools;
 import de.undefinedhuman.projectcreate.world.layer.Layer;
 import de.undefinedhuman.projectcreate.world.settings.BiomeSetting;
 import de.undefinedhuman.projectcreate.world.settings.WorldSetting;
@@ -94,7 +94,7 @@ public class WorldGenerator {
     }
 
     private float calcBorders(float x, float width, float borderSize) {
-        return (x < borderSize ? Utils.lerp(0, 1, (x % borderSize) / borderSize) : x > (width - borderSize) ? 1f - Utils.lerp(0, 1, (x % borderSize) / borderSize) : 1f);
+        return (x < borderSize ? Tools.lerp(0, 1, (x % borderSize) / borderSize) : x > (width - borderSize) ? 1f - Tools.lerp(0, 1, (x % borderSize) / borderSize) : 1f);
     }
 
     private void generateBiome(World world, int[] tempY, BiomeSetting biomeSetting, int biomeID, Biome[] biomes, Noise[] noise, Noise caveNoise, ShiftList list, float[] borderSizes, float[] caveHeight, float[] biomeTransitions) {
@@ -115,14 +115,14 @@ public class WorldGenerator {
             currentHeight = 400;
             for (int y = 0; y < currentHeight; y++) {
                 currentY = tempY[y];
-                if (currentNoise.select(0.5f, isTransition ? Utils.lerp(currentNoise.gradient(currentX + biomeSetting.getTransition(), y, currentHeight), nextNoise.gradient(nextBiomeID == 0 ? currentX + biomeSetting.getTransition() - world.size.x : currentX + biomeSetting.getTransition(), y, currentHeight), biomeTransitions[transitionX]) : currentNoise.gradient(currentX + biomeSetting.getTransition(), y, currentHeight)) && caveNoise.select(borderSizes[currentX] * caveHeight[y], caveNoise.calculateFractalNoise(currentX, currentY)))
-                    world.setBlock(currentX, currentY, World.MAIN_LAYER, getBlockID(World.MAIN_LAYER, currentX, currentY, borderSizes, biomes[isTransition && currentNoise.select(0.5f, Utils.lerp(0, 1, biomeTransitions[transitionX] + currentNoise.calculateInterpolatedNoise(currentX, y))) ? nextBiomeID : biomeID], list));
+                if (currentNoise.select(0.5f, isTransition ? Tools.lerp(currentNoise.gradient(currentX + biomeSetting.getTransition(), y, currentHeight), nextNoise.gradient(nextBiomeID == 0 ? currentX + biomeSetting.getTransition() - world.size.x : currentX + biomeSetting.getTransition(), y, currentHeight), biomeTransitions[transitionX]) : currentNoise.gradient(currentX + biomeSetting.getTransition(), y, currentHeight)) && caveNoise.select(borderSizes[currentX] * caveHeight[y], caveNoise.calculateFractalNoise(currentX, currentY)))
+                    world.setBlock(currentX, currentY, World.MAIN_LAYER, getBlockID(World.MAIN_LAYER, currentX, currentY, borderSizes, biomes[isTransition && currentNoise.select(0.5f, Tools.lerp(0, 1, biomeTransitions[transitionX] + currentNoise.calculateInterpolatedNoise(currentX, y))) ? nextBiomeID : biomeID], list));
             }
 
             currentHeight = 800;
             for (int y = 0; y <= currentHeight; y++) {
                 if (caveNoise.select(borderSizes[currentX] * 0.06f, caveNoise.calculateFractalNoise(currentX, y)))
-                    world.setBlock(currentX, y, World.MAIN_LAYER, getBlockID((byte) currentX, y, World.MAIN_LAYER, borderSizes, biomes[isTransition && currentNoise.select(0.5f, Utils.lerp(0, 1, biomeTransitions[transitionX] + currentNoise.calculateInterpolatedNoise(currentX, y))) ? nextBiomeID : biomeID], list));
+                    world.setBlock(currentX, y, World.MAIN_LAYER, getBlockID((byte) currentX, y, World.MAIN_LAYER, borderSizes, biomes[isTransition && currentNoise.select(0.5f, Tools.lerp(0, 1, biomeTransitions[transitionX] + currentNoise.calculateInterpolatedNoise(currentX, y))) ? nextBiomeID : biomeID], list));
             }
 
         }
@@ -140,7 +140,7 @@ public class WorldGenerator {
             air += neighborIDs[i] == 0 ? 1 : 0;
         }
         if (air >= 3 && current != 0) world.setBlock(x, y, World.MAIN_LAYER, (byte) 0);
-        if (air == 0 && current == 0) world.setBlock(x, y, World.MAIN_LAYER, Utils.getMostFrequentArrayElement(neighborIDs));
+        if (air == 0 && current == 0) world.setBlock(x, y, World.MAIN_LAYER, Tools.getMostFrequentArrayElement(neighborIDs));
     }
 
     private byte getBlockID(byte worldLayer, int x, int y, float[] borderSizes, Biome biome, ShiftList shiftList) {
@@ -148,7 +148,7 @@ public class WorldGenerator {
         for (Layer layer : biome.getLayerList().getLayers()) if (layer.isMaxY(worldLayer, x, y)) maxLayer = layer;
         byte blockID = maxLayer != null ? maxLayer.blockID : 0;
         if (blockID != 0) for (Shift shift : shiftList.getShifts())
-            if (Utils.contains(blockID, shift.blockFilter) && shift.getNoise().select(shift.threshold, borderSizes[x] * shift.getNoise().calculateFractalNoise(x, y)))
+            if (Tools.contains(blockID, shift.blockFilter) && shift.getNoise().select(shift.threshold, borderSizes[x] * shift.getNoise().calculateFractalNoise(x, y)))
                 blockID = shift.blockID;
         return blockID;
     }

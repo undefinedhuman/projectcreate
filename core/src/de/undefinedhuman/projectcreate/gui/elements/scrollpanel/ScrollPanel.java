@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 import de.undefinedhuman.projectcreate.Main;
-import de.undefinedhuman.projectcreate.engine.utils.Utils;
+import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.gui.Gui;
 import de.undefinedhuman.projectcreate.gui.event.ChangeListener;
@@ -43,7 +43,7 @@ public class ScrollPanel<T extends Gui> extends Gui {
         super(guiTexture);
         scrollBar = (ScrollBar) new ScrollBar(GuiTemplate.SCROLL_BAR, 10).addListener((ChangeListener) progress -> {
             if (maxOffset > 0)
-                updateOffset(Utils.clamp(Math.max(maxOffset * (1f / 0.9f), 1f) * progress, 0, maxOffset));
+                updateOffset(Tools.clamp(Math.max(maxOffset * (1f / 0.9f), 1f) * progress, 0, maxOffset));
         });
 
         viewport = (Gui) new Gui(new GuiTexture())
@@ -107,7 +107,7 @@ public class ScrollPanel<T extends Gui> extends Gui {
     public void scroll(int amount) {
         if(amount == 0 || maxOffset < 0)
             return;
-        updateOffset(Utils.clamp(offset - (float) (amount * Variables.MOUSE_SENSITIVITY) / scrollBar.getScrollBarHeight(), 0, maxOffset));
+        updateOffset(Tools.clamp(offset - (float) (amount * Variables.MOUSE_SENSITIVITY) / scrollBar.getScrollBarHeight(), 0, maxOffset));
     }
 
     public void addContent(T gui) {
@@ -128,7 +128,7 @@ public class ScrollPanel<T extends Gui> extends Gui {
     }
 
     private void updateOffset(float offset) {
-        scrollBar.updateThumbY(Utils.clamp((offset / Math.max(maxOffset, 0.9f)) * 0.9f, 0, 0.9f));
+        scrollBar.updateThumbY(Tools.clamp((offset / Math.max(maxOffset, 0.9f)) * 0.9f, 0, 0.9f));
         for (Gui gui : content)
             gui.setValue(Axis.Y, -offset).resize();
         this.offset = offset;

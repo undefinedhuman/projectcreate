@@ -20,7 +20,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Utils {
+public class Tools {
 
     public static SettingsObject loadSettings(FileReader reader) {
         SettingsObject settingsObject = new SettingsObject();

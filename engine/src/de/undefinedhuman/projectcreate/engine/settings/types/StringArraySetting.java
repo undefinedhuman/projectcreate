@@ -6,7 +6,7 @@ import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingType;
-import de.undefinedhuman.projectcreate.engine.utils.Utils;
+import de.undefinedhuman.projectcreate.engine.utils.Tools;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
@@ -36,7 +36,7 @@ public class StringArraySetting extends Setting {
     }
 
     protected void addValueMenuComponents(JPanel panel, Vector2 position) {
-        valueField = createTextField(Utils.convertArrayToString(getStringArray()), position, new Vector2(200, 25), new KeyAdapter() {
+        valueField = createTextField(Tools.convertArrayToString(getStringArray()), position, new Vector2(200, 25), new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 if(valueField.getText() == null || valueField.getText().equalsIgnoreCase("")) return;
@@ -49,7 +49,7 @@ public class StringArraySetting extends Setting {
 
     @Override
     protected void setValueInMenu(Object value) {
-        if(valueField != null) valueField.setText(Utils.convertArrayToString(getStringArray()));
+        if(valueField != null) valueField.setText(Tools.convertArrayToString(getStringArray()));
     }
 
 }

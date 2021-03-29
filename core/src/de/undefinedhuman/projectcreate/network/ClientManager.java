@@ -16,7 +16,7 @@ import de.undefinedhuman.projectcreate.network.packets.entity.ComponentPacket;
 import de.undefinedhuman.projectcreate.network.utils.PacketUtils;
 import de.undefinedhuman.projectcreate.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.utils.Timer;
-import de.undefinedhuman.projectcreate.utils.Utils;
+import de.undefinedhuman.projectcreate.utils.Tools;
 
 import java.io.IOException;
 
@@ -44,7 +44,7 @@ public class ClientManager extends Manager {
 
         playerUpdateTimer60 = new Timer(0.015f, true, () -> {
             Entity player = GameManager.instance.player;
-            ((AngleComponent) player.getComponent(ComponentType.ANGLE)).mousePos = Utils.getMouseCoordsInWorldSpace(CameraManager.gameCamera);
+            ((AngleComponent) player.getComponent(ComponentType.ANGLE)).mousePos = Tools.getMouseCoordsInWorldSpace(CameraManager.gameCamera);
             ComponentPacket packet = PacketUtils.createComponentPacket(player, ComponentType.ANGLE);
             ClientManager.instance.sendUDP(packet);
         });

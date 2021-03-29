@@ -14,7 +14,7 @@ import de.undefinedhuman.projectcreate.inventory.Inventory;
 import de.undefinedhuman.projectcreate.inventory.InventoryManager;
 import de.undefinedhuman.projectcreate.item.ItemManager;
 import de.undefinedhuman.projectcreate.screen.gamescreen.GameManager;
-import de.undefinedhuman.projectcreate.utils.Utils;
+import de.undefinedhuman.projectcreate.utils.Tools;
 
 public class Selector extends Inventory {
 
@@ -25,7 +25,7 @@ public class Selector extends Inventory {
     public Selector() {
         super(1, 9, GuiTemplate.HOTBAR);
         if(instance == null) instance = this;
-        setPosition(new CenterConstraint(), new RelativeConstraint(1)).setOffset(new CenterOffset(), new PixelOffset(-Utils.getInventorySize(GuiTemplate.HOTBAR, 1) - 10));
+        setPosition(new CenterConstraint(), new RelativeConstraint(1)).setOffset(new CenterOffset(), new PixelOffset(-Tools.getInventorySize(GuiTemplate.HOTBAR, 1) - 10));
     }
 
     @Override

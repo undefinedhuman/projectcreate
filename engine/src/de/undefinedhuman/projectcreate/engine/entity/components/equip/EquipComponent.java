@@ -5,7 +5,7 @@ import de.undefinedhuman.projectcreate.engine.entity.Component;
 import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.LineWriter;
-import de.undefinedhuman.projectcreate.engine.utils.Utils;
+import de.undefinedhuman.projectcreate.engine.utils.Tools;
 
 public class EquipComponent extends Component {
 
@@ -32,7 +32,7 @@ public class EquipComponent extends Component {
     public String[] getInvisibleSprites() { return invisibleSprites; }
 
     public void setItemID(int index, int itemID) {
-        if (!Utils.isInRange(index, 0, 4)) return;
+        if (!Tools.isInRange(index, 0, 4)) return;
         itemIDs[index] = itemID;
     }
 

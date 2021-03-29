@@ -89,7 +89,7 @@ project(":editor") {
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
 
-        implementation 'com.formdev:flatlaf:0.36'
+        compile 'com.formdev:flatlaf:0.36'
         testImplementation 'junit:junit:4.12'
     }
 }
@@ -99,8 +99,8 @@ project(":updater") {
         compile project(":engine")
         compile 'com.badlogicgames.gdx:gdx-backend-headless:1.9.4'
 
-        implementation 'org.jsoup:jsoup:1.13.1'
-        implementation 'com.formdev:flatlaf:0.36'
+        compile 'org.jsoup:jsoup:1.13.1'
+        compile 'com.formdev:flatlaf:0.36'
         testImplementation 'junit:junit:4.12'
     }
 }
@@ -111,7 +111,9 @@ project(":launcher") {
         compile project(":updater")
         compile 'com.badlogicgames.gdx:gdx-backend-headless:1.9.4'
 
-        implementation 'com.formdev:flatlaf:0.36'
+        compile 'com.formdev:flatlaf:0.36'
+        compile 'com.formdev:svgSalamander:1.1.2.4'
+        compile 'com.formdev:flatlaf-extras:1.1.1'
         testImplementation 'junit:junit:4.12'
     }
 }

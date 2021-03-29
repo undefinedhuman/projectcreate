@@ -2,7 +2,7 @@ package de.undefinedhuman.projectcreate.engine.settings.panels;
 
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.log.Log;
-import de.undefinedhuman.projectcreate.engine.utils.Utils;
+import de.undefinedhuman.projectcreate.engine.utils.Tools;
 
 import javax.swing.*;
 
@@ -51,8 +51,8 @@ public class StringPanel<T extends PanelObject> extends Panel<T> {
     @Override
     public void selectObject(T object) {
         objectName.setText(object.getKey());
-        Utils.removeSettings(objectPanel);
-        Utils.addSettings(objectPanel, object.getSettings());
+        Tools.removeSettings(objectPanel);
+        Tools.addSettings(objectPanel, object.getSettings());
     }
 
 }

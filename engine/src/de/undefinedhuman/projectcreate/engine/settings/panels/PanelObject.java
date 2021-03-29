@@ -5,7 +5,7 @@ import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
-import de.undefinedhuman.projectcreate.engine.utils.Utils;
+import de.undefinedhuman.projectcreate.engine.utils.Tools;
 
 import java.util.ArrayList;
 
@@ -17,7 +17,7 @@ public class PanelObject {
 
     public void save(FileWriter writer) {
         writer.writeString("{:" + getKey()).nextLine();
-        Utils.saveSettings(writer, settings.getSettings());
+        Tools.saveSettings(writer, settings.getSettings());
         writer.writeString("}").nextLine();
     }
 
