@@ -10,6 +10,7 @@ public enum SettingType {
     Vector2,
     StringArray,
     Selection,
+    Slider,
     Vector2Array,
     InputKey,
     Panel,
