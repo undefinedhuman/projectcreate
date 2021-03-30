@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.core.background.BackgroundObject;
-import de.undefinedhuman.projectcreate.core.engine.resources.texture.TextureManager;
+import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
 import de.undefinedhuman.projectcreate.core.utils.Tools;
 
 public class Cloud extends BackgroundObject {

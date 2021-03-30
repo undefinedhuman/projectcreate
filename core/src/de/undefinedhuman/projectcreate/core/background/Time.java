@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.core.background;
 
-import de.undefinedhuman.projectcreate.core.engine.resources.texture.TextureManager;
-import de.undefinedhuman.projectcreate.core.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 public enum Time {
 

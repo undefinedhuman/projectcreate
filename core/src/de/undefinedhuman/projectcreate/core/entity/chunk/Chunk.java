@@ -2,12 +2,12 @@ package de.undefinedhuman.projectcreate.core.entity.chunk;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.core.collision.CollisionManager;
-import de.undefinedhuman.projectcreate.core.engine.entity.components.collision.CollisionComponent;
-import de.undefinedhuman.projectcreate.core.engine.utils.ds.MultiMap;
-import de.undefinedhuman.projectcreate.core.engine.utils.math.Vector4;
+import de.undefinedhuman.projectcreate.engine.entity.components.collision.CollisionComponent;
+import de.undefinedhuman.projectcreate.engine.utils.ds.MultiMap;
+import de.undefinedhuman.projectcreate.engine.utils.math.Vector4;
 import de.undefinedhuman.projectcreate.core.entity.ecs.system.RenderSystem;
-import de.undefinedhuman.projectcreate.core.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.core.engine.entity.EntityType;
+import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
+import de.undefinedhuman.projectcreate.engine.entity.EntityType;
 import de.undefinedhuman.projectcreate.core.entity.Entity;
 
 import java.util.ArrayList;

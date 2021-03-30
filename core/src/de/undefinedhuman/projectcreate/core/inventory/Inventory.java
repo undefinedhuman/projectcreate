@@ -2,7 +2,7 @@ package de.undefinedhuman.projectcreate.core.inventory;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import de.undefinedhuman.projectcreate.core.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.core.gui.Gui;
 import de.undefinedhuman.projectcreate.core.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.projectcreate.core.inventory.slot.InvSlot;

@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.core.gui.elements.scrollpanel;
 
-import de.undefinedhuman.projectcreate.core.engine.utils.ds.ObjectPool;
-import de.undefinedhuman.projectcreate.core.engine.utils.ds.Poolable;
+import de.undefinedhuman.projectcreate.engine.utils.ds.ObjectPool;
+import de.undefinedhuman.projectcreate.engine.utils.ds.Poolable;
 import de.undefinedhuman.projectcreate.core.gui.Gui;
 import de.undefinedhuman.projectcreate.core.gui.texture.GuiTemplate;
 

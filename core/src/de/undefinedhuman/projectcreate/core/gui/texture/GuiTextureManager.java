@@ -1,9 +1,9 @@
 package de.undefinedhuman.projectcreate.core.gui.texture;
 
 import de.undefinedhuman.projectcreate.core.Main;
-import de.undefinedhuman.projectcreate.core.engine.utils.Manager;
-import de.undefinedhuman.projectcreate.core.engine.utils.ds.Key;
-import de.undefinedhuman.projectcreate.core.engine.utils.math.Vector2i;
+import de.undefinedhuman.projectcreate.engine.utils.Manager;
+import de.undefinedhuman.projectcreate.engine.utils.ds.Key;
+import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 
 import java.util.ArrayList;
 import java.util.HashMap;

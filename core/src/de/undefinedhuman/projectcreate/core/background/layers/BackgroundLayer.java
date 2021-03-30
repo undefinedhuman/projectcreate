@@ -6,9 +6,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.core.background.Layer;
 import de.undefinedhuman.projectcreate.core.background.Time;
-import de.undefinedhuman.projectcreate.core.engine.camera.CameraManager;
-import de.undefinedhuman.projectcreate.core.engine.resources.texture.TextureManager;
-import de.undefinedhuman.projectcreate.core.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.core.camera.CameraManager;
+import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 public class BackgroundLayer extends Layer {
 

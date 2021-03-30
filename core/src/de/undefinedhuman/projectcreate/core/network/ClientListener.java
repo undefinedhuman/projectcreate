@@ -2,9 +2,9 @@ package de.undefinedhuman.projectcreate.core.network;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import de.undefinedhuman.projectcreate.core.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.core.engine.entity.components.movement.MovementComponent;
-import de.undefinedhuman.projectcreate.core.engine.log.Log;
+import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
+import de.undefinedhuman.projectcreate.engine.entity.components.movement.MovementComponent;
+import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.core.entity.Entity;
 import de.undefinedhuman.projectcreate.core.entity.EntityManager;
 import de.undefinedhuman.projectcreate.core.entity.ecs.blueprint.BlueprintManager;

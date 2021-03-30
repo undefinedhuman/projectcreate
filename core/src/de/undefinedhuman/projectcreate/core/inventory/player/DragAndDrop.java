@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.core.engine.camera.CameraManager;
+import de.undefinedhuman.projectcreate.core.camera.CameraManager;
 import de.undefinedhuman.projectcreate.core.gui.transforms.constraints.MouseConstraint;
 import de.undefinedhuman.projectcreate.core.inventory.slot.InvSlot;
 import de.undefinedhuman.projectcreate.core.gui.GuiManager;

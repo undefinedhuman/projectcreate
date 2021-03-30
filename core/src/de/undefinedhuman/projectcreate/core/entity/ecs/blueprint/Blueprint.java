@@ -1,15 +1,15 @@
 package de.undefinedhuman.projectcreate.core.entity.ecs.blueprint;
 
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.core.engine.settings.types.SelectionSetting;
-import de.undefinedhuman.projectcreate.core.engine.settings.types.Vector2Setting;
-import de.undefinedhuman.projectcreate.core.engine.entity.ComponentBlueprint;
-import de.undefinedhuman.projectcreate.core.engine.entity.ComponentParam;
-import de.undefinedhuman.projectcreate.core.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.core.engine.entity.EntityType;
-import de.undefinedhuman.projectcreate.core.engine.settings.Setting;
-import de.undefinedhuman.projectcreate.core.engine.settings.SettingType;
-import de.undefinedhuman.projectcreate.core.engine.settings.SettingsList;
+import de.undefinedhuman.projectcreate.engine.settings.types.SelectionSetting;
+import de.undefinedhuman.projectcreate.engine.settings.types.Vector2Setting;
+import de.undefinedhuman.projectcreate.engine.entity.ComponentBlueprint;
+import de.undefinedhuman.projectcreate.engine.entity.ComponentParam;
+import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
+import de.undefinedhuman.projectcreate.engine.entity.EntityType;
+import de.undefinedhuman.projectcreate.engine.settings.Setting;
+import de.undefinedhuman.projectcreate.engine.settings.SettingType;
+import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.core.entity.Entity;
 
 import java.util.HashMap;

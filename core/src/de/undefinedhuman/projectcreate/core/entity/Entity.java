@@ -1,16 +1,16 @@
 package de.undefinedhuman.projectcreate.core.entity;
 
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.core.engine.base.GameObject;
-import de.undefinedhuman.projectcreate.core.engine.entity.Component;
-import de.undefinedhuman.projectcreate.core.engine.entity.ComponentList;
-import de.undefinedhuman.projectcreate.core.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.core.engine.entity.EntityType;
-import de.undefinedhuman.projectcreate.core.engine.file.LineSplitter;
-import de.undefinedhuman.projectcreate.core.engine.file.LineWriter;
-import de.undefinedhuman.projectcreate.core.engine.utils.Tools;
-import de.undefinedhuman.projectcreate.core.engine.utils.Variables;
-import de.undefinedhuman.projectcreate.core.engine.utils.math.Vector2i;
+import de.undefinedhuman.projectcreate.engine.base.GameObject;
+import de.undefinedhuman.projectcreate.engine.entity.Component;
+import de.undefinedhuman.projectcreate.engine.entity.ComponentList;
+import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
+import de.undefinedhuman.projectcreate.engine.entity.EntityType;
+import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
+import de.undefinedhuman.projectcreate.engine.file.LineWriter;
+import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 import de.undefinedhuman.projectcreate.core.entity.ecs.blueprint.Blueprint;
 import de.undefinedhuman.projectcreate.core.network.components.NetworkComponent;
 import de.undefinedhuman.projectcreate.core.world.World;

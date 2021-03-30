@@ -2,8 +2,8 @@ package de.undefinedhuman.projectcreate.core.screen.gamescreen;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.core.background.BackgroundManager;
-import de.undefinedhuman.projectcreate.core.engine.camera.CameraManager;
-import de.undefinedhuman.projectcreate.core.engine.utils.ManagerList;
+import de.undefinedhuman.projectcreate.core.camera.CameraManager;
+import de.undefinedhuman.projectcreate.engine.utils.ManagerList;
 import de.undefinedhuman.projectcreate.core.entity.Entity;
 import de.undefinedhuman.projectcreate.core.entity.EntityManager;
 import de.undefinedhuman.projectcreate.core.entity.ecs.blueprint.BlueprintManager;

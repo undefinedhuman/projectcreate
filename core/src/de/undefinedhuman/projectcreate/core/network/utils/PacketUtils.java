@@ -1,9 +1,9 @@
 package de.undefinedhuman.projectcreate.core.network.utils;
 
 import de.undefinedhuman.projectcreate.core.screen.gamescreen.GameManager;
-import de.undefinedhuman.projectcreate.core.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.core.engine.file.LineSplitter;
-import de.undefinedhuman.projectcreate.core.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
+import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.core.entity.Entity;
 import de.undefinedhuman.projectcreate.core.entity.EntityManager;
 import de.undefinedhuman.projectcreate.core.equip.EquipManager;

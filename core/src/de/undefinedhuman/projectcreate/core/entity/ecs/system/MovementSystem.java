@@ -2,11 +2,11 @@ package de.undefinedhuman.projectcreate.core.entity.ecs.system;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import de.undefinedhuman.projectcreate.core.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.core.engine.entity.components.animation.AnimationComponent;
-import de.undefinedhuman.projectcreate.core.engine.entity.components.collision.CollisionComponent;
-import de.undefinedhuman.projectcreate.core.engine.entity.components.movement.MovementComponent;
-import de.undefinedhuman.projectcreate.core.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
+import de.undefinedhuman.projectcreate.engine.entity.components.animation.AnimationComponent;
+import de.undefinedhuman.projectcreate.engine.entity.components.collision.CollisionComponent;
+import de.undefinedhuman.projectcreate.engine.entity.components.movement.MovementComponent;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.core.entity.Entity;
 import de.undefinedhuman.projectcreate.core.entity.ecs.System;
 import de.undefinedhuman.projectcreate.core.screen.CollisionUtils;

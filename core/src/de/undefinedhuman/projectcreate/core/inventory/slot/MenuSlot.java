@@ -6,7 +6,7 @@ import de.undefinedhuman.projectcreate.core.gui.transforms.constraints.CenterCon
 import de.undefinedhuman.projectcreate.core.gui.transforms.constraints.Constraint;
 import de.undefinedhuman.projectcreate.core.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.projectcreate.core.gui.transforms.offset.CenterOffset;
-import de.undefinedhuman.projectcreate.core.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.core.gui.Gui;
 import de.undefinedhuman.projectcreate.core.gui.event.ClickListener;
 

@@ -1,8 +1,8 @@
 package de.undefinedhuman.projectcreate.core.gui.texture;
 
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.core.engine.file.Paths;
-import de.undefinedhuman.projectcreate.core.engine.resources.texture.TextureManager;
+import de.undefinedhuman.projectcreate.engine.file.Paths;
+import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
 
 public enum GuiTemplate {
 

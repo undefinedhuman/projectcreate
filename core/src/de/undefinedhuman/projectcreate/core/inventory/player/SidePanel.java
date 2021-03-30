@@ -6,7 +6,7 @@ import de.undefinedhuman.projectcreate.core.gui.transforms.constraints.RelativeC
 import de.undefinedhuman.projectcreate.core.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.projectcreate.core.gui.transforms.offset.PixelOffset;
 import de.undefinedhuman.projectcreate.core.inventory.slot.MenuSlot;
-import de.undefinedhuman.projectcreate.core.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.core.gui.Gui;
 import de.undefinedhuman.projectcreate.core.gui.texture.GuiTemplate;
 import de.undefinedhuman.projectcreate.core.inventory.InventoryManager;

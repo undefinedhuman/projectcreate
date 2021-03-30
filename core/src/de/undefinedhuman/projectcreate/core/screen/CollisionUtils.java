@@ -2,11 +2,11 @@ package de.undefinedhuman.projectcreate.core.screen;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import de.undefinedhuman.projectcreate.core.engine.entity.components.collision.CollisionComponent;
-import de.undefinedhuman.projectcreate.core.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.engine.entity.components.collision.CollisionComponent;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.core.world.World;
-import de.undefinedhuman.projectcreate.core.engine.collision.Hitbox;
-import de.undefinedhuman.projectcreate.core.engine.collision.SAT;
+import de.undefinedhuman.projectcreate.engine.collision.Hitbox;
+import de.undefinedhuman.projectcreate.engine.collision.SAT;
 
 public class CollisionUtils {
 

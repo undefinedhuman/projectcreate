@@ -2,19 +2,19 @@ package de.undefinedhuman.projectcreate.core.entity;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import de.undefinedhuman.projectcreate.core.engine.camera.CameraManager;
-import de.undefinedhuman.projectcreate.core.engine.entity.components.collision.CollisionComponent;
-import de.undefinedhuman.projectcreate.core.engine.utils.math.Vector2i;
-import de.undefinedhuman.projectcreate.core.engine.utils.math.Vector4;
+import de.undefinedhuman.projectcreate.core.camera.CameraManager;
+import de.undefinedhuman.projectcreate.engine.entity.components.collision.CollisionComponent;
+import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
+import de.undefinedhuman.projectcreate.engine.utils.math.Vector4;
 import de.undefinedhuman.projectcreate.core.entity.chunk.Chunk;
 import de.undefinedhuman.projectcreate.core.entity.ecs.System;
 import de.undefinedhuman.projectcreate.core.entity.ecs.system.*;
 import de.undefinedhuman.projectcreate.core.utils.Tools;
 import de.undefinedhuman.projectcreate.core.world.World;
-import de.undefinedhuman.projectcreate.core.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.core.engine.entity.EntityType;
-import de.undefinedhuman.projectcreate.core.engine.utils.Manager;
-import de.undefinedhuman.projectcreate.core.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
+import de.undefinedhuman.projectcreate.engine.entity.EntityType;
+import de.undefinedhuman.projectcreate.engine.utils.Manager;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.entity.ecs.system.*;
 
 import java.util.ArrayList;

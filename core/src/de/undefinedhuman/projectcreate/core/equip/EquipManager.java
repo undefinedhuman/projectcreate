@@ -1,15 +1,15 @@
 package de.undefinedhuman.projectcreate.core.equip;
 
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.core.engine.entity.components.sprite.SpriteComponent;
-import de.undefinedhuman.projectcreate.core.engine.entity.components.sprite.SpriteData;
+import de.undefinedhuman.projectcreate.engine.entity.components.sprite.SpriteComponent;
+import de.undefinedhuman.projectcreate.engine.entity.components.sprite.SpriteData;
 import de.undefinedhuman.projectcreate.core.item.ItemManager;
 import de.undefinedhuman.projectcreate.core.network.utils.PacketUtils;
-import de.undefinedhuman.projectcreate.core.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.core.engine.entity.components.equip.EquipComponent;
-import de.undefinedhuman.projectcreate.core.engine.items.Item;
-import de.undefinedhuman.projectcreate.core.engine.items.ItemType;
-import de.undefinedhuman.projectcreate.core.engine.items.type.Armor.Armor;
+import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
+import de.undefinedhuman.projectcreate.engine.entity.components.equip.EquipComponent;
+import de.undefinedhuman.projectcreate.engine.items.Item;
+import de.undefinedhuman.projectcreate.engine.items.ItemType;
+import de.undefinedhuman.projectcreate.engine.items.type.Armor.Armor;
 import de.undefinedhuman.projectcreate.core.entity.Entity;
 import de.undefinedhuman.projectcreate.core.network.ClientManager;
 import de.undefinedhuman.projectcreate.core.utils.Tools;

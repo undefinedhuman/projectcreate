@@ -2,15 +2,15 @@ package de.undefinedhuman.projectcreate.core.world;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import de.undefinedhuman.projectcreate.core.engine.camera.CameraManager;
-import de.undefinedhuman.projectcreate.core.engine.utils.math.Vector2i;
+import de.undefinedhuman.projectcreate.core.camera.CameraManager;
+import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 import de.undefinedhuman.projectcreate.core.item.ItemManager;
 import de.undefinedhuman.projectcreate.core.world.layer.topLayer.TopLayerManager;
 import de.undefinedhuman.projectcreate.core.world.layer.topLayer.TopLayerType;
-import de.undefinedhuman.projectcreate.core.engine.items.type.blocks.Block;
-import de.undefinedhuman.projectcreate.core.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.engine.items.type.blocks.Block;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.core.screen.CollisionUtils;
-import de.undefinedhuman.projectcreate.core.engine.collision.Hitbox;
+import de.undefinedhuman.projectcreate.engine.collision.Hitbox;
 
 import java.util.Random;
 

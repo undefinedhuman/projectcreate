@@ -8,8 +8,8 @@ import de.undefinedhuman.projectcreate.core.gui.transforms.constraints.Constrain
 import de.undefinedhuman.projectcreate.core.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.projectcreate.core.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.projectcreate.core.inventory.slot.InvSlot;
-import de.undefinedhuman.projectcreate.core.engine.items.ItemType;
-import de.undefinedhuman.projectcreate.core.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.engine.items.ItemType;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 public abstract class EquipSlot extends InvSlot {
 

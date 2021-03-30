@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.core.inventory.player;
 
 import com.badlogic.gdx.graphics.Color;
-import de.undefinedhuman.projectcreate.core.engine.resources.font.Font;
+import de.undefinedhuman.projectcreate.engine.resources.font.Font;
 import de.undefinedhuman.projectcreate.core.inventory.Inventory;
 
 public class PlayerInventory extends Inventory {

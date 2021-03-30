@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import de.undefinedhuman.projectcreate.core.engine.resources.texture.TextureManager;
+import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
 import de.undefinedhuman.projectcreate.core.gui.Gui;
 import de.undefinedhuman.projectcreate.core.gui.GuiComponent;
 import de.undefinedhuman.projectcreate.core.gui.event.ChangeListener;

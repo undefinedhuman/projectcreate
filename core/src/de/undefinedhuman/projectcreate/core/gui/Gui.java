@@ -10,7 +10,7 @@ import de.undefinedhuman.projectcreate.core.gui.transforms.constraints.CenterCon
 import de.undefinedhuman.projectcreate.core.gui.transforms.constraints.RelativeConstraint;
 import de.undefinedhuman.projectcreate.core.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.projectcreate.core.gui.transforms.offset.RelativeOffset;
-import de.undefinedhuman.projectcreate.core.engine.resources.font.Font;
+import de.undefinedhuman.projectcreate.engine.resources.font.Font;
 import de.undefinedhuman.projectcreate.core.gui.text.Text;
 import de.undefinedhuman.projectcreate.core.gui.texture.GuiTemplate;
 import de.undefinedhuman.projectcreate.core.gui.texture.GuiTexture;

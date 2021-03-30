@@ -11,15 +11,15 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
 import de.undefinedhuman.projectcreate.core.Main;
-import de.undefinedhuman.projectcreate.core.engine.camera.CameraManager;
-import de.undefinedhuman.projectcreate.core.engine.utils.math.Vector2i;
+import de.undefinedhuman.projectcreate.core.camera.CameraManager;
+import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 import de.undefinedhuman.projectcreate.core.gui.Gui;
 import de.undefinedhuman.projectcreate.core.gui.transforms.constraints.PixelConstraint;
-import de.undefinedhuman.projectcreate.core.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.core.engine.entity.components.equip.EquipComponent;
-import de.undefinedhuman.projectcreate.core.engine.file.Paths;
-import de.undefinedhuman.projectcreate.core.engine.resources.texture.TextureManager;
-import de.undefinedhuman.projectcreate.core.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
+import de.undefinedhuman.projectcreate.engine.entity.components.equip.EquipComponent;
+import de.undefinedhuman.projectcreate.engine.file.Paths;
+import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.core.entity.Entity;
 import de.undefinedhuman.projectcreate.core.gui.texture.GuiTemplate;
 import de.undefinedhuman.projectcreate.core.inventory.player.Selector;
@@ -33,7 +33,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Random;
 
-public class Tools extends de.undefinedhuman.projectcreate.core.engine.utils.Tools {
+public class Tools extends de.undefinedhuman.projectcreate.engine.utils.Tools {
 
     public static boolean isMac = System.getProperty("os.name").contains("OS X");
     public static boolean isWindows = System.getProperty("os.name").contains("Windows");

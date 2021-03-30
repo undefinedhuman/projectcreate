@@ -1,6 +1,6 @@
 package de.undefinedhuman.projectcreate.core.world.settings;
 
-import de.undefinedhuman.projectcreate.core.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 public enum BiomeSetting {
 

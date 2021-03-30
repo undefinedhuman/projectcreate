@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.core.background.BackgroundManager;
 import de.undefinedhuman.projectcreate.core.background.Layer;
-import de.undefinedhuman.projectcreate.core.engine.resources.texture.TextureManager;
+import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
 import de.undefinedhuman.projectcreate.core.world.World;
 
 public class ForegroundLayer extends Layer {

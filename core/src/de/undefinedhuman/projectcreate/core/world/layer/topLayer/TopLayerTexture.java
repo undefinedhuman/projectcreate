@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.core.world.layer.topLayer;
 
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.core.engine.resources.texture.TextureManager;
+import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
 
 public class TopLayerTexture {
 

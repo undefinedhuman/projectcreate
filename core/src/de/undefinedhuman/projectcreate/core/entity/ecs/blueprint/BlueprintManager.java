@@ -1,14 +1,14 @@
 package de.undefinedhuman.projectcreate.core.entity.ecs.blueprint;
 
 import com.badlogic.gdx.Files;
-import de.undefinedhuman.projectcreate.core.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.core.engine.file.FileReader;
-import de.undefinedhuman.projectcreate.core.engine.file.FsFile;
-import de.undefinedhuman.projectcreate.core.engine.file.Paths;
-import de.undefinedhuman.projectcreate.core.engine.log.Log;
-import de.undefinedhuman.projectcreate.core.engine.settings.Setting;
-import de.undefinedhuman.projectcreate.core.engine.settings.SettingsObject;
-import de.undefinedhuman.projectcreate.core.engine.utils.Manager;
+import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
+import de.undefinedhuman.projectcreate.engine.file.FileReader;
+import de.undefinedhuman.projectcreate.engine.file.FsFile;
+import de.undefinedhuman.projectcreate.engine.file.Paths;
+import de.undefinedhuman.projectcreate.engine.log.Log;
+import de.undefinedhuman.projectcreate.engine.settings.Setting;
+import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
+import de.undefinedhuman.projectcreate.engine.utils.Manager;
 import de.undefinedhuman.projectcreate.core.utils.Tools;
 
 import java.util.Arrays;

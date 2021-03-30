@@ -1,15 +1,15 @@
 package de.undefinedhuman.projectcreate.core.entity.ecs.system;
 
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.core.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.core.engine.entity.components.animation.AnimationComponent;
-import de.undefinedhuman.projectcreate.core.engine.entity.components.arm.ShoulderComponent;
-import de.undefinedhuman.projectcreate.core.engine.entity.components.equip.EquipComponent;
-import de.undefinedhuman.projectcreate.core.engine.entity.components.mouse.AngleComponent;
-import de.undefinedhuman.projectcreate.core.engine.entity.components.sprite.SpriteComponent;
-import de.undefinedhuman.projectcreate.core.engine.entity.components.sprite.SpriteData;
-import de.undefinedhuman.projectcreate.core.engine.items.Item;
-import de.undefinedhuman.projectcreate.core.engine.items.ItemType;
+import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
+import de.undefinedhuman.projectcreate.engine.entity.components.animation.AnimationComponent;
+import de.undefinedhuman.projectcreate.engine.entity.components.arm.ShoulderComponent;
+import de.undefinedhuman.projectcreate.engine.entity.components.equip.EquipComponent;
+import de.undefinedhuman.projectcreate.engine.entity.components.mouse.AngleComponent;
+import de.undefinedhuman.projectcreate.engine.entity.components.sprite.SpriteComponent;
+import de.undefinedhuman.projectcreate.engine.entity.components.sprite.SpriteData;
+import de.undefinedhuman.projectcreate.engine.items.Item;
+import de.undefinedhuman.projectcreate.engine.items.ItemType;
 import de.undefinedhuman.projectcreate.core.entity.Entity;
 import de.undefinedhuman.projectcreate.core.entity.ecs.System;
 import de.undefinedhuman.projectcreate.core.item.ItemManager;

@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.core.Main;
 import de.undefinedhuman.projectcreate.core.gui.transforms.constraints.Constraint;
 import de.undefinedhuman.projectcreate.core.gui.transforms.constraints.PixelConstraint;
-import de.undefinedhuman.projectcreate.core.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.core.gui.GuiComponent;
 import de.undefinedhuman.projectcreate.core.gui.texture.GuiTemplate;
 import de.undefinedhuman.projectcreate.core.gui.texture.GuiTexture;

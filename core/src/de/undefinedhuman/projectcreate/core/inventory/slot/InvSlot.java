@@ -3,7 +3,7 @@ package de.undefinedhuman.projectcreate.core.inventory.slot;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.core.gui.transforms.constraints.Constraint;
-import de.undefinedhuman.projectcreate.core.engine.items.ItemType;
+import de.undefinedhuman.projectcreate.engine.items.ItemType;
 import de.undefinedhuman.projectcreate.core.inventory.InvItem;
 import de.undefinedhuman.projectcreate.core.item.ItemManager;
 

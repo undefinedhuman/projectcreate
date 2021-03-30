@@ -1,8 +1,8 @@
 package de.undefinedhuman.projectcreate.core.collision;
 
-import de.undefinedhuman.projectcreate.core.engine.items.type.blocks.Block;
-import de.undefinedhuman.projectcreate.core.engine.items.type.blocks.BlockType;
-import de.undefinedhuman.projectcreate.core.engine.utils.math.Vector4;
+import de.undefinedhuman.projectcreate.engine.items.type.blocks.Block;
+import de.undefinedhuman.projectcreate.engine.items.type.blocks.BlockType;
+import de.undefinedhuman.projectcreate.engine.utils.math.Vector4;
 import de.undefinedhuman.projectcreate.core.entity.Entity;
 import de.undefinedhuman.projectcreate.core.item.ItemManager;
 

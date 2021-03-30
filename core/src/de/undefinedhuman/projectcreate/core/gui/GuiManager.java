@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.core.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.projectcreate.core.gui.transforms.constraints.ScreenConstraint;
-import de.undefinedhuman.projectcreate.core.engine.utils.Manager;
+import de.undefinedhuman.projectcreate.engine.utils.Manager;
 import de.undefinedhuman.projectcreate.core.gui.texture.GuiTemplate;
 import de.undefinedhuman.projectcreate.core.gui.transforms.GuiTransform;
 
