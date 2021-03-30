@@ -47,6 +47,8 @@ public class Main extends JFrame {
         setSize(1280, 720);
         setLocationRelativeTo(null);
 
+        Log.info(Runtime.getRuntime().totalMemory());
+
         container = getContentPane();
         container.setBackground(new Color(60, 63, 65));
         container.setLayout(null);
@@ -55,7 +57,7 @@ public class Main extends JFrame {
         versionSelection.setBounds(100, 100, 100, 25);
         container.add(versionSelection);
 
-        FlatSVGIcon icon = new FlatSVGIcon("icon/download.svg");
+        FlatSVGIcon icon = new FlatSVGIcon("icon/download.svg", 32, 32);
         JLabel label = new JLabel(icon);
         label.setBounds(0, 0, 32, 32);
         container.add(label);

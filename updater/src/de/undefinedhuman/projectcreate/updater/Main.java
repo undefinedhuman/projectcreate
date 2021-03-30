@@ -33,8 +33,7 @@ public class Main extends JFrame {
 
     public static Main instance;
 
-    private static final int LOGO_SCALE = 3;
-    private static final Vector2i LOGO_SIZE = new Vector2i(128, 32).mul(LOGO_SCALE);
+    private static final Vector2i LOGO_SIZE = new Vector2i(288, 96);
     private static final int WINDOW_WIDTH = LOGO_SIZE.x;
     private static final String DEFAULT_INSTALLATION_PATH = Paths.GAME_PATH + "launcher/";
     private static final String DOWNLOAD_LAUNCHER_URL = "http://alexanderpadberg.de/launcher/";
@@ -64,7 +63,7 @@ public class Main extends JFrame {
         container.setBackground(new Color(60, 63, 65));
         setContentPane(container);
 
-        JLabel icon = new JLabel(new ImageIcon(Tools.scaleNearest(ResourceManager.loadImage("logo.png"), LOGO_SCALE)));
+        JLabel icon = new JLabel(new ImageIcon(ResourceManager.loadImage("logo/288x96.png")));
         icon.setBounds(0, 0, WINDOW_WIDTH, LOGO_SIZE.y);
         container.add(icon);
 
