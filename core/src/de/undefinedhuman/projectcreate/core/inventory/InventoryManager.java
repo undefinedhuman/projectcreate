@@ -18,7 +18,6 @@ import de.undefinedhuman.projectcreate.core.inventory.player.*;
 import de.undefinedhuman.projectcreate.core.item.ItemManager;
 import de.undefinedhuman.projectcreate.core.utils.Tools;
 import de.undefinedhuman.projectcreate.core.gui.transforms.Axis;
-import de.undefinedhuman.projectcreate.inventory.player.*;
 import de.undefinedhuman.projectcreate.core.item.listener.ItemChangeListener;
 
 import java.util.Collection;

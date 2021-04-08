@@ -4,8 +4,8 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
+import de.undefinedhuman.projectcreate.core.config.GameConfig;
 import de.undefinedhuman.projectcreate.engine.config.ConfigManager;
-import de.undefinedhuman.projectcreate.engine.config.SettingsManager;
 import de.undefinedhuman.projectcreate.engine.language.LanguageManager;
 import de.undefinedhuman.projectcreate.core.window.Window;
 import de.undefinedhuman.projectcreate.core.entity.ecs.blueprint.BlueprintManager;
@@ -43,7 +43,7 @@ public class Main extends Game {
     public Main() {
         instance = this;
         managerList = new ManagerList();
-        managerList.addManager(new Log(), new SettingsManager(), new ConfigManager(), new LanguageManager(), new TextureManager(), new SoundManager(), new FontManager(), new Inputs(), new GuiManager(), new GuiTextureManager(), new BlueprintManager(), new ItemManager());
+        managerList.addManager(new Log(), new ConfigManager(new GameConfig()), new LanguageManager(), new TextureManager(), new SoundManager(), new FontManager(), new Inputs(), new GuiManager(), new GuiTextureManager(), new BlueprintManager(), new ItemManager());
         timer = new Timer(1, true, () -> Window.instance.update());
     }
 
@@ -57,7 +57,7 @@ public class Main extends Game {
 
     @Override
     public void resize(int width, int height) {
-        int guiSetting = SettingsManager.instance.guiScale.getInt();
+        int guiSetting = GameConfig.instance.guiScale.getInt();
         guiScale = (int) Math.max((guiSetting == 5 ? Math.ceil(width/640f) : guiSetting) / 2, 1);
         managerList.resize(width, height);
         super.resize(width, height);

@@ -16,7 +16,7 @@ public class FileUtils {
         try {
             return new BufferedReader(file.reader());
         } catch (Exception ex) {
-            Log.instance.exit("Can't create file reader: \n" + ex.getMessage());
+            Log.error("Error while creating file reader for file " + file.name() + ":", ex);
         }
         return null;
     }
@@ -25,7 +25,7 @@ public class FileUtils {
         try {
             return new BufferedWriter(file.writer(false));
         } catch (Exception ex) {
-            Log.instance.exit("Can't create file writer: \n" + ex.getMessage());
+            Log.error("Error while creating file writer for file " + file.name() + ":", ex);
         }
         return null;
     }
@@ -34,7 +34,7 @@ public class FileUtils {
         try {
             reader.close();
         } catch (Exception ex) {
-            Log.instance.exit(ex.getMessage());
+            Log.error("Error while closing file reader: ", ex);
         }
     }
 
@@ -42,7 +42,7 @@ public class FileUtils {
         try {
             writer.close();
         } catch (Exception ex) {
-            Log.instance.exit(ex.getMessage());
+            Log.error("Error while closing file writer", ex);
         }
     }
 
@@ -69,7 +69,7 @@ public class FileUtils {
 
     public static boolean readBoolean(String value) {
         if (value.equalsIgnoreCase("false") || value.equalsIgnoreCase("true")) return Boolean.parseBoolean(value);
-        else if(Tools.isDigit(value)) return Integer.parseInt(value) == 1;
+        else if(Tools.isInteger(value)) return Integer.parseInt(value) == 1;
         else return false;
     }
 

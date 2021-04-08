@@ -10,4 +10,5 @@ public class Paths {
     public static final String LANGUAGE_PATH = "language/";
     public static final String ITEM_PATH = "item/";
     public static final String GUI_PATH = "gui/";
+    public static final String EDITOR_PATH = "editor/";
 }

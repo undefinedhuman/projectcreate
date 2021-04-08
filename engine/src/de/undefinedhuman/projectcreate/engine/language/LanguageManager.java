@@ -3,7 +3,6 @@ package de.undefinedhuman.projectcreate.engine.language;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
-import de.undefinedhuman.projectcreate.engine.config.SettingsManager;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
@@ -19,12 +18,17 @@ public class LanguageManager extends Manager {
     private String languageName;
 
     public LanguageManager() {
-        if (instance == null) instance = this;
+        this(Variables.DEFAULT_LANGUAGE);
+    }
+
+    public LanguageManager(String languageName) {
+        if (instance == null)
+            instance = this;
+        this.languageName = languageName;
     }
 
     @Override
     public void init() {
-        languageName = SettingsManager.instance.language.getString();
         if (!loadLanguage(languageName)) {
             loadLanguage(Variables.DEFAULT_LANGUAGE);
             languageName = Variables.DEFAULT_LANGUAGE;

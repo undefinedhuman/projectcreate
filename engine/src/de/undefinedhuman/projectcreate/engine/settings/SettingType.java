@@ -14,5 +14,6 @@ public enum SettingType {
     Vector2Array,
     InputKey,
     Panel,
-    Texture
+    Texture,
+    FilePath
 }

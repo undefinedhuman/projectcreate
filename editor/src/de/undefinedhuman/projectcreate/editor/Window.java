@@ -1,13 +1,13 @@
-package de.undefinedhuman.projectcreate.core.editor;
+package de.undefinedhuman.projectcreate.editor;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglAWTCanvas;
 import com.formdev.flatlaf.FlatDarculaLaf;
-import de.undefinedhuman.projectcreate.core.editor.editor.Editor;
-import de.undefinedhuman.projectcreate.core.editor.editor.EditorType;
-import de.undefinedhuman.projectcreate.core.editor.editor.entity.EntityEditor;
-import de.undefinedhuman.projectcreate.core.editor.editor.item.ItemEditor;
+import de.undefinedhuman.projectcreate.editor.editor.Editor;
+import de.undefinedhuman.projectcreate.editor.editor.EditorType;
+import de.undefinedhuman.projectcreate.editor.editor.entity.EntityEditor;
+import de.undefinedhuman.projectcreate.editor.editor.item.ItemEditor;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 
 import javax.swing.*;

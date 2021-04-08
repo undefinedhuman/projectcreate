@@ -2,12 +2,11 @@ package de.undefinedhuman.projectcreate.engine.entity;
 
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
+import de.undefinedhuman.projectcreate.engine.utils.Tools;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public abstract class ComponentBlueprint {
@@ -30,12 +29,12 @@ public abstract class ComponentBlueprint {
 
     public void save(FileWriter writer) {
         writer.writeString("{:" + type.name()).nextLine();
-        Tools.saveSettings(writer, settings.getSettings());
+        Tools.saveSettings(writer, settings);
         writer.writeString("}").nextLine();
     }
 
-    public ArrayList<Setting> getSettings() {
-        return settings.getSettings();
+    public SettingsList getSettings() {
+        return settings;
     }
 
     public void delete() {

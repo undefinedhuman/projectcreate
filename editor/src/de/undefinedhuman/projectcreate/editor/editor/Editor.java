@@ -1,4 +1,4 @@
-package de.undefinedhuman.projectcreate.core.editor.editor;
+package de.undefinedhuman.projectcreate.editor.editor;
 
 import javax.swing.*;
 import java.awt.*;

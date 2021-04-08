@@ -12,7 +12,8 @@ public class SettingsList {
     }
 
     public void delete() {
-        for(Setting setting : settings) setting.delete();
+        for(Setting setting : settings)
+            setting.delete();
         settings.clear();
     }
 

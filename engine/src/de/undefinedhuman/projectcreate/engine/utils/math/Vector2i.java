@@ -52,6 +52,16 @@ public class Vector2i {
         return this;
     }
 
+    public Vector2i sub(int x, int y) {
+        this.x -= x;
+        this.y -= y;
+        return this;
+    }
+
+    public Vector2i sub(Vector2i vector) {
+        return sub(vector.x, vector.y);
+    }
+
     public Vector2i div(int scalar) {
         return div(scalar, scalar);
     }
@@ -77,8 +87,8 @@ public class Vector2i {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Vector2i vector2i = (Vector2i) o;
-        return x == vector2i.x && y == vector2i.y;
+        Vector2i other = (Vector2i) o;
+        return x == other.x && y == other.y;
     }
 
     @Override

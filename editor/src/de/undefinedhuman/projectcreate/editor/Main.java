@@ -1,4 +1,4 @@
-package de.undefinedhuman.projectcreate.core.editor;
+package de.undefinedhuman.projectcreate.editor;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -20,7 +20,7 @@ public class Main extends Game {
     public void render() {
         clear();
         delta = Gdx.graphics.getDeltaTime();
-        de.undefinedhuman.projectcreate.core.editor.Window.instance.updateErrorTime(delta);
+        de.undefinedhuman.projectcreate.editor.Window.instance.updateErrorTime(delta);
         super.render();
     }
 
@@ -50,7 +50,7 @@ public class Main extends Game {
     }
 
     public static void main(String[] args) {
-        EventQueue.invokeLater(() -> de.undefinedhuman.projectcreate.core.editor.Window.instance = new Window());
+        EventQueue.invokeLater(() -> de.undefinedhuman.projectcreate.editor.Window.instance = new Window());
     }
 
 }

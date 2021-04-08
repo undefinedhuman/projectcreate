@@ -9,16 +9,16 @@ import de.undefinedhuman.projectcreate.engine.file.FileReader;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
-import de.undefinedhuman.projectcreate.engine.utils.math.Vector4;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
+import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
+import de.undefinedhuman.projectcreate.engine.utils.math.Vector4;
 
 import javax.swing.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Tools {
 
@@ -39,6 +39,12 @@ public class Tools {
             setting.loadSetting(reader.getParentDirectory(), object);
     }
 
+    public static void loadSettings(FileReader reader, SettingsList settings) {
+        SettingsObject object = loadSettings(reader);
+        for(Setting setting : settings.getSettings())
+            setting.loadSetting(reader.getParentDirectory(), object);
+    }
+
     private static String loadKey(String key) {
         String[] values = key.split(":");
         if(values.length < 2)
@@ -46,8 +52,8 @@ public class Tools {
         return values[1];
     }
 
-    public static void saveSettings(FileWriter writer, List<Setting> settings) {
-        for(Setting setting : settings) {
+    public static void saveSettings(FileWriter writer, SettingsList settings) {
+        for(Setting setting : settings.getSettings()) {
             setting.save(writer);
             writer.nextLine();
         }
@@ -83,6 +89,15 @@ public class Tools {
         resetPanel(panel);
     }
 
+    public static void addSettings(JPanel panel, SettingsList settings) {
+        int currentOffset = 0;
+        for (Setting setting : settings.getSettings()) {
+            setting.addMenuComponents(panel, new Vector2(0, currentOffset));
+            currentOffset += setting.offset;
+        }
+        resetPanel(panel);
+    }
+
     public static void removeSettings(JPanel panel) {
         panel.removeAll();
         resetPanel(panel);
@@ -110,6 +125,13 @@ public class Tools {
 
     public static int clamp(int val, int min, int max) {
         return Math.max(min, Math.min(max, val));
+    }
+
+    public static boolean isInRange(Object val, int min, int max) {
+        if(!isInteger(val.toString()))
+            return false;
+        int value = Integer.parseInt(val.toString());
+        return value >= min && value <= max;
     }
 
     public static boolean isInRange(int val, int min, int max) {
@@ -155,7 +177,16 @@ public class Tools {
         return new Vector4(position.x + offset.x, position.y + offset.y, position.x + offset.x + size.x, position.y + offset.y + size.y);
     }
 
-    public static boolean isDigit(String text) {
+    public static boolean isFloat(String text) {
+        try {
+            Float.parseFloat(text);
+            return true;
+        } catch (NumberFormatException ex) {
+            return false;
+        }
+    }
+
+    public static boolean isInteger(String text) {
         try {
             Integer.parseInt(text);
             return true;
@@ -167,6 +198,5 @@ public class Tools {
     public static Vector2 getTextureSize(TextureRegion texture) {
         return new Vector2(texture.getRegionWidth(), texture.getRegionHeight());
     }
-
 
 }

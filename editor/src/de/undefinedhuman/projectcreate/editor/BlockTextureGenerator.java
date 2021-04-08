@@ -1,4 +1,4 @@
-package de.undefinedhuman.projectcreate.core.editor;
+package de.undefinedhuman.projectcreate.editor;
 
 @SuppressWarnings("DuplicatedCode")
 public class BlockTextureGenerator {

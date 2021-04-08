@@ -3,7 +3,7 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 
 sourceSets.main.java.srcDirs = ["src/"]
 
-project.ext.mainClassName = "de.undefinedhuman.projectcreate.updater.Main"
+project.ext.mainClassName = "de.undefinedhuman.projectcreate.updater.Updater"
 project.ext.assetsDir = new File("assets")
 
 jar {

@@ -13,12 +13,19 @@ public class SliderSetting extends Setting {
 
     public JSlider slider;
     private Vector2i bounds = new Vector2i();
-    private int extent;
+    private int tickSpeed;
+    private float conversionValue;
 
-    public SliderSetting(String key, int min, int max, int value, int extent) {
-        super(SettingType.Selection, key, value);
+    public SliderSetting(String key, int min, int max, int tickSpeed, int extent) {
+        this(key, min, max, tickSpeed, extent, 1f);
+    }
+
+    public SliderSetting(String key, int min, int max, int defaultValue, int tickSpeed, float conversionValue) {
+        super(SettingType.Selection, key, defaultValue / conversionValue);
         this.bounds.set(min, max);
-        this.extent = extent;
+        this.tickSpeed = tickSpeed;
+        this.includeType = false;
+        this.conversionValue = conversionValue;
     }
 
     @Override
@@ -28,21 +35,31 @@ public class SliderSetting extends Setting {
 
     @Override
     protected void addValueMenuComponents(JPanel panel, Vector2 position) {
-        slider = new JSlider(bounds.x, bounds.y, getInt());
-        slider.setExtent(extent);
-        slider.setBounds((int) position.x, (int) position.y, 200, 25);
-        slider.addChangeListener(e -> setValue(slider.getValue()));
+        JLabel progressLabel = new JLabel(getString());
+        progressLabel.setBounds((int) position.x + 150, (int) position.y, 50, 25);
+        slider = new JSlider(bounds.x, bounds.y, (int) (getFloat() * conversionValue));
+        slider.setMajorTickSpacing(tickSpeed);
+        slider.setSnapToTicks(true);
+        slider.setBounds((int) position.x, (int) position.y, 150, 25);
+        slider.addChangeListener(e -> {
+            double value = Math.floor((slider.getValue() / conversionValue) * 100) / 100;
+            setValue(value);
+            progressLabel.setText(String.valueOf(value));
+        });
         panel.add(slider);
+        panel.add(progressLabel);
     }
 
     @Override
     protected void setValueInMenu(Object value) {
-        if(slider == null || !Tools.isDigit(value.toString())) {
-            Log.error("Error while setting value of setting (Value isn't an Integer or UI does not exist): " + key);
+        if(slider == null)
+            return;
+        if(!Tools.isFloat(value.toString())) {
+            Log.error("Error while setting value of setting (float conversion error): " + key);
             return;
         }
-        int valueParsed = Integer.parseInt(value.toString());
-        slider.setValue(Tools.isInRange(valueParsed, bounds.x, bounds.y) ? valueParsed : bounds.x);
+        float valueParsed = Float.parseFloat(value.toString());
+        slider.setValue(Tools.isInRange(valueParsed, bounds.x, bounds.y) ? (int) (valueParsed * conversionValue) : bounds.x);
     }
 
 }

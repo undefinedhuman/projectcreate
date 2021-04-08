@@ -17,12 +17,13 @@ public class PanelObject {
 
     public void save(FileWriter writer) {
         writer.writeString("{:" + getKey()).nextLine();
-        Tools.saveSettings(writer, settings.getSettings());
+        Tools.saveSettings(writer, settings);
         writer.writeString("}").nextLine();
     }
 
     public PanelObject load(FsFile parentDir, SettingsObject settingsObject) {
-        for(Setting setting : this.settings.getSettings()) setting.loadSetting(parentDir, settingsObject);
+        for(Setting setting : settings.getSettings())
+            setting.loadSetting(parentDir, settingsObject);
         return this;
     }
 

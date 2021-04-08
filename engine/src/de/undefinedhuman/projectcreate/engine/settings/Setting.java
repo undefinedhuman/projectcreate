@@ -1,5 +1,6 @@
 package de.undefinedhuman.projectcreate.engine.settings;
 
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.Vector2;
@@ -22,6 +23,7 @@ public class Setting {
 
     protected String key;
     protected Object value;
+    protected boolean includeType = true;
 
     public JTextField valueField;
     private SettingType type;
@@ -56,6 +58,7 @@ public class Setting {
     public EntityType getEntityType() { return EntityType.valueOf(getString()); }
     public BlockType getBlockType() { return BlockType.valueOf(getString()); }
     public Version getVersion() { return Version.parse(getString()); }
+    public FsFile getFile() { return new FsFile(getString(), Files.FileType.Absolute); }
 
     public SettingType getType() { return type; }
 
@@ -76,11 +79,12 @@ public class Setting {
     }
 
     public void addMenuComponents(JPanel panel, Vector2 position) {
-        JLabel keyLabel = new JLabel(key + ": (" + type.name() + ")", SwingConstants.CENTER);
+        JLabel keyLabel = new JLabel(key + (includeType ? ": (" + type.name() + ")" : ""), SwingConstants.CENTER);
         keyLabel.setBounds((int) position.x, (int) position.y, 170, 25);
+        keyLabel.setBackground(keyLabel.getBackground().darker());
         keyLabel.setOpaque(true);
         panel.add(keyLabel);
-        addValueMenuComponents(panel, new Vector2(position).add(180, 0));
+        addValueMenuComponents(panel, new Vector2(position).add(175, 0));
     }
 
     protected void addValueMenuComponents(JPanel panel, Vector2 position) {

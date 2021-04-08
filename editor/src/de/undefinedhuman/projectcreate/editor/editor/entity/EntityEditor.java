@@ -1,9 +1,9 @@
-package de.undefinedhuman.projectcreate.core.editor.editor.entity;
+package de.undefinedhuman.projectcreate.editor.editor.entity;
 
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.core.editor.editor.Editor;
+import de.undefinedhuman.projectcreate.editor.editor.Editor;
 import de.undefinedhuman.projectcreate.engine.settings.types.SelectionSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.Vector2Setting;
 import de.undefinedhuman.projectcreate.engine.entity.ComponentBlueprint;
@@ -49,7 +49,7 @@ public class EntityEditor extends Editor {
                 new Setting(SettingType.String, "Name", "Temp Name"),
                 new Vector2Setting("Size", new Vector2(0, 0)),
                 new SelectionSetting("Type", EntityType.values()));
-        Tools.addSettings(mainPanel, baseSettings.getSettings());
+        Tools.addSettings(mainPanel, baseSettings);
 
         componentList = new DefaultListModel<>();
 
@@ -130,7 +130,7 @@ public class EntityEditor extends Editor {
             components.clear();
             Tools.removeSettings(settingsPanel);
 
-            FileReader reader = new FileReader(ResourceManager.loadFile(Paths.ENTITY_PATH, Integer.parseInt(((String) comboBox.getSelectedItem()).split("-")[0]) + "/settings.entity"), true);
+            FileReader reader = new FileReader(new FsFile(Paths.ENTITY_PATH, Integer.parseInt(((String) comboBox.getSelectedItem()).split("-")[0]) + "/settings.entity", Files.FileType.Internal), true);
             SettingsObject settingsObject = Tools.loadSettings(reader);
 
             for(Setting setting : baseSettings.getSettings())
@@ -163,7 +163,7 @@ public class EntityEditor extends Editor {
             FileUtils.deleteFile(entityDir);
 
         FileWriter writer = new FsFile(entityDir.path(), "settings.entity", Files.FileType.Local).getFileWriter(true);
-        Tools.saveSettings(writer, baseSettings.getSettings());
+        Tools.saveSettings(writer, baseSettings);
         for(ComponentBlueprint componentBlueprint : this.components.values())
             componentBlueprint.save(writer);
         writer.close();

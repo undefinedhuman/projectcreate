@@ -1,8 +1,8 @@
-package de.undefinedhuman.projectcreate.core.editor.editor.item;
+package de.undefinedhuman.projectcreate.editor.editor.item;
 
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.files.FileHandle;
-import de.undefinedhuman.projectcreate.core.editor.editor.Editor;
+import de.undefinedhuman.projectcreate.editor.editor.Editor;
 import de.undefinedhuman.projectcreate.engine.file.*;
 import de.undefinedhuman.projectcreate.engine.items.Item;
 import de.undefinedhuman.projectcreate.engine.items.ItemType;
@@ -51,9 +51,11 @@ public class ItemEditor extends Editor {
         ArrayList<String> ids = new ArrayList<>();
 
         for (FileHandle itemDir : itemDirs) {
-            if (!itemDir.isDirectory()) continue;
+            if (!itemDir.isDirectory())
+                continue;
             FsFile itemFile = new FsFile(Paths.ITEM_PATH, itemDir.name() + "/settings.item", Files.FileType.Internal);
-            if(itemFile.isEmpty()) continue;
+            if(itemFile.length() == 0)
+                continue;
             FileReader reader = itemFile.getFileReader(true);
             SettingsObject settings = Tools.loadSettings(reader);
             ids.add(itemDir.name() + "-" + ((LineSplitter) settings.get("Name")).getNextString());
@@ -79,14 +81,14 @@ public class ItemEditor extends Editor {
 
         loadButton.addActionListener(a -> {
             if(itemSelection.getSelectedItem() == null) return;
-            FileReader reader = new FileReader(ResourceManager.loadFile(Paths.ITEM_PATH, Integer.parseInt(((String) itemSelection.getSelectedItem()).split("-")[0]) + "/settings.item"), true);
+            FileReader reader = new FileReader(new FsFile(Paths.ITEM_PATH, Integer.parseInt(((String) itemSelection.getSelectedItem()).split("-")[0]) + "/settings.item", Files.FileType.Internal), true);
             SettingsObject settingsObject = Tools.loadSettings(reader);
             if(!settingsObject.containsKey("Type")) return;
             ItemType type = ItemType.valueOf(((LineSplitter) settingsObject.get("Type")).getNextString());
             itemComboBox.setSelectedItem(type);
             Tools.removeSettings(settingsPanel);
             currentItem = type.createInstance();
-            for(Setting setting : currentItem.getSettings())
+            for(Setting setting : currentItem.getSettings().getSettings())
                 setting.loadSetting(reader.getParentDirectory(), settingsObject);
             Tools.addSettings(settingsPanel, currentItem.getSettings());
             loadWindow.setVisible(false);
@@ -101,7 +103,7 @@ public class ItemEditor extends Editor {
     @Override
     public void save() {
         if(currentItem == null) return;
-        FsFile itemDir = new FsFile(Paths.ITEM_PATH, currentItem.getSettings().get(0).getInt() + Variables.FILE_SEPARATOR, Files.FileType.Local);
+        FsFile itemDir = new FsFile(Paths.ITEM_PATH, currentItem.getSettings().getSettings().get(0).getInt() + Variables.FILE_SEPARATOR, Files.FileType.Local);
         if(itemDir.exists())
             FileUtils.deleteFile(itemDir);
 

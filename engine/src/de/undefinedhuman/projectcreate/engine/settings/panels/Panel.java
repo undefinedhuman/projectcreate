@@ -15,7 +15,6 @@ import java.util.HashMap;
 public abstract class Panel<T extends PanelObject> extends Setting {
 
     private JList<String> objectSelectionList;
-    private JScrollPane objectScrollPane;
 
     protected HashMap<String, T> objects = new HashMap<>();
     protected DefaultListModel<String> objectList;
@@ -37,7 +36,7 @@ public abstract class Panel<T extends PanelObject> extends Setting {
     @Override
     protected void addValueMenuComponents(JPanel panel, Vector2 position) {
         objectPanel = new JPanel(null);
-        objectPanel.setBounds((int) position.x - 175, (int) position.y + 190, 370, panelObject.settings.getSettings().size() * 25);
+        objectPanel.setBounds((int) position.x - 175, (int) position.y + 190, 370, calculateOffsetForPanelObject());
         objectPanel.setOpaque(true);
 
         objectList = new DefaultListModel<>();
@@ -50,10 +49,10 @@ public abstract class Panel<T extends PanelObject> extends Setting {
             selectObject(objects.get(objectSelectionList.getSelectedValue()));
         });
 
-        objectScrollPane = new JScrollPane(objectSelectionList);
+        JScrollPane objectScrollPane = new JScrollPane(objectSelectionList);
         objectScrollPane.setBounds((int) position.x - 175, (int) position.y + 90, 370, 90);
 
-        this.offset = 190 + panelObject.settings.getSettings().size() * 30;
+        this.offset = 195 + calculateOffsetForPanelObject();
 
         panel.add(objectScrollPane);
         panel.add(objectPanel);
@@ -91,6 +90,13 @@ public abstract class Panel<T extends PanelObject> extends Setting {
         for(PanelObject object : this.objects.values())
             object.save(writer);
         writer.writeString("}");
+    }
+
+    private int calculateOffsetForPanelObject() {
+        int offset = 0;
+        for(Setting setting : panelObject.getSettings())
+            offset += setting.offset;
+        return offset;
     }
 
     public HashMap<String, T> getPanelObjects() {

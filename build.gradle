@@ -1,5 +1,4 @@
 buildscript {
-
     repositories {
         mavenLocal()
         mavenCentral()
@@ -76,8 +75,10 @@ project(":engine") {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
         compile group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
+        compile group: 'com.github.kerner1000', name: 'javapng', version: '2.1.2'
 
-        testImplementation 'junit:junit:4.12'
+        testImplementation(platform('org.junit:junit-bom:5.7.1'))
+        testImplementation('org.junit.jupiter:junit-jupiter')
     }
 }
 

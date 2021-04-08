@@ -31,12 +31,13 @@
 STAGE.MAJOR.MINOR 
 INDEV - ALPHA - BETA - Early Access - Release
 Stage: 0 - 1 - 2 - 3 - 1
-Weekly Snapshots: 0.0.0-indev-21w01b1
-Production: 0.0.0-indev
-Production: 0.5.0-alpha
-Production: 0.7.0-beta
-Production: 0.9.0-ea
-Production: 1.0.0-release
+Snapshot: Year Digits (2021 -> 21), w, Week number (04), build number of the week (01) increases with each release
+Snapshots: projectcreate-0.0.0-indev-21w01b1
+Snapshots: projectcreate-0.0.0-alpha-21w02b1
+Production: projectcreate-0.0.0-indev
+Production: projectcreate-0.5.0-alpha
+Production: projectcreate-0.7.0-beta
+Production: projectcreate-1.0.0-release
 
 ## Documentation
 

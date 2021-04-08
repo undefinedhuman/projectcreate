@@ -1,16 +1,14 @@
 package de.undefinedhuman.projectcreate.engine.items;
 
+import de.undefinedhuman.projectcreate.engine.crafting.RecipeItem;
 import de.undefinedhuman.projectcreate.engine.items.recipe.RecipeType;
+import de.undefinedhuman.projectcreate.engine.settings.Setting;
+import de.undefinedhuman.projectcreate.engine.settings.SettingType;
+import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.panels.SelectionPanel;
 import de.undefinedhuman.projectcreate.engine.settings.types.BooleanSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.SelectionSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.TextureSetting;
-import de.undefinedhuman.projectcreate.engine.crafting.RecipeItem;
-import de.undefinedhuman.projectcreate.engine.settings.Setting;
-import de.undefinedhuman.projectcreate.engine.settings.SettingType;
-import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
-
-import java.util.ArrayList;
 
 public class Item {
 
@@ -43,8 +41,8 @@ public class Item {
 
     public void delete() {}
 
-    public ArrayList<Setting> getSettings() {
-        return settings.getSettings();
+    public SettingsList getSettings() {
+        return settings;
     }
 
 }
