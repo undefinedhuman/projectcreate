@@ -3,9 +3,11 @@ package de.undefinedhuman.projectcreate.launcher.config;
 import de.undefinedhuman.projectcreate.engine.config.Config;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
+import de.undefinedhuman.projectcreate.engine.settings.SettingType;
 import de.undefinedhuman.projectcreate.engine.settings.types.BooleanSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.FilePathSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.SliderSetting;
+import de.undefinedhuman.projectcreate.engine.utils.Version;
 import de.undefinedhuman.projectcreate.launcher.Launcher;
 import de.undefinedhuman.projectcreate.launcher.utils.Tools;
 import de.undefinedhuman.projectcreate.updater.utils.InstallationUtils;
@@ -15,15 +17,17 @@ public class LauncherConfig extends Config {
     public static LauncherConfig instance;
 
     public Setting
-            gameInstallationPath = new FilePathSetting("gameInstallationPath", Launcher.DEFAULT_INSTALLATION_DIRECTORY) {
+            gameInstallationPath = new FilePathSetting("Game installation path", Launcher.DEFAULT_INSTALLATION_DIRECTORY) {
                 @Override
                 public String chooseFilePath(FsFile defaultFile) {
                     return InstallationUtils.chooseInstallationDirectory(defaultFile);
                 }
-            },
-            includeSnapshots = new BooleanSetting("Include Snapshots", false),
-            maximumMemory = new SliderSetting("Maximum Game Memory (Xmx)", 0, Tools.AVAILABLE_MAX_MEMORY_IN_MB_HALVED, 0, 500, 1000f),
-            initialMemory = new SliderSetting("Initial Game Memory (Xms)", 0, Tools.AVAILABLE_MAX_MEMORY_IN_MB_HALVED, 0, 500, 1000f);
+            }.setIncludeType(false),
+            includeSnapshots = new BooleanSetting("Include Snapshots", false).setIncludeType(false),
+            maximumMemory = new SliderSetting("Xmx", 0, Tools.AVAILABLE_MAX_MEMORY_IN_MB_HALVED, 0, 500, 1000f).setIncludeType(false),
+            initialMemory = new SliderSetting("Xms", 0, Tools.AVAILABLE_MAX_MEMORY_IN_MB_HALVED, 0, 500, 1000f).setIncludeType(false),
+            closeLauncherAfterGameStart = new BooleanSetting("Close Launcher", true).setIncludeType(false),
+            lastPlayedGameVersion = new Setting(SettingType.Version, "lastPlayedVersion", new Version(0, 0, 0).toString());
 
     private LauncherConfigValidator validator;
 
@@ -31,7 +35,7 @@ public class LauncherConfig extends Config {
         super("launcher");
         if(instance == null)
             instance = this;
-        addSettings(gameInstallationPath, includeSnapshots, maximumMemory, initialMemory);
+        addSettings(gameInstallationPath, includeSnapshots, maximumMemory, initialMemory, closeLauncherAfterGameStart, lastPlayedGameVersion);
         validator = new LauncherConfigValidator();
     }
 

@@ -1,7 +1,6 @@
 package de.undefinedhuman.projectcreate.updater.utils;
 
 import com.badlogic.gdx.Files;
-import com.badlogic.gdx.files.FileHandle;
 import de.undefinedhuman.projectcreate.engine.file.FileError;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
@@ -21,7 +20,6 @@ public class InstallationUtils {
 
     public static void loadInstallationDirectory(boolean firstRun, Setting installationPath, FsFile defaultInstallationDirectory) {
         ArrayList<String> errorMessages = FileError.checkFileForErrors(installationPath.getFile(), FileError.NULL, FileError.NON_EXISTENT, FileError.NO_DIRECTORY, FileError.NOT_WRITEABLE);
-        Log.info(firstRun);
         if(firstRun || errorMessages.size() > 0)
             installationPath.setValue(chooseInstallationDirectory(defaultInstallationDirectory));
     }
@@ -65,24 +63,25 @@ public class InstallationUtils {
         return availableVersions;
     }
 
-    public static boolean checkForSufficientSpace(String downloadURL, FsFile installationDirectory) {
+    public static boolean hasSufficientSpace(String downloadURL, FsFile installationDirectory) {
+        Version newestVersion = Collections.max(fetchAvailableVersions(downloadURL));
+        return hasSufficientSpace(downloadURL, installationDirectory, newestVersion);
+    }
+
+    public static boolean hasSufficientSpace(String downloadURL, FsFile installationDirectory, Version version) {
         installationDirectory.mkdirs();
         if(!installationDirectory.exists() || !installationDirectory.file().canWrite())
             return false;
-        Version newestVersion = Collections.max(fetchAvailableVersions(downloadURL));
-        long fileSize = DownloadUtils.fetchFileSize(downloadURL + newestVersion.toString() + DownloadUtils.DOWNLOAD_FILE_EXTENSION);
+        long fileSize = DownloadUtils.fetchFileSize(downloadURL + version.toString() + DownloadUtils.DOWNLOAD_FILE_EXTENSION);
         return installationDirectory.file().getUsableSpace() > fileSize;
     }
 
-    public static boolean checkIfVersionAlreadyDownloaded(String downloadURL, FsFile installationDirectory, Version version) {
-        for(FileHandle installedVersion : installationDirectory.list(pathname -> pathname.getName().endsWith(DownloadUtils.DOWNLOAD_FILE_EXTENSION))) {
-            if(installedVersion.nameWithoutExtension().equalsIgnoreCase(version.toString())
-                    && !installedVersion.isDirectory()
-                    && installedVersion.name().substring(installedVersion.name().lastIndexOf(".")).equalsIgnoreCase(DownloadUtils.DOWNLOAD_FILE_EXTENSION)
-                    && installedVersion.length() == DownloadUtils.fetchFileSize(downloadURL + version + DownloadUtils.DOWNLOAD_FILE_EXTENSION))
-                return true;
-        }
-        return false;
+    public static boolean isVersionDownloaded(String downloadURL, FsFile installationDirectory, Version version) {
+        FsFile installedVersion = new FsFile(installationDirectory, version.toString() + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
+        return installedVersion.nameWithoutExtension().equalsIgnoreCase(version.toString())
+                && !installedVersion.isDirectory()
+                && installedVersion.name().substring(installedVersion.name().lastIndexOf(".")).equalsIgnoreCase(DownloadUtils.DOWNLOAD_FILE_EXTENSION)
+                && installedVersion.length() == DownloadUtils.fetchFileSize(downloadURL + version + DownloadUtils.DOWNLOAD_FILE_EXTENSION);
     }
 
     public static void checkProjectDotDirectory() {

@@ -16,6 +16,7 @@ import de.undefinedhuman.projectcreate.launcher.config.LauncherConfig;
 import de.undefinedhuman.projectcreate.launcher.icon.IconManager;
 import de.undefinedhuman.projectcreate.launcher.ui.GameManagerUI;
 import de.undefinedhuman.projectcreate.launcher.ui.IconButton;
+import de.undefinedhuman.projectcreate.launcher.ui.SettingsUI;
 import de.undefinedhuman.projectcreate.updater.utils.DownloadUtils;
 import de.undefinedhuman.projectcreate.updater.utils.InstallationUtils;
 import de.undefinedhuman.projectcreate.updater.window.HeadlessApplicationListener;
@@ -51,6 +52,8 @@ public class Launcher extends JFrame {
         setUndecorated(false);
         setSize(1280, 720);
         setLocationRelativeTo(null);
+
+        new SettingsUI();
 
         Container container = getContentPane();
         container.setBackground(new Color(60, 63, 65));
@@ -119,6 +122,7 @@ public class Launcher extends JFrame {
         InstallationUtils.checkProjectDotDirectory();
         managerList.init();
         setGDXLog();
+        GameManagerUI.instance.init();
     }
 
     private void setGDXLog() {

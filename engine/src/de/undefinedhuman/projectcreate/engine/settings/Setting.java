@@ -34,6 +34,11 @@ public class Setting {
         this.value = value;
     }
 
+    public Setting setIncludeType(boolean includeType) {
+        this.includeType = includeType;
+        return this;
+    }
+
     public String getKey() { return key; }
     public Object getValue() { return value; }
     public void setValue(Object value) { this.value = value; }
@@ -79,7 +84,7 @@ public class Setting {
     }
 
     public void addMenuComponents(JPanel panel, Vector2 position) {
-        JLabel keyLabel = new JLabel(key + (includeType ? ": (" + type.name() + ")" : ""), SwingConstants.CENTER);
+        JLabel keyLabel = new JLabel(key + ":" + (includeType ? " (" + type.name() + ")" : ""), SwingConstants.CENTER);
         keyLabel.setBounds((int) position.x, (int) position.y, 170, 25);
         keyLabel.setBackground(keyLabel.getBackground().darker());
         keyLabel.setOpaque(true);

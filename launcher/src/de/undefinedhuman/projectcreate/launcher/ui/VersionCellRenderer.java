@@ -13,7 +13,7 @@ public class VersionCellRenderer extends DefaultListCellRenderer {
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        label.setIcon(!InstallationUtils.checkIfVersionAlreadyDownloaded(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.instance.gameInstallationPath.getFile(), (Version) value) && index != -1 ? IconManager.instance.getIcon("download", 16, 16) : null);
+        label.setIcon(!InstallationUtils.isVersionDownloaded(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.instance.gameInstallationPath.getFile(), (Version) value) && index != -1 ? IconManager.instance.getIcon("download", 16, 16) : null);
         return label;
     }
 }

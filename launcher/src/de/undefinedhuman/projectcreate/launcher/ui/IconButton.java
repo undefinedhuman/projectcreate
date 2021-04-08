@@ -30,12 +30,17 @@ public class IconButton extends JButton implements MouseListener {
         addActionListener(listener);
     }
 
+    public void setIcon(String iconName) {
+        this.iconName = iconName;
+        updateIcon();
+    }
+
     @Override
     public void mouseEntered(MouseEvent e) {
         if(!isEnabled())
             return;
         setBounds(position.x - POSITION_OFFSET.x, position.y - POSITION_OFFSET.y, SIZE_HOVER.x, SIZE_HOVER.y);
-        setIcon(IconManager.instance.getIcon(iconName, getWidth(), getHeight()));
+        updateIcon();
     }
 
     @Override
@@ -43,7 +48,7 @@ public class IconButton extends JButton implements MouseListener {
         if(!isEnabled())
             return;
         setBounds(position.x, position.y, SIZE.x, SIZE.y);
-        setIcon(IconManager.instance.getIcon(iconName, getWidth(), getHeight()));
+        updateIcon();
     }
 
     @Override
@@ -60,4 +65,9 @@ public class IconButton extends JButton implements MouseListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {}
+
+    private void updateIcon() {
+        setIcon(IconManager.instance.getIcon(iconName, getWidth(), getHeight()));
+    }
+
 }
