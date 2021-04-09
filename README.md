@@ -1,4 +1,4 @@
-![ProjectCreate Logo](http://playprojectcreate.com/logo.png)
+<div style="text-align:center"><img src="http://playprojectcreate.com/ProjectCreate-Logo.png" /></div>
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-0.0.0-blue.svg?style=for-the-badge" />
   <a href="https://github.com/undefinedhuman/Eternity/wiki" target="_blank">
