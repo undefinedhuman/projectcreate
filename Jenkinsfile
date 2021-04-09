@@ -11,7 +11,7 @@ pipeline {
        }
        stage(test) {
            steps {
-               echo 'Notify GitLab'
+               echo 'Notify GitLab Test'
                updateGitlabCommitStatus name: 'test', state: 'pending'
                echo 'test step goes here'
                updateGitlabCommitStatus name: 'test', state: 'success'
