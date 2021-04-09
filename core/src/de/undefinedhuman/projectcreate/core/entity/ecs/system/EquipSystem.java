@@ -16,12 +16,6 @@ import de.undefinedhuman.projectcreate.core.item.ItemManager;
 
 public class EquipSystem extends System {
 
-    public static EquipSystem instance;
-
-    public EquipSystem() {
-        if (instance == null) instance = this;
-    }
-
     @Override
     public void init(Entity entity) {
         SpriteComponent spriteComponent;
@@ -48,7 +42,7 @@ public class EquipSystem extends System {
         int equipID = equipComponent.itemIDs[0];
 
         if (equipID == -1) return;
-        Item item = ItemManager.instance.getItem(equipID);
+        Item item = ItemManager.getInstance().getItem(equipID);
         Vector2 weaponOffset = equipComponent.getCurrentOffset(animationComponent.getAnimationFrameIndex()),
                 shoulderPosition = shoulderComponent.getShoulderPos(animationComponent.getAnimationFrameIndex());
 

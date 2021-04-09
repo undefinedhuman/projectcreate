@@ -86,7 +86,7 @@ public class Setting {
     public void addMenuComponents(JPanel panel, Vector2 position) {
         JLabel keyLabel = new JLabel(key + ":" + (includeType ? " (" + type.name() + ")" : ""), SwingConstants.CENTER);
         keyLabel.setBounds((int) position.x, (int) position.y, 170, 25);
-        keyLabel.setBackground(keyLabel.getBackground().darker());
+        keyLabel.setBackground(keyLabel.getBackground().brighter());
         keyLabel.setOpaque(true);
         panel.add(keyLabel);
         addValueMenuComponents(panel, new Vector2(position).add(175, 0));

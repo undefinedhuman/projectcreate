@@ -8,7 +8,7 @@ import java.awt.*;
 
 public class Main extends Game {
 
-    public static Main instance;
+    private static Main instance;
     public static float delta;
 
     @Override
@@ -20,7 +20,7 @@ public class Main extends Game {
     public void render() {
         clear();
         delta = Gdx.graphics.getDeltaTime();
-        de.undefinedhuman.projectcreate.editor.Window.instance.updateErrorTime(delta);
+        Window.getInstance().updateErrorTime(delta);
         super.render();
     }
 
@@ -50,7 +50,9 @@ public class Main extends Game {
     }
 
     public static void main(String[] args) {
-        EventQueue.invokeLater(() -> de.undefinedhuman.projectcreate.editor.Window.instance = new Window());
+        EventQueue.invokeLater(Window::getInstance);
     }
+
+
 
 }

@@ -12,7 +12,7 @@ import de.undefinedhuman.projectcreate.updater.utils.InstallationUtils;
 
 public class UpdaterConfig extends Config {
 
-    public static UpdaterConfig instance;
+    private static volatile UpdaterConfig instance;
 
     public Setting
             firstRun = new BooleanSetting("firstRun", true),
@@ -24,7 +24,7 @@ public class UpdaterConfig extends Config {
             },
             version = new Setting(SettingType.Version, "version", new Version(0, 0, 0).toString());
 
-    public UpdaterConfig() {
+    private UpdaterConfig() {
         super("updater");
         if(instance == null)
             instance = this;
@@ -35,5 +35,15 @@ public class UpdaterConfig extends Config {
     public void save() {
         firstRun.setValue(false);
         super.save();
+    }
+
+    public static UpdaterConfig getInstance() {
+        if (instance == null) {
+            synchronized (UpdaterConfig.class) {
+                if (instance == null)
+                    instance = new UpdaterConfig();
+            }
+        }
+        return instance;
     }
 }

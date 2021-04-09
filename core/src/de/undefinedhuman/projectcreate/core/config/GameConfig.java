@@ -7,7 +7,7 @@ import de.undefinedhuman.projectcreate.engine.settings.types.BooleanSetting;
 
 public class GameConfig extends Config {
 
-    public static GameConfig instance;
+    private static volatile GameConfig instance;
 
     public Setting
         displayWidth = new Setting(SettingType.Int, "displayWidth", 1280),
@@ -21,11 +21,19 @@ public class GameConfig extends Config {
         guiScale = new Setting(SettingType.Int, "guiScale", 5);
 
 
-    public GameConfig() {
+    private GameConfig() {
         super("game");
-        if(instance == null)
-            instance = this;
         addSettings(displayWidth, displayHeight, vSync, maxFps, fullScreen, language, renderHitboxes, firstRun, guiScale);
+    }
+
+    public static GameConfig getInstance() {
+        if (instance == null) {
+            synchronized (GameConfig.class) {
+                if (instance == null)
+                    instance = new GameConfig();
+            }
+        }
+        return instance;
     }
 
 }

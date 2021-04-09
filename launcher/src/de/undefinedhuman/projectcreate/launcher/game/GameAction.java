@@ -18,14 +18,14 @@ public interface GameAction {
 
     static GameAction playAction() {
         return version -> {
-            FsFile gameVersion = new FsFile(LauncherConfig.instance.gameInstallationPath.getFile(), version.toString() + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
-            if(!InstallationUtils.isVersionDownloaded(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.instance.gameInstallationPath.getFile(), version)) {
-                GameManagerUI.instance.checkVersion(version);
+            FsFile gameVersion = new FsFile(LauncherConfig.getInstance().gameInstallationPath.getFile(), version.toString() + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
+            if(!InstallationUtils.isVersionDownloaded(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.getInstance().gameInstallationPath.getFile(), version)) {
+                GameManagerUI.getInstance().checkVersion(version);
                 return;
             }
             try {
-                float xmx = LauncherConfig.instance.maximumMemory.getFloat();
-                float xms = LauncherConfig.instance.initialMemory.getFloat();
+                float xmx = LauncherConfig.getInstance().maximumMemory.getFloat();
+                float xms = LauncherConfig.getInstance().initialMemory.getFloat();
                 String javaCommand =
                         "java -jar " +
                         gameVersion.path() +
@@ -35,8 +35,8 @@ public interface GameAction {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            LauncherConfig.instance.lastPlayedGameVersion.setValue(version.toString());
-            if(LauncherConfig.instance.closeLauncherAfterGameStart.getBoolean()) {
+            LauncherConfig.getInstance().lastPlayedGameVersion.setValue(version.toString());
+            if(LauncherConfig.getInstance().closeLauncherAfterGameStart.getBoolean()) {
                 Launcher.instance.setVisible(false);
                 Launcher.instance.dispose();
             }
@@ -45,20 +45,22 @@ public interface GameAction {
 
     static GameAction downloadAction() {
         return version -> {
-            while(!InstallationUtils.hasSufficientSpace(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.instance.gameInstallationPath.getFile(), version)) {
+            while(!InstallationUtils.hasSufficientSpace(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.getInstance().gameInstallationPath.getFile(), version)) {
                 Log.crash("Error", "Installation directory does not have enough available space.\nPlease choose another directory.", false);
-                LauncherConfig.instance.gameInstallationPath.setValue(InstallationUtils.chooseInstallationDirectory(Launcher.DEFAULT_INSTALLATION_DIRECTORY));
+                LauncherConfig.getInstance().gameInstallationPath.setValue(InstallationUtils.chooseInstallationDirectory(Launcher.DEFAULT_INSTALLATION_DIRECTORY));
             }
             String downloadURL = Launcher.DOWNLOAD_GAME_URL + version + DownloadUtils.DOWNLOAD_FILE_EXTENSION;
-            FsFile destination = new FsFile(LauncherConfig.instance.gameInstallationPath.getFile(), version.toString() + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
+            FsFile destination = new FsFile(LauncherConfig.getInstance().gameInstallationPath.getFile(), version.toString() + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
             long downloadedBytes = 0;
             try {
                 downloadedBytes = DownloadUtils.downloadFile(downloadURL, destination);
             } catch (IOException | URISyntaxException e) {
                 e.printStackTrace();
             }
-            if(downloadedBytes == DownloadUtils.fetchFileSize(downloadURL))
-                GameManagerUI.instance.checkVersion(version);
+            if(downloadedBytes == DownloadUtils.fetchFileSize(downloadURL)) {
+                Log.info("Successfully downloaded game version: " + version);
+                GameManagerUI.getInstance().checkVersion(version);
+            }
         };
     }
 

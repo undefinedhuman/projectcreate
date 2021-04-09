@@ -32,7 +32,7 @@ public class ForegroundLayer extends Layer {
 
     @Override
     public void resize(int width, int height) {
-        this.size.set(initialSize).scl(BackgroundManager.instance.scale);
+        this.size.set(initialSize).scl(BackgroundManager.getInstance().scale);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class ForegroundLayer extends Layer {
         batch.setColor(brightness, brightness, brightness, 75f);
         float renderX = currentX;
         do {
-            batch.draw(TextureManager.instance.getTexture(texture), (camera.position.x - camera.viewportWidth * 0.5f) + renderX, World.instance.maxHeight + yOffset * BackgroundManager.instance.scale, size.x, size.y);
+            batch.draw(TextureManager.instance.getTexture(texture), (camera.position.x - camera.viewportWidth * 0.5f) + renderX, World.instance.maxHeight + yOffset * BackgroundManager.getInstance().scale, size.x, size.y);
             renderX += size.x;
         } while (renderX <= camera.viewportWidth);
         batch.setColor(batchColor);

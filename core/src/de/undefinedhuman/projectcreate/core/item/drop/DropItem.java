@@ -32,7 +32,7 @@ public class DropItem {
         this.position = position;
 
         this.target = null;
-        this.sprite = new Sprite(TextureManager.instance.getTexture(ItemManager.instance.getItem(id).iconTexture.getString()));
+        this.sprite = new Sprite(TextureManager.instance.getTexture(ItemManager.getInstance().getItem(id).iconTexture.getString()));
 
     }
 
@@ -48,7 +48,7 @@ public class DropItem {
             if (newTarget != null) target = newTarget;
             else {
                 velocity.set(0, Tools.clamp(collide(position, 0, 8) ? 120 : !collide(position, 0, 7) ? velocity.y - gravity * delta : 0, -speed * 2, speed * 2));
-                velocity.scl(1 - 1f * delta);
+                velocity.scl(1 - delta);
                 position.mulAdd(velocity, delta);
                 position.y = Math.max(position.y, 0);
             }
@@ -70,7 +70,7 @@ public class DropItem {
                     difference.set(new Vector2(getCenter()).sub(target.getCenterPosition()));
                     offset.set(difference.x >= 0 ? 60 : -60, difference.y >= 0 ? 60 : -60);
                     velocity.set(velocity.x - (1 / (difference.x + offset.x)) * 300 * 300 * delta, velocity.y - (1 / (difference.y + offset.y)) * 200 * 300 * delta);
-                    velocity.scl(1 - 1f * delta);
+                    velocity.scl(1 - delta);
                     position.mulAdd(velocity, delta);
 
                 }
@@ -86,7 +86,7 @@ public class DropItem {
     // TODO Refactor also make target choosing server sided
 
     private Entity getNewTarget() {
-        for (Entity player : EntityManager.instance.getEntityByType(EntityType.Player))
+        for (Entity player : EntityManager.getInstance().getEntityByType(EntityType.Player))
             if (Math.abs(player.getCenterPosition().dst(getCenter())) < 80) return player;
         return null;
     }

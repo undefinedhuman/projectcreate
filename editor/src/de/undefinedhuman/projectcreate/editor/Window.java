@@ -1,6 +1,5 @@
 package de.undefinedhuman.projectcreate.editor;
 
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglAWTCanvas;
 import com.formdev.flatlaf.FlatDarculaLaf;
@@ -18,7 +17,7 @@ import java.awt.event.WindowEvent;
 
 public class Window extends JFrame {
 
-    public static Window instance;
+    private static Window instance;
     public Editor editor;
 
     public JMenuBar menuBar;
@@ -26,17 +25,12 @@ public class Window extends JFrame {
     public JLabel errorMessage;
     public JMenu fileMenu, editorMenu;
 
-    private ApplicationListener main;
-    private LwjglAWTCanvas canvas;
     private Container container;
     private boolean hasError = false;
 
-    public Window() {
-
+    private Window() {
         FlatDarculaLaf.install();
-
-        main = new Main();
-        canvas = new LwjglAWTCanvas(main);
+        LwjglAWTCanvas canvas = new LwjglAWTCanvas(new Main());
         canvas.getCanvas().setBounds(25, 300, 480, 345);
 
         errorMessage = new JLabel();
@@ -126,6 +120,16 @@ public class Window extends JFrame {
             hasError = false;
             errorTime = 15;
         }
+    }
+
+    public static Window getInstance() {
+        if (instance == null) {
+            synchronized (Window.class) {
+                if (instance == null)
+                    instance = new Window();
+            }
+        }
+        return instance;
     }
 
 }

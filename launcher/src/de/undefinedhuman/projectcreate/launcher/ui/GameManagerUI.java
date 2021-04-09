@@ -5,6 +5,7 @@ import de.undefinedhuman.projectcreate.engine.file.FileError;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.utils.Version;
+import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 import de.undefinedhuman.projectcreate.launcher.Launcher;
 import de.undefinedhuman.projectcreate.launcher.config.LauncherConfig;
 import de.undefinedhuman.projectcreate.launcher.game.GameAction;
@@ -16,7 +17,9 @@ import java.util.ArrayList;
 
 public class GameManagerUI extends JPanel {
 
-    public static GameManagerUI instance;
+    private static final Vector2i ICON_SIZE = new Vector2i(32, 32);
+
+    private static volatile GameManagerUI instance;
 
     private DefaultComboBoxModel<Version> versionSelectionModel;
     private JComboBox<Version> versionSelection;
@@ -26,11 +29,9 @@ public class GameManagerUI extends JPanel {
     private GameAction currentAction;
     private Version selectedVersion = null;
 
-    public GameManagerUI() {
-        if(instance == null)
-            instance = this;
+    private GameManagerUI() {
         setLayout(null);
-        setSize(1280, 100);
+        setBounds(0, 620, 640, 100);
 
         initVersionSelection();
         initVersionButton();
@@ -39,16 +40,24 @@ public class GameManagerUI extends JPanel {
     }
 
     public void init() {
-        Version lastPlayed = LauncherConfig.instance.lastPlayedGameVersion.getVersion();
-        if(InstallationUtils.isVersionDownloaded(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.instance.gameInstallationPath.getFile(), lastPlayed) && versionSelectionModel.getIndexOf(lastPlayed) != -1)
-            versionSelection.setSelectedItem(lastPlayed);
-        else versionSelection.setSelectedIndex(0);
+        Version lastPlayed = LauncherConfig.getInstance().lastPlayedGameVersion.getVersion();
+        int selectedIndex = versionSelectionModel.getIndexOf(lastPlayed);
+        if(selectedIndex == -1 || !InstallationUtils.isVersionDownloaded(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.getInstance().gameInstallationPath.getFile(), lastPlayed)) {
+            selectedIndex = 0;
+            for(int i = 0; i < versionSelectionModel.getSize(); i++) {
+                Version currentVersion = versionSelectionModel.getElementAt(i);
+                if(InstallationUtils.isVersionDownloaded(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.getInstance().gameInstallationPath.getFile(), currentVersion)
+                        && currentVersion.compareTo(versionSelectionModel.getElementAt(selectedIndex)) > 0)
+                    selectedIndex = i;
+            }
+        }
+        versionSelection.setSelectedItem(versionSelectionModel.getElementAt(selectedIndex));
     }
 
     private void initVersionSelection() {
         versionSelectionModel = new DefaultComboBoxModel<>(InstallationUtils.fetchAvailableVersions(Launcher.DOWNLOAD_GAME_URL).toArray(new Version[0]));
         versionSelection = new JComboBox<>(InstallationUtils.fetchAvailableVersions(Launcher.DOWNLOAD_GAME_URL).toArray(new Version[0]));
-        versionSelection.setBounds(25, getHeight()/2-16, 200, 32);
+        versionSelection.setBounds(25, getHeight()/2-ICON_SIZE.y/2, 200, ICON_SIZE.y);
         versionSelection.setRenderer(new VersionCellRenderer());
         versionSelection.addActionListener(e -> {
             Version currentVersion = (Version) versionSelection.getSelectedItem();
@@ -60,15 +69,15 @@ public class GameManagerUI extends JPanel {
     }
 
     private void initVersionButton() {
-        versionButton = new IconButton("download", 235, getHeight()/2-16, e -> {
+        versionButton = new IconButton("download", 235, getHeight()/2-ICON_SIZE.y/2, e -> {
             currentAction.onClick(selectedVersion);
         });
         add(versionButton);
     }
 
     private void initDeleteButton() {
-        deleteButton = new IconButton("delete", 277, getHeight()/2-16, e -> {
-            FsFile installationFile = new FsFile(LauncherConfig.instance.gameInstallationPath.getFile(), selectedVersion.toString() + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
+        deleteButton = new IconButton("delete", 277, getHeight()/2-ICON_SIZE.y/2, e -> {
+            FsFile installationFile = new FsFile(LauncherConfig.getInstance().gameInstallationPath.getFile(), selectedVersion.toString() + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
             ArrayList<String> errorMessages = FileError.checkFileForErrors(installationFile, FileError.NULL, FileError.NON_EXISTENT, FileError.NO_FILE);
             if(errorMessages.size() == 0 && installationFile.delete())
                 Log.info("Successfully deleted game version " + selectedVersion.toString());
@@ -79,24 +88,34 @@ public class GameManagerUI extends JPanel {
     }
 
     private void initSettingsButton() {
-        IconButton settingsButton = new IconButton("settings", 319, getHeight() / 2 - 16, e -> {
-            SettingsUI.instance.openConfig(
-                    LauncherConfig.instance.gameInstallationPath,
-                    LauncherConfig.instance.includeSnapshots,
-                    LauncherConfig.instance.closeLauncherAfterGameStart,
-                    LauncherConfig.instance.maximumMemory,
-                    LauncherConfig.instance.initialMemory
+        IconButton settingsButton = new IconButton("settings", 319, getHeight()/2-ICON_SIZE.y/2, e -> {
+            SettingsUI.getInstance().openConfig(
+                    LauncherConfig.getInstance().gameInstallationPath,
+                    LauncherConfig.getInstance().includeSnapshots,
+                    LauncherConfig.getInstance().closeLauncherAfterGameStart,
+                    LauncherConfig.getInstance().maximumMemory,
+                    LauncherConfig.getInstance().initialMemory
             );
         });
         add(settingsButton);
     }
 
     public void checkVersion(Version version) {
-        boolean isVersionDownloaded = InstallationUtils.isVersionDownloaded(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.instance.gameInstallationPath.getFile(), version);
+        boolean isVersionDownloaded = InstallationUtils.isVersionDownloaded(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.getInstance().gameInstallationPath.getFile(), version);
         deleteButton.setEnabled(isVersionDownloaded);
         versionButton.setIcon(isVersionDownloaded ? "play" : "download");
         currentAction = isVersionDownloaded ? GameAction.playAction() : GameAction.downloadAction();
         selectedVersion = version;
+    }
+
+    public static GameManagerUI getInstance() {
+        if (instance == null) {
+            synchronized (GameManagerUI.class) {
+                if (instance == null)
+                    instance = new GameManagerUI();
+            }
+        }
+        return instance;
     }
 
 }

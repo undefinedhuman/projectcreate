@@ -47,7 +47,7 @@ public class InvSlot extends Slot {
     }
 
     public boolean isTypeCompatible(InvItem item) {
-        return itemType == null || ItemManager.instance.getItem(item.getID()).type == itemType;
+        return itemType == null || ItemManager.getInstance().getItem(item.getID()).type == itemType;
     }
 
     public int addItem(InvItem item) {
@@ -59,7 +59,7 @@ public class InvSlot extends Slot {
             if(invItem.getAmount() != -1) {
                 if (id != invItem.getID())
                     return amount;
-                int maxAmount = ItemManager.instance.getItem(id).maxAmount.getInt();
+                int maxAmount = ItemManager.getInstance().getItem(id).maxAmount.getInt();
                 if ((invItem.getAmount() + amount) <= maxAmount)
                     setInvItem(invItem.getAmount() + amount);
                 else {

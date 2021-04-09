@@ -17,7 +17,7 @@ public class CollisionManager {
 
     // TODO Refactor through
     public static boolean collide(byte id) {
-        return ((Block) ItemManager.instance.getItem(id)).blockType.getBlockType() == BlockType.Block;
+        return ((Block) ItemManager.getInstance().getItem(id)).blockType.getBlockType() == BlockType.Block;
     }
 
     public static boolean collideAABB(Vector4 bounds1, Vector4 bounds2) {

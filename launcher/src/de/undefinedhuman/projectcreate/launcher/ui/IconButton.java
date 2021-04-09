@@ -21,7 +21,7 @@ public class IconButton extends JButton implements MouseListener {
     public IconButton(String iconName, int x, int y, ActionListener listener) {
         this.iconName = iconName;
         this.position.set(x, y);
-        setIcon(IconManager.instance.getIcon(iconName, SIZE.x, SIZE.y));
+        setIcon(IconManager.getInstance().getIcon(iconName, SIZE.x, SIZE.y));
         setOpaque(false);
         setBackground(new Color(0, 0, 0, 0));
         setBorderPainted(false);
@@ -67,7 +67,7 @@ public class IconButton extends JButton implements MouseListener {
     public void mouseReleased(MouseEvent e) {}
 
     private void updateIcon() {
-        setIcon(IconManager.instance.getIcon(iconName, getWidth(), getHeight()));
+        setIcon(IconManager.getInstance().getIcon(iconName, getWidth(), getHeight()));
     }
 
 }

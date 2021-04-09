@@ -14,7 +14,7 @@ import de.undefinedhuman.projectcreate.updater.utils.InstallationUtils;
 
 public class LauncherConfig extends Config {
 
-    public static LauncherConfig instance;
+    private static LauncherConfig instance;
 
     public Setting
             gameInstallationPath = new FilePathSetting("Game installation path", Launcher.DEFAULT_INSTALLATION_DIRECTORY) {
@@ -31,7 +31,7 @@ public class LauncherConfig extends Config {
 
     private LauncherConfigValidator validator;
 
-    public LauncherConfig() {
+    private LauncherConfig() {
         super("launcher");
         if(instance == null)
             instance = this;
@@ -43,4 +43,15 @@ public class LauncherConfig extends Config {
     public void validate() {
         validator.validate(this);
     }
+
+    public static LauncherConfig getInstance() {
+        if (instance == null) {
+            synchronized (LauncherConfig.class) {
+                if (instance == null)
+                    instance = new LauncherConfig();
+            }
+        }
+        return instance;
+    }
+
 }

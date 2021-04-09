@@ -2,22 +2,22 @@ package de.undefinedhuman.projectcreate.core.camera;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
-import de.undefinedhuman.projectcreate.engine.utils.math.Vector4i;
-import de.undefinedhuman.projectcreate.engine.utils.Manager;
-import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.core.entity.EntityManager;
 import de.undefinedhuman.projectcreate.core.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.core.utils.Tools;
 import de.undefinedhuman.projectcreate.core.world.World;
+import de.undefinedhuman.projectcreate.engine.utils.Manager;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.engine.utils.math.Vector4i;
 
 public class CameraManager extends Manager {
 
-    public static CameraManager instance;
+    private static volatile CameraManager instance;
 
     public static OrthographicCamera gameCamera, guiCamera;
     public Vector4i blockBounds = new Vector4i(), chunkBounds = new Vector4i();
 
-    public CameraManager() {
+    private CameraManager() {
         gameCamera = new OrthographicCamera();
         guiCamera = new OrthographicCamera();
     }
@@ -48,7 +48,7 @@ public class CameraManager extends Manager {
                 .div(Variables.CHUNK_SIZE)
                 .add(-1, -1, 1, 1)
                 .setY(Math.max(chunkBounds.y, 0))
-                .setW(Math.min(chunkBounds.w, EntityManager.instance.getChunkSize().y - 1));
+                .setW(Math.min(chunkBounds.w, EntityManager.getInstance().getChunkSize().y - 1));
     }
 
     private void updateCameraPosition() {
@@ -59,6 +59,16 @@ public class CameraManager extends Manager {
                 .set(new Vector3(GameManager.instance.player.getCenterPosition(), 0))
                 .y = Tools.clamp(gameCamera.position.y, cameraYBounds, World.instance.pixelSize.y - cameraYBounds);
         gameCamera.update();
+    }
+
+    public static CameraManager getInstance() {
+        if (instance == null) {
+            synchronized (CameraManager.class) {
+                if (instance == null)
+                    instance = new CameraManager();
+            }
+        }
+        return instance;
     }
 
 }

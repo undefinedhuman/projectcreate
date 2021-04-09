@@ -51,14 +51,14 @@ public class World {
     }
 
     public void renderMainLayer(SpriteBatch batch) {
-        for (int i = CameraManager.instance.blockBounds.x; i <= CameraManager.instance.blockBounds.z; i++)
-            for (int j = CameraManager.instance.blockBounds.y; j <= CameraManager.instance.blockBounds.w; j++) {
+        for (int i = CameraManager.getInstance().blockBounds.x; i <= CameraManager.getInstance().blockBounds.z; i++)
+            for (int j = CameraManager.getInstance().blockBounds.y; j <= CameraManager.getInstance().blockBounds.w; j++) {
                 renderBlock(batch, Color.WHITE, i, j, MAIN_LAYER);
             }
 
         if(Variables.DEBUG)
-            for (int i = CameraManager.instance.blockBounds.x*2; i <= CameraManager.instance.blockBounds.z*2; i++)
-                for (int j = CameraManager.instance.blockBounds.y*2; j <= CameraManager.instance.blockBounds.w*2; j++) {
+            for (int i = CameraManager.getInstance().blockBounds.x*2; i <= CameraManager.getInstance().blockBounds.z*2; i++)
+                for (int j = CameraManager.getInstance().blockBounds.y*2; j <= CameraManager.getInstance().blockBounds.w*2; j++) {
                     byte state = getCollision(i, j, COLLISION_STATE_LAYER);
                     if(state == 0) continue;
                     Hitbox hitbox = CollisionUtils.blockCollisionMask[state];
@@ -68,16 +68,16 @@ public class World {
     }
 
     public void renderBackLayer(SpriteBatch batch) {
-        for (int i = CameraManager.instance.blockBounds.x; i <= CameraManager.instance.blockBounds.z; i++)
-            for (int j = CameraManager.instance.blockBounds.y; j <= CameraManager.instance.blockBounds.w; j++) {
-                Block block = (Block) ItemManager.instance.getItem(getBlock(i, j, MAIN_LAYER));
+        for (int i = CameraManager.getInstance().blockBounds.x; i <= CameraManager.getInstance().blockBounds.z; i++)
+            for (int j = CameraManager.getInstance().blockBounds.y; j <= CameraManager.getInstance().blockBounds.w; j++) {
+                Block block = (Block) ItemManager.getInstance().getItem(getBlock(i, j, MAIN_LAYER));
                 if (block.id.getInt() != 0 || getState(i, j, MAIN_LAYER) == 0 || block.isFull.getBoolean()) return;
                 renderBlock(batch, batchColor.set(0.45f, 0.45f, 0.45f, 1), i, j, BACK_LAYER);
             }
     }
 
     private void renderBlock(SpriteBatch batch, Color color, int x, int y, byte worldLayer) {
-        Block block = (Block) ItemManager.instance.getItem(getBlock(x, y, worldLayer));
+        Block block = (Block) ItemManager.getInstance().getItem(getBlock(x, y, worldLayer));
         if (block == null || block.id.getInt() == 0) return;
 
         batch.setColor(color);
@@ -95,7 +95,7 @@ public class World {
    public void setBlock(int x, int y, byte worldLayer, byte blockID) {
         if(y < 0 || y >= size.y) return;
         setBlockData(x, y, worldLayer, BLOCK_LAYER, blockID);
-        if(worldLayer == MAIN_LAYER) setCollisionBlock(x, y, blockID != 0 && ((Block) ItemManager.instance.getItem(blockID)).hasCollision.getBoolean());
+        if(worldLayer == MAIN_LAYER) setCollisionBlock(x, y, blockID != 0 && ((Block) ItemManager.getInstance().getItem(blockID)).hasCollision.getBoolean());
     }
 
     public byte getState(int x, int y, byte worldLayer) {

@@ -9,18 +9,18 @@ import de.undefinedhuman.projectcreate.core.background.birds.BirdLayer;
 import de.undefinedhuman.projectcreate.core.background.clouds.CloudLayer;
 import de.undefinedhuman.projectcreate.core.background.layers.BackgroundLayer;
 import de.undefinedhuman.projectcreate.core.background.layers.ForegroundLayer;
+import de.undefinedhuman.projectcreate.core.entity.Entity;
+import de.undefinedhuman.projectcreate.core.screen.gamescreen.GameManager;
+import de.undefinedhuman.projectcreate.core.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
 import de.undefinedhuman.projectcreate.engine.entity.components.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
-import de.undefinedhuman.projectcreate.core.entity.Entity;
-import de.undefinedhuman.projectcreate.core.screen.gamescreen.GameManager;
-import de.undefinedhuman.projectcreate.core.utils.Tools;
 
 public class BackgroundManager extends Manager {
 
-    public static BackgroundManager instance;
+    private static volatile BackgroundManager instance;
 
     public String[] cloudTextures = new String[Variables.CLOUD_COUNT];
     public TextureRegion[] birdTexture;
@@ -28,8 +28,7 @@ public class BackgroundManager extends Manager {
 
     private Layer[] layers;
 
-    public BackgroundManager() {
-        if (instance == null) instance = this;
+    private BackgroundManager() {
         layers = new Layer[] {
                 new BackgroundLayer(new Vector2(640, 300)),
                 new CloudLayer(225, 3),
@@ -83,6 +82,16 @@ public class BackgroundManager extends Manager {
         TextureManager.instance.removeTexture("background/Bird.png");
         birdTexture = new TextureRegion[0];
         Time.delete();
+    }
+
+    public static BackgroundManager getInstance() {
+        if (instance == null) {
+            synchronized (BackgroundManager.class) {
+                if (instance == null)
+                    instance = new BackgroundManager();
+            }
+        }
+        return instance;
     }
 
 }

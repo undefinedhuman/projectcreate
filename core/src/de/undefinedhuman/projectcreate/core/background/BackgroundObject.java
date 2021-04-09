@@ -24,13 +24,13 @@ public class BackgroundObject extends GameObject {
 
     @Override
     public void resize(int width, int height) {
-        size.set(baseSize).scl(BackgroundManager.instance.scale).scl(1f - layerID * 0.15f);
+        size.set(baseSize).scl(BackgroundManager.getInstance().scale).scl(1f - layerID * 0.15f);
     }
 
     @Override
     public void update(float delta) {
         position.x += speed * baseMultiplier * delta;
-        position.x += BackgroundManager.instance.speed * baseMultiplier * delta;
+        position.x += BackgroundManager.getInstance().speed * baseMultiplier * delta;
         position.x = position.x < -size.x ? World.instance.pixelSize.x : position.x > World.instance.pixelSize.x ? -size.x : position.x;
     }
 

@@ -23,12 +23,11 @@ import java.util.HashMap;
 
 public class ItemManager extends Manager {
 
-    public static ItemManager instance;
+    private static volatile ItemManager instance;
 
     private HashMap<Integer, Item> items;
 
-    public ItemManager() {
-        if (instance == null) instance = this;
+    private ItemManager() {
         this.items = new HashMap<>();
     }
 
@@ -99,11 +98,21 @@ public class ItemManager extends Manager {
         if(!settingsObject.containsKey("Type")) return null;
         ItemType type = ItemType.valueOf(((LineSplitter) settingsObject.get("Type")).getNextString());
         Item item = type.createInstance();
-        for(Setting setting : item.getSettings())
+        for(Setting setting : item.getSettings().getSettings())
             setting.loadSetting(reader.getParentDirectory(), settingsObject);
         item.init();
         reader.close();
         return item;
+    }
+
+    public static ItemManager getInstance() {
+        if (instance == null) {
+            synchronized (ItemManager.class) {
+                if (instance == null)
+                    instance = new ItemManager();
+            }
+        }
+        return instance;
     }
 
 }

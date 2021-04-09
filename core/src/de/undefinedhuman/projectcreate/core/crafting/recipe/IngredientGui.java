@@ -74,7 +74,7 @@ public class IngredientGui extends Gui implements Poolable {
         InventoryManager.instance.removeListener(currentItemID, listener);
         currentItemID = Integer.parseInt(item.getKey());
         currentAmount = item.quantity.getInt();
-        Item currentItem = ItemManager.instance.getItem(currentItemID);
+        Item currentItem = ItemManager.getInstance().getItem(currentItemID);
         this.icon.setTexture(currentItem.iconTexture.getString());
         this.name
                 .setText(currentItem.name.getString())

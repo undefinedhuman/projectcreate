@@ -2,13 +2,13 @@ package de.undefinedhuman.projectcreate.core.entity.chunk;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.core.collision.CollisionManager;
+import de.undefinedhuman.projectcreate.core.entity.Entity;
+import de.undefinedhuman.projectcreate.core.entity.EntityManager;
+import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
+import de.undefinedhuman.projectcreate.engine.entity.EntityType;
 import de.undefinedhuman.projectcreate.engine.entity.components.collision.CollisionComponent;
 import de.undefinedhuman.projectcreate.engine.utils.ds.MultiMap;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector4;
-import de.undefinedhuman.projectcreate.core.entity.ecs.system.RenderSystem;
-import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.engine.entity.EntityType;
-import de.undefinedhuman.projectcreate.core.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,7 +23,7 @@ public class Chunk {
             ArrayList<Entity> entityList = entitiesByType.getValuesWithKey(type);
             if(entityList == null) continue;
             for(Entity entity : entityList)
-                RenderSystem.instance.render(batch, entity, renderOffset);
+                EntityManager.getInstance().renderSystem.render(batch, entity, renderOffset);
         }
     }
 

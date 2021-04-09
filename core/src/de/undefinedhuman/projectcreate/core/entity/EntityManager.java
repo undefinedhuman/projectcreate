@@ -3,9 +3,6 @@ package de.undefinedhuman.projectcreate.core.entity;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.core.camera.CameraManager;
-import de.undefinedhuman.projectcreate.engine.entity.components.collision.CollisionComponent;
-import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
-import de.undefinedhuman.projectcreate.engine.utils.math.Vector4;
 import de.undefinedhuman.projectcreate.core.entity.chunk.Chunk;
 import de.undefinedhuman.projectcreate.core.entity.ecs.System;
 import de.undefinedhuman.projectcreate.core.entity.ecs.system.*;
@@ -13,8 +10,11 @@ import de.undefinedhuman.projectcreate.core.utils.Tools;
 import de.undefinedhuman.projectcreate.core.world.World;
 import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
 import de.undefinedhuman.projectcreate.engine.entity.EntityType;
+import de.undefinedhuman.projectcreate.engine.entity.components.collision.CollisionComponent;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
+import de.undefinedhuman.projectcreate.engine.utils.math.Vector4;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +23,7 @@ import java.util.HashMap;
 
 public class EntityManager extends Manager {
 
-    public static EntityManager instance;
+    private static volatile EntityManager instance;
 
     private Vector2i chunkSize = new Vector2i();
     private Chunk[][] chunks;
@@ -31,9 +31,10 @@ public class EntityManager extends Manager {
     private ArrayList<Integer> entitiesToRemove = new ArrayList<>();
     private ArrayList<System> systems = new ArrayList<>();
 
-    public EntityManager() {
-        if (instance == null) instance = this;
-        addSystems(new AngleSystem(), new AnimationSystem(), new ArmSystem(), new InteractionSystem(), new EquipSystem(), new MovementSystem(), new RenderSystem());
+    public RenderSystem renderSystem;
+
+    private EntityManager() {
+        addSystems(new AngleSystem(), new AnimationSystem(), new ArmSystem(), new InteractionSystem(), new EquipSystem(), new MovementSystem(), renderSystem = new RenderSystem());
     }
 
     @Override
@@ -60,13 +61,13 @@ public class EntityManager extends Manager {
 
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
-        for (int x = CameraManager.instance.chunkBounds.x; x <= CameraManager.instance.chunkBounds.z; x++)
-            for (int y = CameraManager.instance.chunkBounds.y; y <= CameraManager.instance.chunkBounds.w; y++)
+        for (int x = CameraManager.getInstance().chunkBounds.x; x <= CameraManager.getInstance().chunkBounds.z; x++)
+            for (int y = CameraManager.getInstance().chunkBounds.y; y <= CameraManager.getInstance().chunkBounds.w; y++)
                 getChunk(x, y).render(batch, World.instance.pixelSize.x * (x < 0 ? -1 : x >= chunkSize.x ? 1 : 0));
     }
 
     public void render(SpriteBatch batch, Entity entity) {
-        RenderSystem.instance.render(batch, entity);
+        renderSystem.render(batch, entity);
     }
 
     public void addEntity(int worldID, Entity entity) {
@@ -101,8 +102,8 @@ public class EntityManager extends Manager {
 
     public ArrayList<Entity> getEntityByType(EntityType type) {
         ArrayList<Entity> entities = new ArrayList<>();
-        for(int chunkX = CameraManager.instance.chunkBounds.x; chunkX <= CameraManager.instance.chunkBounds.z; chunkX++)
-            for(int chunkY = CameraManager.instance.chunkBounds.y; chunkY <= CameraManager.instance.chunkBounds.w; chunkY++) {
+        for(int chunkX = CameraManager.getInstance().chunkBounds.x; chunkX <= CameraManager.getInstance().chunkBounds.z; chunkX++)
+            for(int chunkY = CameraManager.getInstance().chunkBounds.y; chunkY <= CameraManager.getInstance().chunkBounds.w; chunkY++) {
                 Collection<Entity> entitiesOfChunk = chunks[Tools.getWorldPositionX(chunkX, chunkSize.x)][chunkY].getEntitiesByType(type);
                 if(entitiesOfChunk != null) entities.addAll(entitiesOfChunk);
             }
@@ -117,8 +118,8 @@ public class EntityManager extends Manager {
 
     public ArrayList<Entity> getEntitiesWithCollision(Vector4 bounds) {
         ArrayList<Entity> entitiesInRange = new ArrayList<>();
-        for(int chunkX = CameraManager.instance.chunkBounds.x; chunkX <= CameraManager.instance.chunkBounds.z; chunkX++)
-            for(int chunkY = CameraManager.instance.chunkBounds.y; chunkY <= CameraManager.instance.chunkBounds.w; chunkY++)
+        for(int chunkX = CameraManager.getInstance().chunkBounds.x; chunkX <= CameraManager.getInstance().chunkBounds.z; chunkX++)
+            for(int chunkY = CameraManager.getInstance().chunkBounds.y; chunkY <= CameraManager.getInstance().chunkBounds.w; chunkY++)
                 entitiesInRange.addAll(getChunk(chunkX, chunkY).getEntitiesInRangeForCollision(bounds));
         return entitiesInRange;
     }
@@ -136,6 +137,16 @@ public class EntityManager extends Manager {
         chunks = new Chunk[0][0];
         entitiesToRemove.clear();
         entities.clear();
+    }
+
+    public static EntityManager getInstance() {
+        if (instance == null) {
+            synchronized (EntityManager.class) {
+                if (instance == null)
+                    instance = new EntityManager();
+            }
+        }
+        return instance;
     }
 
 }

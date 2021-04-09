@@ -31,9 +31,9 @@ public class Selector extends Inventory {
     @Override
     public void update(float delta) {
         super.update(delta);
-        ItemManager.instance.useItem(getSelectedItemID());
+        ItemManager.getInstance().useItem(getSelectedItemID());
         if (inventory[0][selected].getItem().getAmount() == -1)
-            EquipManager.instance.unEquipItemNetwork(GameManager.instance.player, 0, false);
+            EquipManager.getInstance().unEquipItemNetwork(GameManager.instance.player, 0, false);
     }
 
     @Override
@@ -53,13 +53,13 @@ public class Selector extends Inventory {
         this.selected = index;
         InvItem item = inventory[0][selected].getItem();
         if (item.getAmount() != -1)
-            EquipManager.instance.equipItemNetwork(GameManager.instance.player, item.getID(), false);
-        else EquipManager.instance.unEquipItemNetwork(GameManager.instance.player, 0, false);
+            EquipManager.getInstance().equipItemNetwork(GameManager.instance.player, item.getID(), false);
+        else EquipManager.getInstance().unEquipItemNetwork(GameManager.instance.player, 0, false);
         inventory[0][selected].setSelected(true);
     }
 
     public Item getSelectedItem() {
-        return ItemManager.instance.getItem(inventory[0][selected].getItem().getID());
+        return ItemManager.getInstance().getItem(inventory[0][selected].getItem().getID());
     }
 
     public InvItem getSelectedInvItem() {

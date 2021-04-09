@@ -26,24 +26,24 @@ public class GameManager {
 
     public GameManager() {
         batch = new SpriteBatch();
-        CameraManager.instance = new CameraManager();
+        CameraManager.getInstance();
         manager = new ManagerList();
     }
 
     public void init() {
-        BackgroundManager.instance = new BackgroundManager();
-        BackgroundManager.instance.init();
+        BackgroundManager.getInstance();
+        BackgroundManager.getInstance().init();
         loadManager();
 
         //GuiManager.instance.addGui(new CraftingInventory());
     }
 
     public void resize(int width, int height) {
-        CameraManager.instance.resize(width, height);
+        CameraManager.getInstance().resize(width, height);
 
         manager.resize(width, height);
 
-        BackgroundManager.instance.resize(width, height);
+        BackgroundManager.getInstance().resize(width, height);
 
         GuiManager.instance.resize(width, height);
         InventoryManager.instance.resize(width, height);
@@ -60,21 +60,21 @@ public class GameManager {
         GuiManager.instance.update(delta);
         InventoryManager.instance.update(delta);
         DropItemManager.instance.update(delta);
-        EntityManager.instance.update(delta);
+        EntityManager.getInstance().update(delta);
         WorldManager.instance.update(delta);
 
-        BackgroundManager.instance.update(delta);
+        BackgroundManager.getInstance().update(delta);
 
-        CameraManager.instance.update(delta);
+        CameraManager.getInstance().update(delta);
     }
 
     public void render() {
 
         batch.setProjectionMatrix(CameraManager.gameCamera.combined);
         batch.begin();
-        BackgroundManager.instance.render(batch, CameraManager.gameCamera);
+        BackgroundManager.getInstance().render(batch, CameraManager.gameCamera);
         // World.instance.renderBackLayer(gameBatch);
-        EntityManager.instance.render(batch, CameraManager.gameCamera);
+        EntityManager.getInstance().render(batch, CameraManager.gameCamera);
         DropItemManager.instance.render(batch);
         if (projectile != null) projectile.render(batch);
         World.instance.renderMainLayer(batch);
@@ -90,16 +90,16 @@ public class GameManager {
 
     public void delete() {
         manager.delete();
-        BackgroundManager.instance.delete();
-        BlueprintManager.instance.delete();
+        BackgroundManager.getInstance().delete();
+        BlueprintManager.getInstance().delete();
         DropItemManager.instance.delete();
-        EntityManager.instance.delete();
-        ItemManager.instance.delete();
+        EntityManager.getInstance().delete();
+        ItemManager.getInstance().delete();
         batch.dispose();
     }
 
     private void loadManager() {
-        ItemManager.instance.init();
+        ItemManager.getInstance().init();
         InventoryManager.instance.init();
         DropItemManager.instance = new DropItemManager();
     }

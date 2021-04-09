@@ -15,13 +15,8 @@ import de.undefinedhuman.projectcreate.core.screen.gamescreen.GameManager;
 
 public class InteractionSystem extends System {
 
-    public static InteractionSystem instance;
     private Vector2 distanceVector = new Vector2();
     private Text helpText;
-
-    public InteractionSystem() {
-        if (instance == null) instance = this;
-    }
 
     @Override
     public void init(Entity entity) {

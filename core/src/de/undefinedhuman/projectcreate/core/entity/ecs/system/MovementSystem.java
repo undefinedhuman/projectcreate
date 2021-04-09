@@ -14,17 +14,10 @@ import de.undefinedhuman.projectcreate.core.utils.Tools;
 
 public class MovementSystem extends System {
 
-    public static MovementSystem instance;
-
     private Vector2 currentPosition = new Vector2();
-
-    public MovementSystem() {
-        if (instance == null) instance = this;
-    }
 
     @Override
     public void update(float delta, Entity entity) {
-
         MovementComponent movementComponent;
         CollisionComponent collisionComponent;
         AnimationComponent animationComponent;
@@ -65,7 +58,6 @@ public class MovementSystem extends System {
         entity.setPosition(currentPosition);
 
         animate(animationComponent, movementComponent);
-
     }
 
     private void animate(AnimationComponent animationComponent, MovementComponent movementComponent) {

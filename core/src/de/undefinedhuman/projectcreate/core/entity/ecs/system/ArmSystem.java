@@ -28,12 +28,6 @@ import java.util.ArrayList;
 
 public class ArmSystem extends System {
 
-    public static ArmSystem instance;
-
-    public ArmSystem() {
-        if (instance == null) instance = this;
-    }
-
     @Override
     public void update(float delta, Entity entity) {
 
@@ -61,7 +55,7 @@ public class ArmSystem extends System {
             angle += angleComponent.isTurned ? 95 : -95;
 
             if (Selector.instance.getSelectedInvItem() != null) {
-                Item item = ItemManager.instance.getItem(Selector.instance.getSelectedItemID());
+                Item item = ItemManager.getInstance().getItem(Selector.instance.getSelectedItemID());
                 boolean hasSword = (item.type == ItemType.SWORD);
                 CombatComponent combatComponent = (CombatComponent) entity.getComponent(ComponentType.COMBAT);
                 calculateShake(rightArmComponent, item);
@@ -120,7 +114,7 @@ public class ArmSystem extends System {
 
                     // TODO Make the collision with the hitbox not the entity itself
 
-                    ArrayList<Entity> entitiesWithCollision = EntityManager.instance.getEntitiesWithCollision(combatEntity);
+                    ArrayList<Entity> entitiesWithCollision = EntityManager.getInstance().getEntitiesWithCollision(combatEntity);
 
                     for (Entity entity : entitiesWithCollision) {
                         if (!entity.hasComponent(ComponentType.HEALTH) || entity == combatEntity && !combatComponent.touchedEntityList.contains(entity)) continue;

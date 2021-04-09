@@ -28,7 +28,7 @@ public class RecipeGui extends Gui implements Poolable {
         super();
         set(new PixelConstraint(0), new RelativeConstraint(0), new RelativeConstraint(1), new PixelConstraint(Variables.SLOT_SIZE));
 
-        addListener((ClickListener) () -> CraftingInventory.instance.updateRecipe(itemID));
+        addListener((ClickListener) () -> CraftingInventory.getInstance().updateRecipe(itemID));
 
         addChild(
                 new Gui(GuiTemplate.SLOT)
@@ -53,7 +53,7 @@ public class RecipeGui extends Gui implements Poolable {
 
     public RecipeGui update(int itemID) {
         this.itemID = itemID;
-        Item currentItem = ItemManager.instance.getItem(itemID);
+        Item currentItem = ItemManager.getInstance().getItem(itemID);
         this.icon.setTexture(currentItem.iconTexture.getString());
         this.name
                 .setText(currentItem.name.getString())

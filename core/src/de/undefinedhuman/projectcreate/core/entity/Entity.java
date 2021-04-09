@@ -87,11 +87,11 @@ public class Entity extends GameObject implements NetworkComponent {
 
     public void updateChunkPosition() {
         tempChunkPosition.set(position).div(Variables.BLOCK_SIZE).div(Variables.CHUNK_SIZE);
-        tempChunkPosition.x = Tools.getWorldPositionX(tempChunkPosition.x, EntityManager.instance.getChunkSize().x);
-        int newChunkID = tempChunkPosition.x + EntityManager.instance.getChunkSize().x * tempChunkPosition.y;
+        tempChunkPosition.x = Tools.getWorldPositionX(tempChunkPosition.x, EntityManager.getInstance().getChunkSize().x);
+        int newChunkID = tempChunkPosition.x + EntityManager.getInstance().getChunkSize().x * tempChunkPosition.y;
         if(newChunkID == chunkID) return;
-        EntityManager.instance.getChunk(chunkPosition.x, chunkPosition.y).removeEntity(this);
-        EntityManager.instance.getChunk(tempChunkPosition.x, tempChunkPosition.y).addEntity(this);
+        EntityManager.getInstance().getChunk(chunkPosition.x, chunkPosition.y).removeEntity(this);
+        EntityManager.getInstance().getChunk(tempChunkPosition.x, tempChunkPosition.y).addEntity(this);
         chunkPosition.set(tempChunkPosition);
         chunkID = newChunkID;
     }

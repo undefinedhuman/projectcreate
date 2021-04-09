@@ -38,14 +38,14 @@ public class InventoryManager extends Manager {
         if (instance == null) instance = this;
         dragAndDrop = new DragAndDrop(CameraManager.guiCamera);
         GuiManager.instance.addGui(new Selector(), new SidePanel(), new InspectScreen(), new EquipScreen(), new PlayerInventory());
-        dragAndDrop.addTarget(PlayerInventory.instance, Selector.instance, EquipScreen.instance);
+        dragAndDrop.addTarget(PlayerInventory.instance, Selector.instance, EquipScreen.getInstance());
     }
 
     @Override
     public void init() {
         super.init();
         addTempItems(Selector.instance, 1, 2);
-        addTempItems(PlayerInventory.instance, ItemManager.instance.getItems().keySet());
+        addTempItems(PlayerInventory.instance, ItemManager.getInstance().getItems().keySet());
         Selector.instance.setSelected(0);
     }
 
@@ -62,11 +62,11 @@ public class InventoryManager extends Manager {
 
     private void addTempItems(Inventory inventory, int... ids) {
         for (int id : ids)
-            inventory.addItem(id, ItemManager.instance.getItem(id).maxAmount.getInt());
+            inventory.addItem(id, ItemManager.getInstance().getItem(id).maxAmount.getInt());
     }
 
     private void addTempItems(Inventory inventory, Set<Integer> ids) {
-        for (int id : ids) inventory.addItem(id, ItemManager.instance.getItem(id).maxAmount.getInt());
+        for (int id : ids) inventory.addItem(id, ItemManager.getInstance().getItem(id).maxAmount.getInt());
     }
 
     public void addGuiToSlot(Gui gui) {
@@ -216,7 +216,7 @@ public class InventoryManager extends Manager {
                 openGui(PlayerInventory.instance);
                 break;
             case 1:
-                openGui(EquipScreen.instance);
+                openGui(EquipScreen.getInstance());
                 break;
             case 2:
             case 3:

@@ -9,17 +9,14 @@ import java.util.HashMap;
 
 public class IconManager extends Manager {
 
-    public static IconManager instance;
+    private static IconManager instance;
 
     private static final Key<String, Vector2i> TEMP_KEY = new Key<>("", new Vector2i());
     private static final String ICON_PATH = "icon/NAME.svg";
 
     private HashMap<Key<String, Vector2i>, FlatSVGIcon> icons = new HashMap<>();
 
-    public IconManager() {
-        if(instance == null)
-            instance = this;
-    }
+    private IconManager() { }
 
     @Override
     public void delete() {
@@ -43,6 +40,16 @@ public class IconManager extends Manager {
     private void updateKey(String name, int width, int height) {
         TEMP_KEY.key1 = name;
         TEMP_KEY.key2.set(width, height);
+    }
+
+    public static IconManager getInstance() {
+        if (instance == null) {
+            synchronized (IconManager.class) {
+                if (instance == null)
+                    instance = new IconManager();
+            }
+        }
+        return instance;
     }
 
 }

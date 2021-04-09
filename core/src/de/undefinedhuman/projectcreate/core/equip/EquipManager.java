@@ -16,14 +16,14 @@ import de.undefinedhuman.projectcreate.core.utils.Tools;
 
 public class EquipManager {
 
-    public static EquipManager instance;
+    private static volatile EquipManager instance;
 
     public EquipManager() {}
 
     public void equipItemNetwork(Entity entity, int id, boolean armor) {
         equipItem(entity, id, armor);
         if (entity.mainPlayer)
-            ClientManager.instance.sendTCP(PacketUtils.createEquipPacket(entity, armor ? getItemIndex(ItemManager.instance.getItem(id).type) : 0, id, true, armor));
+            ClientManager.instance.sendTCP(PacketUtils.createEquipPacket(entity, armor ? getItemIndex(ItemManager.getInstance().getItem(id).type) : 0, id, true, armor));
     }
 
     // TODO Look into the Vector(0, 0) hitbox Vector in the last line
@@ -31,7 +31,7 @@ public class EquipManager {
     public void equipItem(Entity entity, int id, boolean armor) {
         SpriteComponent spriteComponent = (SpriteComponent) entity.getComponent(ComponentType.SPRITE);
         EquipComponent equipComponent = (EquipComponent) entity.getComponent(ComponentType.EQUIP);
-        Item item = ItemManager.instance.getItem(id);
+        Item item = ItemManager.getInstance().getItem(id);
         equipComponent.setItemID(armor ? getItemIndex(item.type) : 0, id);
         setSpriteData(spriteComponent, armor ? Tools.capitalizeFirstLetter(item.type.name()) : "Item", item.useIconAsHandTexture.getBoolean() ? item.iconTexture.getString() : item.itemTexture.getString(), item.useIconAsHandTexture.getBoolean() ? new Vector2(16, 16) : new Vector2(128, 64), true);
         if (armor) setVisible(spriteComponent, false, ((Armor) item).inVisibleSprites.getStringArray());
@@ -57,13 +57,13 @@ public class EquipManager {
     public void unEquipItemNetwork(Entity entity, int id, boolean armor) {
         unEquipItem(entity, id, armor);
         if (entity.mainPlayer)
-            ClientManager.instance.sendTCP(PacketUtils.createEquipPacket(entity, armor ? getItemIndex(ItemManager.instance.getItem(id).type) : 0, id, false, armor));
+            ClientManager.instance.sendTCP(PacketUtils.createEquipPacket(entity, armor ? getItemIndex(ItemManager.getInstance().getItem(id).type) : 0, id, false, armor));
     }
 
     public void unEquipItem(Entity entity, int id, boolean armor) {
         SpriteComponent spriteComponent = (SpriteComponent) entity.getComponent(ComponentType.SPRITE);
         EquipComponent equipComponent = (EquipComponent) entity.getComponent(ComponentType.EQUIP);
-        Item item = ItemManager.instance.getItem(id);
+        Item item = ItemManager.getInstance().getItem(id);
         equipComponent.setItemID(armor ? getItemIndex(item.type) : 0, -1);
         setVisible(spriteComponent, false, armor ? Tools.capitalizeFirstLetter(item.type.name()) : "Item");
         if (armor) setVisible(spriteComponent, true, ((Armor) item).inVisibleSprites.getStringArray());
@@ -83,6 +83,16 @@ public class EquipManager {
 
         }
 
+    }
+
+    public static EquipManager getInstance() {
+        if (instance == null) {
+            synchronized (EquipManager.class) {
+                if (instance == null)
+                    instance = new EquipManager();
+            }
+        }
+        return instance;
     }
 
 }

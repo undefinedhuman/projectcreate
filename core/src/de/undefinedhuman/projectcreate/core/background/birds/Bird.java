@@ -17,12 +17,12 @@ public class Bird extends GameObject {
     public Bird(Vector2 startPos, float speedMultiplier) {
         this.position.set(startPos);
         this.speedMultiplier = speedMultiplier;
-        currentIndex = Tools.random.nextInt(BackgroundManager.instance.birdTexture.length);
+        currentIndex = Tools.random.nextInt(BackgroundManager.getInstance().birdTexture.length);
     }
 
     @Override
     public void resize(int width, int height) {
-        size.set(Variables.BIRD_SIZE).scl(BackgroundManager.instance.scale).scl(speedMultiplier);
+        size.set(Variables.BIRD_SIZE).scl(BackgroundManager.getInstance().scale).scl(speedMultiplier);
     }
 
     @Override
@@ -33,14 +33,14 @@ public class Bird extends GameObject {
             animationTime = 0;
         }
         position.x += Variables.BIRD_SPEED * speedMultiplier * delta;
-        position.x += BackgroundManager.instance.speed * speedMultiplier * delta;
+        position.x += BackgroundManager.getInstance().speed * speedMultiplier * delta;
         position.x = position.x < -size.x ? World.instance.pixelSize.x : position.x > World.instance.pixelSize.x ? -size.x : position.x;
     }
 
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         if (!Tools.isInRange(position.x, -size.x, camera.viewportWidth + size.x)) return;
-        batch.draw(BackgroundManager.instance.birdTexture[currentIndex], (int) ((camera.position.x - camera.viewportWidth * 0.5f) + position.x), position.y, size.x, size.y);
+        batch.draw(BackgroundManager.getInstance().birdTexture[currentIndex], (int) ((camera.position.x - camera.viewportWidth * 0.5f) + position.x), position.y, size.x, size.y);
     }
 
 }

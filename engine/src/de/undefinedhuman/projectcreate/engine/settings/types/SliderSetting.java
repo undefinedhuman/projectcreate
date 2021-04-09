@@ -16,8 +16,8 @@ public class SliderSetting extends Setting {
     private int tickSpeed;
     private float conversionValue;
 
-    public SliderSetting(String key, int min, int max, int tickSpeed, int extent) {
-        this(key, min, max, tickSpeed, extent, 1f);
+    public SliderSetting(String key, int min, int max, int tickSpeed) {
+        this(key, min, max, min, tickSpeed, 1f);
     }
 
     public SliderSetting(String key, int min, int max, int defaultValue, int tickSpeed, float conversionValue) {

@@ -11,13 +11,11 @@ import java.awt.event.WindowEvent;
 
 public class SettingsUI extends JFrame {
 
-    public static SettingsUI instance;
+    private static SettingsUI instance;
 
     private JPanel settingsPanel;
 
     public SettingsUI() {
-        if(instance == null)
-            instance = this;
         setSize(480, 720);
         setResizable(false);
         setLocationRelativeTo(null);
@@ -31,7 +29,7 @@ public class SettingsUI extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
-                LauncherConfig.instance.validate();
+                LauncherConfig.getInstance().validate();
             }
         });
 
@@ -41,6 +39,16 @@ public class SettingsUI extends JFrame {
         Tools.removeSettings(settingsPanel);
         Tools.addSettings(settingsPanel, 32, 32, 5, settings);
         setVisible(true);
+    }
+
+    public static SettingsUI getInstance() {
+        if (instance == null) {
+            synchronized (SettingsUI.class) {
+                if (instance == null)
+                    instance = new SettingsUI();
+            }
+        }
+        return instance;
     }
 
 }

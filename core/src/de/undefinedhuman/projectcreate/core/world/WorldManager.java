@@ -65,7 +65,7 @@ public class WorldManager {
     public void placeBlock(byte worldLayer) {
         if (!canPlace) return;
         int id = Selector.instance.getSelectedItemID();
-        Block block = (Block) ItemManager.instance.getItem(id);
+        Block block = (Block) ItemManager.getInstance().getItem(id);
         Vector2i blockPos = Tools.convertToBlockPos(Tools.getWorldPos(CameraManager.gameCamera, Mouse.getMouseCoords()));
 
         if(id == 0 || !isInRange(blockPos, Tools.convertToBlockPos(GameManager.instance.player.getCenterPosition()), Variables.BLOCK_PLACEMENT_RANGE)) return;
@@ -75,7 +75,7 @@ public class WorldManager {
 
     private void placeBlockInMainLayer(int x, int y, Block block) {
         if(World.instance.getBlock(x, y, World.MAIN_LAYER) != 0) return;
-        for (Entity entity : EntityManager.instance.getEntitiesWithCollision(new Vector4(x, y, x + Variables.BLOCK_SIZE, y + Variables.BLOCK_SIZE))) {
+        for (Entity entity : EntityManager.getInstance().getEntitiesWithCollision(new Vector4(x, y, x + Variables.BLOCK_SIZE, y + Variables.BLOCK_SIZE))) {
             if (!CollisionManager.blockCanBePlaced(entity, x, y)) return;
         }
         if(World.instance.getBlock(x, y, World.BACK_LAYER) != 0 || (!block.needBack.getBoolean() && isBlockInRange(x, y, World.MAIN_LAYER))) placeBlock(x, y, World.MAIN_LAYER, block.id.getByte(), true);
@@ -102,7 +102,7 @@ public class WorldManager {
 
         Pickaxe pickaxe = (Pickaxe) Selector.instance.getSelectedItem();
         Vector2i blockPos = Tools.convertToBlockPos(Tools.getWorldPos(CameraManager.gameCamera, Mouse.getMouseCoords())), playerCenter = Tools.convertToBlockPos(new Vector2().add(GameManager.instance.player.getPosition()).add(GameManager.instance.player.getCenter()));
-        Block currentBlock = (Block) ItemManager.instance.getItem(World.instance.getBlock(blockPos.x, blockPos.y, World.MAIN_LAYER));
+        Block currentBlock = (Block) ItemManager.getInstance().getItem(World.instance.getBlock(blockPos.x, blockPos.y, World.MAIN_LAYER));
 
         if (currentBlock.id.getInt() == 0 || !isInRange(blockPos, playerCenter, pickaxe.range.getInt()) || currentBlock.durability.getInt() == -1)
             return;
@@ -187,7 +187,7 @@ public class WorldManager {
     }
 
     public boolean isTransparent(byte blockID) {
-        return blockID == 0 || !((Block) ItemManager.instance.getItem(blockID)).isFull.getBoolean();
+        return blockID == 0 || !((Block) ItemManager.getInstance().getItem(blockID)).isFull.getBoolean();
     }
 
     private boolean isInRange(Vector2i position1, Vector2i position2, int range) {
@@ -195,7 +195,7 @@ public class WorldManager {
     }
 
     private Block getBlock(int x, int y, byte worldLayer) {
-        return (Block) ItemManager.instance.getItem(World.instance.getBlock(x, y, worldLayer));
+        return (Block) ItemManager.getInstance().getItem(World.instance.getBlock(x, y, worldLayer));
     }
 
     public boolean isBlockInRange(int x, int y, byte worldLayer) {
@@ -203,7 +203,7 @@ public class WorldManager {
     }
 
     private boolean hasCollision(int x, int y, byte worldLayer) {
-        return ((Block) ItemManager.instance.getItem(World.instance.getBlock(x, y, worldLayer))).hasCollision.getBoolean();
+        return ((Block) ItemManager.getInstance().getItem(World.instance.getBlock(x, y, worldLayer))).hasCollision.getBoolean();
     }
 
 }

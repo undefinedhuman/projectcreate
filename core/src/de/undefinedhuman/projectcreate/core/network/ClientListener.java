@@ -50,12 +50,12 @@ public class ClientListener extends Listener {
         if (o instanceof AddPlayerPacket) {
 
             AddPlayerPacket packet = (AddPlayerPacket) o;
-            Entity player = BlueprintManager.instance.getBlueprint(0).createInstance();
+            Entity player = BlueprintManager.getInstance().getBlueprint(0).createInstance();
             player.mainPlayer = true;
             // player.receive(packet.playerInfo);
             player.setWorldID(packet.worldID);
             GameManager.instance.player = player;
-            EntityManager.instance.addEntity(packet.worldID, player);
+            EntityManager.getInstance().addEntity(packet.worldID, player);
 
             ClientManager.instance.connected = true;
 
@@ -68,16 +68,16 @@ public class ClientListener extends Listener {
             if (o instanceof AddEntityPacket) {
 
                 AddEntityPacket packet = (AddEntityPacket) o;
-                Entity entity = BlueprintManager.instance.getBlueprint(packet.blueprintID).createInstance();
+                Entity entity = BlueprintManager.getInstance().getBlueprint(packet.blueprintID).createInstance();
                 // entity.receive(packet.entityInfo);
                 entity.setWorldID(packet.worldID);
-                EntityManager.instance.addEntity(packet.worldID, entity);
+                EntityManager.getInstance().addEntity(packet.worldID, entity);
 
             }
 
             if (o instanceof RemoveEntityPacket) {
                 RemoveEntityPacket packet = (RemoveEntityPacket) o;
-                EntityManager.instance.removeEntity(packet.worldID);
+                EntityManager.getInstance().removeEntity(packet.worldID);
             }
 
             if (o instanceof ServerClosedPacket) {
@@ -92,7 +92,7 @@ public class ClientListener extends Listener {
 
                 WorldPacket packet = (WorldPacket) o;
                 World.instance = new World(packet.worldName, 50, packet.width, packet.height, 0);
-                EntityManager.instance.init();
+                EntityManager.getInstance().init();
 //                LoadingScreen.instance.worldLoaded = true;
 
             }
@@ -107,7 +107,7 @@ public class ClientListener extends Listener {
             if (o instanceof JumpPacket) {
 
                 JumpPacket packet = (JumpPacket) o;
-                ((MovementComponent) EntityManager.instance.getEntity(packet.id).getComponent(ComponentType.MOVEMENT)).setJump();
+                ((MovementComponent) EntityManager.getInstance().getEntity(packet.id).getComponent(ComponentType.MOVEMENT)).setJump();
 
             }
 

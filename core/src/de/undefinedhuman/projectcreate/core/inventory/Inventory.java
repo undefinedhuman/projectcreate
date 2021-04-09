@@ -79,7 +79,7 @@ public class Inventory extends Gui implements InvTarget {
     }
 
     public boolean isFull(int id, int amount) {
-        int currentAmount = 0, maxAmount = ItemManager.instance.getItem(id).maxAmount.getInt();
+        int currentAmount = 0, maxAmount = ItemManager.getInstance().getItem(id).maxAmount.getInt();
 
         for (int i = row - 1; i >= 0; i--)
             for (int j = 0; j < col; j++) {
@@ -100,7 +100,7 @@ public class Inventory extends Gui implements InvTarget {
             for (int j = 0; j < col; j++) {
                 InvSlot slot = inventory[i][j];
                 InvItem currentItem = slot.getItem();
-                if(currentItem.getAmount() == -1 || (currentItem.getID() == id && currentItem.getAmount() < ItemManager.instance.getItem(id).maxAmount.getInt())) return slot;
+                if(currentItem.getAmount() == -1 || (currentItem.getID() == id && currentItem.getAmount() < ItemManager.getInstance().getItem(id).maxAmount.getInt())) return slot;
             }
         return null;
     }

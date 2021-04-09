@@ -4,16 +4,16 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.core.gui.Gui;
-import de.undefinedhuman.projectcreate.core.inventory.slot.InvSlot;
-import de.undefinedhuman.projectcreate.engine.items.ItemType;
-import de.undefinedhuman.projectcreate.engine.resources.font.Font;
 import de.undefinedhuman.projectcreate.core.gui.texture.GuiTemplate;
 import de.undefinedhuman.projectcreate.core.inventory.InvTarget;
+import de.undefinedhuman.projectcreate.core.inventory.slot.InvSlot;
 import de.undefinedhuman.projectcreate.core.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.items.ItemType;
+import de.undefinedhuman.projectcreate.engine.resources.font.Font;
 
 public class EquipScreen extends Gui implements InvTarget {
 
-    public static EquipScreen instance;
+    private static volatile EquipScreen instance;
 
     private EquipSlot[] slots = new EquipSlot[4];
     private Vector2[] offset = new Vector2[] {new Vector2(0, 100), new Vector2(0, 68), new Vector2(-26, 40), new Vector2(0, -4)};
@@ -22,7 +22,6 @@ public class EquipScreen extends Gui implements InvTarget {
 
     public EquipScreen() {
         super(GuiTemplate.SMALL_PANEL);
-        if(instance == null) instance = this;
         setSize(Tools.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 5), Tools.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 10));
         setTitle("Character", Font.Title, Color.WHITE);
 
@@ -47,6 +46,16 @@ public class EquipScreen extends Gui implements InvTarget {
         if (!visible) return null;
         for (EquipSlot equipSlot : slots) if (equipSlot.isClicked(camera)) return equipSlot;
         return null;
+    }
+
+    public static EquipScreen getInstance() {
+        if (instance == null) {
+            synchronized (EquipScreen.class) {
+                if (instance == null)
+                    instance = new EquipScreen();
+            }
+        }
+        return instance;
     }
 
 }

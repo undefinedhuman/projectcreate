@@ -9,12 +9,6 @@ import de.undefinedhuman.projectcreate.core.entity.ecs.System;
 
 public class AnimationSystem extends System {
 
-    public static AnimationSystem instance;
-
-    public AnimationSystem() {
-        if (instance == null) instance = this;
-    }
-
     @Override
     public void update(float delta, Entity entity) {
         SpriteComponent spriteComponent;

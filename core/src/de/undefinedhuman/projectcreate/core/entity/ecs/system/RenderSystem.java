@@ -12,12 +12,6 @@ import de.undefinedhuman.projectcreate.core.entity.ecs.System;
 
 public class RenderSystem extends System {
 
-    public static RenderSystem instance;
-
-    public RenderSystem() {
-        if (instance == null) instance = this;
-    }
-
     @Override
     public void init(Entity entity) {
         SpriteComponent spriteComponent;

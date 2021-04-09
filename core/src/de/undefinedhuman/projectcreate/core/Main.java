@@ -43,7 +43,7 @@ public class Main extends Game {
     public Main() {
         instance = this;
         managerList = new ManagerList();
-        managerList.addManager(new Log(), new ConfigManager(new GameConfig()), new LanguageManager(), new TextureManager(), new SoundManager(), new FontManager(), new Inputs(), new GuiManager(), new GuiTextureManager(), new BlueprintManager(), new ItemManager());
+        managerList.addManager(new Log(), ConfigManager.getInstance().setConfigs(GameConfig.getInstance()), new LanguageManager(), new TextureManager(), new SoundManager(), new FontManager(), new Inputs(), new GuiManager(), new GuiTextureManager(), BlueprintManager.getInstance(), ItemManager.getInstance());
         timer = new Timer(1, true, () -> Window.instance.update());
     }
 
@@ -57,7 +57,7 @@ public class Main extends Game {
 
     @Override
     public void resize(int width, int height) {
-        int guiSetting = GameConfig.instance.guiScale.getInt();
+        int guiSetting = GameConfig.getInstance().guiScale.getInt();
         guiScale = (int) Math.max((guiSetting == 5 ? Math.ceil(width/640f) : guiSetting) / 2, 1);
         managerList.resize(width, height);
         super.resize(width, height);
@@ -103,12 +103,12 @@ public class Main extends Game {
     }
 
     private void initScreens() {
-        EntityManager.instance = new EntityManager();
+        EntityManager.getInstance();
 
         TestScreen.instance = new TestScreen();
         GameScreen.instance = new GameScreen();
 
-        EquipManager.instance = new EquipManager();
+        EquipManager.getInstance();
         InventoryManager.instance = new InventoryManager();
 
         WorldManager.instance = new WorldManager();

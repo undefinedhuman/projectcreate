@@ -1,6 +1,7 @@
 package de.undefinedhuman.projectcreate.core.entity.ecs.blueprint;
 
 import com.badlogic.gdx.Files;
+import de.undefinedhuman.projectcreate.core.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
 import de.undefinedhuman.projectcreate.engine.file.FileReader;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
@@ -9,19 +10,17 @@ import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
-import de.undefinedhuman.projectcreate.core.utils.Tools;
 
 import java.util.Arrays;
 import java.util.HashMap;
 
 public class BlueprintManager extends Manager {
 
-    public static BlueprintManager instance;
+    private static volatile BlueprintManager instance;
 
     private HashMap<Integer, Blueprint> blueprints;
 
-    public BlueprintManager() {
-        if (instance == null) instance = this;
+    private BlueprintManager() {
         blueprints = new HashMap<>();
     }
 
@@ -87,6 +86,16 @@ public class BlueprintManager extends Manager {
 
         reader.close();
         return blueprint;
+    }
+
+    public static BlueprintManager getInstance() {
+        if (instance == null) {
+            synchronized (BlueprintManager.class) {
+                if (instance == null)
+                    instance = new BlueprintManager();
+            }
+        }
+        return instance;
     }
 
 }

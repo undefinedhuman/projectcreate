@@ -55,7 +55,7 @@ public class PacketUtils {
 
     public static void handleComponentPacket(ComponentPacket packet) {
 
-        Entity entity = EntityManager.instance.getEntity(packet.worldID);
+        Entity entity = EntityManager.getInstance().getEntity(packet.worldID);
         if (entity != null) {
             LineSplitter s = new LineSplitter(packet.data, true, Variables.SEPARATOR);
             int size = s.getNextInt();
@@ -67,10 +67,10 @@ public class PacketUtils {
 
     public static void handleEquipComponent(EquipPacket packet) {
 
-        Entity entity = EntityManager.instance.getEntity(packet.entityID);
+        Entity entity = EntityManager.getInstance().getEntity(packet.entityID);
         if (entity != null) {
-            if (packet.equip) EquipManager.instance.equipItem(entity, packet.equipedItemID, packet.armor);
-            else EquipManager.instance.unEquipItem(entity, packet.equipedItemID, packet.armor);
+            if (packet.equip) EquipManager.getInstance().equipItem(entity, packet.equipedItemID, packet.armor);
+            else EquipManager.getInstance().unEquipItem(entity, packet.equipedItemID, packet.armor);
         }
 
     }
