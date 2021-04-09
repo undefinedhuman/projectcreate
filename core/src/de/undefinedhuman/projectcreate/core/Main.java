@@ -41,6 +41,8 @@ public class Main extends Game {
     private Timer timer;
 
     public Main() {
+        // TEST
+
         instance = this;
         managerList = new ManagerList();
         managerList.addManager(new Log(), ConfigManager.getInstance().setConfigs(GameConfig.getInstance()), new LanguageManager(), new TextureManager(), new SoundManager(), new FontManager(), new Inputs(), new GuiManager(), new GuiTextureManager(), BlueprintManager.getInstance(), ItemManager.getInstance());
