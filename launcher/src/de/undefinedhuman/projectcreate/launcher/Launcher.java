@@ -33,7 +33,7 @@ public class Launcher extends JFrame {
 
     private ManagerList managerList = new ManagerList();
 
-    public Launcher() {
+    private Launcher() {
         new HeadlessApplication(new HeadlessApplicationListener());
         setUIComponentProperties();
         FlatDarculaLaf.install();
