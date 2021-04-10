@@ -16,7 +16,7 @@
 5. [License](#license)
 
 ## Installation
-> The project requires Java Version 8 and Gradle Version 6.8.3 (wrapper already included)
+> The project requires Java Version 8 and Gradle Version 7.0 (wrapper already included)
 ```sh
 ./gradlew build
 ```
