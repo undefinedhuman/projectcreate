@@ -37,6 +37,7 @@ pipeline {
             }
             post {
                 always {
+                    echo branch
                     updateGitlabCommitStatus name: 'Quality Gate', state: STATUS_MAP[currentBuild.currentResult]
                 }
             }
