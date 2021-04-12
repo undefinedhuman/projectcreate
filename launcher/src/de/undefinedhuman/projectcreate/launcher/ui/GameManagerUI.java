@@ -46,8 +46,8 @@ public class GameManagerUI extends JPanel {
             selectedIndex = 0;
             for(int i = 0; i < versionSelectionModel.getSize(); i++) {
                 Version currentVersion = versionSelectionModel.getElementAt(i);
-                if(InstallationUtils.isVersionDownloaded(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.getInstance().gameInstallationPath.getFile(), currentVersion)
-                        && currentVersion.compareTo(versionSelectionModel.getElementAt(selectedIndex)) > 0)
+                if((InstallationUtils.isVersionDownloaded(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.getInstance().gameInstallationPath.getFile(), currentVersion)
+                        && currentVersion.compareTo(versionSelectionModel.getElementAt(selectedIndex)) > 0))
                     selectedIndex = i;
             }
         }

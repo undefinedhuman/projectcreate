@@ -37,8 +37,8 @@ public interface GameAction {
             }
             LauncherConfig.getInstance().lastPlayedGameVersion.setValue(version.toString());
             if(LauncherConfig.getInstance().closeLauncherAfterGameStart.getBoolean()) {
-                Launcher.instance.setVisible(false);
-                Launcher.instance.dispose();
+                Launcher.getInstance().setVisible(false);
+                Launcher.getInstance().dispose();
             }
         };
     }
