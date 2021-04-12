@@ -37,7 +37,6 @@ pipeline {
             }
             post {
                 always {
-                    echo branch
                     updateGitlabCommitStatus name: 'Quality Gate', state: STATUS_MAP[currentBuild.currentResult]
                 }
             }
@@ -56,7 +55,9 @@ pipeline {
             updateGitlabCommitStatus name: 'Pipeline', state: STATUS_MAP[currentBuild.currentResult]
         }
         failure {
-            echo 'I failed :('
+            mail to: 'alexander.padberg@code.berlin',
+                    subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
+                    body: "Something is wrong with ${env.BUILD_URL}"
         }
     }
 }
