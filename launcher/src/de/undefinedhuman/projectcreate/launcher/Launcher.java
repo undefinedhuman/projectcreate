@@ -44,6 +44,8 @@ public class Launcher extends JFrame {
             }
         }, ConfigManager.getInstance().setConfigs(LauncherConfig.getInstance()), IconManager.getInstance());
 
+        Launcher.instanc.getIO();
+
         setResizable(false);
         setUndecorated(false);
         setSize(1280, 720);
