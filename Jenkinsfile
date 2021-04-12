@@ -54,11 +54,6 @@ pipeline {
         always {
             updateGitlabCommitStatus name: 'Pipeline', state: STATUS_MAP[currentBuild.currentResult]
         }
-        failure {
-            mail to: 'alexander.padberg@code.berlin',
-                    subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
-                    body: "Something is wrong with ${env.BUILD_URL}"
-        }
     }
 }
 
