@@ -1,3 +1,5 @@
+def STATUS_MAP = ['SUCCESS': 'success', 'FAILURE': 'failed', 'UNSTABLE': 'failed', 'ABORTED': 'failed']
+
 pipeline {
     agent any
     stages {
@@ -5,7 +7,12 @@ pipeline {
             steps {
                 updateGitlabCommitStatus name: 'Compile', state: 'pending'
                 gradlew('clean')
-                updateGitlabCommitStatus name: 'Compile', state: 'success'
+                gradlew('compileJava')
+            }
+            post {
+                always {
+                    updateGitlabCommitStatus name: 'Compile', state: STATUS_MAP[currentBuild.currentResult]
+                }
             }
         }
         stage('SonarQube analysis') {
@@ -14,7 +21,11 @@ pipeline {
                 withSonarQubeEnv('SonarQube ProjectCreate') {
                     gradlew("sonarqube")
                 }
-                updateGitlabCommitStatus name: 'SonarQube analysis', state: 'success'
+            }
+            post {
+                always {
+                    updateGitlabCommitStatus name: 'SonarQube analysis', state: STATUS_MAP[currentBuild.currentResult]
+                }
             }
         }
         stage("Quality Gate") {
@@ -23,8 +34,28 @@ pipeline {
                 timeout(time: 1, unit: 'HOURS') {
                     waitForQualityGate abortPipeline: true
                 }
-                updateGitlabCommitStatus name: 'Quality Gate', state: 'success'
             }
+            post {
+                always {
+                    updateGitlabCommitStatus name: 'Quality Gate', state: STATUS_MAP[currentBuild.currentResult]
+                }
+            }
+        }
+        stage('Deploy') {
+            when { branch 'main' }
+            steps {
+                script {
+                    echo 'DEPLOY! WOOHOO!'
+                }
+            }
+        }
+    }
+    post {
+        always {
+            updateGitlabCommitStatus name: 'Pipeline', state: STATUS_MAP[currentBuild.currentResult]
+        }
+        failure {
+            echo 'I failed :('
         }
     }
 }
