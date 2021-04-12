@@ -8,6 +8,20 @@ pipeline {
                 updateGitlabCommitStatus name: 'Compile', state: 'success'
             }
         }
+        stage('SonarQube analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube ProjectCreate') {
+                    gradlew("sonarqube")
+                }
+            }
+        }
+        stage("Quality Gate") {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
     }
 }
 
