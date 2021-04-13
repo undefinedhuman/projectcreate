@@ -5,7 +5,7 @@ pipeline {
     stages {
         stage('Compile') {
             steps {
-                echo ${GIT_BRANCH}
+                echo "${GIT_BRANCH}"
                 updateGitlabCommitStatus name: 'Compile', state: 'pending'
                 gradlew('clean')
                 gradlew('compileJava')
