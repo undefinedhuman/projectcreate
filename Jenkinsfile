@@ -11,7 +11,7 @@ pipeline {
             }
             post {
                 always {
-                    getGitBranchName(GIT_BRANCH)
+                    getGitBranchName("${GIT_BRANCH}")
                     updateGitlabCommitStatus name: 'Compile', state: STATUS_MAP[currentBuild.currentResult]
                 }
             }
@@ -58,8 +58,8 @@ pipeline {
 
 String getGitBranchName(String gitBranch) {
     String[] names = gitBranch.split("origin/")
-    println(names[0])
-    return gitBranch.split("/")
+    echo names.toArrayString()
+    return gitBranch.split("/")[0]
 }
 
 def gradlew(String... args) {
