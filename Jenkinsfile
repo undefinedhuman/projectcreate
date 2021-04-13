@@ -1,3 +1,4 @@
+#!groovy
 def STATUS_MAP = ['SUCCESS': 'success', 'FAILURE': 'failed', 'UNSTABLE': 'failed', 'ABORTED': 'failed']
 
 pipeline {
@@ -15,7 +16,7 @@ pipeline {
                 }
             }
         }
-        stage('SonarQube analysis') {
+        stage('Static Code Analysis') {
             steps {
                 updateGitlabCommitStatus name: 'SonarQube analysis', state: 'pending'
                 withSonarQubeEnv('SonarQube ProjectCreate') {
@@ -41,6 +42,14 @@ pipeline {
             post {
                 always {
                     updateGitlabCommitStatus name: 'Quality Gate', state: STATUS_MAP[currentBuild.currentResult]
+                }
+            }
+        }
+        stage('Staging') {
+            when { (getGitBranchName("${GIT_BRANCH}") == "origin/dev") }
+            steps {
+                script {
+                    echo 'STAGING! WOOHOO!'
                 }
             }
         }
