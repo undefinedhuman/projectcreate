@@ -58,7 +58,7 @@ pipeline {
 
 String getGitBranchName(String gitBranch) {
     String[] names = gitBranch.split("origin/")
-    echo names.toArrayString()
+    echo names
     return gitBranch.split("/")[0]
 }
 
