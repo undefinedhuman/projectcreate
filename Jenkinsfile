@@ -45,7 +45,7 @@ pipeline {
                 }
             }
         }
-        stage('Staging') {
+        stage('Snapshot release') {
             when {
                 expression {
                     GIT_BRANCH == 'origin/dev'

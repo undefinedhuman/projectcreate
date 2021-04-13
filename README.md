@@ -1,7 +1,7 @@
 <div style="text-align:center"><img src="http://playprojectcreate.com/ProjectCreate-Logo.png"  alt="Logo"/></div>
 
 [![Version](https://img.shields.io/badge/version-0.0.0-blue.svg?style=for-the-badge&logo=version)]()
-[![Build Status](https://img.shields.io/badge/build-text-brightgreen?style=for-the-badge&logo=jenkins)](http://jenkins.playprojectcreate.com/job/project-create/)
+[![Build Status](https://img.shields.io/badge/build-success-brightgreen?style=for-the-badge&logo=jenkins)](http://jenkins.playprojectcreate.com/job/project-create/)
 
 > 2D Sandbox Game heavily focused on freedom of gameplay and exploration.
 
