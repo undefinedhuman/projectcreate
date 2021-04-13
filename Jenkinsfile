@@ -46,7 +46,11 @@ pipeline {
             }
         }
         stage('Staging') {
-            when { (getGitBranchName("${GIT_BRANCH}") == "origin/dev") }
+            when {
+                expression {
+                    GIT_BRANCH == 'origin/dev'
+                }
+            }
             steps {
                 script {
                     echo 'STAGING! WOOHOO!'
@@ -54,7 +58,11 @@ pipeline {
             }
         }
         stage('Deploy') {
-            when { branch 'origin/main' }
+            when {
+                expression {
+                    GIT_BRANCH == 'origin/main'
+                }
+            }
             steps {
                 script {
                     echo 'DEPLOY! WOOHOO!'
