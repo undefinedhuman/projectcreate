@@ -5,7 +5,6 @@ pipeline {
     stages {
         stage('Compile') {
             steps {
-                echo "${GIT_BRANCH}"
                 updateGitlabCommitStatus name: 'Compile', state: 'pending'
                 gradlew('clean')
                 gradlew('compileJava')
@@ -20,7 +19,10 @@ pipeline {
             steps {
                 updateGitlabCommitStatus name: 'SonarQube analysis', state: 'pending'
                 withSonarQubeEnv('SonarQube ProjectCreate') {
-                    gradlew("sonarqube", "-Dsonar.analysis.buildNumber=${currentBuild.number}")
+                    gradlew("sonarqube",
+                            "-Dsonar.analysis.buildNumber=${currentBuild.number}",
+                            "-Dsonar.projectKey=ProjectName-${GIT_BRANCH}",
+                            "-Dsonar.projectName=ProjectName-${GIT_BRANCH}")
                 }
             }
             post {
@@ -43,7 +45,7 @@ pipeline {
             }
         }
         stage('Deploy') {
-            when { branch 'master' }
+            when { branch 'origin/main' }
             steps {
                 script {
                     echo 'DEPLOY! WOOHOO!'
