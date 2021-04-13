@@ -1,10 +1,7 @@
-<div style="text-align:center"><img src="http://playprojectcreate.com/ProjectCreate-Logo.png" /></div>
-<p>
-  <img alt="Version" src="https://img.shields.io/badge/version-0.0.0-blue.svg?style=for-the-badge" />
-  <a href="https://github.com/undefinedhuman/Eternity/wiki" target="_blank">
-    <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg?style=for-the-badge" />
-  </a>
-</p>
+<div style="text-align:center"><img src="http://playprojectcreate.com/ProjectCreate-Logo.png"  alt="Logo"/></div>
+
+[![Version](https://img.shields.io/badge/version-0.0.0-blue.svg?style=for-the-badge&logo=version)]()
+[![Build Status](https://img.shields.io/badge/build-text-brightgreen?style=for-the-badge&logo=jenkins)](http://jenkins.playprojectcreate.com/job/project-create/)
 
 > 2D Sandbox Game heavily focused on freedom of gameplay and exploration.
 
