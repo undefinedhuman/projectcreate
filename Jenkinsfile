@@ -11,7 +11,6 @@ pipeline {
             }
             post {
                 always {
-                    echo getGitBranchName("${GIT_BRANCH}")
                     updateGitlabCommitStatus name: 'Compile', state: STATUS_MAP[currentBuild.currentResult]
                 }
             }
@@ -22,8 +21,8 @@ pipeline {
                 withSonarQubeEnv('SonarQube ProjectCreate') {
                     gradlew("sonarqube",
                             "-Dsonar.analysis.buildNumber=${currentBuild.number}",
-                            "-Dsonar.projectKey=project-create-${GIT_BRANCH}",
-                            "-Dsonar.projectName=ProjectCreate-${GIT_BRANCH}")
+                            "-Dsonar.projectKey=project-create-${getGitBranchName("${GIT_BRANCH}")}",
+                            "-Dsonar.projectName=ProjectCreate-${getGitBranchName("${GIT_BRANCH}")}")
                 }
             }
             post {
@@ -59,8 +58,8 @@ pipeline {
 static String getGitBranchName(String gitBranch) {
     def names = gitBranch.split("/", 2)
     if(names.size() > 1)
-        return "project-create-${names[1].replaceAll("/", "-")}"
-    return "project-create"
+        return "${names[1].replaceAll("/", "-")}"
+    return ""
 }
 
 def gradlew(String... args) {
