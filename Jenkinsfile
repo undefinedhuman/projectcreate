@@ -57,7 +57,7 @@ pipeline {
 }
 
 static String getGitBranchName(String gitBranch) {
-    def names = gitBranch.split("/", 1)
+    def names = gitBranch.split("/", 2)
     if(names.size() > 1)
         return "project-create-${names[1].replaceAll("/", "-")}"
     return "project-create"
