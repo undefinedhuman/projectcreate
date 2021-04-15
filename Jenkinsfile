@@ -51,7 +51,7 @@ pipeline {
                             "-Dsonar.analysis.buildNumber=${currentBuild.number}",
                             "-Dsonar.projectKey=project-create",
                             "-Dsonar.projectName=ProjectCreate",
-                            "-Dsonar.coverage.jacoco.xmlReportPaths=**/reports/jacoco.xml")
+                            "-Dsonar.jacoco.reportPaths=**/reports/jacoco.xml")
                 }
             }
             post {
