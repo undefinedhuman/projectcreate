@@ -25,7 +25,8 @@ pipeline {
             steps {
                 updateGitlabCommitStatus name: 'Unit Tests', state: STATUS_MAP[currentBuild.currentResult]
                 gradlew("test")
-                stash includes: '**/unitReports/*.xml', name: 'unitTestReports'
+                if(fileExists('**/unitReports/*.xml'))
+                    stash includes: '**/unitReports/*.xml', name: 'unitTestReports'
             }
             post {
                 always {
@@ -37,7 +38,8 @@ pipeline {
             steps {
                 updateGitlabCommitStatus name: 'Integration Tests', state: STATUS_MAP[currentBuild.currentResult]
                 gradlew("integrationTest")
-                stash includes: '**/integrationReports/*.xml', name: 'integrationTestReports'
+                if(fileExists('**/integrationReports/*.xml'))
+                    stash includes: '**/integrationReports/*.xml', name: 'integrationTestReports'
             }
             post {
                 always {
