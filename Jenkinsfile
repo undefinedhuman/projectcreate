@@ -50,12 +50,14 @@ pipeline {
                 always {
                     junit allowEmptyResults: true, testResults: '**/test-results/**/*.xml'
                     gradlew("combineJaCoCoReports")
+                    stash includes: '**/combineJaCoCoReports/combineJaCoCoReports.xml', name: 'jacocoReports'
                 }
             }
         }
         stage('Static Code Analysis') {
             steps {
                 updateGitlabCommitStatus name: 'SonarQube analysis', state: 'pending'
+                unstash 'jacocoReports'
                 withSonarQubeEnv('SonarQube ProjectCreate') {
                     gradlew("sonarqube",
                             "-Dsonar.analysis.buildNumber=${currentBuild.number}",
