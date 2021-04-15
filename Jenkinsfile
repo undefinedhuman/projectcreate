@@ -27,7 +27,7 @@ pipeline {
                     steps {
                         updateGitlabCommitStatus name: 'Unit Tests', state: STATUS_MAP[currentBuild.currentResult]
                         gradlew("test")
-                        stash includes: '**/test-results/**/*.xml', name: 'unitTestReports'
+                        stash includes: '**/unitReports/*.xml', name: 'unitTestReports'
                     }
                     post {
                         always {
@@ -39,7 +39,7 @@ pipeline {
                     steps {
                         updateGitlabCommitStatus name: 'Integration Tests', state: STATUS_MAP[currentBuild.currentResult]
                         gradlew("integrationTest")
-                        stash includes: '**/test-results/**/*.xml', name: 'integrationTestReports'
+                        stash includes: '**/integrationReports/*.xml', name: 'integrationTestReports'
                     }
                     post {
                         always {
@@ -48,24 +48,32 @@ pipeline {
                     }
                 }
             }
+        }
+        stage('Reporting') {
+            steps {
+                unstash 'unitTestReports'
+                unstash 'integrationTestReports'
+                gradlew("combineJaCoCoReports")
+                stash includes: '**/reports/jacoco.xml', name: 'jacocoReports'
+            }
+
             post {
                 always {
-                    junit allowEmptyResults: true, testResults: '**/test-results/**/*.xml'
-                    gradlew("combineJaCoCoReports")
-                    stash includes: '**/combineJaCoCoReports/combineJaCoCoReports.xml', name: 'jacocoReports'
+                    junit allowEmptyResults: true, '**/TEST-*.xml'
                 }
             }
         }
+
         stage('Static Code Analysis') {
             steps {
                 updateGitlabCommitStatus name: 'SonarQube analysis', state: 'pending'
-                echo "${fileExists('**/combineJaCoCoReports/combineJaCoCoReports.xml')}"
+                unstash 'jacocoReports'
                 withSonarQubeEnv('SonarQube ProjectCreate') {
                     gradlew("sonarqube",
                             "-Dsonar.analysis.buildNumber=${currentBuild.number}",
                             "-Dsonar.projectKey=project-create",
                             "-Dsonar.projectName=ProjectCreate",
-                            "-Dsonar.coverage.jacoco.xmlReportPaths=**/combineJaCoCoReports/combineJaCoCoReports.xml")
+                            "-Dsonar.coverage.jacoco.xmlReportPaths=**/reports/jacoco.xml")
                 }
             }
             post {
