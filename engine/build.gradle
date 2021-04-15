@@ -21,7 +21,7 @@ test {
 
 task integrationTest(type: Test) {
     useJUnitPlatform {
-        includeTags 'Integration'
+        includeTags('Integration')
     }
     workingDir = new File("../assets/")
 

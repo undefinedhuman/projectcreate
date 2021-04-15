@@ -48,7 +48,6 @@ pipeline {
             }
             post {
                 always {
-                    echo "HELLO"
                     junit allowEmptyResults: true, testResults: '**/test-results/**/*.xml'
                     gradlew("combineJaCoCoReports")
                 }
@@ -61,7 +60,8 @@ pipeline {
                     gradlew("sonarqube",
                             "-Dsonar.analysis.buildNumber=${currentBuild.number}",
                             "-Dsonar.projectKey=project-create",
-                            "-Dsonar.projectName=ProjectCreate")
+                            "-Dsonar.projectName=ProjectCreate",
+                            "-Dsonar.coverage.jacoco.xmlReportPaths=**/combineJaCoCoReports/combineJaCoCoReports.xml")
                 }
             }
             post {
