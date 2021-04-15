@@ -11,6 +11,7 @@ pipeline {
     stages {
         stage('Compile') {
             steps {
+                echo BRANCH_NAME
                 updateGitlabCommitStatus name: 'Compile', state: 'pending'
                 gradlew('clean')
                 gradlew('compileJava')
@@ -21,15 +22,36 @@ pipeline {
                 }
             }
         }
-        stage('Unit Tests') {
-            steps {
-                updateGitlabCommitStatus name: 'Unit Tests', state: STATUS_MAP[currentBuild.currentResult]
-                gradlew("test")
+        stage('Run Tests') {
+            parallel {
+                stage('Unit Tests') {
+                    steps {
+                        updateGitlabCommitStatus name: 'Unit Tests', state: STATUS_MAP[currentBuild.currentResult]
+                        gradlew("test")
+                    }
+                    post {
+                        always {
+                            junit allowEmptyResults: true, testResults: '**/test-results/**/*.xml'
+                            updateGitlabCommitStatus name: 'Unit Tests', state: STATUS_MAP[currentBuild.currentResult]
+                        }
+                    }
+                }
+                stage('Integration Tests') {
+                    steps {
+                        updateGitlabCommitStatus name: 'Integration Tests', state: STATUS_MAP[currentBuild.currentResult]
+                        gradlew("integrationTest")
+                    }
+                    post {
+                        always {
+                            junit allowEmptyResults: true, testResults: '**/test-results/**/*.xml'
+                            updateGitlabCommitStatus name: 'Integration Tests', state: STATUS_MAP[currentBuild.currentResult]
+                        }
+                    }
+                }
             }
             post {
                 always {
-                    junit allowEmptyResults: true, testResults: '**/test-results/**/*.xml'
-                    updateGitlabCommitStatus name: 'Unit Tests', state: STATUS_MAP[currentBuild.currentResult]
+                    gradlew("combineJaCoCoReports")
                 }
             }
         }
