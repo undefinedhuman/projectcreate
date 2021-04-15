@@ -58,7 +58,7 @@ pipeline {
             steps {
                 updateGitlabCommitStatus name: 'SonarQube analysis', state: 'pending'
                 unstash 'jacocoReports'
-                echo fileExists('**/combineJaCoCoReports/combineJaCoCoReports.xml')
+                echo fileExists '**/combineJaCoCoReports/combineJaCoCoReports.xml'
                 withSonarQubeEnv('SonarQube ProjectCreate') {
                     gradlew("sonarqube",
                             "-Dsonar.analysis.buildNumber=${currentBuild.number}",
