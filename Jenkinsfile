@@ -3,6 +3,11 @@ def STATUS_MAP = ['SUCCESS': 'success', 'FAILURE': 'failed', 'UNSTABLE': 'failed
 
 pipeline {
     agent any
+
+    options {
+        gitLabConnection('Gitlab ProjectCreate')
+    }
+
     stages {
         stage('Compile') {
             steps {
