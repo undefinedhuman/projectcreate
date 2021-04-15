@@ -20,10 +20,10 @@ pipeline {
             steps {
                 updateGitlabCommitStatus name: 'Unit Tests', state: STATUS_MAP[currentBuild.currentResult]
                 gradlew("test")
+                junit '**/build/test-reports/**/TEST-*.xml'
             }
             post {
                 always {
-                    junit '**/build/test-reports/**/TEST-*.xml'
                     updateGitlabCommitStatus name: 'Unit Tests', state: STATUS_MAP[currentBuild.currentResult]
                 }
             }
