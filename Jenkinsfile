@@ -16,14 +16,26 @@ pipeline {
                 }
             }
         }
+        stage('Unit Tests') {
+            steps {
+                updateGitlabCommitStatus name: 'Unit Tests', state: STATUS_MAP[currentBuild.currentResult]
+                gradlew("test")
+            }
+            post {
+                always {
+                    junit '**/build/test-reports/**/TEST-*.xml'
+                    updateGitlabCommitStatus name: 'Unit Tests', state: STATUS_MAP[currentBuild.currentResult]
+                }
+            }
+        }
         stage('Static Code Analysis') {
             steps {
                 updateGitlabCommitStatus name: 'SonarQube analysis', state: 'pending'
                 withSonarQubeEnv('SonarQube ProjectCreate') {
                     gradlew("sonarqube",
                             "-Dsonar.analysis.buildNumber=${currentBuild.number}",
-                            "-Dsonar.projectKey=project-create-${getGitBranchName("${GIT_BRANCH}")}",
-                            "-Dsonar.projectName=ProjectCreate-${getGitBranchName("${GIT_BRANCH}")}")
+                            "-Dsonar.projectKey=project-create",
+                            "-Dsonar.projectName=Project Create")
                 }
             }
             post {
@@ -35,8 +47,14 @@ pipeline {
         stage("Quality Gate") {
             steps {
                 updateGitlabCommitStatus name: 'Quality Gate', state: 'pending'
-                timeout(time: 1, unit: 'HOURS') {
+                timeout(time: 15, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
+                    script {
+                        def qg = waitForQualityGate()
+                        if(qg.status != 'OK') {
+                            error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                        }
+                    }
                 }
             }
             post {
@@ -46,18 +64,14 @@ pipeline {
             }
         }
         stage('Snapshot release') {
-            when {
-                expression {
-                    GIT_BRANCH == 'origin/dev'
-                }
-            }
+            when { expression { GIT_BRANCH == 'origin/dev' } }
             steps {
                 script {
                     echo 'STAGING! WOOHOO!'
                 }
             }
         }
-        stage('Deploy') {
+        stage('') {
             when {
                 expression {
                     GIT_BRANCH == 'origin/main'
@@ -68,6 +82,11 @@ pipeline {
                     echo 'DEPLOY! WOOHOO!'
                 }
             }
+        }
+    }
+    post {
+        always {
+            updateGitlabCommitStatus name: 'Pipeline', state: STATUS_MAP[currentBuild.currentResult]
         }
     }
 }

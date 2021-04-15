@@ -13,7 +13,7 @@
 5. [License](#license)
 
 ## Installation
-> The project requires Java Version 8 and Gradle Version 7.0 (wrapper already included)
+> The project requires Java Version 8 and Gradle Version 6.8.3 (wrapper already included)
 ```sh
 ./gradlew build
 ```
@@ -29,11 +29,11 @@ STAGE.MAJOR.MINOR
 INDEV - ALPHA - BETA - Early Access - Release
 Stage: 0 - 1 - 2 - 3 - 1
 Snapshot: Year Digits (2021 -> 21), w, Week number (04), build number of the week (01) increases with each release
-Snapshots: projectcreate-0.0.0-indev-21w01b1
-Snapshots: projectcreate-0.0.0-alpha-21w02b1
-Production: projectcreate-0.0.0-indev
-Production: projectcreate-0.5.0-alpha
-Production: projectcreate-0.7.0-beta
+Snapshots: projectcreate-indev-21w01b1
+Snapshots: projectcreate-alpha-21w02b1
+Production: projectcreate-indev-0.0.0
+Production: projectcreate-alpha-0.5.0
+Production: projectcreate-beta-0.7.0
 Production: projectcreate-1.0.0-release
 
 ## Documentation
