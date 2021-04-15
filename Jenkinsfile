@@ -27,6 +27,7 @@ pipeline {
                     steps {
                         updateGitlabCommitStatus name: 'Unit Tests', state: STATUS_MAP[currentBuild.currentResult]
                         gradlew("test")
+                        stash includes: '**/test-results/**/*.xml', name: 'unitTestReports'
                     }
                     post {
                         always {
@@ -38,6 +39,7 @@ pipeline {
                     steps {
                         updateGitlabCommitStatus name: 'Integration Tests', state: STATUS_MAP[currentBuild.currentResult]
                         gradlew("integrationTest")
+                        stash includes: '**/test-results/**/*.xml', name: 'integrationTestReports'
                     }
                     post {
                         always {
@@ -49,6 +51,8 @@ pipeline {
             post {
                 always {
                     junit allowEmptyResults: true, testResults: '**/test-results/**/*.xml'
+                    unstash 'unitTestReports'
+                    unstash 'integrationTestReports'
                     gradlew("combineJaCoCoReports")
                     stash includes: '**/combineJaCoCoReports/combineJaCoCoReports.xml', name: 'jacocoReports'
                 }
