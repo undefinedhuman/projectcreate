@@ -51,8 +51,6 @@ pipeline {
             post {
                 always {
                     junit allowEmptyResults: true, testResults: '**/test-results/**/*.xml'
-                    unstash 'unitTestReports'
-                    unstash 'integrationTestReports'
                     gradlew("combineJaCoCoReports")
                     stash includes: '**/combineJaCoCoReports/combineJaCoCoReports.xml', name: 'jacocoReports'
                 }
@@ -61,7 +59,6 @@ pipeline {
         stage('Static Code Analysis') {
             steps {
                 updateGitlabCommitStatus name: 'SonarQube analysis', state: 'pending'
-                unstash 'jacocoReports'
                 echo "${fileExists('**/combineJaCoCoReports/combineJaCoCoReports.xml')}"
                 withSonarQubeEnv('SonarQube ProjectCreate') {
                     gradlew("sonarqube",
