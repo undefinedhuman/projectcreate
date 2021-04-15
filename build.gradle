@@ -1,15 +1,3 @@
-buildscript {
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        maven { url "https://plugins.gradle.org/m2/" }
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        jcenter()
-        google()
-    }
-    dependencies {}
-}
-
 plugins {
     id "org.sonarqube" version "3.0"
 }
@@ -25,7 +13,6 @@ version = '5.1.1'
 task setVersion {
     group = 'Versioning'
     description = "Sets the version to the new number specified with -PnewVersion=\'x.x.x\'"
-    println version
     doLast {
         if (project.hasProperty('newVersion')) {
             println 'Set Project to new Version ' + newVersion
@@ -57,67 +44,70 @@ allprojects {
 }
 
 subprojects {
-    apply plugin: "java-library"
+    apply plugin: "java"
 }
 
 project(":desktop") {
     dependencies {
-        implementation project(":core")
+        compile project(":core")
 
-        implementation "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-        implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-        implementation group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
+        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+        compile group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
     }
 }
 
 project(":core") {
     dependencies {
-        implementation project(":engine")
+        compile project(":engine")
 
-        implementation "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-        implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
-        implementation group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
+        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        compile group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
 
-        testImplementation 'junit:junit:4.12'
+        testImplementation("org.assertj:assertj-core:3.19.0")
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
     }
 }
 
 project(":server") {
     dependencies {
-        implementation project(":engine")
+        compile project(":engine")
 
-        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
-        implementation group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        compile group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
     }
 }
 
 project(":engine") {
     dependencies {
-        implementation "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-        implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
-        implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-        implementation group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
-        implementation group: 'com.github.kerner1000', name: 'javapng', version: '2.1.2'
+        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+        compile group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
+        compile group: 'com.github.kerner1000', name: 'javapng', version: '2.1.2'
 
-        testImplementation(platform('org.junit:junit-bom:5.7.1'))
-        testImplementation('org.junit.jupiter:junit-jupiter')
+        testImplementation("org.assertj:assertj-core:3.19.0")
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
     }
 }
 
 project(":editor") {
     dependencies {
-        implementation project(":engine")
+        compile project(":engine")
 
-        implementation "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-        implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
-        implementation 'com.formdev:flatlaf:0.36'
+        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        compile 'com.formdev:flatlaf:0.36'
 
         testImplementation 'junit:junit:4.12'
     }
@@ -125,11 +115,11 @@ project(":editor") {
 
 project(":updater") {
     dependencies {
-        implementation project(":engine")
+        compile project(":engine")
 
-        implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
-        implementation 'org.jsoup:jsoup:1.13.1'
-        implementation 'com.formdev:flatlaf:0.36'
+        compile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        compile 'org.jsoup:jsoup:1.13.1'
+        compile 'com.formdev:flatlaf:0.36'
 
         testImplementation 'junit:junit:4.12'
     }
@@ -137,14 +127,15 @@ project(":updater") {
 
 project(":launcher") {
     dependencies {
-        implementation project(":engine")
-        implementation project(":updater")
+        compile project(":engine")
+        compile project(":updater")
 
-        implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
-        implementation 'com.formdev:flatlaf:0.36'
-        implementation 'com.formdev:svgSalamander:1.1.2.4'
-        implementation 'com.formdev:flatlaf-extras:1.1.1'
+        compile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        compile 'com.formdev:flatlaf:0.36'
+        compile 'com.formdev:svgSalamander:1.1.2.4'
+        compile 'com.formdev:flatlaf-extras:1.1.1'
 
+        testImplementation("org.assertj:assertj-core:3.19.0")
         testImplementation 'junit:junit:4.12'
     }
 }
