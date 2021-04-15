@@ -35,7 +35,7 @@ pipeline {
                     gradlew("sonarqube",
                             "-Dsonar.analysis.buildNumber=${currentBuild.number}",
                             "-Dsonar.projectKey=project-create",
-                            "-Dsonar.projectName=Project Create")
+                            "-Dsonar.projectName=ProjectCreate")
                 }
             }
             post {
