@@ -53,14 +53,9 @@ pipeline {
             steps {
                 unstash 'unitTestReports'
                 unstash 'integrationTestReports'
+                junit allowEmptyResults: true, testResults: '**/TEST-*.xml'
                 gradlew("combineJaCoCoReports")
                 stash includes: '**/reports/jacoco.xml', name: 'jacocoReports'
-            }
-
-            post {
-                always {
-                    junit allowEmptyResults: true, '**/TEST-*.xml'
-                }
             }
         }
 
