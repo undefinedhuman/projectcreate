@@ -20,28 +20,27 @@ pipeline {
             steps {
                 updateGitlabCommitStatus name: 'Unit Tests', state: STATUS_MAP[currentBuild.currentResult]
                 gradlew("test")
-                println(fileExists('engine/build/test-results/test/TEST-de.undefinedhuman.projectcreate.engine.test.utils.ToolsTest.xml'))
-                junit allowEmptyResults: true, testResults: '**/test-results/**/*.xml'
             }
             post {
                 always {
+                    junit allowEmptyResults: true, testResults: '**/test-results/**/*.xml'
                     updateGitlabCommitStatus name: 'Unit Tests', state: STATUS_MAP[currentBuild.currentResult]
                 }
             }
         }
         stage('Static Code Analysis') {
             steps {
-                updateGitlabCommitStatus name: 'SonarQube analysis', state: 'pending'
+                updateGitlabCommitStatus name: 'Static Code Analysis', state: 'pending'
                 withSonarQubeEnv('SonarQube ProjectCreate') {
                     gradlew("sonarqube",
                             "-Dsonar.analysis.buildNumber=${currentBuild.number}",
                             "-Dsonar.projectKey=project-create",
-                            "-Dsonar.projectName=Project Create")
+                            "-Dsonar.projectName=ProjectCreate")
                 }
             }
             post {
                 always {
-                    updateGitlabCommitStatus name: 'SonarQube analysis', state: STATUS_MAP[currentBuild.currentResult]
+                    updateGitlabCommitStatus name: 'Static Code Analysis', state: STATUS_MAP[currentBuild.currentResult]
                 }
             }
         }
@@ -72,12 +71,8 @@ pipeline {
                 }
             }
         }
-        stage('') {
-            when {
-                expression {
-                    GIT_BRANCH == 'origin/main'
-                }
-            }
+        stage('Release') {
+            when { expression { GIT_BRANCH == 'origin/main' } }
             steps {
                 script {
                     echo 'DEPLOY! WOOHOO!'
