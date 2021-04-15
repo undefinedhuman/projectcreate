@@ -89,11 +89,6 @@ pipeline {
             }
         }
     }
-    post {
-        always {
-            updateGitlabCommitStatus name: 'Pipeline', state: STATUS_MAP[currentBuild.currentResult]
-        }
-    }
 }
 
 static String getGitBranchName(String gitBranch) {
