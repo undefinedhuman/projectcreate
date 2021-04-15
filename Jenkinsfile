@@ -20,10 +20,12 @@ pipeline {
             steps {
                 updateGitlabCommitStatus name: 'Unit Tests', state: STATUS_MAP[currentBuild.currentResult]
                 gradlew("test")
+                echo fileExists('engine/build/test-results/test/TEST-de.undefinedhuman.projectcreate.engine.test.utils.ToolsTest.xml')
+                junit allowEmptyResults: true, testResults: '**/test-results/*.xml'
+                junit '**/build/test-reports/**/TEST-*.xml'
             }
             post {
                 always {
-                    junit '**/build/test-reports/**/TEST-*.xml'
                     updateGitlabCommitStatus name: 'Unit Tests', state: STATUS_MAP[currentBuild.currentResult]
                 }
             }
