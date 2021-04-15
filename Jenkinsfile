@@ -21,31 +21,27 @@ pipeline {
                 }
             }
         }
-        stage('Run Tests') {
-            parallel {
-                stage('Unit Tests') {
-                    steps {
-                        updateGitlabCommitStatus name: 'Unit Tests', state: STATUS_MAP[currentBuild.currentResult]
-                        gradlew("test")
-                        stash includes: '**/unitReports/*.xml', name: 'unitTestReports'
-                    }
-                    post {
-                        always {
-                            updateGitlabCommitStatus name: 'Unit Tests', state: STATUS_MAP[currentBuild.currentResult]
-                        }
-                    }
+        stage('Unit Tests') {
+            steps {
+                updateGitlabCommitStatus name: 'Unit Tests', state: STATUS_MAP[currentBuild.currentResult]
+                gradlew("test")
+                stash includes: '**/unitReports/*.xml', name: 'unitTestReports'
+            }
+            post {
+                always {
+                    updateGitlabCommitStatus name: 'Unit Tests', state: STATUS_MAP[currentBuild.currentResult]
                 }
-                stage('Integration Tests') {
-                    steps {
-                        updateGitlabCommitStatus name: 'Integration Tests', state: STATUS_MAP[currentBuild.currentResult]
-                        gradlew("integrationTest")
-                        stash includes: '**/integrationReports/*.xml', name: 'integrationTestReports'
-                    }
-                    post {
-                        always {
-                            updateGitlabCommitStatus name: 'Integration Tests', state: STATUS_MAP[currentBuild.currentResult]
-                        }
-                    }
+            }
+        }
+        stage('Integration Tests') {
+            steps {
+                updateGitlabCommitStatus name: 'Integration Tests', state: STATUS_MAP[currentBuild.currentResult]
+                gradlew("integrationTest")
+                stash includes: '**/integrationReports/*.xml', name: 'integrationTestReports'
+            }
+            post {
+                always {
+                    updateGitlabCommitStatus name: 'Integration Tests', state: STATUS_MAP[currentBuild.currentResult]
                 }
             }
         }
