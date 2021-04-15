@@ -11,7 +11,6 @@ pipeline {
     stages {
         stage('Compile') {
             steps {
-                echo BRANCH_NAME
                 updateGitlabCommitStatus name: 'Compile', state: 'pending'
                 gradlew('clean')
                 gradlew('compileJava')
@@ -31,7 +30,6 @@ pipeline {
                     }
                     post {
                         always {
-                            junit allowEmptyResults: true, testResults: '**/test-results/**/*.xml'
                             updateGitlabCommitStatus name: 'Unit Tests', state: STATUS_MAP[currentBuild.currentResult]
                         }
                     }
@@ -43,7 +41,6 @@ pipeline {
                     }
                     post {
                         always {
-                            junit allowEmptyResults: true, testResults: '**/test-results/**/*.xml'
                             updateGitlabCommitStatus name: 'Integration Tests', state: STATUS_MAP[currentBuild.currentResult]
                         }
                     }
@@ -51,6 +48,8 @@ pipeline {
             }
             post {
                 always {
+                    echo "HELLO"
+                    junit allowEmptyResults: true, testResults: '**/test-results/**/*.xml'
                     gradlew("combineJaCoCoReports")
                 }
             }
