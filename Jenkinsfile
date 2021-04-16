@@ -11,6 +11,7 @@ pipeline {
     stages {
         stage('Compile') {
             steps {
+                echo BRANCH_NAME
                 updateGitlabCommitStatus name: 'Compile', state: 'pending'
                 gradlew('clean')
                 gradlew('compileJava')
