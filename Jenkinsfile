@@ -25,8 +25,9 @@ pipeline {
             steps {
                 updateGitlabCommitStatus name: 'Build', state: 'pending'
                 script {
-                    env.BY = VersionNumber(versionNumberString: '${BUILD_YEAR}')
-                    echo BY
+                    env.BY = VersionNumber(versionNumberString: '${BUILD_YEAR,XX}')
+                    env.BW = VersionNumber(versionNumberString: '${BUILD_WEEK,XX}')
+                    env.BTW = VersionNumber(versionNumberString: '${BUILDS_THIS_WEEK}')
                 }
             }
             post {
@@ -104,7 +105,7 @@ pipeline {
             when { expression { BRANCH_NAME == "dev" } }
             steps {
                 script {
-                    echo "${BUILD_YEAR}w${BUILD_WEEK}"
+                    echo "${env.BY}w${env.BW}b${env.BTW}"
                 }
             }
         }
