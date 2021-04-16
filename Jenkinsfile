@@ -29,7 +29,7 @@ pipeline {
                     env.BW = VersionNumber(versionNumberString: '${BUILD_WEEK,XX}')
                     env.BTW = VersionNumber(versionNumberString: '${BUILDS_THIS_WEEK}')
                 }
-                echo "${env.BY}w${env.BW}b${env.BTW}"
+                echo "${env.BY}w${env.BW}b${env.BTW}.${Calendar.WEEK_OF_YEAR}"
             }
             post {
                 always {
