@@ -41,7 +41,7 @@ public class Main extends Game {
     private Timer timer;
 
     public Main() {
-        // TEST PUSH 2
+        // TEST PUSH 3
 
         instance = this;
         managerList = new ManagerList();
