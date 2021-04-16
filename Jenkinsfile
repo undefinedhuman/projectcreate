@@ -25,7 +25,7 @@ pipeline {
             steps {
                 updateGitlabCommitStatus name: 'Build', state: 'pending'
                 script {
-                    env.BY = VersionNumber(versionNumberString: '${BUILD_DATE_FORMATTED,"yy"}')
+                    env.BY = VersionNumber(versionNumberString: '${BUILD_DATE_FORMATTED,"yy.mm.dd.ww.z"}')
                     env.BW = VersionNumber(versionNumberString: '${BUILD_DATE_FORMATTED,"ww"}')
                     env.BTW = VersionNumber(versionNumberString: '${BUILDS_THIS_WEEK}')
                 }
