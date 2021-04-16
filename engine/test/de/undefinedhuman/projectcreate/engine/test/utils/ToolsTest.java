@@ -28,4 +28,14 @@ class ToolsTest {
         assertThat(Tools.isInRange(3, 0, 2)).isFalse();
     }
 
+    @DisplayName("Clamp")
+    @Test
+    void testClamp() {
+        assertThat(Tools.clamp(-1, 0, 2)).isZero();
+        assertThat(Tools.clamp(3, 0, 2)).isEqualTo(2);
+        assertThat(Tools.clamp(1, 0, 2)).isEqualTo(1);
+        assertThat(Tools.clamp(0, 0, 2)).isZero();
+        assertThat(Tools.clamp(2, 0, 2)).isEqualTo(2);
+    }
+
 }

@@ -13,4 +13,11 @@ class CoreTest {
         Assertions.assertThat(Tools.mix(0, 1f, 1f)).isEqualTo(1f);
     }
 
+    @Test
+    void testCoreTwo() {
+        Assertions.assertThat(Tools.isEqual(2, 2)).isEqualTo(1);
+        Assertions.assertThat(Tools.isEqual(3, 2)).isZero();
+        Assertions.assertThat(Tools.isEqual(4, 2)).isZero();
+    }
+
 }
