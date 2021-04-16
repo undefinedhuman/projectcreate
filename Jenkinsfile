@@ -25,11 +25,11 @@ pipeline {
             steps {
                 updateGitlabCommitStatus name: 'Build', state: 'pending'
                 script {
-                    env.BY = VersionNumber(versionNumberString: '${BUILD_DATE_FORMATTED,"yy.ww"}')
-                    env.BW = VersionNumber(versionNumberString: '${BUILD_WEEK,XX}')
-                    env.BTW = VersionNumber(versionNumberString: '${BUILDS_THIS_WEEK}')
                     def calendar = Calendar.getInstance(Locale.GERMANY)
-                    echo "${env.BY}w${env.BW}b${env.BTW}.${calendar.get(Calendar.WEEK_OF_YEAR)}"
+                    env.BY = new SimpleDateFormat("yy").format(calendar.getTime())
+                    env.BW = calendar.get(Calendar.WEEK_OF_YEAR)
+                    env.BTW = VersionNumber(versionNumberString: '${BUILDS_THIS_WEEK}')
+                    echo "${env.BY}w${env.BW}b${env.BTW}"
                 }
             }
             post {
