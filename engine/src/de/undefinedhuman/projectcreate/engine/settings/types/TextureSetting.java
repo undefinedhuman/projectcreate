@@ -96,7 +96,7 @@ public class TextureSetting extends Setting {
     }
 
     private void loadTexture(String path) {
-        try { texture = new PngImage().read(new FsFile(path, Files.FileType.Internal).file());
+        try { texture = new PngImage().read(new FsFile(path, Files.FileType.Internal).read(), true);
         } catch (IOException ex) { Log.instance.exit(ex.getMessage()); }
         if(texture == null && !path.equals("Unknown.png")) loadTexture("Unknown.png");
     }
