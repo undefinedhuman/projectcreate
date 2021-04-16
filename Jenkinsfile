@@ -87,11 +87,11 @@ pipeline {
                 }
             }
         }
-        stage('Snapshot release') {
+        stage('Deploy snapshot') {
             when { expression { BRANCH_NAME == "dev" } }
             steps {
                 script {
-                    echo 'STAGING! WOOHOO!'
+                    echo "${BUILD_YEAR}w${BUILD_WEEK}"
                 }
             }
         }
