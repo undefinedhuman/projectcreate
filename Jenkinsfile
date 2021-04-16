@@ -88,7 +88,7 @@ pipeline {
             }
         }
         stage('Snapshot release') {
-            when { expression { GIT_BRANCH == 'origin/dev' } }
+            when { expression { BRANCH_NAME == "dev" } }
             steps {
                 script {
                     echo 'STAGING! WOOHOO!'
