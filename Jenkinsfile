@@ -37,8 +37,8 @@ pipeline {
             steps {
                 unstash 'unitTestReports'
                 junit allowEmptyResults: true, testResults: '**/TEST-*.xml'
-                gradlew("combineJaCoCoReports")
-                stash includes: '**/reports/jacoco.xml', name: 'jacocoReports'
+                gradlew("jacocoTestReport")
+                stash includes: '**/jacocoTestReport.xml', name: 'jacocoReports'
             }
         }
 
@@ -51,7 +51,7 @@ pipeline {
                             "-Dsonar.analysis.buildNumber=${currentBuild.number}",
                             "-Dsonar.projectKey=project-create",
                             "-Dsonar.projectName=ProjectCreate",
-                            "-Dsonar.coverage.jacoco.xmlReportPaths=\$(find \"\$(pwd)\" -path '*jacoco.xml' | sed 's/.*/&/' | tr '\\n' ',')")
+                            "-Dsonar.coverage.jacoco.xmlReportPaths=**/jacocoTestReport.xml")
                 }
             }
             post {
