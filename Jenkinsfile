@@ -33,9 +33,22 @@ pipeline {
                 }
             }
         }
+        stage('Integration Tests') {
+            steps {
+                updateGitlabCommitStatus name: 'Integration Tests', state: STATUS_MAP[currentBuild.currentResult]
+                gradlew("test")
+                stash includes: '**/integrationReports/*.xml', name: 'integrationTestReports'
+            }
+            post {
+                always {
+                    updateGitlabCommitStatus name: 'Integration Tests', state: STATUS_MAP[currentBuild.currentResult]
+                }
+            }
+        }
         stage('Reporting') {
             steps {
                 unstash 'unitTestReports'
+                unstash 'integrationTestReports'
                 junit allowEmptyResults: true, testResults: '**/TEST-*.xml'
                 gradlew("jacocoTestReport")
                 stash includes: '**/jacocoTestReport.xml', name: 'jacocoReports'
