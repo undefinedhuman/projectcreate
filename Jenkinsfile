@@ -25,7 +25,7 @@ pipeline {
             steps {
                 updateGitlabCommitStatus name: 'Unit Tests', state: STATUS_MAP[currentBuild.currentResult]
                 gradlew("test")
-                stash includes: '**/unitReports/*.xml', name: 'unitTestReports'
+                stash allowEmpty: true, includes: '**/unitReports/*.xml', name: 'unitTestReports'
             }
             post {
                 always {
@@ -36,8 +36,8 @@ pipeline {
         stage('Integration Tests') {
             steps {
                 updateGitlabCommitStatus name: 'Integration Tests', state: STATUS_MAP[currentBuild.currentResult]
-                gradlew("test")
-                stash includes: '**/integrationReports/*.xml', name: 'integrationTestReports'
+                gradlew("integrationTest")
+                stash allowEmpty: true, includes: '**/integrationReports/*.xml', name: 'integrationTestReports'
             }
             post {
                 always {
