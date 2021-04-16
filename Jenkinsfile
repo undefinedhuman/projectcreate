@@ -11,7 +11,6 @@ pipeline {
     stages {
         stage('Compile') {
             steps {
-                echo BRANCH_NAME
                 updateGitlabCommitStatus name: 'Compile', state: 'pending'
                 gradlew('clean')
                 gradlew('compileJava')
@@ -19,6 +18,20 @@ pipeline {
             post {
                 always {
                     updateGitlabCommitStatus name: 'Compile', state: STATUS_MAP[currentBuild.currentResult]
+                }
+            }
+        }
+        stage('Build') {
+            steps {
+                updateGitlabCommitStatus name: 'Build', state: 'pending'
+                script {
+                    env.BY = VersionNumber(versionNumberString: '${BUILD_YEAR}')
+                    echo BY
+                }
+            }
+            post {
+                always {
+                    updateGitlabCommitStatus name: 'Build', state: STATUS_MAP[currentBuild.currentResult]
                 }
             }
         }
