@@ -17,9 +17,7 @@ public class ResourceManager {
 
     public static Texture loadTexture(String path) {
         Texture texture = null;
-        try {
-            Log.info(Gdx.files.internal(path).exists(), Gdx.files.internal(path).file().getAbsolutePath());
-            texture = new Texture(Gdx.files.internal(path));
+        try { texture = new Texture(Gdx.files.internal(path));
         } catch (Exception ex) {
             Log.error("Error while loading texture: " + path + "\n" + ex.getMessage());
         }
