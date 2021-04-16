@@ -28,7 +28,10 @@ pipeline {
                     env.BY = VersionNumber(versionNumberString: '${BUILD_DATE_FORMATTED,"yy.ww"}')
                     env.BW = VersionNumber(versionNumberString: '${BUILD_WEEK,XX}')
                     env.BTW = VersionNumber(versionNumberString: '${BUILDS_THIS_WEEK}')
-                    def calendar = Calendar.getInstance()
+                    def calendar = Calendar.getInstance(Locale.FRANCE)
+                    echo calendar.firstDayOfWeek
+                    def calendar2 = Calendar.getInstance(Locale.GERMANY)
+                    echo calendar2.firstDayOfWeek
                     echo "${env.BY}w${env.BW}b${env.BTW}.${calendar.get(Calendar.WEEK_OF_YEAR)}"
                 }
             }
