@@ -51,7 +51,7 @@ pipeline {
                             "-Dsonar.analysis.buildNumber=${currentBuild.number}",
                             "-Dsonar.projectKey=project-create",
                             "-Dsonar.projectName=ProjectCreate",
-                            "-Dsonar.jacoco.reportPaths=**/reports/jacoco.xml")
+                            "-Dsonar.coverage.jacoco.xmlReportPaths=\$(find \"\$(pwd)\" -path '*jacoco.xml' | sed 's/.*/&/' | tr '\\n' ',')")
                 }
             }
             post {

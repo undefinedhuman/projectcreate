@@ -1,4 +1,5 @@
 plugins {
+    id 'jacoco'
     id "org.sonarqube" version "3.0"
 }
 
@@ -23,6 +24,8 @@ task setVersion {
 }
 
 allprojects {
+    apply plugin: 'jacoco'
+    apply plugin: "org.sonarqube"
     apply plugin: "idea"
 
     ext {
@@ -108,8 +111,6 @@ project(":editor") {
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile 'com.formdev:flatlaf:0.36'
-
-        testImplementation 'junit:junit:4.12'
     }
 }
 
@@ -120,8 +121,6 @@ project(":updater") {
         compile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
         compile 'org.jsoup:jsoup:1.13.1'
         compile 'com.formdev:flatlaf:0.36'
-
-        testImplementation 'junit:junit:4.12'
     }
 }
 
@@ -134,8 +133,5 @@ project(":launcher") {
         compile 'com.formdev:flatlaf:0.36'
         compile 'com.formdev:svgSalamander:1.1.2.4'
         compile 'com.formdev:flatlaf-extras:1.1.1'
-
-        testImplementation("org.assertj:assertj-core:3.19.0")
-        testImplementation 'junit:junit:4.12'
     }
 }

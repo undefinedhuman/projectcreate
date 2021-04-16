@@ -7,10 +7,34 @@ sourceSets.test.java.srcDirs = ["test/"]
 project.ext.assetsDir = new File("../assets/")
 
 test {
-    useJUnitPlatform()
+    useJUnitPlatform {
+        includeTags('Unit')
+    }
     workingDir = new File("../assets/")
+
+    reports.junitXml.destination = file("$buildDir/unitReports")
 
     testLogging {
         events "passed", "skipped", "failed"
+    }
+}
+
+task integrationTest(type: Test) {
+    useJUnitPlatform {
+        includeTags('Integration')
+    }
+    workingDir = new File("../assets/")
+
+    reports.junitXml.destination = file("$buildDir/integrationReports")
+
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
     }
 }
