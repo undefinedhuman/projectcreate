@@ -107,6 +107,31 @@ pipeline {
             steps {
                 script {
                     echo "${env.BY}w${env.BW}b${env.BTW}"
+                    gradlew(":")
+                    sshPublisher(
+                            publishers: [
+                            sshPublisherDesc(
+                                    configName: 'Jenkins Deploy',
+                                    transfers: [
+                                            sshTransfer(
+                                                    cleanRemote: false,
+                                                    excludes: '',
+                                                    execCommand: 'apt-get update',
+                                                    execTimeout: 120000,
+                                                    flatten: false,
+                                                    makeEmptyDirs: false,
+                                                    noDefaultExcludes: false,
+                                                    patternSeparator: '[, ]+',
+                                                    remoteDirectory: '',
+                                                    remoteDirectorySDF: false,
+                                                    removePrefix: '',
+                                                    sourceFiles: '**/game.jar')
+                                    ],
+                                    usePromotionTimestamp: false,
+                                    useWorkspaceInPromotion: false,
+                                    verbose: false)
+                            ]
+                    )
                 }
             }
         }
