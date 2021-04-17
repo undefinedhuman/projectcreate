@@ -107,7 +107,7 @@ pipeline {
             steps {
                 script {
                     echo "${env.BY}w${env.BW}b${env.BTW}"
-                    gradlew(":")
+                    gradlew(":desktop:dist")
                     sshPublisher(
                             publishers: [
                             sshPublisherDesc(
