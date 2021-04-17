@@ -115,13 +115,14 @@ pipeline {
                             publishers: [
                             sshPublisherDesc(
                                     configName: 'Jenkins Deploy',
+                                    failOnError: false,
                                     transfers: [
                                             sshTransfer(
                                                     remoteDirectory: '/game/',
                                                     remoteDirectorySDF: false,
                                                     removePrefix: 'desktop/build/libs/',
-                                                    sourceFiles: 'desktop/build/libs/game.jar'),
-                                            sshTransfer(execCommand: 'mv /game/game.jar /game/game2.jar')
+                                                    sourceFiles: 'desktop/build/libs/game.jar',
+                                                    execCommand: 'mv /game.jar /game2.jar'),
                                     ],
                                     usePromotionTimestamp: false,
                                     useWorkspaceInPromotion: false,
