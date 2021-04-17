@@ -111,7 +111,7 @@ pipeline {
             steps {
                 script {
                     gradlew(":desktop:dist")
-                    deployFile("desktop/build/libs/", "game.jar", "game/", "${env.SNAPSHOT}")
+                    deployFile("desktop/build/libs/", "game.jar", "game/", "${env.SNAPSHOT}.jar")
                 }
             }
         }
@@ -134,7 +134,7 @@ def deployFile(String sourceDir, String sourceFileName, String destinationDir, S
     def sourceFilePath = "${sourceDir}${sourceFileName}"
     def destinationDuringUploadName = "UPLOAD-${destinationFileName}"
     fileOperations([fileCreateOperation(fileName: "${destinationDuringUploadName}", fileContent: '')])
-    fileOperations([fileRenameOperation(destination: "${destinationDuringUploadName}", source: "${sourceFilePath}")])
+    fileOperations([fileRenameOperation(destination: "${sourceDir}${destinationDuringUploadName}", source: "${sourceFilePath}")])
     sshPublisher(
             publishers: [
                     sshPublisherDesc(
@@ -144,7 +144,7 @@ def deployFile(String sourceDir, String sourceFileName, String destinationDir, S
                                             remoteDirectory: "/${destinationDir}",
                                             remoteDirectorySDF: false,
                                             removePrefix: "${sourceDir}",
-                                            sourceFiles: "${sourceFilePath}",
+                                            sourceFiles: "${sourceDir}${destinationDuringUploadName}",
                                             execCommand: "mv ${destinationDir}/${destinationDuringUploadName} ${destinationDir}/${destinationFileName}"),
                             ],
                             verbose: false)
