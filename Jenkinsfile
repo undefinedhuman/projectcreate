@@ -72,6 +72,9 @@ pipeline {
         }
 
         stage('Static Code Analysis') {
+            tools {
+                jdk "openjdk-11"
+            }
             steps {
                 updateGitlabCommitStatus name: 'SonarQube analysis', state: 'pending'
                 unstash 'jacocoReports'
@@ -124,8 +127,8 @@ pipeline {
                                                     patternSeparator: '[, ]+',
                                                     remoteDirectory: '/game/',
                                                     remoteDirectorySDF: false,
-                                                    removePrefix: '',
-                                                    sourceFiles: '**/game.jar')
+                                                    removePrefix: '**/libs/',
+                                                    sourceFiles: '**/libs/game.jar')
                                     ],
                                     usePromotionTimestamp: false,
                                     useWorkspaceInPromotion: false,
