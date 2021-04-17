@@ -122,7 +122,7 @@ pipeline {
                                                     makeEmptyDirs: false,
                                                     noDefaultExcludes: false,
                                                     patternSeparator: '[, ]+',
-                                                    remoteDirectory: '',
+                                                    remoteDirectory: '/game/',
                                                     remoteDirectorySDF: false,
                                                     removePrefix: '',
                                                     sourceFiles: '**/game.jar')
