@@ -117,18 +117,11 @@ pipeline {
                                     configName: 'Jenkins Deploy',
                                     transfers: [
                                             sshTransfer(
-                                                    cleanRemote: false,
-                                                    excludes: '',
-                                                    execCommand: 'apt-get update',
-                                                    execTimeout: 120000,
-                                                    flatten: false,
-                                                    makeEmptyDirs: false,
-                                                    noDefaultExcludes: false,
-                                                    patternSeparator: '[, ]+',
                                                     remoteDirectory: '/game/',
                                                     remoteDirectorySDF: false,
                                                     removePrefix: 'desktop/build/libs/',
-                                                    sourceFiles: 'desktop/build/libs/game.jar')
+                                                    sourceFiles: 'desktop/build/libs/game.jar'),
+                                            sshTransfer(execCommand: 'mv /game/game.jar /game/game2.jar')
                                     ],
                                     usePromotionTimestamp: false,
                                     useWorkspaceInPromotion: false,
