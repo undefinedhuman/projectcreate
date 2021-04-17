@@ -115,7 +115,6 @@ pipeline {
                             publishers: [
                             sshPublisherDesc(
                                     configName: 'Jenkins Deploy',
-                                    failOnError: false,
                                     transfers: [
                                             sshTransfer(
                                                     remoteDirectory: '/game/',
