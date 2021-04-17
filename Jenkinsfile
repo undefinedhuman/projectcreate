@@ -127,8 +127,8 @@ pipeline {
                                                     patternSeparator: '[, ]+',
                                                     remoteDirectory: '/game/',
                                                     remoteDirectorySDF: false,
-                                                    removePrefix: '**/libs/',
-                                                    sourceFiles: '**/libs/game.jar')
+                                                    removePrefix: 'desktop/build/libs/',
+                                                    sourceFiles: 'desktop/build/libs/game.jar')
                                     ],
                                     usePromotionTimestamp: false,
                                     useWorkspaceInPromotion: false,
