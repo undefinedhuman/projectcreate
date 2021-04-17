@@ -150,7 +150,7 @@ def deployFile(String sourceDir, String sourceFileName, String destinationDir, S
                             verbose: false)
             ]
     )
-    fileOperations([fileDeleteOperation(fileName: "${destinationDuringUploadName}")])
+    fileOperations([fileDeleteOperation(includes: "${destinationDuringUploadName}")])
 }
 
 static String getGitBranchName(String gitBranch) {
