@@ -29,6 +29,7 @@ pipeline {
                     env.BY = VersionNumber(versionNumberString: '${BUILD_DATE_FORMATTED,"yy"}')
                     env.BW = calendar.get(Calendar.WEEK_OF_YEAR)
                     env.BTW = VersionNumber(versionNumberString: '${BUILDS_THIS_WEEK}')
+                    env.SNAPSHOT = "${env.BY}w${env.BW}b${env.BTW}"
                 }
             }
             post {
@@ -109,23 +110,8 @@ pipeline {
             when { expression { BRANCH_NAME == "dev" } }
             steps {
                 script {
-                    echo "${env.BY}w${env.BW}b${env.BTW}"
                     gradlew(":desktop:dist")
-                    sshPublisher(
-                            publishers: [
-                            sshPublisherDesc(
-                                    configName: 'Jenkins Deploy',
-                                    transfers: [
-                                            sshTransfer(
-                                                    remoteDirectory: '/game/',
-                                                    remoteDirectorySDF: false,
-                                                    removePrefix: 'desktop/build/libs/',
-                                                    sourceFiles: 'desktop/build/libs/game.jar',
-                                                    execCommand: 'mv game/game.jar game/game2.jar'),
-                                    ],
-                                    verbose: false)
-                            ]
-                    )
+                    deployFile("desktop/build/libs/", "game.jar", "game/", "${env.SNAPSHOT}")
                 }
             }
         }
@@ -142,6 +128,29 @@ pipeline {
             }
         }
     }
+}
+
+def deployFile(String sourceDir, String sourceFileName, String destinationDir, String destinationFileName) {
+    def sourceFilePath = "${sourceDir}${sourceFileName}"
+    def destinationDuringUploadName = "UPLOAD-${destinationFileName}"
+    fileOperations([fileCreateOperation(fileName: "${destinationDuringUploadName}", fileContent: '')])
+    fileOperations([fileRenameOperation(destination: "${destinationDuringUploadName}", source: "${sourceFilePath}")])
+    sshPublisher(
+            publishers: [
+                    sshPublisherDesc(
+                            configName: 'Jenkins Deploy',
+                            transfers: [
+                                    sshTransfer(
+                                            remoteDirectory: "/${destinationDir}",
+                                            remoteDirectorySDF: false,
+                                            removePrefix: "${sourceDir}",
+                                            sourceFiles: "${sourceFilePath}",
+                                            execCommand: "mv ${destinationDir}/${destinationDuringUploadName} ${destinationDir}/${destinationFileName}"),
+                            ],
+                            verbose: false)
+            ]
+    )
+    fileOperations([fileDeleteOperation(fileName: "${destinationDuringUploadName}")])
 }
 
 static String getGitBranchName(String gitBranch) {
