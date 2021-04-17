@@ -29,7 +29,6 @@ pipeline {
                     env.BY = VersionNumber(versionNumberString: '${BUILD_DATE_FORMATTED,"yy"}')
                     env.BW = calendar.get(Calendar.WEEK_OF_YEAR)
                     env.BTW = VersionNumber(versionNumberString: '${BUILDS_THIS_WEEK}')
-                    echo "${env.BY}w${env.BW}b${env.BTW}"
                 }
             }
             post {
