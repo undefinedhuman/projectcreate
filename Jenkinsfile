@@ -133,7 +133,7 @@ def deployFile(String sourceDir, String sourceFileName, String destinationDir, S
     def sourceFilePath = "${sourceDir}${sourceFileName}"
     def destinationDuringUploadName = "UPLOAD-${destinationFileName}"
     fileOperations([fileCreateOperation(fileName: "${sourceDir}${destinationDuringUploadName}", fileContent: '')])
-    fileOperations([fileRenameOperation(destination: "${sourceDir}${destinationDuringUploadName}", source: "${sourceFilePath}")])
+    fileOperations([fileRenameOperation(source: "${sourceFilePath}", destination: "${sourceDir}${destinationDuringUploadName}")])
     sshPublisher(
             publishers: [
                     sshPublisherDesc(
