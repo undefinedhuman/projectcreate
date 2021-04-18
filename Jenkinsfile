@@ -5,7 +5,7 @@ pipeline {
     agent any
 
     options {
-        gitLabConnection('Gitlab ProjectCreate')
+        gitLabConnection('ProjectCreate Gitlab')
     }
 
     stages {
