@@ -132,7 +132,7 @@ pipeline {
 def deployFile(String sourceDir, String sourceFileName, String destinationDir, String destinationFileName) {
     def sourceFilePath = "${sourceDir}${sourceFileName}"
     def destinationDuringUploadName = "UPLOAD-${destinationFileName}"
-    fileOperations([fileCreateOperation(fileName: "${destinationDuringUploadName}", fileContent: '')])
+    fileOperations([fileCreateOperation(fileName: "${sourceDir}${destinationDuringUploadName}", fileContent: '')])
     fileOperations([fileRenameOperation(destination: "${sourceDir}${destinationDuringUploadName}", source: "${sourceFilePath}")])
     sshPublisher(
             publishers: [
@@ -149,7 +149,7 @@ def deployFile(String sourceDir, String sourceFileName, String destinationDir, S
                             verbose: false)
             ]
     )
-    fileOperations([fileDeleteOperation(includes: "${destinationDuringUploadName}")])
+    fileOperations([fileDeleteOperation(includes: "${sourceDir}${destinationDuringUploadName}")])
 }
 
 static String getGitBranchName(String gitBranch) {
