@@ -130,10 +130,8 @@ pipeline {
 }
 
 def deployFile(String sourceDir, String sourceFileName, String destinationDir, String destinationFileName) {
-    def sourceFilePath = "${sourceDir}${sourceFileName}"
-    def destinationDuringUploadName = "UPLOAD-${destinationFileName}.jar"
-    fileOperations([fileCreateOperation(fileName: "${sourceDir}${destinationDuringUploadName}", fileContent: '')])
-    fileOperations([fileRenameOperation(source: "${sourceFilePath}", destination: "${sourceDir}${destinationDuringUploadName}")])
+    def destinationDuringUploadName = "UPLOAD-${destinationFileName}"
+    fileOperations([fileRenameOperation(source: "${sourceDir}${sourceFileName}", destination: "${sourceDir}${destinationDuringUploadName}", )])
     sshPublisher(
             publishers: [
                     sshPublisherDesc(
@@ -144,7 +142,7 @@ def deployFile(String sourceDir, String sourceFileName, String destinationDir, S
                                             remoteDirectorySDF: false,
                                             removePrefix: "${sourceDir}",
                                             sourceFiles: "${sourceDir}${destinationDuringUploadName}",
-                                            execCommand: "mv ${destinationDir}/${destinationDuringUploadName} ${destinationDir}/${destinationFileName}"),
+                                            execCommand: "mv ${destinationDir}${destinationDuringUploadName} ${destinationDir}${destinationFileName}"),
                             ],
                             verbose: false)
             ]
