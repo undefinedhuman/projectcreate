@@ -28,6 +28,7 @@ pipeline {
                     env.BY = VersionNumber(versionNumberString: '${BUILD_DATE_FORMATTED,"yy"}')
                     env.BW = VersionNumber(versionNumberString: '${BUILD_WEEK,XX}')
                     env.BTW = VersionNumber(versionNumberString: '${BUILDS_THIS_WEEK}')
+                    env.BAT = VersionNumber(versionNumberString: '${BUILDS_ALL_TIME}')
                     env.SNAPSHOT = "${env.BY}w${env.BW}b${env.BTW}"
                 }
             }
@@ -109,24 +110,33 @@ pipeline {
             when { expression { BRANCH_NAME == "snapshot" } }
             steps {
                 script {
-                    gradlew(":desktop:dist")
-                    deployFile("desktop", "versions/", "snapshot-${env.SNAPSHOT}.jar")
+                    gradlew(":game:dist")
+                    deployFile("game", "versions/", "snapshot-${env.SNAPSHOT}.jar")
                 }
             }
         }
-        stage('') {
-            when {
-                expression {
-                    GIT_BRANCH == 'origin/main'
-                }
-            }
+        stage('Deploy release candidate') {
+            when { expression { BRANCH_NAME ==~ '^(indev|alpha|beta|release)-(game|launcher|updater|editor)-[0-9]+.[0-9]+.[0-9]+' } }
             steps {
                 script {
-                    echo 'DEPLOY! WOOHOO!'
+                    def versionString = "${BRANCH_NAME}".split("-")
+                    if(versionString.size() != 3)
+                        error('Release branch name does not follow the required scheme [indev, alpha, beta, release]-[game, launcher, updater, server]-STAGE.MAJOR.MINOR')
+                    def stage = versionString[0]
+                    def module = versionString[1]
+                    def version = versionString[2]
+                    buildAndDeployModule(module, "${stage}-${version}-rc${env.BTA}.jar")
+                    if(module.equalsIgnoreCase("game"))
+                        buildAndDeployModule("server", "${stage}-${version}-rc${env.BTA}.jar")
                 }
             }
         }
     }
+}
+
+def buildAndDeployModule(String moduleName, String destinationFileName) {
+    gradlew(":${moduleName}:dist")
+    deployFile("${moduleName}", "${moduleName}/", "${destinationFileName}")
 }
 
 def deployFile(String sourceName, String destinationDir, String destinationFileName) {
