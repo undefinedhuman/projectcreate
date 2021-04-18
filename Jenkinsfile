@@ -106,11 +106,11 @@ pipeline {
             }
         }
         stage('Deploy snapshot') {
-            when { expression { BRANCH_NAME == "dev" } }
+            when { expression { BRANCH_NAME == "snapshot" } }
             steps {
                 script {
                     gradlew(":desktop:dist")
-                    deployFile("desktop/build/libs/", "game.jar", "game/", "${env.SNAPSHOT}.jar")
+                    deployFile("desktop", "versions/", "snapshot-${env.SNAPSHOT}.jar")
                 }
             }
         }
@@ -129,9 +129,10 @@ pipeline {
     }
 }
 
-def deployFile(String sourceDir, String sourceFileName, String destinationDir, String destinationFileName) {
+def deployFile(String sourceName, String destinationDir, String destinationFileName) {
     def destinationDuringUploadName = "UPLOAD-${destinationFileName}"
-    fileOperations([fileRenameOperation(source: "${sourceDir}${sourceFileName}", destination: "${sourceDir}${destinationDuringUploadName}", )])
+    def sourceDir = "${sourceName}/build/libs/"
+    fileOperations([fileRenameOperation(source: "${sourceDir}${sourceName}.jar", destination: "${sourceDir}${destinationDuringUploadName}", )])
     sshPublisher(
             publishers: [
                     sshPublisherDesc(
@@ -148,13 +149,6 @@ def deployFile(String sourceDir, String sourceFileName, String destinationDir, S
             ]
     )
     fileOperations([fileDeleteOperation(includes: "${sourceDir}${destinationDuringUploadName}")])
-}
-
-static String getGitBranchName(String gitBranch) {
-    def names = gitBranch.split("/", 2)
-    if(names.size() > 1)
-        return "${names[1].replaceAll("/", "-")}"
-    return ""
 }
 
 def gradlew(String... args) {
