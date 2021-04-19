@@ -118,16 +118,12 @@ pipeline {
             when { expression { BRANCH_NAME ==~ '^(indev|alpha|beta|release)-(game|launcher|updater|editor)-[0-9]+.[0-9]+.[0-9]+' } }
             steps {
                 script {
-                    // CHANGE BUILDS ALL TIME TO ONLY CHECK IF BELOW SUCCED UNTIL DOWNLOAD TO NOT COUNT FAILED PIPELINES OR LOOK DOC
-
                     def versionString = "${BRANCH_NAME}".split("-")
-                    echo versionString[0] + ", " + versionString[1] + ", " + versionString[2]
-                    if(versionString.size() != 3)
-                        error('Release branch name does not follow the required scheme [indev, alpha, beta, release]-[game, launcher, updater, server]-STAGE.MAJOR.MINOR')
                     def stage = versionString[0] as String
                     def module = versionString[1] as String
                     def version = versionString[2] as String
                     def versionNumber = VersionNumber(versionNumberString: '${BUILDS_ALL_TIME}', worstResultForIncrement: 'SUCCESS') as String
+                    error("TEST ERROR")
                     gradlew(":${module}:dist" as String)
                     deployFile("${module}", "${module}/", "${stage}-${version}-rc${versionNumber}.jar")
                     if(module.equalsIgnoreCase("game")) {
