@@ -1,4 +1,4 @@
-package de.undefinedhuman.projectcreate.desktop;
+package de.undefinedhuman.projectcreate.game;
 
 import de.undefinedhuman.projectcreate.core.window.Window;
 

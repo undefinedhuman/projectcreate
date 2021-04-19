@@ -3,7 +3,7 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 
 sourceSets.main.java.srcDirs = ["src/"]
 
-project.ext.mainClassName = "de.undefinedhuman.projectcreate.desktop.DesktopLauncher"
+project.ext.mainClassName = "de.undefinedhuman.projectcreate.game.DesktopLauncher"
 project.ext.assetsDir = new File("../assets")
 
 jar {
@@ -30,6 +30,8 @@ task debug(dependsOn: classes, type: JavaExec) {
 }
 
 task dist(type: Jar) {
+    archiveFileName = "game.jar"
+
     from files(sourceSets.main.output.classesDirs)
     from files(sourceSets.main.output.resourcesDir)
     from { configurations.compile.collect { zipTree(it) } }

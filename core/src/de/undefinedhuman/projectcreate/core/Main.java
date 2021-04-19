@@ -41,7 +41,7 @@ public class Main extends Game {
     private Timer timer;
 
     public Main() {
-        // FIX TEST FEATURE (GIT FLOW TEST)
+        // TEST PUSH 5
 
         instance = this;
         managerList = new ManagerList();

@@ -3,7 +3,7 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 
 sourceSets.main.java.srcDirs = ["src/"]
 
-project.ext.mainClassName = "de.undefinedhuman.sandboxgame.server.Main"
+project.ext.mainClassName = "de.undefinedhuman.projectcreate.server.Main"
 project.ext.assetsDir = new File("../assets/");
 
 task run(dependsOn: classes, type: JavaExec) {
@@ -24,10 +24,12 @@ task debug(dependsOn: classes, type: JavaExec) {
 }
 
 task dist(type: Jar) {
+    archiveFileName = "server.jar"
+
     from files(sourceSets.main.output.classesDirs)
     from files(sourceSets.main.output.resourcesDir)
     from { configurations.compile.collect { zipTree(it) } }
-    from files(project.assetsDir);
+    from files(project.assetsDir)
 
     manifest {
         attributes 'Main-Class': project.mainClassName

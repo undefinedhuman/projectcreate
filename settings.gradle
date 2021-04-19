@@ -1,2 +1,2 @@
-include 'desktop', 'engine', 'core', 'server', 'editor', 'launcher', 'updater'
+include 'game', 'engine', 'core', 'server', 'editor', 'launcher', 'updater'
 
