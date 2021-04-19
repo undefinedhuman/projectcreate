@@ -115,7 +115,7 @@ pipeline {
             }
         }
         stage('Deploy release candidate') {
-            when { expression { BRANCH_NAME ==~ '^(indev|alpha|beta|release)-(game|launcher|updater|editor)-[0-9]+.[0-9]+.[0-9]+' } }
+            when { expression { BRANCH_NAME ==~ '^(release/)(indev|alpha|beta|release)-(game|launcher|updater|editor)-[0-9]+.[0-9]+.[0-9]+' } }
             steps {
                 script {
                     def versionString = "${BRANCH_NAME}".split("-")
