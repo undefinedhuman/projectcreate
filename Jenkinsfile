@@ -6,6 +6,7 @@ pipeline {
 
     options {
         gitLabConnection('ProjectCreate Gitlab')
+        worstResultForIncrement('SUCCESS')
     }
 
     stages {
@@ -27,7 +28,7 @@ pipeline {
                 script {
                     env.BY = VersionNumber(versionNumberString: '${BUILD_DATE_FORMATTED,"yy"}')
                     env.BW = VersionNumber(versionNumberString: '${BUILD_WEEK,XX}')
-                    env.BTW = VersionNumber(versionNumberString: '${BUILDS_THIS_WEEK}', worstResultForIncrement: 'SUCCESS')
+                    env.BTW = VersionNumber(versionNumberString: '${BUILDS_THIS_WEEK}')
                     env.SNAPSHOT = "${env.BY}w${env.BW}b${env.BTW}"
                 }
             }
@@ -122,7 +123,8 @@ pipeline {
                     def stage = versionString[0] as String
                     def module = versionString[1] as String
                     def version = versionString[2] as String
-                    def versionNumber = VersionNumber(versionNumberString: '${BUILDS_ALL_TIME}', worstResultForIncrement: 'SUCCESS') as String
+                    error("TEST ERROR")
+                    def versionNumber = VersionNumber(versionNumberString: '${BUILDS_ALL_TIME}') as String
                     gradlew(":${module}:dist" as String)
                     deployFile("${module}", "${module}/", "${stage}-${version}-rc${versionNumber}.jar")
                     if(module.equalsIgnoreCase("game")) {
