@@ -120,12 +120,12 @@ pipeline {
             steps {
                 script {
                     def versionString = "${BRANCH_NAME}".split("-")
-                    echo versionString
+                    echo versionString[0] + ", " + versionString[1] + ", " + versionString[2]
                     if(versionString.size() != 3)
                         error('Release branch name does not follow the required scheme [indev, alpha, beta, release]-[game, launcher, updater, server]-STAGE.MAJOR.MINOR')
-                    def stage = versionString[0]
-                    def module = versionString[1]
-                    def version = versionString[2]
+                    def stage = versionString[0] as String
+                    def module = versionString[1] as String
+                    def version = versionString[2] as String
                     gradlew(":game:dist")
                     deployFile("${module}", "${module}/", "${stage}-${version}-rc${env.BTA}.jar")
                     if(module.equalsIgnoreCase("game")) {
