@@ -125,18 +125,16 @@ pipeline {
                     def stage = versionString[0]
                     def module = versionString[1]
                     def version = versionString[2]
-                    buildAndDeployModule(module, "${stage}-${version}-rc${env.BTA}.jar")
-                    if(module.equalsIgnoreCase("game"))
-                        buildAndDeployModule("server", "${stage}-${version}-rc${env.BTA}.jar")
+                    gradlew(":${module}:dist")
+                    deployFile("${module}", "${module}/", "${stage}-${version}-rc${env.BTA}.jar")
+                    if(module.equalsIgnoreCase("game")) {
+                        gradlew(":server:dist")
+                        deployFile("server", "server/", "${stage}-${version}-rc${env.BTA}.jar")
+                    }
                 }
             }
         }
     }
-}
-
-def buildAndDeployModule(String moduleName, String destinationFileName) {
-    gradlew(":${moduleName}:dist")
-    deployFile("${moduleName}", "${moduleName}/", "${destinationFileName}")
 }
 
 def deployFile(String sourceName, String destinationDir, String destinationFileName) {
