@@ -127,7 +127,8 @@ pipeline {
                     def stage = versionString[0] as String
                     def module = versionString[1] as String
                     def version = versionString[2] as String
-                    def versionNumber = VersionNumber(versionNumberString: '${BUILDS_ALL_TIME}') as String
+                    def versionNumber = VersionNumber(versionNumberString: '${BUILDS_ALL_TIME}', skipFailedBuilds: true) as String
+                    error("HAHAHA")
                     gradlew(":game:dist")
                     deployFile("${module}", "${module}/", "${stage}-${version}-rc${versionNumber}.jar")
                     if(module.equalsIgnoreCase("game")) {
