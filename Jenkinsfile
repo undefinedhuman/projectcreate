@@ -120,7 +120,7 @@ pipeline {
             steps {
                 script {
                     def versionString = "${BRANCH_NAME}".split("-")
-                    echo versionString.toArrayString()
+                    echo versionString
                     if(versionString.size() != 3)
                         error('Release branch name does not follow the required scheme [indev, alpha, beta, release]-[game, launcher, updater, server]-STAGE.MAJOR.MINOR')
                     def stage = versionString[0]
