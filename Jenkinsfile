@@ -125,10 +125,10 @@ pipeline {
                     def stage = versionString[0]
                     def module = versionString[1]
                     def version = versionString[2]
-                    gradlew(":${module}:dist")
+                    buildDistributable(module)
                     deployFile("${module}", "${module}/", "${stage}-${version}-rc${env.BTA}.jar")
                     if(module.equalsIgnoreCase("game")) {
-                        gradlew(":server:dist")
+                        buildDistributable("server")
                         deployFile("server", "server/", "${stage}-${version}-rc${env.BTA}.jar")
                     }
                 }
@@ -157,6 +157,11 @@ def deployFile(String sourceName, String destinationDir, String destinationFileN
             ]
     )
     fileOperations([fileDeleteOperation(includes: "${sourceDir}${destinationDuringUploadName}")])
+}
+
+def buildDistributable(String moduleName) {
+    def command = ":${moduleName}:dist"
+    gradlew(command)
 }
 
 def gradlew(String... args) {
