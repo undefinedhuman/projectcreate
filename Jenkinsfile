@@ -6,7 +6,6 @@ pipeline {
 
     options {
         gitLabConnection('ProjectCreate Gitlab')
-        worstResultForIncrement('success')
     }
 
     stages {
