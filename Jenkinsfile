@@ -28,7 +28,6 @@ pipeline {
                     env.BY = VersionNumber(versionNumberString: '${BUILD_DATE_FORMATTED,"yy"}')
                     env.BW = VersionNumber(versionNumberString: '${BUILD_WEEK,XX}')
                     env.BTW = VersionNumber(versionNumberString: '${BUILDS_THIS_WEEK}')
-                    env.BAT = VersionNumber(versionNumberString: '${BUILDS_ALL_TIME}')
                     env.SNAPSHOT = "${env.BY}w${env.BW}b${env.BTW}"
                 }
             }
@@ -119,6 +118,8 @@ pipeline {
             when { expression { BRANCH_NAME ==~ '^(indev|alpha|beta|release)-(game|launcher|updater|editor)-[0-9]+.[0-9]+.[0-9]+' } }
             steps {
                 script {
+                    // CHANGE BUILDS ALL TIME TO ONLY CHECK IF BELOW SUCCED UNTIL DOWNLOAD TO NOT COUNT FAILED PIPELINES OR LOOK DOC
+
                     def versionString = "${BRANCH_NAME}".split("-")
                     echo versionString[0] + ", " + versionString[1] + ", " + versionString[2]
                     if(versionString.size() != 3)
@@ -126,11 +127,12 @@ pipeline {
                     def stage = versionString[0] as String
                     def module = versionString[1] as String
                     def version = versionString[2] as String
+                    def versionNumber = VersionNumber(versionNumberString: '${BUILDS_ALL_TIME}') as String
                     gradlew(":game:dist")
-                    deployFile("${module}", "${module}/", "${stage}-${version}-rc${env.BTA}.jar")
+                    deployFile("${module}", "${module}/", "${stage}-${version}-rc${versionNumber}.jar")
                     if(module.equalsIgnoreCase("game")) {
                         gradlew(":server:dist")
-                        deployFile("server", "server/", "${stage}-${version}-rc${env.BTA}.jar")
+                        deployFile("server", "server/", "${stage}-${version}-rc${versionNumber}.jar")
                     }
                 }
             }
