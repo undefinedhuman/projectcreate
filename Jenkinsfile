@@ -3,6 +3,11 @@ def STATUS_MAP = ['SUCCESS': 'success', 'FAILURE': 'failed', 'UNSTABLE': 'failed
 
 pipeline {
     agent any
+
+    options {
+        gitLabConnection('ProjectCreate Gitlab')
+    }
+
     stages {
         stage('Compile') {
             steps {
@@ -16,31 +21,74 @@ pipeline {
                 }
             }
         }
+        stage('Build') {
+            steps {
+                updateGitlabCommitStatus name: 'Build', state: 'pending'
+                script {
+                    env.BY = VersionNumber(versionNumberString: '${BUILD_DATE_FORMATTED,"yy"}')
+                    env.BW = VersionNumber(versionNumberString: '${BUILD_WEEK,XX}')
+                    env.BTW = VersionNumber(versionNumberString: '${BUILDS_THIS_WEEK}', worstResultForIncrement: 'SUCCESS')
+                    env.SNAPSHOT = "${env.BY}w${env.BW}b${env.BTW}"
+                }
+            }
+            post {
+                always {
+                    updateGitlabCommitStatus name: 'Build', state: STATUS_MAP[currentBuild.currentResult]
+                }
+            }
+        }
         stage('Unit Tests') {
             steps {
                 updateGitlabCommitStatus name: 'Unit Tests', state: STATUS_MAP[currentBuild.currentResult]
                 gradlew("test")
+                stash allowEmpty: true, includes: '**/unitReports/*.xml', name: 'unitTestReports'
             }
             post {
                 always {
-                    junit allowEmptyResults: true, testResults: '**/test-results/**/*.xml'
                     updateGitlabCommitStatus name: 'Unit Tests', state: STATUS_MAP[currentBuild.currentResult]
                 }
             }
         }
-        stage('Static Code Analysis') {
+        stage('Integration Tests') {
             steps {
-                updateGitlabCommitStatus name: 'Static Code Analysis', state: 'pending'
+                updateGitlabCommitStatus name: 'Integration Tests', state: STATUS_MAP[currentBuild.currentResult]
+                gradlew("integrationTest")
+                stash allowEmpty: true, includes: '**/integrationReports/*.xml', name: 'integrationTestReports'
+            }
+            post {
+                always {
+                    updateGitlabCommitStatus name: 'Integration Tests', state: STATUS_MAP[currentBuild.currentResult]
+                }
+            }
+        }
+        stage('Reporting') {
+            steps {
+                unstash 'unitTestReports'
+                unstash 'integrationTestReports'
+                junit allowEmptyResults: true, testResults: '**/TEST-*.xml'
+                gradlew("jacocoTestReport")
+                stash includes: '**/jacocoTestReport.xml', name: 'jacocoReports'
+            }
+        }
+
+        stage('Static Code Analysis') {
+            tools {
+                jdk "openjdk-11"
+            }
+            steps {
+                updateGitlabCommitStatus name: 'SonarQube analysis', state: 'pending'
+                unstash 'jacocoReports'
                 withSonarQubeEnv('SonarQube ProjectCreate') {
                     gradlew("sonarqube",
                             "-Dsonar.analysis.buildNumber=${currentBuild.number}",
                             "-Dsonar.projectKey=project-create",
-                            "-Dsonar.projectName=ProjectCreate")
+                            "-Dsonar.projectName=ProjectCreate",
+                            "-Dsonar.java.coveragePlugin=jacoco")
                 }
             }
             post {
                 always {
-                    updateGitlabCommitStatus name: 'Static Code Analysis', state: STATUS_MAP[currentBuild.currentResult]
+                    updateGitlabCommitStatus name: 'SonarQube analysis', state: STATUS_MAP[currentBuild.currentResult]
                 }
             }
         }
@@ -49,12 +97,6 @@ pipeline {
                 updateGitlabCommitStatus name: 'Quality Gate', state: 'pending'
                 timeout(time: 15, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
-                    script {
-                        def qg = waitForQualityGate()
-                        if(qg.status != 'OK') {
-                            error "Pipeline aborted due to quality gate failure: ${qg.status}"
-                        }
-                    }
                 }
             }
             post {
@@ -63,35 +105,58 @@ pipeline {
                 }
             }
         }
-        stage('Snapshot release') {
-            when { expression { GIT_BRANCH == 'origin/dev' } }
+        stage('Deploy snapshot') {
+            when { expression { BRANCH_NAME == "snapshot" } }
             steps {
                 script {
-                    echo 'STAGING! WOOHOO!'
+                    gradlew(":game:dist")
+                    deployFile("game", "versions/", "snapshot-${env.SNAPSHOT}.jar")
                 }
             }
         }
-        stage('Release') {
-            when { expression { GIT_BRANCH == 'origin/main' } }
+        stage('Deploy release candidate') {
+            when { expression { BRANCH_NAME ==~ '^(indev|alpha|beta|release)-(game|launcher|updater|editor)-[0-9]+.[0-9]+.[0-9]+' } }
             steps {
                 script {
-                    echo 'DEPLOY! WOOHOO!'
+                    def versionString = "${BRANCH_NAME}".split("-")
+                    def stage = versionString[0] as String
+                    def module = versionString[1] as String
+                    def version = versionString[2] as String
+                    def versionNumber = VersionNumber(versionNumberString: '${BUILDS_ALL_TIME}', worstResultForIncrement: 'SUCCESS') as String
+                    buildAndDeployModule(module, "${stage}-${version}-rc${versionNumber}.jar")
+                    if(module.equalsIgnoreCase("game"))
+                        buildAndDeployModule("server", "${stage}-${version}-rc${versionNumber}.jar")
                 }
             }
-        }
-    }
-    post {
-        always {
-            updateGitlabCommitStatus name: 'Pipeline', state: STATUS_MAP[currentBuild.currentResult]
         }
     }
 }
 
-static String getGitBranchName(String gitBranch) {
-    def names = gitBranch.split("/", 2)
-    if(names.size() > 1)
-        return "${names[1].replaceAll("/", "-")}"
-    return ""
+def buildAndDeployModule(String moduleName, String destinationName) {
+    gradlew(":${moduleName}:dist" as String)
+    deployFile("${moduleName}", "${moduleName}/", "${destinationName}")
+}
+
+def deployFile(String sourceName, String destinationDir, String destinationFileName) {
+    def destinationDuringUploadName = "UPLOAD-${destinationFileName}"
+    def sourceDir = "${sourceName}/build/libs/"
+    fileOperations([fileRenameOperation(source: "${sourceDir}${sourceName}.jar", destination: "${sourceDir}${destinationDuringUploadName}", )])
+    sshPublisher(
+            publishers: [
+                    sshPublisherDesc(
+                            configName: 'Jenkins Deploy',
+                            transfers: [
+                                    sshTransfer(
+                                            remoteDirectory: "/${destinationDir}",
+                                            remoteDirectorySDF: false,
+                                            removePrefix: "${sourceDir}",
+                                            sourceFiles: "${sourceDir}${destinationDuringUploadName}",
+                                            execCommand: "mv ${destinationDir}${destinationDuringUploadName} ${destinationDir}${destinationFileName}"),
+                            ],
+                            verbose: false)
+            ]
+    )
+    fileOperations([fileDeleteOperation(includes: "${sourceDir}${destinationDuringUploadName}")])
 }
 
 def gradlew(String... args) {
