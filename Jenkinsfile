@@ -123,16 +123,18 @@ pipeline {
                     def module = versionString[1] as String
                     def version = versionString[2] as String
                     def versionNumber = VersionNumber(versionNumberString: '${BUILDS_ALL_TIME}', worstResultForIncrement: 'SUCCESS') as String
-                    gradlew(":${module}:dist" as String)
-                    deployFile("${module}", "${module}/", "${stage}-${version}-rc${versionNumber}.jar")
-                    if(module.equalsIgnoreCase("game")) {
-                        gradlew(":server:dist")
-                        deployFile("server", "server/", "${stage}-${version}-rc${versionNumber}.jar")
-                    }
+                    buildAndDeployModule(module, "${stage}-${version}-rc${versionNumber}.jar")
+                    if(module.equalsIgnoreCase("game"))
+                        buildAndDeployModule("server", "${stage}-${version}-rc${versionNumber}.jar")
                 }
             }
         }
     }
+}
+
+def buildAndDeployModule(String moduleName, String destinationName) {
+    gradlew(":${moduleName}:dist" as String)
+    deployFile("${moduleName}", "${moduleName}/", "${destinationName}")
 }
 
 def deployFile(String sourceName, String destinationDir, String destinationFileName) {
