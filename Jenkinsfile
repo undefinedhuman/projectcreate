@@ -118,7 +118,7 @@ pipeline {
             when { expression { BRANCH_NAME ==~ '^(release/)(indev|alpha|beta|release)-(game|launcher|updater|editor)-[0-9]+.[0-9]+.[0-9]+' } }
             steps {
                 script {
-                    def versionString = "${BRANCH_NAME}".split("-")
+                    def versionString = "${BRANCH_NAME}".split("/", 2)[1].split("-")
                     def stage = versionString[0] as String
                     def module = versionString[1] as String
                     def version = versionString[2] as String
