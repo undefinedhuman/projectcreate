@@ -120,15 +120,16 @@ pipeline {
             steps {
                 script {
                     def versionString = "${BRANCH_NAME}".split("-")
+                    echo versionString.toArrayString()
                     if(versionString.size() != 3)
                         error('Release branch name does not follow the required scheme [indev, alpha, beta, release]-[game, launcher, updater, server]-STAGE.MAJOR.MINOR')
                     def stage = versionString[0]
                     def module = versionString[1]
                     def version = versionString[2]
-                    buildDistributable(module)
+                    gradlew(":game:dist")
                     deployFile("${module}", "${module}/", "${stage}-${version}-rc${env.BTA}.jar")
                     if(module.equalsIgnoreCase("game")) {
-                        buildDistributable("server")
+                        gradlew(":server:dist")
                         deployFile("server", "server/", "${stage}-${version}-rc${env.BTA}.jar")
                     }
                 }
@@ -157,11 +158,6 @@ def deployFile(String sourceName, String destinationDir, String destinationFileN
             ]
     )
     fileOperations([fileDeleteOperation(includes: "${sourceDir}${destinationDuringUploadName}")])
-}
-
-def buildDistributable(String moduleName) {
-    def command = ":${moduleName}:dist"
-    gradlew(command)
 }
 
 def gradlew(String... args) {
