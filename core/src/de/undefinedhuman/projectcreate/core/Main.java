@@ -41,7 +41,7 @@ public class Main extends Game {
     private Timer timer;
 
     public Main() {
-        // TEST DEV COMMIT 2
+        // TEST RELEASE BIG FIX COMMIT 2
 
         instance = this;
         managerList = new ManagerList();
