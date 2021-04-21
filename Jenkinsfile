@@ -133,7 +133,7 @@ pipeline {
             when { expression { BRANCH_NAME == 'main' } }
             steps {
                 script {
-                    TAG = sh(script: 'git tag --points-at HEAD | awk NF', returnStdout: true)
+                    TAG = sh(script: 'git tag --points-at HEAD | awk NF', returnStdout: true).trim()
                     def versionString = "${TAG}".split("-")
                     def stage = versionString[0] as String
                     def module = versionString[1] as String
@@ -168,7 +168,7 @@ def deployFile(String sourceName, String destinationDir, String destinationFileN
                                             sourceFiles: "${sourceDir}${destinationDuringUploadName}",
                                             execCommand: "mv ${destinationDir}${destinationDuringUploadName} ${destinationDir}${destinationFileName}"),
                             ],
-                            verbose: false)
+                            verbose: true)
             ]
     )
     fileOperations([fileDeleteOperation(includes: "${sourceDir}${destinationDuringUploadName}")])
