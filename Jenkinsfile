@@ -133,13 +133,11 @@ pipeline {
             when { expression { BRANCH_NAME == 'main' } }
             steps {
                 script {
-                    gitlab {
-                        def TAG = sh (
-                                script: 'git fetch --tags && git tag --points-at HEAD | awk NF',
-                                returnStdout: true
-                        ).trim()
-                        echo TAG
-                    }
+                    def TAG = sh (
+                            script: 'git fetch --tags && git tag --points-at HEAD | awk NF',
+                            returnStdout: true
+                    ).trim()
+                    echo TAG
                     def versionString = "${TAG}".split("-")
                     def stage = versionString[0] as String
                     def module = versionString[1] as String
