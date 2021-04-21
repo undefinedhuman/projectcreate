@@ -132,7 +132,7 @@ pipeline {
         stage('Deploy release') {
             when { expression { BRANCH_NAME == 'dev' } }
             steps {
-                withCredentials([usernamePassword(credentialsId: 'gitlabUsernamePassword')]) {
+                withCredentials([usernamePassword(credentialsId: 'gitlabUsernamePassword', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
                     echo sh(script: 'git fetch --tags && git describe --tags --abbrev=0 | awk NF', returnStdout: true)
                 }
             }
