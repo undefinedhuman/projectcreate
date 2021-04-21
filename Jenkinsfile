@@ -133,11 +133,8 @@ pipeline {
             when { expression { BRANCH_NAME == 'main' } }
             steps {
                 script {
-                    def TAG = sh (
-                            script: 'git fetch --tags && git tag --points-at HEAD | awk NF',
-                            returnStdout: true
-                    ).trim()
-                    echo TAG
+                    echo env.TAG_NAME
+                    echo TAG_NAME
                     def versionString = "${TAG}".split("-")
                     def stage = versionString[0] as String
                     def module = versionString[1] as String
