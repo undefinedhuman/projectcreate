@@ -130,7 +130,7 @@ pipeline {
             }
         }
         stage('Deploy release') {
-            when { expression { BRANCH_NAME == 'dev' } }
+            when { expression { BRANCH_NAME == 'main' } }
             steps {
                 script {
                     gitlab {
