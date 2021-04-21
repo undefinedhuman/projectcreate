@@ -134,13 +134,13 @@ pipeline {
             steps {
                 script {
                     gitlab {
-                        env.TAG = sh (
+                        TAG = sh (
                                 script: 'git fetch --tags && git tag --points-at HEAD | awk NF',
                                 returnStdout: true
                         ).trim()
                     }
-                    echo env.TAG
-                    def versionString = (env.TAG as String).split("-")
+                    echo TAG
+                    def versionString = "${TAG}".split("-")
                     def stage = versionString[0] as String
                     def module = versionString[1] as String
                     def version = versionString[2] as String
