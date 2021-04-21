@@ -134,7 +134,7 @@ pipeline {
             steps {
                 script {
                     TAG = sh(script: 'git tag --points-at HEAD | awk NF', returnStdout: true)
-                    def versionString = "${TAG}".split("/", 2)[1].split("-")
+                    def versionString = "${TAG}".split("-")
                     def stage = versionString[0] as String
                     def module = versionString[1] as String
                     def version = versionString[2] as String
