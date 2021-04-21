@@ -130,7 +130,7 @@ pipeline {
             }
         }
         stage('Deploy release') {
-            when { expression { BRANCH_NAME == 'main' } }
+            when { expression { BRANCH_NAME == 'dev' } }
             steps {
                 script {
                     gitlab {
@@ -139,7 +139,8 @@ pipeline {
                                 returnStdout: true
                         ).trim()
                     }
-                    def versionString = (TAG as String).split("-")
+                    echo TAG
+                    def versionString = "${TAG}".split("-")
                     def stage = versionString[0] as String
                     def module = versionString[1] as String
                     def version = versionString[2] as String
