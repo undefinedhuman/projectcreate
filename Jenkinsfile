@@ -130,9 +130,16 @@ pipeline {
             }
         }
         stage('Deploy release') {
-            when { expression { BRANCH_NAME == 'dev' } }
+            when { expression { BRANCH_NAME == 'main' } }
             steps {
-                echo sh(script: 'git describe --tags --abbrev=0 | awk NF', returnStdout: true)
+                TAG = sh(script: 'git tag --points-at HEAD | awk NF', returnStdout: true)
+                def versionString = "${TAG}".split("/", 2)[1].split("-")
+                def stage = versionString[0] as String
+                def module = versionString[1] as String
+                def version = versionString[2] as String
+                buildAndDeployModule(module, "${stage}-${version}.jar")
+                if(module.equalsIgnoreCase("game"))
+                    buildAndDeployModule("server", "${stage}-${version}.jar")
             }
         }
     }
