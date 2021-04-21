@@ -168,7 +168,7 @@ def deployFile(String sourceName, String destinationDir, String destinationFileN
                                             sourceFiles: "${sourceDir}${destinationDuringUploadName}",
                                             execCommand: "mv ${destinationDir}${destinationDuringUploadName} ${destinationDir}${destinationFileName}"),
                             ],
-                            verbose: false)
+                            verbose: true)
             ]
     )
     fileOperations([fileDeleteOperation(includes: "${sourceDir}${destinationDuringUploadName}")])
