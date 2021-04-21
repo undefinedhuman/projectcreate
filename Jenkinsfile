@@ -132,14 +132,16 @@ pipeline {
         stage('Deploy release') {
             when { expression { BRANCH_NAME == 'main' } }
             steps {
-                TAG = sh(script: 'git tag --points-at HEAD | awk NF', returnStdout: true)
-                def versionString = "${TAG}".split("/", 2)[1].split("-")
-                def stage = versionString[0] as String
-                def module = versionString[1] as String
-                def version = versionString[2] as String
-                buildAndDeployModule(module, "${stage}-${version}.jar")
-                if(module.equalsIgnoreCase("game"))
-                    buildAndDeployModule("server", "${stage}-${version}.jar")
+                script {
+                    TAG = sh(script: 'git tag --points-at HEAD | awk NF', returnStdout: true)
+                    def versionString = "${TAG}".split("/", 2)[1].split("-")
+                    def stage = versionString[0] as String
+                    def module = versionString[1] as String
+                    def version = versionString[2] as String
+                    buildAndDeployModule(module, "${stage}-${version}.jar")
+                    if(module.equalsIgnoreCase("game"))
+                        buildAndDeployModule("server", "${stage}-${version}.jar")
+                }
             }
         }
     }
