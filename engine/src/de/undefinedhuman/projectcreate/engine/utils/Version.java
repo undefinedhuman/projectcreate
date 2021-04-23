@@ -81,6 +81,8 @@ public class Version implements Comparable<Version>{
 
     public static Version parse(String version) {
         String[] stageAndDataSplit = version.split("-");
+        if(stageAndDataSplit.length != 2)
+            return new Version(Stage.INDEV, -1, -1, -1);
         return new Version(stageAndDataSplit[0], stageAndDataSplit[1].split("\\."));
     }
 
