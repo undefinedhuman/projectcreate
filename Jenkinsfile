@@ -178,14 +178,14 @@ def deployUpdaterForOS(String os, String destinationName, boolean deployLatest) 
                     sshPublisherDesc(
                             configName: "Jenkins Deploy",
                             transfers: [
-                                    sshTransfer(
-                                            execCommand: "rm updater/${os}/latest.zip"),
+                                    sshTransfer(execCommand: "rm updater/${os}/latest.zip"),
                             ],
-                            verbose: false)
+                            verbose: true)
             ]
     )
     sh "chmod +x -R libs/pack.sh"
     sh "libs/pack.sh -o ${os}"
+    fileOperations([fileZipOperation(folderPath: "libs/ProjectCreate/", outputFolderPath: "libs/" )])
     def zipName = "ProjectCreate.zip"
     deployFile("updater", "libs/", zipName, "updater/${os}/", destinationName)
     if(deployLatest) {
@@ -214,7 +214,7 @@ def deployFile(String moduleName, String sourceDirectory, String sourceFileName,
                                             sourceFiles: "${sourceDirectory}${destinationDuringUploadName}",
                                             execCommand: "mv ${destinationDir}${destinationDuringUploadName} ${destinationDir}${destinationFileName}"),
                             ],
-                            verbose: false)
+                            verbose: true)
             ]
     )
     fileOperations([fileDeleteOperation(includes: "${sourceDirectory}${destinationDuringUploadName}")])
