@@ -176,7 +176,7 @@ def deployUpdaterForOS(String os, String destinationName) {
                             verbose: false)
             ]
     )
-    sh "/libs/pack.sh -o ${os}"
+    sh "libs/pack.sh -o ${os}"
     def zipName = "ProjectCreate.zip"
     deployFile("updater", "libs/", zipName, "updater/${os}/", destinationName)
     deployFile("updater", "libs/", zipName, "updater/${os}/", "latest.zip")
