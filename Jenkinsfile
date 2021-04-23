@@ -206,7 +206,7 @@ def deployUpdaterForOS(String os, String destinationName, boolean deployLatest) 
     if(deployLatest) {
         deployFile("updater", "libs/", zipName, "updater/${os}/", "latest.zip")
     }
-    fileOperations([fileDeleteOperation(includes: "libs/${zipName}"), folderDeleteOperation(folderPath: "libs/ProjectCreate")])
+    fileOperations([folderDeleteOperation(folderPath: "libs/ProjectCreate")])
 }
 
 def buildAndDeployModule(String moduleName, String destinationName) {
