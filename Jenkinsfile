@@ -208,6 +208,7 @@ def deployUpdaterForOS(String os, String destinationName, boolean deployLatest) 
     def zipName = "ProjectCreate.zip"
     deployFile("libs/", zipName, "updater/${os}/", destinationName)
     if(deployLatest) {
+        fileOperations([fileZipOperation(folderPath: "libs/ProjectCreate", outputFolderPath: "libs" )])
         deployFile("libs/", zipName, "updater/${os}/", "latest.zip")
     }
     fileOperations([folderDeleteOperation(folderPath: "libs/ProjectCreate")])
