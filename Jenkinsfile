@@ -129,6 +129,10 @@ pipeline {
                             buildAndDeployModule(module, "${stage}-${version}-rc${versionNumber}${DEPLOY_FILE_EXTENSION}")
                             buildAndDeployModule("server", "${stage}-${version}-rc${versionNumber}${DEPLOY_FILE_EXTENSION}")
                             break
+                        case "updater":
+                            gradlew(":updater:dist" as String)
+                            deployUpdater("${stage}-${version}-rc${versionNumber}.zip", false)
+                            break
                         default:
                             buildAndDeployModule(module, "${stage}-${version}-rc${versionNumber}${DEPLOY_FILE_EXTENSION}")
                     }
@@ -151,9 +155,7 @@ pipeline {
                             break
                         case "updater":
                             gradlew(":updater:dist" as String)
-                            deployUpdaterForOS("windows", "${stage}-${version}.zip")
-                            deployUpdaterForOS("linux", "${stage}-${version}.zip")
-                            deployUpdaterForOS("macos", "${stage}-${version}.zip")
+                            deployUpdater("${stage}-${version}.zip", true)
                             break
                         default:
                             buildAndDeployModule(module, "${stage}-${version}${DEPLOY_FILE_EXTENSION}")
@@ -164,7 +166,13 @@ pipeline {
     }
 }
 
-def deployUpdaterForOS(String os, String destinationName) {
+def deployUpdater(String destinationName, boolean deployLatest) {
+    deployUpdaterForOS("windows", destinationName, deployLatest)
+    deployUpdaterForOS("linux", destinationName, deployLatest)
+    deployUpdaterForOS("macos", destinationName, deployLatest)
+}
+
+def deployUpdaterForOS(String os, String destinationName, boolean deployLatest) {
     sshPublisher(
             publishers: [
                     sshPublisherDesc(
@@ -176,11 +184,14 @@ def deployUpdaterForOS(String os, String destinationName) {
                             verbose: false)
             ]
     )
+    sh "chmod +x -R libs/pack.sh"
     sh "libs/pack.sh -o ${os}"
     def zipName = "ProjectCreate.zip"
     deployFile("updater", "libs/", zipName, "updater/${os}/", destinationName)
-    deployFile("updater", "libs/", zipName, "updater/${os}/", "latest.zip")
-    fileOperations([fileDeleteOperation(includes: "libs/${zipName}"), folderDeleteOperation(folderPath: "libs/ProjectCreate/")])
+    if(deployLatest) {
+        deployFile("updater", "libs/", zipName, "updater/${os}/", "latest.zip")
+    }
+    fileOperations([fileDeleteOperation(folderPath: "libs/${zipName}"), folderDeleteOperation(folderPath: "libs/ProjectCreate/")])
 }
 
 def buildAndDeployModule(String moduleName, String destinationName) {
