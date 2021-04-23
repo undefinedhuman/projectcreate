@@ -39,8 +39,10 @@ pipeline {
             }
         }
         stage('Unit Tests') {
+            when {
+                expression { false == true }
+            }
             steps {
-                return
                 updateGitlabCommitStatus name: 'Unit Tests', state: STATUS_MAP[currentBuild.currentResult]
                 gradlew("test")
                 stash allowEmpty: true, includes: '**/unitReports/*.xml', name: 'unitTestReports'
@@ -52,8 +54,10 @@ pipeline {
             }
         }
         stage('Integration Tests') {
+            when {
+                expression { false == true }
+            }
             steps {
-                return
                 updateGitlabCommitStatus name: 'Integration Tests', state: STATUS_MAP[currentBuild.currentResult]
                 gradlew("integrationTest")
                 stash allowEmpty: true, includes: '**/integrationReports/*.xml', name: 'integrationTestReports'
@@ -65,8 +69,10 @@ pipeline {
             }
         }
         stage('Reporting') {
+            when {
+                expression { false == true }
+            }
             steps {
-                return
                 unstash 'unitTestReports'
                 unstash 'integrationTestReports'
                 junit allowEmptyResults: true, testResults: '**/TEST-*.xml'
@@ -76,11 +82,13 @@ pipeline {
         }
 
         stage('Static Code Analysis') {
+            when {
+                expression { false == true }
+            }
             tools {
                 jdk "openjdk-11"
             }
             steps {
-                return
                 updateGitlabCommitStatus name: 'SonarQube analysis', state: 'pending'
                 unstash 'jacocoReports'
                 withSonarQubeEnv('SonarQube ProjectCreate') {
@@ -98,8 +106,10 @@ pipeline {
             }
         }
         stage("Quality Gate") {
+            when {
+                expression { false == true }
+            }
             steps {
-                return
                 updateGitlabCommitStatus name: 'Quality Gate', state: 'pending'
                 timeout(time: 15, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
