@@ -39,6 +39,9 @@ pipeline {
             }
         }
         stage('Unit Tests') {
+            when {
+                expression { false == true }
+            }
             steps {
                 updateGitlabCommitStatus name: 'Unit Tests', state: STATUS_MAP[currentBuild.currentResult]
                 gradlew("test")
@@ -51,6 +54,9 @@ pipeline {
             }
         }
         stage('Integration Tests') {
+            when {
+                expression { false == true }
+            }
             steps {
                 updateGitlabCommitStatus name: 'Integration Tests', state: STATUS_MAP[currentBuild.currentResult]
                 gradlew("integrationTest")
@@ -63,6 +69,9 @@ pipeline {
             }
         }
         stage('Reporting') {
+            when {
+                expression { false == true }
+            }
             steps {
                 unstash 'unitTestReports'
                 unstash 'integrationTestReports'
@@ -73,6 +82,9 @@ pipeline {
         }
 
         stage('Static Code Analysis') {
+            when {
+                expression { false == true }
+            }
             tools {
                 jdk "openjdk-11"
             }
@@ -94,6 +106,9 @@ pipeline {
             }
         }
         stage("Quality Gate") {
+            when {
+                expression { false == true }
+            }
             steps {
                 updateGitlabCommitStatus name: 'Quality Gate', state: 'pending'
                 timeout(time: 15, unit: 'MINUTES') {
@@ -173,33 +188,36 @@ def deployUpdater(String destinationName, boolean deployLatest) {
 }
 
 def deployUpdaterForOS(String os, String destinationName, boolean deployLatest) {
-    sshPublisher(
-            publishers: [
-                    sshPublisherDesc(
-                            configName: "Jenkins Deploy",
-                            transfers: [
-                                    sshTransfer(execCommand: "rm updater/${os}/latest.zip"),
-                            ],
-                            verbose: true)
-            ]
-    )
+    if(deployLatest) {
+        sshPublisher(
+                failOnError: false,
+                publishers: [
+                        sshPublisherDesc(
+                                configName: "Jenkins Deploy",
+                                transfers: [
+                                        sshTransfer(execCommand: "rm updater/${os}/latest.zip"),
+                                ],
+                                verbose: true)
+                ]
+        )
+    }
     sh "chmod +x -R libs/pack.sh"
     sh "libs/pack.sh -o ${os}"
-    fileOperations([fileZipOperation(folderPath: "libs/ProjectCreate/", outputFolderPath: "libs/" )])
+    fileOperations([fileZipOperation(folderPath: "libs/ProjectCreate", outputFolderPath: "libs" )])
     def zipName = "ProjectCreate.zip"
-    deployFile("updater", "libs/", zipName, "updater/${os}/", destinationName)
+    deployFile("libs/", zipName, "updater/${os}/", destinationName)
     if(deployLatest) {
-        deployFile("updater", "libs/", zipName, "updater/${os}/", "latest.zip")
+        deployFile("libs/", zipName, "updater/${os}/", "latest.zip")
     }
-    fileOperations([fileDeleteOperation(folderPath: "libs/${zipName}"), folderDeleteOperation(folderPath: "libs/ProjectCreate/")])
+    fileOperations([folderDeleteOperation(folderPath: "libs/ProjectCreate")])
 }
 
 def buildAndDeployModule(String moduleName, String destinationName) {
     gradlew(":${moduleName}:dist" as String)
-    deployFile("${moduleName}", "${moduleName}/build/libs/", "${moduleName}${DEPLOY_FILE_EXTENSION}", "${moduleName}/", "${destinationName}")
+    deployFile("${moduleName}/build/libs/", "${moduleName}${DEPLOY_FILE_EXTENSION}", "${moduleName}/", "${destinationName}")
 }
 
-def deployFile(String moduleName, String sourceDirectory, String sourceFileName, String destinationDir, String destinationFileName) {
+def deployFile(String sourceDirectory, String sourceFileName, String destinationDir, String destinationFileName) {
     def destinationDuringUploadName = "UPLOAD-${destinationFileName}"
     fileOperations([fileRenameOperation(source: "${sourceDirectory}${sourceFileName}", destination: "${sourceDirectory}${destinationDuringUploadName}", )])
     sshPublisher(
