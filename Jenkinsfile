@@ -168,7 +168,7 @@ def deployUpdaterForOS(String os, String destinationName) {
     sshPublisher(
             publishers: [
                     sshPublisherDesc(
-                            configName: "Delete latest version for ${os}",
+                            configName: "Jenkins Deploy",
                             transfers: [
                                     sshTransfer(
                                             execCommand: "rm updater/${os}/latest.zip"),
@@ -194,7 +194,7 @@ def deployFile(String moduleName, String sourceDirectory, String sourceFileName,
     sshPublisher(
             publishers: [
                     sshPublisherDesc(
-                            configName: "Deploy ${moduleName}",
+                            configName: "Jenkins Deploy",
                             transfers: [
                                     sshTransfer(
                                             remoteDirectory: "/${destinationDir}",
