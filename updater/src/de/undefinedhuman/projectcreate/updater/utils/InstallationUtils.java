@@ -20,7 +20,7 @@ public class InstallationUtils {
 
     public static void loadInstallationDirectory(boolean firstRun, Setting installationPath, FsFile defaultInstallationDirectory) {
         ArrayList<String> errorMessages = FileError.checkFileForErrors(installationPath.getFile(), FileError.NULL, FileError.NON_EXISTENT, FileError.NO_DIRECTORY, FileError.NOT_WRITEABLE);
-        if(firstRun || errorMessages.size() > 0)
+        if(firstRun || !errorMessages.isEmpty())
             installationPath.setValue(chooseInstallationDirectory(defaultInstallationDirectory));
     }
 
@@ -29,7 +29,7 @@ public class InstallationUtils {
         chooser.setDialogTitle("Choose a installation directory...");
         defaultInstallationDirectory.mkdirs();
         ArrayList<String> errorMessages = FileError.checkFileForErrors(defaultInstallationDirectory, FileError.NON_EXISTENT, FileError.NO_DIRECTORY, FileError.NOT_WRITEABLE);
-        if(errorMessages.size() > 0)
+        if(!errorMessages.isEmpty())
             Log.crash("Error", "An error occurred while creating the default installation directory! \nPlease choose another writable installation directory!", false);
         else chooser.setCurrentDirectory(defaultInstallationDirectory.file());
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -77,7 +77,7 @@ public class InstallationUtils {
     }
 
     public static boolean isVersionDownloaded(String downloadURL, FsFile installationDirectory, Version version) {
-        FsFile installedVersion = new FsFile(installationDirectory, version.toString() + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
+        FsFile installedVersion = new FsFile(installationDirectory, version + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
         return installedVersion.nameWithoutExtension().equalsIgnoreCase(version.toString())
                 && !installedVersion.isDirectory()
                 && installedVersion.name().substring(installedVersion.name().lastIndexOf(".")).equalsIgnoreCase(DownloadUtils.DOWNLOAD_FILE_EXTENSION)
@@ -88,7 +88,7 @@ public class InstallationUtils {
         FsFile projectDotDirectory = new FsFile(Paths.GAME_PATH, Files.FileType.External);
         projectDotDirectory.mkdirs();
         ArrayList<String> errorMessages = FileError.checkFileForErrors(projectDotDirectory, FileError.NON_EXISTENT, FileError.NO_DIRECTORY, FileError.NOT_WRITEABLE);
-        if(errorMessages.size() > 0)
+        if(!errorMessages.isEmpty())
             Log.crash("Crash", "An error occurred while creating the root directory of the project. \nPlease contact the author.\n" + errorMessages, true);
     }
 
