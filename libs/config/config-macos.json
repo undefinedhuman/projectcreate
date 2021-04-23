@@ -3,7 +3,7 @@
   "jdk": "https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u292-b10/OpenJDK8U-jre_x64_linux_hotspot_8u292b10.tar.gz",
   "executable": "Updater",
   "classpath": [
-    "../updater/build/libs/updater.jar"
+    "updater/build/libs/updater.jar"
   ],
   "mainclass": "de.undefinedhuman.projectcreate.updater.Updater",
   "minimizejre": "soft",
