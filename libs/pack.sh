@@ -26,4 +26,4 @@ if [ -z "$os_name" ]; then
     exit
 fi
 
-java -jar packr.jar config/config-"$os_name".json
+java -jar libs/packr.jar libs/config/config-"$os_name".json

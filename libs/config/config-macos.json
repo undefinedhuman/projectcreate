@@ -7,6 +7,6 @@
   ],
   "mainclass": "de.undefinedhuman.projectcreate.updater.Updater",
   "minimizejre": "soft",
-  "output": "ProjectCreate",
+  "output": "libs/ProjectCreate",
   "verbose": true
 }
