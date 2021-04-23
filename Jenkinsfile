@@ -168,7 +168,7 @@ def deployUpdaterForOS(String os, String destinationName) {
     sshPublisher(
             publishers: [
                     sshPublisherDesc(
-                            configName: "Delete latest version for ${os}",
+                            configName: "Jenkins Deploy",
                             transfers: [
                                     sshTransfer(
                                             execCommand: "rm updater/${os}/latest.zip"),
@@ -176,7 +176,7 @@ def deployUpdaterForOS(String os, String destinationName) {
                             verbose: false)
             ]
     )
-    sh "/libs/pack.sh -o ${os}"
+    sh "libs/pack.sh -o ${os}"
     def zipName = "ProjectCreate.zip"
     deployFile("updater", "libs/", zipName, "updater/${os}/", destinationName)
     deployFile("updater", "libs/", zipName, "updater/${os}/", "latest.zip")
@@ -194,7 +194,7 @@ def deployFile(String moduleName, String sourceDirectory, String sourceFileName,
     sshPublisher(
             publishers: [
                     sshPublisherDesc(
-                            configName: "Deploy ${moduleName}",
+                            configName: "Jenkins Deploy",
                             transfers: [
                                     sshTransfer(
                                             remoteDirectory: "/${destinationDir}",
