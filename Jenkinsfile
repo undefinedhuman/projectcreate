@@ -39,9 +39,6 @@ pipeline {
             }
         }
         stage('Unit Tests') {
-            when {
-                expression { false == true }
-            }
             steps {
                 updateGitlabCommitStatus name: 'Unit Tests', state: STATUS_MAP[currentBuild.currentResult]
                 gradlew("test")
@@ -54,9 +51,6 @@ pipeline {
             }
         }
         stage('Integration Tests') {
-            when {
-                expression { false == true }
-            }
             steps {
                 updateGitlabCommitStatus name: 'Integration Tests', state: STATUS_MAP[currentBuild.currentResult]
                 gradlew("integrationTest")
@@ -69,9 +63,6 @@ pipeline {
             }
         }
         stage('Reporting') {
-            when {
-                expression { false == true }
-            }
             steps {
                 unstash 'unitTestReports'
                 unstash 'integrationTestReports'
@@ -82,9 +73,6 @@ pipeline {
         }
 
         stage('Static Code Analysis') {
-            when {
-                expression { false == true }
-            }
             tools {
                 jdk "openjdk-11"
             }
@@ -106,9 +94,6 @@ pipeline {
             }
         }
         stage("Quality Gate") {
-            when {
-                expression { false == true }
-            }
             steps {
                 updateGitlabCommitStatus name: 'Quality Gate', state: 'pending'
                 timeout(time: 15, unit: 'MINUTES') {
