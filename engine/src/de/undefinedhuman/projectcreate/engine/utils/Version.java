@@ -2,19 +2,30 @@ package de.undefinedhuman.projectcreate.engine.utils;
 
 public class Version implements Comparable<Version>{
 
+    private final Stage stage;
     private final int[] data;
 
-    public Version(int... data) {
+    public Version(Stage stage, int... data) {
+        this.stage = stage;
         this.data = data;
     }
 
     public Version(String... data) {
+        stage = Stage.parse(data[0]);
         this.data = new int[data.length];
-        for(int i = 0; i < data.length; i++)
+        for(int i = 1; i < data.length; i++)
             this.data[i] = Integer.parseInt(data[i]);
     }
 
-    public Version(int major, int minor, int patch) {
+    public Version(String stage, String... data) {
+        this.stage = Stage.parse(stage);
+        this.data = new int[data.length];
+        for(int i = 1; i < data.length; i++)
+            this.data[i] = Integer.parseInt(data[i]);
+    }
+
+    public Version(Stage stage, int major, int minor, int patch) {
+        this.stage = stage;
         data = new int[] { major, minor, patch };
     }
 
@@ -24,10 +35,9 @@ public class Version implements Comparable<Version>{
 
     @Override
     public String toString() {
-        if(data.length == 0)
+        if(stage == null || data.length == 0)
             return "";
-        StringBuilder builder = new StringBuilder();
-        builder.append("v");
+        StringBuilder builder = new StringBuilder(stage.name().toLowerCase()).append("-");
         for(int i = 0; i < data.length-1; i++)
             builder.append(data[i]).append(".");
         builder.append(data[data.length-1]);
@@ -56,6 +66,9 @@ public class Version implements Comparable<Version>{
     public int compareTo(Version other) {
         if(other == null)
             return 1;
+        int stageComparison = stage.compareTo(other.stage);
+        if(stageComparison != 0)
+            return stageComparison;
         int length = Math.max(data.length, other.data().length);
         for(int i = 0; i < length; i++) {
             int data = i < this.data.length ? this.data[i] : 0;
@@ -67,11 +80,10 @@ public class Version implements Comparable<Version>{
     }
 
     public static Version parse(String version) {
-        String[] data;
-        if(version.startsWith("v"))
-            data = version.substring(1).split("\\.");
-        else data = version.split("\\.");
-        return new Version(data);
+        String[] stageAndDataSplit = version.split("-");
+        if(stageAndDataSplit.length != 2)
+            return new Version(Stage.INDEV, -1, -1, -1);
+        return new Version(stageAndDataSplit[0], stageAndDataSplit[1].split("\\."));
     }
 
 }

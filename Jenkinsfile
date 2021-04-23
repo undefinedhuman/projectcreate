@@ -201,6 +201,7 @@ def deployUpdaterForOS(String os, String destinationName, boolean deployLatest) 
                 ]
         )
     }
+    fileOperations([folderDeleteOperation(folderPath: "libs/ProjectCreate")])
     sh "chmod +x -R libs/pack.sh"
     sh "libs/pack.sh -o ${os}"
     fileOperations([fileZipOperation(folderPath: "libs/ProjectCreate", outputFolderPath: "libs" )])
