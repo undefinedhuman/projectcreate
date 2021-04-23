@@ -188,33 +188,36 @@ def deployUpdater(String destinationName, boolean deployLatest) {
 }
 
 def deployUpdaterForOS(String os, String destinationName, boolean deployLatest) {
-    sshPublisher(
-            publishers: [
-                    sshPublisherDesc(
-                            configName: "Jenkins Deploy",
-                            transfers: [
-                                    sshTransfer(execCommand: "rm updater/${os}/latest.zip"),
-                            ],
-                            verbose: true)
-            ]
-    )
+    if(deployLatest) {
+        sshPublisher(
+                failOnError: false,
+                publishers: [
+                        sshPublisherDesc(
+                                configName: "Jenkins Deploy",
+                                transfers: [
+                                        sshTransfer(execCommand: "rm updater/${os}/latest.zip"),
+                                ],
+                                verbose: true)
+                ]
+        )
+    }
     sh "chmod +x -R libs/pack.sh"
     sh "libs/pack.sh -o ${os}"
     fileOperations([fileZipOperation(folderPath: "libs/ProjectCreate", outputFolderPath: "libs" )])
     def zipName = "ProjectCreate.zip"
-    deployFile("updater", "libs/", zipName, "updater/${os}/", destinationName)
+    deployFile("libs/", zipName, "updater/${os}/", destinationName)
     if(deployLatest) {
-        deployFile("updater", "libs/", zipName, "updater/${os}/", "latest.zip")
+        deployFile("libs/", zipName, "updater/${os}/", "latest.zip")
     }
-    fileOperations([fileDeleteOperation(includes: "libs/${zipName}"), folderDeleteOperation(folderPath: "libs/ProjectCreate")])
+    fileOperations([folderDeleteOperation(folderPath: "libs/ProjectCreate")])
 }
 
 def buildAndDeployModule(String moduleName, String destinationName) {
     gradlew(":${moduleName}:dist" as String)
-    deployFile("${moduleName}", "${moduleName}/build/libs/", "${moduleName}${DEPLOY_FILE_EXTENSION}", "${moduleName}/", "${destinationName}")
+    deployFile("${moduleName}/build/libs/", "${moduleName}${DEPLOY_FILE_EXTENSION}", "${moduleName}/", "${destinationName}")
 }
 
-def deployFile(String moduleName, String sourceDirectory, String sourceFileName, String destinationDir, String destinationFileName) {
+def deployFile(String sourceDirectory, String sourceFileName, String destinationDir, String destinationFileName) {
     def destinationDuringUploadName = "UPLOAD-${destinationFileName}"
     fileOperations([fileRenameOperation(source: "${sourceDirectory}${sourceFileName}", destination: "${sourceDirectory}${destinationDuringUploadName}", )])
     sshPublisher(
