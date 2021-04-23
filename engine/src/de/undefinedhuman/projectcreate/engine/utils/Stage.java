@@ -3,6 +3,7 @@ package de.undefinedhuman.projectcreate.engine.utils;
 import java.util.Arrays;
 
 public enum Stage {
+    SNAPSHOT,
     INDEV,
     ALPHA,
     BETA,
