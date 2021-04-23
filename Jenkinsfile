@@ -188,16 +188,19 @@ def deployUpdater(String destinationName, boolean deployLatest) {
 }
 
 def deployUpdaterForOS(String os, String destinationName, boolean deployLatest) {
-    sshPublisher(
-            publishers: [
-                    sshPublisherDesc(
-                            configName: "Jenkins Deploy",
-                            transfers: [
-                                    sshTransfer(execCommand: "rm updater/${os}/latest.zip"),
-                            ],
-                            verbose: true)
-            ]
-    )
+    if(deployLatest) {
+        sshPublisher(
+                failOnError: false,
+                publishers: [
+                        sshPublisherDesc(
+                                configName: "Jenkins Deploy",
+                                transfers: [
+                                        sshTransfer(execCommand: "rm updater/${os}/latest.zip"),
+                                ],
+                                verbose: true)
+                ]
+        )
+    }
     sh "chmod +x -R libs/pack.sh"
     sh "libs/pack.sh -o ${os}"
     fileOperations([fileZipOperation(folderPath: "libs/ProjectCreate", outputFolderPath: "libs" )])
