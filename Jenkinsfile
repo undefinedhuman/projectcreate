@@ -1,5 +1,6 @@
 #!groovy
 def STATUS_MAP = ['SUCCESS': 'success', 'FAILURE': 'failed', 'UNSTABLE': 'failed', 'ABORTED': 'failed']
+DEPLOY_FILE_EXTENSION = ".jar"
 
 pipeline {
     agent any
@@ -109,8 +110,8 @@ pipeline {
             when { expression { BRANCH_NAME == "snapshot" } }
             steps {
                 script {
-                    gradlew(":game:dist")
-                    deployFile("game", "versions/", "snapshot-${env.SNAPSHOT}.jar")
+                    buildAndDeployModule("game", "snapshot-${env.SNAPSHOT}${DEPLOY_FILE_EXTENSION}")
+                    buildAndDeployModule("server", "snapshot-${env.SNAPSHOT}${DEPLOY_FILE_EXTENSION}")
                 }
             }
         }
@@ -123,9 +124,14 @@ pipeline {
                     def module = versionString[1] as String
                     def version = versionString[2] as String
                     def versionNumber = VersionNumber(versionNumberString: '${BUILDS_ALL_TIME}', worstResultForIncrement: 'SUCCESS') as String
-                    buildAndDeployModule(module, "${stage}-${version}-rc${versionNumber}.jar")
-                    if(module.equalsIgnoreCase("game"))
-                        buildAndDeployModule("server", "${stage}-${version}-rc${versionNumber}.jar")
+                    switch(module) {
+                        case "game":
+                            buildAndDeployModule(module, "${stage}-${version}-rc${versionNumber}${DEPLOY_FILE_EXTENSION}")
+                            buildAndDeployModule("server", "${stage}-${version}-rc${versionNumber}${DEPLOY_FILE_EXTENSION}")
+                            break
+                        default:
+                            buildAndDeployModule(module, "${stage}-${version}-rc${versionNumber}${DEPLOY_FILE_EXTENSION}")
+                    }
                 }
             }
         }
@@ -138,40 +144,69 @@ pipeline {
                     def stage = versionString[0] as String
                     def module = versionString[1] as String
                     def version = versionString[2] as String
-                    buildAndDeployModule(module, "${stage}-${version}.jar")
-                    if(module.equalsIgnoreCase("game"))
-                        buildAndDeployModule("server", "${stage}-${version}.jar")
+                    switch(module) {
+                        case "game":
+                            buildAndDeployModule(module, "${stage}-${version}${DEPLOY_FILE_EXTENSION}")
+                            buildAndDeployModule("server", "${stage}-${version}${DEPLOY_FILE_EXTENSION}")
+                            break
+                        case "updater":
+                            gradlew(":updater:dist" as String)
+                            deployUpdaterForOS("windows", "${stage}-${version}.zip")
+                            deployUpdaterForOS("linux", "${stage}-${version}.zip")
+                            deployUpdaterForOS("macos", "${stage}-${version}.zip")
+                            break
+                        default:
+                            buildAndDeployModule(module, "${stage}-${version}${DEPLOY_FILE_EXTENSION}")
+                    }
                 }
             }
         }
     }
 }
 
-def buildAndDeployModule(String moduleName, String destinationName) {
-    gradlew(":${moduleName}:dist" as String)
-    deployFile("${moduleName}", "${moduleName}/", "${destinationName}")
-}
-
-def deployFile(String sourceName, String destinationDir, String destinationFileName) {
-    def destinationDuringUploadName = "UPLOAD-${destinationFileName}"
-    def sourceDir = "${sourceName}/build/libs/"
-    fileOperations([fileRenameOperation(source: "${sourceDir}${sourceName}.jar", destination: "${sourceDir}${destinationDuringUploadName}", )])
+def deployUpdaterForOS(String os, String destinationName) {
     sshPublisher(
             publishers: [
                     sshPublisherDesc(
-                            configName: 'Jenkins Deploy',
+                            configName: "Delete latest version for ${os}",
+                            transfers: [
+                                    sshTransfer(
+                                            execCommand: "rm updater/${os}/latest.zip"),
+                            ],
+                            verbose: false)
+            ]
+    )
+    sh "/libs/pack.sh -o ${os}"
+    def zipName = "ProjectCreate.zip"
+    deployFile("updater", "libs/", zipName, "updater/${os}/", destinationName)
+    deployFile("updater", "libs/", zipName, "updater/${os}/", "latest.zip")
+    fileOperations([fileDeleteOperation(includes: "libs/${zipName}"), folderDeleteOperation(folderPath: "libs/ProjectCreate/")])
+}
+
+def buildAndDeployModule(String moduleName, String destinationName) {
+    gradlew(":${moduleName}:dist" as String)
+    deployFile("${moduleName}", "${moduleName}/build/libs/", "${moduleName}${DEPLOY_FILE_EXTENSION}", "${moduleName}/", "${destinationName}")
+}
+
+def deployFile(String moduleName, String sourceDirectory, String sourceFileName, String destinationDir, String destinationFileName) {
+    def destinationDuringUploadName = "UPLOAD-${destinationFileName}"
+    fileOperations([fileRenameOperation(source: "${sourceDirectory}${sourceFileName}", destination: "${sourceDirectory}${destinationDuringUploadName}", )])
+    sshPublisher(
+            publishers: [
+                    sshPublisherDesc(
+                            configName: "Deploy ${moduleName}",
                             transfers: [
                                     sshTransfer(
                                             remoteDirectory: "/${destinationDir}",
                                             remoteDirectorySDF: false,
-                                            removePrefix: "${sourceDir}",
-                                            sourceFiles: "${sourceDir}${destinationDuringUploadName}",
+                                            removePrefix: "${sourceDirectory}",
+                                            sourceFiles: "${sourceDirectory}${destinationDuringUploadName}",
                                             execCommand: "mv ${destinationDir}${destinationDuringUploadName} ${destinationDir}${destinationFileName}"),
                             ],
-                            verbose: true)
+                            verbose: false)
             ]
     )
-    fileOperations([fileDeleteOperation(includes: "${sourceDir}${destinationDuringUploadName}")])
+    fileOperations([fileDeleteOperation(includes: "${sourceDirectory}${destinationDuringUploadName}")])
 }
 
 def gradlew(String... args) {
