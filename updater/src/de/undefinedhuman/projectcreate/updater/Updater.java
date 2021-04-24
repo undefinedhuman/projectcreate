@@ -23,8 +23,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class Updater extends JFrame {
 
@@ -80,7 +80,7 @@ public class Updater extends JFrame {
         updaterUI.updateProgressText("Checking for installed version...");
         sleep();
         FsFile currentlyInstalledVersion = new FsFile(UpdaterConfig.getInstance().installationPath.getFile(), UpdaterConfig.getInstance().version.getString() + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
-        ArrayList<Version> versions = InstallationUtils.fetchAvailableVersions(DOWNLOAD_LAUNCHER_URL);
+        List<Version> versions = InstallationUtils.fetchAvailableVersions(DOWNLOAD_LAUNCHER_URL);
         if(versions.isEmpty())
             Log.crash("Crash", "Error while fetching available launcher versions. \nPlease restart, if the error persists, please contact the author.", true);
         Version maxVersion = Collections.max(versions);
