@@ -6,7 +6,6 @@
     "updater/build/libs/updater.jar"
   ],
   "mainclass": "de.undefinedhuman.projectcreate.updater.Updater",
-  "minimizejre": "soft",
   "output": "libs/ProjectCreate",
   "verbose": true
 }
