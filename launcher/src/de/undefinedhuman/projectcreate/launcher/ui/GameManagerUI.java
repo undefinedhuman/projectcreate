@@ -79,7 +79,7 @@ public class GameManagerUI extends JPanel {
         deleteButton = new IconButton("delete", 277, getHeight()/2-ICON_SIZE.y/2, e -> {
             FsFile installationFile = new FsFile(LauncherConfig.getInstance().gameInstallationPath.getFile(), selectedVersion.toString() + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
             ArrayList<String> errorMessages = FileError.checkFileForErrors(installationFile, FileError.NULL, FileError.NON_EXISTENT, FileError.NO_FILE);
-            if(errorMessages.size() == 0 && installationFile.delete())
+            if(errorMessages.isEmpty() && installationFile.delete())
                 Log.info("Successfully deleted game version " + selectedVersion.toString());
             checkVersion(selectedVersion);
         });

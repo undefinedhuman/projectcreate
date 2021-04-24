@@ -103,8 +103,7 @@ public class Updater extends JFrame {
         updaterUI.updateProgressText("Start launcher...");
         sleep();
         try {
-            Log.info(currentlyInstalledVersion.path());
-            Runtime.getRuntime().exec("java -jar " + currentlyInstalledVersion.path());
+            Runtime.getRuntime().exec(System.getProperty("java.home") + "/bin/java -jar " + currentlyInstalledVersion.path());
             setVisible(false);
             dispose();
         } catch (IOException e) {
