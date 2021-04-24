@@ -26,8 +26,8 @@ import java.awt.event.WindowEvent;
 
 public class Launcher extends JFrame {
 
-    public static final String DOWNLOAD_GAME_URL = DownloadUtils.SERVER_URL + "versions/";
-    public static final FsFile DEFAULT_INSTALLATION_DIRECTORY = new FsFile(Paths.GAME_PATH, "versions/", Files.FileType.External);
+    public static final String DOWNLOAD_GAME_URL = DownloadUtils.SERVER_URL + "game/";
+    public static final FsFile DEFAULT_INSTALLATION_DIRECTORY = new FsFile(Paths.GAME_PATH, "game/", Files.FileType.External);
 
     private static volatile Launcher instance;
 
