@@ -84,20 +84,19 @@ public class Updater extends JFrame {
         if(versions.isEmpty())
             Log.crash("Crash", "Error while fetching available launcher versions. \nPlease restart, if the error persists, please contact the author.", true);
         Version maxVersion = Collections.max(versions);
-        String loggableVersion = maxVersion.toString().substring(1);
         String downloadUrl = DOWNLOAD_LAUNCHER_URL + maxVersion + DownloadUtils.DOWNLOAD_FILE_EXTENSION;
         if(!currentlyInstalledVersion.exists() || !UpdaterConfig.getInstance().version.getVersion().equals(maxVersion) || DownloadUtils.fetchFileSize(downloadUrl) != currentlyInstalledVersion.length()) {
-            updaterUI.updateProgressText("Download launcher version " + loggableVersion + "...");
+            updaterUI.updateProgressText("Download launcher version " + maxVersion + "...");
             sleep();
-            Log.info("Downloading newest launcher version " + loggableVersion);
             FileUtils.deleteFile(currentlyInstalledVersion);
+            Log.info(maxVersion);
             currentlyInstalledVersion = new FsFile(UpdaterConfig.getInstance().installationPath.getFile(), maxVersion + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
             try {
                 DownloadUtils.downloadFile(downloadUrl, currentlyInstalledVersion);
             } catch (IOException | URISyntaxException e) {
-                Log.crash("Crash", "Error while downloading launcher version " + loggableVersion + "\nPlease restart, if the error persists, please contact the author.", true);
+                Log.crash("Crash", "Error while downloading launcher version " + maxVersion + "\nPlease restart, if the error persists, please contact the author.", true);
             }
-        } else Log.info("Launcher already up to date. Version: " + loggableVersion);
+        } else Log.info("Launcher already up to date. Version: " + maxVersion);
 
         UpdaterConfig.getInstance().version.setValue(maxVersion.toString());
 

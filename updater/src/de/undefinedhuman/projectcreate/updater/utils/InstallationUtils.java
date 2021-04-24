@@ -6,6 +6,7 @@ import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
+import de.undefinedhuman.projectcreate.engine.utils.Stage;
 import de.undefinedhuman.projectcreate.engine.utils.Version;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -14,6 +15,7 @@ import org.jsoup.nodes.Element;
 import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class InstallationUtils {
@@ -56,7 +58,10 @@ public class InstallationUtils {
             return availableVersions;
         for (Element file : doc.select("pre a")) {
             String fileName = file.attr("href");
-            if(!fileName.startsWith("v"))
+            StringBuilder regex = new StringBuilder("^(");
+            Arrays.stream(Stage.values()).forEach(stage -> regex.append(stage.name().toLowerCase()).append("|"));
+            regex.deleteCharAt(regex.length()-1).append(").*");
+            if(!fileName.matches(regex.toString()))
                 continue;
             availableVersions.add(Version.parse(fileName.split(DownloadUtils.DOWNLOAD_FILE_EXTENSION)[0]));
         }

@@ -23,7 +23,7 @@ public class UpdaterConfig extends Config {
                     return InstallationUtils.chooseInstallationDirectory(defaultFile);
                 }
             },
-            version = new Setting(SettingType.Version, "version", new Version(Stage.INDEV, 0, 0, 0).toString());
+            version = new Setting(SettingType.Version, "version", new Version(Stage.INDEV, 0, 0, 0, 0).toString());
 
     private UpdaterConfig() {
         super("updater");
