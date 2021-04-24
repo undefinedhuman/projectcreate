@@ -1,3 +1,5 @@
+def osName = System.getProperty('os.name').toLowerCase(Locale.ROOT)
+
 sourceCompatibility = JavaVersion.VERSION_1_8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
