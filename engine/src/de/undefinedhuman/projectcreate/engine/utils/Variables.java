@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 public class Variables {
     // General
     public static String NAME = "ProjectCreate";
-    public static Version VERSION = new Version(Stage.INDEV, 0, 0, 0);
+    public static Version VERSION = new Version(Stage.INDEV, 0, 0, 0, 0);
 
     // Engine
     public static final float GAME_CAMERA_ZOOM = 3f;

@@ -5,28 +5,9 @@ public class Version implements Comparable<Version>{
     private final Stage stage;
     private final int[] data;
 
-    public Version(Stage stage, int... data) {
+    public Version(Stage stage, int major, int minor, int patch, int rc) {
         this.stage = stage;
-        this.data = data;
-    }
-
-    public Version(String... data) {
-        stage = Stage.parse(data[0]);
-        this.data = new int[data.length];
-        for(int i = 1; i < data.length; i++)
-            this.data[i] = Integer.parseInt(data[i]);
-    }
-
-    public Version(String stage, String... data) {
-        this.stage = Stage.parse(stage);
-        this.data = new int[data.length];
-        for(int i = 1; i < data.length; i++)
-            this.data[i] = Integer.parseInt(data[i]);
-    }
-
-    public Version(Stage stage, int major, int minor, int patch) {
-        this.stage = stage;
-        data = new int[] { major, minor, patch };
+        data = new int[] { major, minor, patch, rc };
     }
 
     public int[] data() {
@@ -38,9 +19,8 @@ public class Version implements Comparable<Version>{
         if(stage == null || data.length == 0)
             return "";
         StringBuilder builder = new StringBuilder(stage.name().toLowerCase()).append("-");
-        for(int i = 0; i < data.length-1; i++)
-            builder.append(data[i]).append(".");
-        builder.append(data[data.length-1]);
+        if(stage == Stage.SNAPSHOT) builder.append(data[0]).append("w").append(data[1]).append("b").append(data[2]);
+        else builder.append(data[0]).append(".").append(data[1]).append(".").append(data[2]).append(data[3] != Integer.MAX_VALUE ? "-rc" + data[3] : "");
         return builder.toString();
     }
 
@@ -81,9 +61,18 @@ public class Version implements Comparable<Version>{
 
     public static Version parse(String version) {
         String[] stageAndDataSplit = version.split("-");
-        if(stageAndDataSplit.length != 2)
-            return new Version(Stage.INDEV, -1, -1, -1);
-        return new Version(stageAndDataSplit[0], stageAndDataSplit[1].split("\\."));
+        if(!Tools.isInRange(stageAndDataSplit.length, 2, 3))
+            return new Version(Stage.SNAPSHOT, 0, 0, 0, 0);
+        String[] data = stageAndDataSplit[1].split("\\.|([wb])");
+        if(data.length != 3 || !Tools.isInteger(data[0]) || !Tools.isInteger(data[1]) || !Tools.isInteger(data[2]))
+            return new Version(Stage.SNAPSHOT, 0, 0, 0, 0);
+        return new Version(
+                Stage.parse(stageAndDataSplit[0]),
+                Integer.parseInt(data[0]),
+                Integer.parseInt(data[1]),
+                Integer.parseInt(data[2]),
+                stageAndDataSplit.length == 3 ? Integer.parseInt(stageAndDataSplit[2].substring(2)) : Integer.MAX_VALUE
+        );
     }
 
 }
