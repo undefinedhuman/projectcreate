@@ -133,5 +133,6 @@ project(":launcher") {
         compile 'com.formdev:flatlaf:0.36'
         compile 'com.formdev:svgSalamander:1.1.2.4'
         compile 'com.formdev:flatlaf-extras:1.1.1'
+        compile 'com.github.oshi:oshi-core:5.7.1'
     }
 }
