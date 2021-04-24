@@ -27,7 +27,7 @@ public interface GameAction {
                 float xmx = LauncherConfig.getInstance().maximumMemory.getFloat();
                 float xms = LauncherConfig.getInstance().initialMemory.getFloat();
                 String javaCommand =
-                        "java -jar " +
+                        System.getProperty("java.home") + "/bin/java -jar " +
                         gameVersion.path() +
                         (xmx != 0 ? String.format(" -Xmx%.1fg", xmx) : "") +
                         (xms != 0 ? String.format(" -Xms%.1fg", xms) : "");
