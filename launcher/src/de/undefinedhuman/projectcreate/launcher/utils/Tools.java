@@ -1,8 +1,7 @@
 package de.undefinedhuman.projectcreate.launcher.utils;
 
-import com.sun.management.OperatingSystemMXBean;
-
-import java.lang.management.ManagementFactory;
+import oshi.SystemInfo;
+import oshi.hardware.HardwareAbstractionLayer;
 
 public class Tools {
 
@@ -11,8 +10,10 @@ public class Tools {
     private static final float MB = 1024f * 1024f;
 
     public static int calculateAvailableMaxMemory() {
-        float totalMemory = ((OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean()).getTotalPhysicalMemorySize();
-        float memoryInMB = totalMemory / MB;
+        SystemInfo si = new SystemInfo();
+        HardwareAbstractionLayer hal = si.getHardware();
+        long availableMemory = hal.getMemory().getTotal();
+        float memoryInMB = availableMemory / MB;
         float memoryHalved = memoryInMB / 2f;
         return (int) Math.ceil(memoryHalved);
     }
