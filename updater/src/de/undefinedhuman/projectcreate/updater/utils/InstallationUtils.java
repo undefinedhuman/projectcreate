@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 public class InstallationUtils {
 
@@ -46,7 +47,7 @@ public class InstallationUtils {
         return selectedFile.file().getAbsolutePath();
     }
 
-    public static ArrayList<Version> fetchAvailableVersions(String url) {
+    public static List<Version> fetchAvailableVersions(String url) {
         ArrayList<Version> availableVersions = new ArrayList<>();
         Document doc = null;
         try {

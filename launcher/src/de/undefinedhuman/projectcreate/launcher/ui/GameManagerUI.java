@@ -14,6 +14,8 @@ import de.undefinedhuman.projectcreate.updater.utils.InstallationUtils;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class GameManagerUI extends JPanel {
 
@@ -55,7 +57,9 @@ public class GameManagerUI extends JPanel {
     }
 
     private void initVersionSelection() {
-        versionSelectionModel = new DefaultComboBoxModel<>(InstallationUtils.fetchAvailableVersions(Launcher.DOWNLOAD_GAME_URL).toArray(new Version[0]));
+        List<Version> availableVersion = InstallationUtils.fetchAvailableVersions(Launcher.DOWNLOAD_GAME_URL);
+        Collections.reverse(availableVersion);
+        versionSelectionModel = new DefaultComboBoxModel<>(availableVersion.toArray(new Version[0]));
         versionSelection = new JComboBox<>(InstallationUtils.fetchAvailableVersions(Launcher.DOWNLOAD_GAME_URL).toArray(new Version[0]));
         versionSelection.setBounds(25, getHeight()/2-ICON_SIZE.y/2, 200, ICON_SIZE.y);
         versionSelection.setRenderer(new VersionCellRenderer());
