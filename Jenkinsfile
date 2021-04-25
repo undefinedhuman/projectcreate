@@ -110,6 +110,7 @@ pipeline {
             when { expression { BRANCH_NAME == "dev" } }
             steps {
                 script {
+                    gradlew(":server:dist" as String)
                     deployToTestServer("dev")
                 }
             }
