@@ -1,5 +1,5 @@
 #!groovy
-def STATUS_MAP = ['SUCCESS': 'success', 'FAILURE': 'failed', 'UNSTABLE': 'failed', 'ABORTED': 'failed']
+def STATUS_MAP = ['SUCCESS': 'success', 'UNSTABLE': 'unstable', 'FAILURE': 'failed', 'ABORTED': 'failed']
 DEPLOY_FILE_EXTENSION = ".jar"
 
 pipeline {
