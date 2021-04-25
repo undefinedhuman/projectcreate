@@ -9,7 +9,7 @@ public class Main {
         while(i > 0) {
             try {
                 Thread.sleep(1000);
-                System.out.println("Server still running!");
+                System.out.println("Server still running! Run: " + i);
                 i--;
             } catch (InterruptedException e) {
                 Log.error("Error while server sleep" + e.getMessage());

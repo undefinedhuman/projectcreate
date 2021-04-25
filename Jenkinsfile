@@ -110,7 +110,7 @@ pipeline {
             when { expression { BRANCH_NAME == "dev" } }
             steps {
                 script {
-                    buildAndDeployModule("server", "snapshot-${env.SNAPSHOT}${DEPLOY_FILE_EXTENSION}")
+                    deployToTestServer("dev")
                 }
             }
         }
@@ -120,6 +120,7 @@ pipeline {
                 script {
                     buildAndDeployModule("game", "snapshot-${env.SNAPSHOT}${DEPLOY_FILE_EXTENSION}")
                     buildAndDeployModule("server", "snapshot-${env.SNAPSHOT}${DEPLOY_FILE_EXTENSION}")
+                    deployToTestServer("snapshot")
                 }
             }
         }
@@ -136,6 +137,7 @@ pipeline {
                         case "game":
                             buildAndDeployModule(module, "${stage}-${version}-rc${versionNumber}${DEPLOY_FILE_EXTENSION}")
                             buildAndDeployModule("server", "${stage}-${version}-rc${versionNumber}${DEPLOY_FILE_EXTENSION}")
+                            deployToTestServer("release")
                             break
                         case "updater":
                             gradlew(":updater:dist" as String)
@@ -174,8 +176,31 @@ pipeline {
     }
 }
 
-def deployToTestServer() {
-    deployFile("server/build/libs/", "server${DEPLOY_FILE_EXTENSION}", "instances/dev/", "server.jar")
+def deployToTestServer(String stage) {
+    sshPublisher(
+            failOnError: false,
+            publishers: [
+                    sshPublisherDesc(
+                            configName: "Jenkins Deploy",
+                            transfers: [
+                                    sshTransfer(execCommand: "sh instances/${stage}/stop.sh"),
+                                    sshTransfer(execCommand: "rm instances/${stage}/server.jar"),
+                            ],
+                            verbose: true)
+            ]
+    )
+    deployFile("server/build/libs/", "server.jar", "instances/${stage}/", "server.jar")
+    sshPublisher(
+            failOnError: false,
+            publishers: [
+                    sshPublisherDesc(
+                            configName: "Jenkins Deploy",
+                            transfers: [
+                                    sshTransfer(execCommand: "sh instances/${stage}/start.sh"),
+                            ],
+                            verbose: true)
+            ]
+    )
 }
 
 def deployUpdater(String destinationName, boolean deployLatest) {
