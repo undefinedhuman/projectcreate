@@ -13,7 +13,7 @@ public class Main {
         Log.instance.type = Files.FileType.Local;
         Log.instance.init();
         Log.instance.load();
-        Log.info("SERVER STARTED!");
+        Log.info("SERVER STARTED! TEST");
         Log.info("SERVER STOPPED!");
         Log.instance.save();
         int i = 500;
