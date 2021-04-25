@@ -180,12 +180,21 @@ pipeline {
 def deployToTestServer(String stage) {
     sshPublisher(
             failOnError: false,
-            continueOnError: true,
             publishers: [
                     sshPublisherDesc(
                             configName: "Jenkins Deploy",
                             transfers: [
-                                    sshTransfer(execCommand: "sh instances/${stage}/stop.sh"),
+                                    sshTransfer(execCommand: "sh instances/${stage}/stop.sh")
+                            ],
+                            verbose: true)
+            ]
+    )
+    sshPublisher(
+            failOnError: false,
+            publishers: [
+                    sshPublisherDesc(
+                            configName: "Jenkins Deploy",
+                            transfers: [
                                     sshTransfer(execCommand: "rm instances/${stage}/server.jar")
                             ],
                             verbose: true)
@@ -198,9 +207,9 @@ def deployToTestServer(String stage) {
                     sshPublisherDesc(
                             configName: "Jenkins Deploy",
                             transfers: [
-                                    sshTransfer(execCommand: "sh instances/${stage}/start.sh"),
+                                    sshTransfer(execCommand: "cd instances/${stage}/ && ./start.sh"),
                             ],
-                            verbose: true)
+                            verbose: false)
             ]
     )
 }

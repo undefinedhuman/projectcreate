@@ -30,6 +30,8 @@ public class Log extends Manager implements ApplicationLogger, Serializable {
     private String fileName;
     private FsFile file;
 
+    public Files.FileType type = Files.FileType.External;
+
     public Log() {
         if (instance == null)
             instance = this;
@@ -61,7 +63,8 @@ public class Log extends Manager implements ApplicationLogger, Serializable {
     public void load() {
         checkLogs();
         file = new FsFile(Paths.LOG_PATH, fileName, Files.FileType.External);
-        if (file.exists()) info("Log file successfully created!");
+        if (file.exists())
+            info("Log file successfully created!");
     }
 
     public void exit() {
