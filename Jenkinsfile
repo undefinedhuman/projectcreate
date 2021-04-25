@@ -109,25 +109,38 @@ pipeline {
         stage('Deploy dev server') {
             when { expression { BRANCH_NAME == "dev" } }
             steps {
+                updateGitlabCommitStatus name: 'Deploy dev server', state: 'pending'
                 script {
                     gradlew(":server:dist" as String)
                     deployToTestServer("dev")
+                }
+            }
+            post {
+                always {
+                    updateGitlabCommitStatus name: 'Deploy dev server', state: STATUS_MAP[currentBuild.currentResult]
                 }
             }
         }
         stage('Deploy snapshot') {
             when { expression { BRANCH_NAME == "snapshot" } }
             steps {
+                updateGitlabCommitStatus name: 'Deploy snapshot', state: 'pending'
                 script {
                     buildAndDeployModule("game", "snapshot-${env.SNAPSHOT}${DEPLOY_FILE_EXTENSION}")
                     buildAndDeployModule("server", "snapshot-${env.SNAPSHOT}${DEPLOY_FILE_EXTENSION}")
                     deployToTestServer("snapshot")
                 }
             }
+            post {
+                always {
+                    updateGitlabCommitStatus name: 'Deploy snapshot', state: STATUS_MAP[currentBuild.currentResult]
+                }
+            }
         }
         stage('Deploy release candidate') {
             when { expression { BRANCH_NAME ==~ '^(release/)(indev|alpha|beta|release)-(game|launcher|updater|editor)-[0-9]+.[0-9]+.[0-9]+' } }
             steps {
+                updateGitlabCommitStatus name: 'Deploy release candidate', state: 'pending'
                 script {
                     def versionString = "${BRANCH_NAME}".split("/", 2)[1].split("-")
                     def stage = versionString[0] as String
@@ -149,10 +162,16 @@ pipeline {
                     }
                 }
             }
+            post {
+                always {
+                    updateGitlabCommitStatus name: 'Deploy release candidate', state: STATUS_MAP[currentBuild.currentResult]
+                }
+            }
         }
         stage('Deploy release') {
             when { expression { BRANCH_NAME == 'main' } }
             steps {
+                updateGitlabCommitStatus name: 'Deploy release', state: 'pending'
                 script {
                     TAG = sh(script: 'git tag --points-at HEAD | awk NF', returnStdout: true).trim()
                     def versionString = "${TAG}".split("-")
@@ -171,6 +190,11 @@ pipeline {
                         default:
                             buildAndDeployModule(module, "${stage}-${version}${DEPLOY_FILE_EXTENSION}")
                     }
+                }
+            }
+            post {
+                always {
+                    updateGitlabCommitStatus name: 'Deploy release', state: STATUS_MAP[currentBuild.currentResult]
                 }
             }
         }
