@@ -13,7 +13,7 @@ version = '5.1.1'
 
 task setVersion {
     group = 'Versioning'
-    description = "Sets the version to the new number specified with -PnewVersion=\'x.x.x\'"
+    description = "Sets the version to the new version specified with -PnewVersion=\'x.x.x\'"
     doLast {
         if (project.hasProperty('newVersion')) {
             println 'Set Project to new Version ' + newVersion
