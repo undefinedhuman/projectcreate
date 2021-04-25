@@ -5,18 +5,11 @@ import de.undefinedhuman.projectcreate.engine.log.Log;
 public class Main {
 
     public static void main(String[] args) {
-        int i = 500;
-        while(i > 0) {
-            try {
-                Thread.sleep(1000);
-                System.out.println("Server still running! Run: " + i);
-                i--;
-            } catch (InterruptedException e) {
-                Log.error("Error while server sleep" + e.getMessage());
-                Thread.currentThread().interrupt();
-            }
-        }
-        System.out.println("SERVER STOPPED!");
+        Log.instance = new Log();
+        Log.info("SERVER STARTED!");
+        Log.info("SERVER STOPPED!");
+        Log.instance.save();
+        System.exit(0);
     }
 
 }
