@@ -1,11 +1,14 @@
 package de.undefinedhuman.projectcreate.server;
 
 import com.badlogic.gdx.Files;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 
 public class Main {
 
     public static void main(String[] args) {
+        new HeadlessApplication(new HeadlessApplicationListener());
         Log.instance = new Log();
         Log.instance.type = Files.FileType.Local;
         Log.instance.init();
@@ -23,6 +26,8 @@ public class Main {
                 Thread.currentThread().interrupt();
             }
         }
+        Gdx.app.exit();
+        System.exit(0);
     }
 
 }
