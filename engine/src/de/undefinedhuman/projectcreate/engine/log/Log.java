@@ -62,7 +62,7 @@ public class Log extends Manager implements ApplicationLogger, Serializable {
     @Override
     public void load() {
         checkLogs();
-        file = new FsFile(Paths.LOG_PATH, fileName, Files.FileType.External);
+        file = new FsFile(Paths.LOG_PATH, fileName, type);
         if (file.exists())
             info("Log file successfully created!");
     }

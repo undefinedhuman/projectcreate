@@ -186,7 +186,7 @@ def deployToTestServer(String stage) {
                             transfers: [
                                     sshTransfer(execCommand: "sh instances/${stage}/stop.sh")
                             ],
-                            verbose: true)
+                            verbose: false)
             ]
     )
     sshPublisher(
@@ -197,7 +197,7 @@ def deployToTestServer(String stage) {
                             transfers: [
                                     sshTransfer(execCommand: "rm instances/${stage}/server.jar")
                             ],
-                            verbose: true)
+                            verbose: false)
             ]
     )
     deployFile("server/build/libs/", "server.jar", "instances/${stage}/", "server.jar")
@@ -230,7 +230,7 @@ def deployUpdaterForOS(String os, String destinationName, boolean deployLatest) 
                                 transfers: [
                                         sshTransfer(execCommand: "rm updater/${os}/latest.zip"),
                                 ],
-                                verbose: true)
+                                verbose: false)
                 ]
         )
     }
@@ -267,7 +267,7 @@ def deployFile(String sourceDirectory, String sourceFileName, String destination
                                             sourceFiles: "${sourceDirectory}${destinationDuringUploadName}",
                                             execCommand: "mv ${destinationDir}${destinationDuringUploadName} ${destinationDir}${destinationFileName}"),
                             ],
-                            verbose: true)
+                            verbose: false)
             ]
     )
     fileOperations([fileDeleteOperation(includes: "${sourceDirectory}${destinationDuringUploadName}")])
