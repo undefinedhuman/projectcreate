@@ -9,7 +9,16 @@ public class Main {
         Log.info("SERVER STARTED!");
         Log.info("SERVER STOPPED!");
         Log.instance.save();
-        System.exit(0);
+        int i = 500;
+        while(i > 0) {
+            try {
+                Thread.sleep(1000);
+                i--;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                Thread.currentThread().interrupt();
+            }
+        }
     }
 
 }
