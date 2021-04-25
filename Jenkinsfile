@@ -186,7 +186,7 @@ def deployToTestServer(String stage) {
                             configName: "Jenkins Deploy",
                             transfers: [
                                     sshTransfer(execCommand: "sh instances/${stage}/stop.sh"),
-                                    sshTransfer(execCommand: "rm instances/${stage}/server.jar"),
+                                    sshTransfer(execCommand: "rm instances/${stage}/server.jar")
                             ],
                             verbose: true)
             ]

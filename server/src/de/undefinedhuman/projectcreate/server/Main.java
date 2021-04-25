@@ -15,7 +15,7 @@ public class Main {
                 Thread.sleep(1000);
                 i--;
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Log.error("Error in server thread", e);
                 Thread.currentThread().interrupt();
             }
         }
