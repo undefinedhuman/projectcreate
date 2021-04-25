@@ -1,5 +1,7 @@
 package de.undefinedhuman.projectcreate.server;
 
+import de.undefinedhuman.projectcreate.engine.log.Log;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -10,7 +12,8 @@ public class Main {
                 System.out.println("Server still running!");
                 i--;
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Log.error("Error while server sleep" + e.getMessage());
+                Thread.currentThread().interrupt();
             }
         }
         System.out.println("SERVER STOPPED!");

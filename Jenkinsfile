@@ -106,6 +106,14 @@ pipeline {
                 }
             }
         }
+        stage('Deploy dev server') {
+            when { expression { BRANCH_NAME == "dev" } }
+            steps {
+                script {
+                    buildAndDeployModule("server", "snapshot-${env.SNAPSHOT}${DEPLOY_FILE_EXTENSION}")
+                }
+            }
+        }
         stage('Deploy snapshot') {
             when { expression { BRANCH_NAME == "snapshot" } }
             steps {
@@ -164,6 +172,10 @@ pipeline {
             }
         }
     }
+}
+
+def deployToTestServer() {
+    deployFile("server/build/libs/", "server${DEPLOY_FILE_EXTENSION}", "instances/dev/", "server.jar")
 }
 
 def deployUpdater(String destinationName, boolean deployLatest) {
