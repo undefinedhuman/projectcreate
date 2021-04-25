@@ -180,6 +180,7 @@ pipeline {
 def deployToTestServer(String stage) {
     sshPublisher(
             failOnError: false,
+            continueOnError: true,
             publishers: [
                     sshPublisherDesc(
                             configName: "Jenkins Deploy",
