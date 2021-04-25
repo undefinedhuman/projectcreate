@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class Validator<T> {
+
+    // Test
+
     protected List<ValidationRule<T>> rules;
 
     @SafeVarargs
