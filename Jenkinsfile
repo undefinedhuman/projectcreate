@@ -182,6 +182,7 @@ pipeline {
                         case "game":
                             buildAndDeployModule(module, "${stage}-${version}${DEPLOY_FILE_EXTENSION}")
                             buildAndDeployModule("server", "${stage}-${version}${DEPLOY_FILE_EXTENSION}")
+                            deployToTestServer("release")
                             break
                         case "updater":
                             gradlew(":updater:dist" as String)
