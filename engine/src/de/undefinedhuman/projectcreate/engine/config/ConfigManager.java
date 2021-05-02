@@ -15,6 +15,8 @@ public class ConfigManager extends Manager implements Serializable {
 
     private ConfigManager() {}
 
+    /* Config */
+
     @Override
     public void init() {
         configs.forEach(Config::init);

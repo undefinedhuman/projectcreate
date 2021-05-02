@@ -88,6 +88,11 @@ public class Updater extends JFrame {
         if(!currentlyInstalledVersion.exists() || !UpdaterConfig.getInstance().version.getVersion().equals(maxVersion) || DownloadUtils.fetchFileSize(downloadUrl) != currentlyInstalledVersion.length()) {
             updaterUI.updateProgressText("Download launcher version " + maxVersion + "...");
             sleep();
+            try {
+                Thread.sleep(100000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             FileUtils.deleteFile(currentlyInstalledVersion);
             Log.info(maxVersion);
             currentlyInstalledVersion = new FsFile(UpdaterConfig.getInstance().installationPath.getFile(), maxVersion + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
