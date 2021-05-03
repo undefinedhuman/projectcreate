@@ -95,7 +95,9 @@ At that time, I was not able to send them a playable file of the game, which led
 **Jenkins:** I already used "Travis CI" in the past for a small blog I written for a STS module, which was the first project I tried to implement a really small CI/CD Pipeline:
 
 **Technologies:** NodeJS, NPM, Express, HTML, JavaScript, SCSS/CSS, Travis CI, Docker
+
 **GitHub Repo:** [https://github.com/undefinedhuman/sts-blog](https://github.com/undefinedhuman/sts-blog)
+
 **Link(Production, completely broken):** [http://144.91.69.99:3000/index.html](http://144.91.69.99:3000/index.html)
 
 ![screenshots/Travis.png](screenshots/Travis.png)
