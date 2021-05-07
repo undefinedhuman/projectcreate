@@ -15,8 +15,6 @@ public class ConfigManager extends Manager implements Serializable {
 
     private ConfigManager() {}
 
-    /* Config */
-
     @Override
     public void init() {
         configs.forEach(Config::init);
@@ -38,6 +36,7 @@ public class ConfigManager extends Manager implements Serializable {
     }
 
     public ConfigManager setConfigs(Config... configs) {
+        this.configs.clear();
         Collections.addAll(this.configs, configs);
         return this;
     }
