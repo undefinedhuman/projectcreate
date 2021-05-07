@@ -4,6 +4,7 @@ import com.badlogic.gdx.Files;
 import de.undefinedhuman.projectcreate.engine.file.FileError;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
+import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.utils.Stage;
@@ -33,17 +34,17 @@ public class InstallationUtils {
         defaultInstallationDirectory.mkdirs();
         ArrayList<String> errorMessages = FileError.checkFileForErrors(defaultInstallationDirectory, FileError.NON_EXISTENT, FileError.NO_DIRECTORY, FileError.NOT_WRITEABLE);
         if(!errorMessages.isEmpty())
-            Log.crash("Error", "An error occurred while creating the default installation directory! \nPlease choose another writable installation directory!", false);
+            Log.getInstance().showErrorDialog(Level.ERROR, "An error occurred while creating the default installation directory! \nPlease choose another writable installation directory!", false);
         else chooser.setCurrentDirectory(defaultInstallationDirectory.file());
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
         if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION)
-            Log.crash("Crash", "Please choose a writable installation directory!\nPlease restart!", true);
+            Log.getInstance().showErrorDialog(Level.CRASH, "Please choose a writable installation directory!\nPlease restart!", true);
         FsFile selectedFile = new FsFile(chooser.getSelectedFile().getAbsolutePath(), Files.FileType.Absolute);
         if(!selectedFile.file().equals(defaultInstallationDirectory.file()) && defaultInstallationDirectory.delete())
             Log.info("Deleted default installation directory!");
         if(FileError.checkFileForErrors("checking installation directory", selectedFile, FileError.NULL, FileError.NON_EXISTENT, FileError.NO_DIRECTORY, FileError.NOT_WRITEABLE))
-            Log.crash("Crash", "Please choose a writable installation directory!\nPlease restart!", true);
+            Log.getInstance().showErrorDialog(Level.CRASH, "Please choose a writable installation directory!\nPlease restart!", true);
         return selectedFile.file().getAbsolutePath();
     }
 
@@ -53,7 +54,7 @@ public class InstallationUtils {
         try {
             doc = Jsoup.connect(url).get();
         } catch (IOException ex) {
-            Log.instance.error("Error", "Error while connecting to download server:", ex);
+            Log.error("Error while connecting to download server:", ex);
         }
         if(doc == null)
             return availableVersions;
@@ -95,7 +96,7 @@ public class InstallationUtils {
         projectDotDirectory.mkdirs();
         ArrayList<String> errorMessages = FileError.checkFileForErrors(projectDotDirectory, FileError.NON_EXISTENT, FileError.NO_DIRECTORY, FileError.NOT_WRITEABLE);
         if(!errorMessages.isEmpty())
-            Log.crash("Crash", "An error occurred while creating the root directory of the project. \nPlease contact the author.\n" + errorMessages, true);
+            Log.getInstance().showErrorDialog(Level.CRASH, "An error occurred while creating the root directory of the project. \nPlease contact the author.\n" + errorMessages, true);
     }
 
 }

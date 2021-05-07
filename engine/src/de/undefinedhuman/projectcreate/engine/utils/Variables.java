@@ -1,8 +1,8 @@
 package de.undefinedhuman.projectcreate.engine.utils;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.projectcreate.engine.log.Level;
 
 public class Variables {
     // General
@@ -22,7 +22,7 @@ public class Variables {
 
     // Log
     public static final int LOG_DELETION_TIME_DAYS = 14;
-    public static final int LOG_LEVEL = Application.LOG_DEBUG;
+    public static final Level LOG_LEVEL = Level.DEBUG;
     public static final String LOG_MESSAGE_FORMAT = "[%prefix% - %time%] %message%";
     public static final String LOG_DATE_FORMAT = "dd-MM-yyyy - HH-mm-ss";
 

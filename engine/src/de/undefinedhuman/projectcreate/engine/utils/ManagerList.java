@@ -45,8 +45,8 @@ public class ManagerList {
 
     public void save() {
         managers.stream()
-                .filter(manager -> manager instanceof Serializable)
-                .map(manager -> (Serializable) manager)
+                .filter(Serializable.class::isInstance)
+                .map(Serializable.class::cast)
                 .forEach(Serializable::save);
     }
 

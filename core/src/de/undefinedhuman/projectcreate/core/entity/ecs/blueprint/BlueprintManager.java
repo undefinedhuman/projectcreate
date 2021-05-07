@@ -6,6 +6,7 @@ import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
 import de.undefinedhuman.projectcreate.engine.file.FileReader;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
+import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
@@ -13,6 +14,7 @@ import de.undefinedhuman.projectcreate.engine.utils.Manager;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.stream.Stream;
 
 public class BlueprintManager extends Manager {
 
@@ -36,8 +38,10 @@ public class BlueprintManager extends Manager {
             if (!hasBlueprint(id)) blueprints.put(id, loadBlueprint(new FsFile(Paths.ENTITY_PATH, id + "/settings.entity", Files.FileType.Internal)));
             loaded |= hasBlueprint(id);
         }
-        if (loaded)
-            Log.info("Blueprint" + Tools.appendSToString(ids.length) + " loaded successfully: " + Arrays.toString(ids));
+        if(Log.getInstance().getLogLevel() == Level.DEBUG) {
+            Stream<Integer> loadedBlueprints = Arrays.stream(ids).filter(id -> blueprints.containsKey(id));
+            Log.debug("Loaded texture" + de.undefinedhuman.projectcreate.engine.utils.Tools.appendSToString(loadedBlueprints.count()) + ":" + Tools.convertStreamToPrintableString(loadedBlueprints));
+        }
         return loaded;
     }
 

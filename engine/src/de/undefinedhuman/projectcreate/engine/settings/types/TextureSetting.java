@@ -7,6 +7,7 @@ import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
+import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
@@ -65,7 +66,7 @@ public class TextureSetting extends Setting {
         writer.writeString(key).writeString(value.toString());
         FsFile file = new FsFile(writer.getParentDirectory().path() + Variables.FILE_SEPARATOR + getString(),  Files.FileType.Local);
         try { ImageIO.write(texture, "png", file.file());
-        } catch (IOException e) { Log.instance.exit(e.getMessage()); }
+        } catch (IOException ex) { Log.getInstance().showErrorDialog(Level.CRASH, "Can not save texture (" + this + "): \n" + ex.getMessage(), true); }
     }
 
     @Override
@@ -74,11 +75,9 @@ public class TextureSetting extends Setting {
             return;
         setValue(((LineSplitter) value).getNextString());
         String path = parentDir.path() + Variables.FILE_SEPARATOR + getString();
-        try {
-            loadTexture(path);
-            if(texture == null)
-                loadTexture("Unknown.png");
-        } catch (Exception e) { Log.instance.exit(e.getMessage()); }
+        loadTexture(path);
+        if(texture == null)
+            loadTexture("Unknown.png");
         if(TextureManager.instance != null) {
             setValue(path);
             TextureManager.instance.addTexture(getString());
@@ -97,7 +96,7 @@ public class TextureSetting extends Setting {
 
     private void loadTexture(String path) {
         try { texture = new PngImage().read(new FsFile(path, Files.FileType.Internal).read(), true);
-        } catch (IOException ex) { Log.instance.exit(ex.getMessage()); }
+        } catch (IOException ex) { Log.getInstance().showErrorDialog(Level.CRASH, "Can not load texture (" + this + "): \n" + ex.getMessage(), true); }
         if(texture == null && !path.equals("Unknown.png")) loadTexture("Unknown.png");
     }
 

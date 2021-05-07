@@ -41,11 +41,9 @@ public class Main extends Game {
     private Timer timer;
 
     public Main() {
-        // TEST RELEASE BIG FIX COMMIT 2
-
         instance = this;
         managerList = new ManagerList();
-        managerList.addManager(new Log(), ConfigManager.getInstance().setConfigs(GameConfig.getInstance()), new LanguageManager(), new TextureManager(), new SoundManager(), new FontManager(), new Inputs(), new GuiManager(), new GuiTextureManager(), BlueprintManager.getInstance(), ItemManager.getInstance());
+        managerList.addManager(Log.getInstance(), ConfigManager.getInstance().setConfigs(GameConfig.getInstance()), new LanguageManager(), new TextureManager(), new SoundManager(), new FontManager(), new Inputs(), new GuiManager(), new GuiTextureManager(), BlueprintManager.getInstance(), ItemManager.getInstance());
         timer = new Timer(1, true, () -> Window.instance.update());
     }
 
@@ -97,8 +95,8 @@ public class Main extends Game {
     }
 
     private void initGDX() {
-        Gdx.app.setApplicationLogger(Log.instance);
-        Gdx.app.setLogLevel(Variables.LOG_LEVEL);
+        Gdx.app.setApplicationLogger(Log.getInstance());
+        Gdx.app.setLogLevel(Variables.LOG_LEVEL.ordinal());
         Pixmap cursor = new Pixmap(Gdx.files.internal(Paths.GUI_PATH + "Cursor.png"));
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(cursor, 0, 0));
         cursor.dispose();

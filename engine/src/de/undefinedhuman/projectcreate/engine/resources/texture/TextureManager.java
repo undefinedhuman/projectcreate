@@ -2,10 +2,15 @@ package de.undefinedhuman.projectcreate.engine.resources.texture;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import de.undefinedhuman.projectcreate.engine.log.Level;
+import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.resources.ResourceManager;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
+import de.undefinedhuman.projectcreate.engine.utils.Tools;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.stream.Stream;
 
 public class TextureManager extends Manager {
 
@@ -37,6 +42,10 @@ public class TextureManager extends Manager {
                 loaded |= hasTexture(name);
             } else textures.get(name).add();
         }
+        if(Log.getInstance().getLogLevel() == Level.DEBUG) {
+            Stream<String> loadedTextures = Arrays.stream(names).filter(name -> textures.containsKey(name));
+            Log.debug("Loaded texture" + Tools.appendSToString(loadedTextures.count()) + ":" + Tools.convertStreamToPrintableString(loadedTextures));
+        }
         return loaded;
     }
 
@@ -49,7 +58,8 @@ public class TextureManager extends Manager {
             if (!hasTexture(name)) continue;
             TextureValue texture = textures.get(name);
             texture.remove();
-            if(!texture.remove) continue;
+            if(!texture.remove)
+                continue;
             textures.remove(name);
             texture.delete();
         }

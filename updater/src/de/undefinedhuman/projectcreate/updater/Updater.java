@@ -8,6 +8,7 @@ import de.undefinedhuman.projectcreate.engine.config.ConfigManager;
 import de.undefinedhuman.projectcreate.engine.file.FileUtils;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
+import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.utils.ManagerList;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
@@ -39,12 +40,7 @@ public class Updater extends JFrame {
     private Updater() {
         new HeadlessApplication(new HeadlessApplicationListener());
         FlatDarkLaf.install();
-        managerList.addManager(new Log() {
-            @Override
-            public void close() {
-                Updater.this.close();
-            }
-        }, ConfigManager.getInstance().setConfigs(UpdaterConfig.getInstance()));
+        managerList.addManager(Log.getInstance(), ConfigManager.getInstance().setConfigs(UpdaterConfig.getInstance()));
 
         setContentPane(updaterUI = new UpdaterUI());
 
@@ -59,7 +55,9 @@ public class Updater extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
-                close();
+                managerList.delete();
+                Gdx.app.exit();
+                System.exit(0);
             }
         });
     }
@@ -69,8 +67,8 @@ public class Updater extends JFrame {
         updaterUI.updateProgressText("Checking for project root directory...");
         InstallationUtils.checkProjectDotDirectory();
         managerList.init();
-        Gdx.app.setApplicationLogger(Log.instance);
-        Gdx.app.setLogLevel(Variables.LOG_LEVEL);
+        Gdx.app.setApplicationLogger(Log.getInstance());
+        Gdx.app.setLogLevel(Variables.LOG_LEVEL.ordinal());
     }
 
     public void updateLauncher() {
@@ -82,7 +80,7 @@ public class Updater extends JFrame {
         FsFile currentlyInstalledVersion = new FsFile(UpdaterConfig.getInstance().installationPath.getFile(), UpdaterConfig.getInstance().version.getString() + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
         List<Version> versions = InstallationUtils.fetchAvailableVersions(DOWNLOAD_LAUNCHER_URL);
         if(versions.isEmpty())
-            Log.crash("Crash", "Error while fetching available launcher versions. \nPlease restart, if the error persists, please contact the author.", true);
+            Log.getInstance().showErrorDialog(Level.CRASH, "Error while fetching available launcher versions. \nPlease restart, if the error persists, please contact the author.", true);
         Version maxVersion = Collections.max(versions);
         String downloadUrl = DOWNLOAD_LAUNCHER_URL + maxVersion + DownloadUtils.DOWNLOAD_FILE_EXTENSION;
         if(!currentlyInstalledVersion.exists() || !UpdaterConfig.getInstance().version.getVersion().equals(maxVersion) || DownloadUtils.fetchFileSize(downloadUrl) != currentlyInstalledVersion.length()) {
@@ -94,7 +92,7 @@ public class Updater extends JFrame {
             try {
                 DownloadUtils.downloadFile(downloadUrl, currentlyInstalledVersion);
             } catch (IOException | URISyntaxException e) {
-                Log.crash("Crash", "Error while downloading launcher version " + maxVersion + "\nPlease restart, if the error persists, please contact the author.", true);
+                Log.getInstance().showErrorDialog(Level.CRASH, "Error while downloading launcher version " + maxVersion + "\nPlease restart, if the error persists, please contact the author.", true);
             }
         } else Log.info("Launcher already up to date. Version: " + maxVersion);
 
@@ -109,12 +107,6 @@ public class Updater extends JFrame {
         } catch (IOException ex) {
             Log.error("Error while starting launcher", ex);
         }
-    }
-
-    public void close() {
-        managerList.delete();
-        Gdx.app.exit();
-        System.exit(0);
     }
 
     private void sleep() {

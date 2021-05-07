@@ -41,6 +41,6 @@ public abstract class Config extends SettingsList implements Serializable {
         reader.close();
     }
 
-    void validate() {}
+    public abstract void validate();
 
 }

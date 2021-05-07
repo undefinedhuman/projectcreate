@@ -38,6 +38,9 @@ public class UpdaterConfig extends Config {
         super.save();
     }
 
+    @Override
+    public void validate() {}
+
     public static UpdaterConfig getInstance() {
         if (instance == null) {
             synchronized (UpdaterConfig.class) {

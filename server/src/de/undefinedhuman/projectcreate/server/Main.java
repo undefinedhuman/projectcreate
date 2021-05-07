@@ -9,13 +9,11 @@ public class Main {
 
     public static void main(String[] args) {
         new HeadlessApplication(new HeadlessApplicationListener());
-        Log.instance = new Log();
-        Log.instance.type = Files.FileType.Local;
-        Log.instance.init();
-        Log.instance.load();
+        Log.getInstance().setFileLocation(Files.FileType.Local);
+        Log.getInstance().init();
+        Log.getInstance().load();
         Log.info("SERVER STARTED!");
         Log.info("SERVER STOPPED!");
-        Log.instance.save();
         int i = 500;
         while(i > 0) {
             try {
@@ -26,6 +24,7 @@ public class Main {
                 Thread.currentThread().interrupt();
             }
         }
+        Log.getInstance().save();
         Gdx.app.exit();
         System.exit(0);
     }

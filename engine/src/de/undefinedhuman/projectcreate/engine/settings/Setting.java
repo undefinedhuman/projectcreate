@@ -116,4 +116,8 @@ public class Setting {
 
     protected void delete() { value = null; }
 
+    @Override
+    public String toString() {
+        return "[" + key + ", " + value + "]";
+    }
 }

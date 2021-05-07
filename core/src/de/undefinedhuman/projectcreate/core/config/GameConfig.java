@@ -36,4 +36,6 @@ public class GameConfig extends Config {
         return instance;
     }
 
+    @Override
+    public void validate() {}
 }

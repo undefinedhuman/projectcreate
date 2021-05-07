@@ -3,7 +3,6 @@ package de.undefinedhuman.projectcreate.engine.utils;
 import com.badlogic.gdx.graphics.Color;
 
 public class Colors {
-
     private Colors() {
         throw new UnsupportedOperationException("Container class to centralize main colors for the game");
     }

@@ -49,7 +49,7 @@ public class EntityEditor extends Editor {
                 new Setting(SettingType.String, "Name", "Temp Name"),
                 new Vector2Setting("Size", new Vector2(0, 0)),
                 new SelectionSetting("Type", EntityType.values()));
-        Tools.addSettings(mainPanel, baseSettings);
+        Tools.addSettings(leftPanel, baseSettings);
 
         componentList = new DefaultListModel<>();
 
@@ -58,8 +58,8 @@ public class EntityEditor extends Editor {
         listPanel.addListSelectionListener(e -> {
             selectedComponent = listPanel.getSelectedValue() != null ? ComponentType.valueOf(listPanel.getSelectedValue()) : null;
             if(selectedComponent != null) {
-                Tools.removeSettings(settingsPanel);
-                Tools.addSettings(settingsPanel, components.get(selectedComponent).getSettings());
+                Tools.removeSettings(rightPanel);
+                Tools.addSettings(rightPanel, components.get(selectedComponent).getSettings());
             }
         });
 
@@ -70,7 +70,7 @@ public class EntityEditor extends Editor {
         addComponent.setBounds(20, 55, 150, 25);
         addComponent.addActionListener(e -> {
             if(componentComboBox.getSelectedItem() == null) return;
-            Tools.removeSettings(settingsPanel);
+            Tools.removeSettings(rightPanel);
             ComponentType type = ComponentType.valueOf(componentComboBox.getSelectedItem().toString());
             if(componentList.contains(type.toString())) return;
             componentList.addElement(type.toString());
@@ -82,7 +82,7 @@ public class EntityEditor extends Editor {
         removeComponent.addActionListener(e -> {
             if(listPanel.getSelectedValue() == null) return;
             ComponentType type = ComponentType.valueOf(listPanel.getSelectedValue());
-            Tools.removeSettings(settingsPanel);
+            Tools.removeSettings(rightPanel);
             components.remove(type);
             if(componentList.contains(type.toString())) componentList.removeElement(type.toString());
         });
@@ -128,7 +128,7 @@ public class EntityEditor extends Editor {
             if(comboBox.getSelectedItem() == null) return;
             componentList.clear();
             components.clear();
-            Tools.removeSettings(settingsPanel);
+            Tools.removeSettings(rightPanel);
 
             FileReader reader = new FileReader(new FsFile(Paths.ENTITY_PATH, Integer.parseInt(((String) comboBox.getSelectedItem()).split("-")[0]) + "/settings.entity", Files.FileType.Internal), true);
             SettingsObject settingsObject = Tools.loadSettings(reader);

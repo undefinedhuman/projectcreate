@@ -38,6 +38,7 @@ public class LauncherConfig extends Config {
         validator = new LauncherConfigValidator();
     }
 
+
     @Override
     public void validate() {
         validator.validate(this);
