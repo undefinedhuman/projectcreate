@@ -1,5 +1,5 @@
 #!groovy
-def STATUS_MAP = ['SUCCESS': 'success', 'FAILURE': 'failed', 'UNSTABLE': 'failed', 'ABORTED': 'failed']
+def STATUS_MAP = ['SUCCESS': 'success', 'UNSTABLE': 'success', 'FAILURE': 'failed', 'ABORTED': 'failed']
 DEPLOY_FILE_EXTENSION = ".jar"
 
 pipeline {
@@ -73,6 +73,7 @@ pipeline {
         }
 
         stage('Static Code Analysis') {
+            when { expression { BRANCH_NAME != "dev" } }
             tools {
                 jdk "openjdk-11"
             }
@@ -94,6 +95,7 @@ pipeline {
             }
         }
         stage("Quality Gate") {
+            when { expression { BRANCH_NAME != "dev" } }
             steps {
                 updateGitlabCommitStatus name: 'Quality Gate', state: 'pending'
                 timeout(time: 15, unit: 'MINUTES') {
@@ -106,18 +108,41 @@ pipeline {
                 }
             }
         }
+        stage('Deploy dev server') {
+            when { expression { BRANCH_NAME == "dev" } }
+            steps {
+                updateGitlabCommitStatus name: 'Deploy dev server', state: 'pending'
+                script {
+                    gradlew(":server:dist" as String)
+                    deployToTestServer("dev")
+                }
+            }
+            post {
+                always {
+                    updateGitlabCommitStatus name: 'Deploy dev server', state: STATUS_MAP[currentBuild.currentResult]
+                }
+            }
+        }
         stage('Deploy snapshot') {
             when { expression { BRANCH_NAME == "snapshot" } }
             steps {
+                updateGitlabCommitStatus name: 'Deploy snapshot', state: 'pending'
                 script {
                     buildAndDeployModule("game", "snapshot-${env.SNAPSHOT}${DEPLOY_FILE_EXTENSION}")
                     buildAndDeployModule("server", "snapshot-${env.SNAPSHOT}${DEPLOY_FILE_EXTENSION}")
+                    deployToTestServer("snapshot")
+                }
+            }
+            post {
+                always {
+                    updateGitlabCommitStatus name: 'Deploy snapshot', state: STATUS_MAP[currentBuild.currentResult]
                 }
             }
         }
         stage('Deploy release candidate') {
             when { expression { BRANCH_NAME ==~ '^(release/)(indev|alpha|beta|release)-(game|launcher|updater|editor)-[0-9]+.[0-9]+.[0-9]+' } }
             steps {
+                updateGitlabCommitStatus name: 'Deploy release candidate', state: 'pending'
                 script {
                     def versionString = "${BRANCH_NAME}".split("/", 2)[1].split("-")
                     def stage = versionString[0] as String
@@ -128,6 +153,7 @@ pipeline {
                         case "game":
                             buildAndDeployModule(module, "${stage}-${version}-rc${versionNumber}${DEPLOY_FILE_EXTENSION}")
                             buildAndDeployModule("server", "${stage}-${version}-rc${versionNumber}${DEPLOY_FILE_EXTENSION}")
+                            deployToTestServer("release")
                             break
                         case "updater":
                             gradlew(":updater:dist" as String)
@@ -138,10 +164,16 @@ pipeline {
                     }
                 }
             }
+            post {
+                always {
+                    updateGitlabCommitStatus name: 'Deploy release candidate', state: STATUS_MAP[currentBuild.currentResult]
+                }
+            }
         }
         stage('Deploy release') {
             when { expression { BRANCH_NAME == 'main' } }
             steps {
+                updateGitlabCommitStatus name: 'Deploy release', state: 'pending'
                 script {
                     TAG = sh(script: 'git tag --points-at HEAD | awk NF', returnStdout: true).trim()
                     def versionString = "${TAG}".split("-")
@@ -152,6 +184,7 @@ pipeline {
                         case "game":
                             buildAndDeployModule(module, "${stage}-${version}${DEPLOY_FILE_EXTENSION}")
                             buildAndDeployModule("server", "${stage}-${version}${DEPLOY_FILE_EXTENSION}")
+                            deployToTestServer("release")
                             break
                         case "updater":
                             gradlew(":updater:dist" as String)
@@ -162,8 +195,50 @@ pipeline {
                     }
                 }
             }
+            post {
+                always {
+                    updateGitlabCommitStatus name: 'Deploy release', state: STATUS_MAP[currentBuild.currentResult]
+                }
+            }
         }
     }
+}
+
+def deployToTestServer(String stage) {
+    sshPublisher(
+            failOnError: false,
+            publishers: [
+                    sshPublisherDesc(
+                            configName: "Jenkins Deploy",
+                            transfers: [
+                                    sshTransfer(execCommand: "sh instances/${stage}/stop.sh")
+                            ],
+                            verbose: false)
+            ]
+    )
+    sshPublisher(
+            failOnError: false,
+            publishers: [
+                    sshPublisherDesc(
+                            configName: "Jenkins Deploy",
+                            transfers: [
+                                    sshTransfer(execCommand: "rm instances/${stage}/server.jar")
+                            ],
+                            verbose: false)
+            ]
+    )
+    deployFile("server/build/libs/", "server.jar", "instances/${stage}/", "server.jar")
+    sshPublisher(
+            failOnError: false,
+            publishers: [
+                    sshPublisherDesc(
+                            configName: "Jenkins Deploy",
+                            transfers: [
+                                    sshTransfer(execCommand: "cd instances/${stage}/ && ./start.sh"),
+                            ],
+                            verbose: false)
+            ]
+    )
 }
 
 def deployUpdater(String destinationName, boolean deployLatest) {
@@ -182,7 +257,7 @@ def deployUpdaterForOS(String os, String destinationName, boolean deployLatest) 
                                 transfers: [
                                         sshTransfer(execCommand: "rm updater/${os}/latest.zip"),
                                 ],
-                                verbose: true)
+                                verbose: false)
                 ]
         )
     }
@@ -219,7 +294,7 @@ def deployFile(String sourceDirectory, String sourceFileName, String destination
                                             sourceFiles: "${sourceDirectory}${destinationDuringUploadName}",
                                             execCommand: "mv ${destinationDir}${destinationDuringUploadName} ${destinationDir}${destinationFileName}"),
                             ],
-                            verbose: true)
+                            verbose: false)
             ]
     )
     fileOperations([fileDeleteOperation(includes: "${sourceDirectory}${destinationDuringUploadName}")])

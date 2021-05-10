@@ -2,6 +2,7 @@ package de.undefinedhuman.projectcreate.engine.settings;
 
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.entity.EntityType;
@@ -11,6 +12,7 @@ import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.items.Rarity;
 import de.undefinedhuman.projectcreate.engine.items.type.blocks.BlockType;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.Version;
 
 import javax.swing.*;
@@ -19,10 +21,9 @@ import java.awt.event.KeyEvent;
 
 public class Setting {
 
-    public float offset = 25;
-
     protected String key;
     protected Object value;
+    private int contentHeight = Variables.DEFAULT_CONTENT_HEIGHT;
     protected boolean includeType = true;
 
     public JTextField valueField;
@@ -65,11 +66,23 @@ public class Setting {
     public Version getVersion() { return Version.parse(getString()); }
     public FsFile getFile() { return new FsFile(getString(), Files.FileType.Absolute); }
 
+    public int getTotalHeight() {
+        return contentHeight + Variables.BORDER_HEIGHT;
+    }
+
+    public int getContentHeight() {
+        return contentHeight;
+    }
+
+    protected void setContentHeight(int contentHeight) {
+        this.contentHeight = contentHeight;
+    }
+
     public SettingType getType() { return type; }
 
-    public void loadSetting(FsFile parentDir, SettingsObject settingsObject) {
+    public void loadSetting(FileHandle parentDir, SettingsObject settingsObject) {
         if(!settingsObject.containsKey(key)) return;
-        load(parentDir, settingsObject.get(key));
+        loadValue(parentDir, settingsObject.get(key));
         setValueInMenu(value);
     }
 
@@ -78,25 +91,30 @@ public class Setting {
         writer.writeString(value.toString());
     }
 
-    protected void load(FsFile parentDir, Object value) {
+    protected void loadValue(FileHandle parentDir, Object value) {
         if(!(value instanceof LineSplitter)) return;
         setValue(((LineSplitter) value).getNextString());
     }
 
-    public void addMenuComponents(JPanel panel, Vector2 position) {
-        JLabel keyLabel = new JLabel(key + ":" + (includeType ? " (" + type.name() + ")" : ""), SwingConstants.CENTER);
-        keyLabel.setBounds((int) position.x, (int) position.y, 170, 25);
-        keyLabel.setBackground(keyLabel.getBackground().brighter());
-        keyLabel.setOpaque(true);
-        panel.add(keyLabel);
-        addValueMenuComponents(panel, new Vector2(position).add(175, 0));
+    public void addMenuComponents(JPanel container, Vector2 position, int containerWidth) {
+        int contentWidth = containerWidth - Variables.BORDER_WIDTH;
+        JPanel contentPanel = new JPanel(null);
+        contentPanel.setSize(contentWidth, contentHeight);
+
+        addValueMenuComponents(contentPanel, contentWidth);
+
+        JScrollPane settingsContainer = new JScrollPane(contentPanel);
+        settingsContainer.setBounds((int) position.x, (int) position.y, containerWidth, contentHeight + Variables.BORDER_HEIGHT);
+        settingsContainer.setBorder(BorderFactory.createTitledBorder(key + (includeType ? " (" + type.name() + ")" : "")));
+        container.add(settingsContainer);
     }
 
-    protected void addValueMenuComponents(JPanel panel, Vector2 position) {
-        valueField = createTextField(value, position, new Vector2(200, 25), new KeyAdapter() {
+    protected void addValueMenuComponents(JPanel panel, int width) {
+        valueField = createTextField(value, new Vector2(0, 0), new Vector2(width, contentHeight), new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                if(valueField.getText() == null || valueField.getText().equalsIgnoreCase("")) return;
+                if(valueField.getText() == null || valueField.getText().equalsIgnoreCase(""))
+                    return;
                 setValue(valueField.getText());
             }
         });
@@ -116,4 +134,8 @@ public class Setting {
 
     protected void delete() { value = null; }
 
+    @Override
+    public String toString() {
+        return "[" + key + ", " + value + "]";
+    }
 }

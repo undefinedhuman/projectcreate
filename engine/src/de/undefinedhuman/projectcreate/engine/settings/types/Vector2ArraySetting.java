@@ -1,12 +1,13 @@
 package de.undefinedhuman.projectcreate.engine.settings.types;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
-import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingType;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
@@ -25,7 +26,7 @@ public class Vector2ArraySetting extends Setting {
     }
 
     @Override
-    public void load(FsFile parentDir, Object value) {
+    public void loadValue(FileHandle parentDir, Object value) {
         if(!(value instanceof LineSplitter)) return;
         LineSplitter splitter = (LineSplitter) value;
         Vector2[] vectors = new Vector2[splitter.getNextInt()];
@@ -39,8 +40,9 @@ public class Vector2ArraySetting extends Setting {
         for(Vector2 vector : getVector2Array()) writer.writeVector2(vector);
     }
 
-    protected void addValueMenuComponents(JPanel panel, Vector2 position) {
-        valueField = createTextField(Tools.convertArrayToString(getVector2Array()), position, new Vector2(200, 25), new KeyAdapter() {
+    @Override
+    protected void addValueMenuComponents(JPanel panel, int width) {
+        valueField = createTextField(Tools.convertArrayToString(getVector2Array()), new Vector2(0, 0), new Vector2(width, Variables.DEFAULT_CONTENT_HEIGHT), new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 if(valueField.getText() == null || valueField.getText().equalsIgnoreCase("")) return;

@@ -36,6 +36,7 @@ public class ConfigManager extends Manager implements Serializable {
     }
 
     public ConfigManager setConfigs(Config... configs) {
+        this.configs.clear();
         Collections.addAll(this.configs, configs);
         return this;
     }

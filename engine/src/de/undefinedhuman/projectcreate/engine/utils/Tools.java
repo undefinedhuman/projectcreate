@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.file.FileReader;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
+import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
@@ -19,6 +20,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class Tools {
 
@@ -36,19 +39,19 @@ public class Tools {
     public static void loadSettings(FileReader reader, Setting... settings) {
         SettingsObject object = loadSettings(reader);
         for(Setting setting : settings)
-            setting.loadSetting(reader.getParentDirectory(), object);
+            setting.loadSetting(reader.parent(), object);
     }
 
     public static void loadSettings(FileReader reader, SettingsList settings) {
         SettingsObject object = loadSettings(reader);
         for(Setting setting : settings.getSettings())
-            setting.loadSetting(reader.getParentDirectory(), object);
+            setting.loadSetting(reader.parent(), object);
     }
 
     private static String loadKey(String key) {
         String[] values = key.split(":");
         if(values.length < 2)
-            Log.instance.exit("Can't find key in string: " + key);
+            Log.showErrorDialog(Level.CRASH, "Can't find key in string: " + key, true);
         return values[1];
     }
 
@@ -80,20 +83,30 @@ public class Tools {
         return builder.toString();
     }
 
+    public static String convertArrayToPrintableString(String[] messages) {
+        StringBuilder logMessage = new StringBuilder();
+        for (int i = 0; i < messages.length; i++) logMessage.append(messages[i]).append(i < messages.length - 1 ? ", " : "");
+        return logMessage.toString();
+    }
+
+    public static String convertArrayToPrintableString(Object[] messages) {
+        return Arrays.stream(messages).map(Object::toString).collect(Collectors.joining(", "));
+    }
+
     public static void addSettings(JPanel panel, int x, int y, int offset, Setting... settings) {
         int currentOffset = 0;
         for (Setting setting : settings) {
-            setting.addMenuComponents(panel, new Vector2(x, y + currentOffset));
-            currentOffset += setting.offset + offset;
+            setting.addMenuComponents(panel, new Vector2(x, y + currentOffset), Variables.CONTENT_WIDTH + Variables.BORDER_WIDTH);
+            currentOffset += setting.getTotalHeight() + offset;
         }
         resetPanel(panel);
     }
 
-    public static void addSettings(JPanel panel, ArrayList<Setting> settings) {
+    public static void addSettings(JPanel panel, ArrayList<Setting> settings, int width) {
         int currentOffset = 0;
         for (Setting setting : settings) {
-            setting.addMenuComponents(panel, new Vector2(0, currentOffset));
-            currentOffset += setting.offset;
+            setting.addMenuComponents(panel, new Vector2(0, currentOffset), width);
+            currentOffset += setting.getTotalHeight();
         }
         resetPanel(panel);
     }
@@ -105,8 +118,8 @@ public class Tools {
     public static void addSettings(JPanel panel, SettingsList settings, int x, int y, int offset) {
         int currentOffset = 0;
         for (Setting setting : settings.getSettings()) {
-            setting.addMenuComponents(panel, new Vector2(x, y + currentOffset));
-            currentOffset += setting.offset + offset;
+            setting.addMenuComponents(panel, new Vector2(x, y + currentOffset), Variables.CONTENT_WIDTH);
+            currentOffset += setting.getTotalHeight() + offset;
         }
         resetPanel(panel);
     }
@@ -166,6 +179,10 @@ public class Tools {
     }
 
     public static String appendSToString(int length) {
+        return length > 1 ? "s" : "";
+    }
+
+    public static String appendSToString(long length) {
         return length > 1 ? "s" : "";
     }
 

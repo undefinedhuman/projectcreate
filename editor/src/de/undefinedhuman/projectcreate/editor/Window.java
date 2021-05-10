@@ -7,6 +7,7 @@ import de.undefinedhuman.projectcreate.editor.editor.Editor;
 import de.undefinedhuman.projectcreate.editor.editor.EditorType;
 import de.undefinedhuman.projectcreate.editor.editor.entity.EntityEditor;
 import de.undefinedhuman.projectcreate.editor.editor.item.ItemEditor;
+import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 
 import javax.swing.*;
@@ -30,6 +31,7 @@ public class Window extends JFrame {
 
     private Window() {
         FlatDarculaLaf.install();
+        setUIComponentProperties();
         LwjglAWTCanvas canvas = new LwjglAWTCanvas(new Main());
         canvas.getCanvas().setBounds(25, 300, 480, 345);
 
@@ -37,15 +39,14 @@ public class Window extends JFrame {
         errorMessage.setBounds(22, 1002, 1880, 25);
         errorMessage.setForeground(new Color(255, 85, 85));
 
-        Log.instance = new Log() {
-            @Override
-            public void displayMessage(String msg) {
-                if(!msg.contains("Error")) return;
-                errorMessage.setText(msg);
-                hasError = true;
-            }
-        };
-        Log.instance.init();
+        Log.getInstance().addLogEvent((level, message) -> {
+            if(level != Level.ERROR)
+                return;
+            errorMessage.setText(message);
+            hasError = true;
+        });
+        Log.getInstance().init();
+        Log.getInstance().load();
         setResizable(false);
         setSize(1920, 1080);
         container = getContentPane();
@@ -60,7 +61,7 @@ public class Window extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
-                Log.instance.save();
+                Log.getInstance().save();
                 Gdx.app.exit();
                 System.exit(0);
             }
@@ -120,6 +121,16 @@ public class Window extends JFrame {
             hasError = false;
             errorTime = 15;
         }
+    }
+
+    private void setUIComponentProperties() {
+        UIManager.put("Button.arc", 0);
+        UIManager.put("Component.arc", 0);
+        UIManager.put("CheckBox.arc", 0);
+        UIManager.put("ProgressBar.arc", 0);
+
+        UIManager.put("Component.arrowType", "chevron");
+        UIManager.put("Component.focusWidth", 1);
     }
 
     public static Window getInstance() {

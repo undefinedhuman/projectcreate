@@ -31,9 +31,9 @@ public class TextureOffsetSetting extends Vector2ArraySetting {
     }
 
     @Override
-    protected void addValueMenuComponents(JPanel panel, Vector2 position) {
+    protected void addValueMenuComponents(JPanel panel, int width) {
         textureLabel = new JLabel(new ImageIcon(texture));
-        textureLabel.setBounds((int) position.x, (int) position.y, 25, 25);
+        textureLabel.setSize(25, 25);
         textureLabel.addMouseListener(new MouseAdapter() {
 
             @Override
@@ -56,7 +56,15 @@ public class TextureOffsetSetting extends Vector2ArraySetting {
 
         });
         panel.add(textureLabel);
-        valueField = createTextField(Tools.convertArrayToString(getVector2Array()), new Vector2(position).add(30, 0), new Vector2(170, 25), null);
+        valueField = createTextField(
+                Tools.convertArrayToString(getVector2Array()),
+                new Vector2(Variables.DEFAULT_CONTENT_HEIGHT + Variables.OFFSET, 0),
+                new Vector2(
+                        width - Variables.DEFAULT_CONTENT_HEIGHT - Variables.OFFSET,
+                        Variables.DEFAULT_CONTENT_HEIGHT
+                ),
+                null);
+        valueField.setEditable(false);
         panel.add(valueField);
     }
 

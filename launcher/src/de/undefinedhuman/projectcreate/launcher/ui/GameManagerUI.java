@@ -13,9 +13,12 @@ import de.undefinedhuman.projectcreate.updater.utils.DownloadUtils;
 import de.undefinedhuman.projectcreate.updater.utils.InstallationUtils;
 
 import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class GameManagerUI extends JPanel {
 
@@ -30,6 +33,8 @@ public class GameManagerUI extends JPanel {
 
     private GameAction currentAction;
     private Version selectedVersion = null;
+
+    private VersionCellRenderer versionCellRenderer;
 
     private GameManagerUI() {
         setLayout(null);
@@ -60,9 +65,25 @@ public class GameManagerUI extends JPanel {
         List<Version> availableVersion = InstallationUtils.fetchAvailableVersions(Launcher.DOWNLOAD_GAME_URL);
         Collections.reverse(availableVersion);
         versionSelectionModel = new DefaultComboBoxModel<>(availableVersion.toArray(new Version[0]));
-        versionSelection = new JComboBox<>(InstallationUtils.fetchAvailableVersions(Launcher.DOWNLOAD_GAME_URL).toArray(new Version[0]));
+        versionSelection = new JComboBox<>(versionSelectionModel);
         versionSelection.setBounds(25, getHeight()/2-ICON_SIZE.y/2, 200, ICON_SIZE.y);
-        versionSelection.setRenderer(new VersionCellRenderer());
+        versionCellRenderer = new VersionCellRenderer();
+        versionSelection.setRenderer(versionCellRenderer);
+        versionSelection.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                Stream<Version> downloadedVersions = availableVersion
+                        .stream()
+                        .filter(version -> InstallationUtils.isVersionDownloaded(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.getInstance().gameInstallationPath.getFile(), version));
+                versionCellRenderer.setVersionDownloaded(downloadedVersions);
+            }
+
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {}
+
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {}
+        });
         versionSelection.addActionListener(e -> {
             Version currentVersion = (Version) versionSelection.getSelectedItem();
             if(currentVersion == null)

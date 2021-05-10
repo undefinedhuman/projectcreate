@@ -3,6 +3,10 @@ package de.undefinedhuman.projectcreate.engine.utils;
 import com.badlogic.gdx.graphics.Color;
 
 public class Colors {
+    private Colors() {
+        throw new UnsupportedOperationException("Container class to centralize main colors for the game");
+    }
+
     public static final Color WHITE = new Color(0.8f, 0.8f, 0.8f, 1f);
     public static final Color LIGHT_GREEN = new Color(0.22f, 0.66f, 0.2f, 1f);
     public static final Color LIGHT_BLUE = new Color(0.21f, 0.54f, 0.63f, 1f);

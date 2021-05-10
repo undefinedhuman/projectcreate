@@ -6,11 +6,10 @@ import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 
 @SuppressWarnings("ALL")
-public class Config extends SettingsList implements Serializable {
+public abstract class Config extends SettingsList implements Serializable {
 
     private String fileName;
     private FsFile configFile;
-    private ConfigValidator validator;
 
     public Config(String fileName) {
         this.fileName = fileName;
@@ -42,6 +41,6 @@ public class Config extends SettingsList implements Serializable {
         reader.close();
     }
 
-    public void validate() {}
+    public abstract void validate();
 
 }

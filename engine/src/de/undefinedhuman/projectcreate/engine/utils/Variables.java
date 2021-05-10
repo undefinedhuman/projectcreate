@@ -1,8 +1,8 @@
 package de.undefinedhuman.projectcreate.engine.utils;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.projectcreate.engine.log.Level;
 
 public class Variables {
     // General
@@ -13,6 +13,13 @@ public class Variables {
     public static final float GAME_CAMERA_ZOOM = 3f;
     public static final float DELTA_MULTIPLIER = 1.0f;
 
+    // Settings
+    public static final int BORDER_HEIGHT = 25;
+    public static final int BORDER_WIDTH = 10;
+    public static final int CONTENT_WIDTH = 390;
+    public static final int DEFAULT_CONTENT_HEIGHT = 25;
+    public static final int OFFSET = 5;
+
     // File System
     public static final String SEPARATOR = ";";
     public static final String FILE_SEPARATOR = "/";
@@ -22,7 +29,7 @@ public class Variables {
 
     // Log
     public static final int LOG_DELETION_TIME_DAYS = 14;
-    public static final int LOG_LEVEL = Application.LOG_DEBUG;
+    public static final Level LOG_LEVEL = Level.DEBUG;
     public static final String LOG_MESSAGE_FORMAT = "[%prefix% - %time%] %message%";
     public static final String LOG_DATE_FORMAT = "dd-MM-yyyy - HH-mm-ss";
 

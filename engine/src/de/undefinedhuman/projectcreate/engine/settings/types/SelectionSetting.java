@@ -1,8 +1,8 @@
 package de.undefinedhuman.projectcreate.engine.settings.types;
 
-import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingType;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
 
@@ -31,9 +31,9 @@ public class SelectionSetting extends Setting {
     }
 
     @Override
-    protected void addValueMenuComponents(JPanel panel, Vector2 position) {
+    protected void addValueMenuComponents(JPanel panel, int width) {
         selection = new JComboBox<>(values);
-        selection.setBounds((int) position.x, (int) position.y, 200, 25);
+        selection.setSize(width, Variables.DEFAULT_CONTENT_HEIGHT);
         if(hasValue(getString()))
             selection.setSelectedItem(getString());
         selection.addActionListener(e -> setValue(selection.getSelectedItem()));

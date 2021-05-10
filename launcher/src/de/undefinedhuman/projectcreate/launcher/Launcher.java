@@ -35,14 +35,9 @@ public class Launcher extends JFrame {
 
     private Launcher() {
         new HeadlessApplication(new HeadlessApplicationListener());
-        setUIComponentProperties();
         FlatDarculaLaf.install();
-        managerList.addManager(new Log() {
-            @Override
-            public void close() {
-                Launcher.this.close();
-            }
-        }, ConfigManager.getInstance().setConfigs(LauncherConfig.getInstance()), IconManager.getInstance());
+        setUIComponentProperties();
+        managerList.addManager(Log.getInstance(), ConfigManager.getInstance().setConfigs(LauncherConfig.getInstance()), IconManager.getInstance());
 
         setResizable(false);
         setUndecorated(false);
@@ -75,7 +70,9 @@ public class Launcher extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
-                close();
+                managerList.delete();
+                Gdx.app.exit();
+                System.exit(0);
             }
         });
 
@@ -92,8 +89,8 @@ public class Launcher extends JFrame {
     }
 
     private void setGDXLog() {
-        Gdx.app.setApplicationLogger(Log.instance);
-        Gdx.app.setLogLevel(Variables.LOG_LEVEL);
+        Gdx.app.setApplicationLogger(Log.getInstance());
+        Gdx.app.setLogLevel(Variables.LOG_LEVEL.ordinal());
     }
 
     private void setUIComponentProperties() {
@@ -104,12 +101,6 @@ public class Launcher extends JFrame {
 
         UIManager.put("Component.arrowType", "chevron");
         UIManager.put("Component.focusWidth", 1);
-    }
-
-    public void close() {
-        managerList.delete();
-        Gdx.app.exit();
-        System.exit(0);
     }
 
     public static Launcher getInstance() {

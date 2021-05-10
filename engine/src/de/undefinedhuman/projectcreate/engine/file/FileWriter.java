@@ -1,7 +1,9 @@
 package de.undefinedhuman.projectcreate.engine.file;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Base64Coder;
+import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
@@ -48,19 +50,19 @@ public class FileWriter {
         return writeFloat(vector.x).writeFloat(vector.y);
     }
 
-    public FsFile getParentDirectory() {
-        return new FsFile(file.parent().path(), file.type());
+    public FileHandle parent() {
+        return file.parent();
     }
 
     public FileWriter writeValue(Object v) {
         try { writer.write(base ? Base64Coder.encodeString(String.valueOf(v)) + this.separator : v + this.separator);
-        } catch (IOException ex) { Log.instance.exit(ex.getMessage()); }
+        } catch (IOException ex) { Log.getInstance().showErrorDialog(Level.CRASH, "Can't write new value: \n" + ex.getMessage(), true); }
         return this;
     }
 
     public FileWriter nextLine() {
         try { writer.newLine();
-        } catch (IOException ex) { Log.instance.exit(ex.getMessage()); }
+        } catch (IOException ex) { Log.getInstance().showErrorDialog(Level.CRASH, "Can't write new line: \n" + ex.getMessage(), true); }
         return this;
     }
 

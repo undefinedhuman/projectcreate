@@ -1,11 +1,13 @@
 package de.undefinedhuman.projectcreate.engine.settings.panels;
 
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.files.FileHandle;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
-import de.undefinedhuman.projectcreate.engine.file.FsFile;
+import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingType;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
+import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -14,101 +16,167 @@ import java.util.HashMap;
 
 public abstract class Panel<T extends PanelObject> extends Setting {
 
+    protected static final int INPUT_HEIGHT = Variables.DEFAULT_CONTENT_HEIGHT;
+    private static final int BUTTON_HEIGHT = Variables.DEFAULT_CONTENT_HEIGHT;
+    private static final int OBJECT_PANEL_HEIGHT = Variables.DEFAULT_CONTENT_HEIGHT*4;
+
     private JList<String> objectSelectionList;
 
-    protected HashMap<String, T> objects = new HashMap<>();
+    protected HashMap<String, T> panelObjects = new HashMap<>();
     protected DefaultListModel<String> objectList;
     protected T panelObject;
-    protected JPanel objectPanel;
+
+    private JPanel objectPanel;
 
     public Panel(String key, T panelObject) {
         super(SettingType.Panel, key, "");
         this.panelObject = panelObject;
+        setContentHeight(INPUT_HEIGHT + BUTTON_HEIGHT + OBJECT_PANEL_HEIGHT + BUTTON_HEIGHT + Variables.OFFSET*4 + getPanelObjectContentHeight());
     }
 
     @Override
     protected void delete() {
         super.delete();
-        for(PanelObject animation : objects.values()) animation.delete();
-        objects.clear();
+        for(PanelObject animation : panelObjects.values()) animation.delete();
+        panelObjects.clear();
     }
 
     @Override
-    protected void addValueMenuComponents(JPanel panel, Vector2 position) {
-        objectPanel = new JPanel(null);
-        objectPanel.setBounds((int) position.x - 175, (int) position.y + 190, 370, calculateOffsetForPanelObject());
-        objectPanel.setOpaque(true);
-
+    protected void addValueMenuComponents(JPanel panel, int width) {
         objectList = new DefaultListModel<>();
-        for(String key : objects.keySet()) objectList.addElement(key);
+        for(String key : panelObjects.keySet())
+            objectList.addElement(key);
 
         objectSelectionList = new JList<>(objectList);
         objectSelectionList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         objectSelectionList.addListSelectionListener(e -> {
-            if(objectSelectionList.getSelectedValue() == null) return;
-            selectObject(objects.get(objectSelectionList.getSelectedValue()));
+            if(objectSelectionList.getSelectedValue() == null)
+                return;
+            selectObject(panelObjects.get(objectSelectionList.getSelectedValue()), objectPanel, width);
         });
 
-        JScrollPane objectScrollPane = new JScrollPane(objectSelectionList);
-        objectScrollPane.setBounds((int) position.x - 175, (int) position.y + 90, 370, 90);
+        JScrollPane objectSelectionPanel = new JScrollPane(objectSelectionList);
+        objectSelectionPanel.setBounds(0, INPUT_HEIGHT + BUTTON_HEIGHT + Variables.OFFSET*2, width, OBJECT_PANEL_HEIGHT);
 
-        this.offset = 195 + calculateOffsetForPanelObject();
+        objectPanel = new JPanel(null);
+        objectPanel.setBounds(0, INPUT_HEIGHT + BUTTON_HEIGHT + OBJECT_PANEL_HEIGHT + BUTTON_HEIGHT + Variables.OFFSET*4, width, getPanelObjectContentHeight());
+        objectPanel.setOpaque(true);
 
-        panel.add(objectScrollPane);
+        createPanelObjectNameComponent(panel, width);
+        panel.add(createButton("Add",
+                0,
+                (float) INPUT_HEIGHT + Variables.OFFSET,
+                width/2f - Variables.OFFSET/2f,
+                e -> {
+                    String name = getSelectedObjectName();
+                    if(name.equalsIgnoreCase(""))
+                        return;
+                    addPanelObject(name);
+                }
+        ));
+        panel.add(createButton("Remove",
+                width/2f + Variables.OFFSET/2f,
+                (float) INPUT_HEIGHT + Variables.OFFSET,
+                width/2f - Variables.OFFSET/2f,
+                e -> removePanelObject(getSelectedObjectName())));
+        panel.add(objectSelectionPanel);
+        createUtilityButtons(panel, INPUT_HEIGHT + BUTTON_HEIGHT + OBJECT_PANEL_HEIGHT + Variables.OFFSET*3, width);
         panel.add(objectPanel);
-        panel.add(addButton("Add", (int) position.x - 175, (int) position.y + 60, e -> addObject()));
-        panel.add(addButton("Remove", (int) position.x + 15, (int) position.y + 60, e -> removeObject()));
-    }
-
-    private JButton addButton(String text, int x, int y, ActionListener listener) {
-        JButton button = new JButton(text);
-        button.setBounds(x, y, 180, 25);
-        button.addActionListener(listener);
-        return button;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    protected void load(FsFile parentDir, Object value) {
+    protected void loadValue(FileHandle parentDir, Object value) {
         if(!(value instanceof SettingsObject)) return;
         SettingsObject settingsObject = (SettingsObject) value;
         HashMap<String, Object> settings = settingsObject.getSettings();
         for(String key : settings.keySet()) {
             Object panelObjectSettings = settings.get(key);
-            if(!(panelObjectSettings instanceof SettingsObject)) continue;
-            try {
-                objects.put(key, (T) panelObject.getClass().newInstance().load(parentDir, (SettingsObject) panelObjectSettings).setKey(key));
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
+            if(!(panelObjectSettings instanceof SettingsObject))
+                continue;
+            T panelObject = createNewInstance();
+            if(panelObject == null)
+                return;
+            panelObjects.put(key, (T) panelObject.load(parentDir, (SettingsObject) panelObjectSettings).setKey(key));
         }
     }
 
     @Override
     public void save(FileWriter writer) {
         writer.writeString("{:" + key).nextLine();
-        for(PanelObject object : this.objects.values())
+        for(PanelObject object : this.panelObjects.values())
             object.save(writer);
         writer.writeString("}");
     }
 
-    private int calculateOffsetForPanelObject() {
-        int offset = 0;
+    private int getPanelObjectContentHeight() {
+        int height = 0;
         for(Setting setting : panelObject.getSettings())
-            offset += setting.offset;
-        return offset;
+            height += setting.getTotalHeight();
+        return height;
     }
 
     public HashMap<String, T> getPanelObjects() {
-        return objects;
+        return panelObjects;
     }
 
     public Collection<T> values() {
-        return objects.values();
+        return panelObjects.values();
     }
 
-    public abstract void addObject();
-    public abstract void removeObject();
-    public abstract void selectObject(T object);
+    protected abstract void createPanelObjectNameComponent(JPanel panel, int width);
+    protected abstract String getSelectedObjectName();
+    protected abstract void selectObject(T object, JPanel panel, int containerWidth);
+
+    protected void createUtilityButtons(JPanel panel, int y, int width) {
+        panel.add(createButton("Clear All",
+                width/3f*2f + Variables.OFFSET/2f,
+                y,
+                width/3f - Variables.OFFSET/2f,
+                e -> removeAllPanelObjects()));
+    }
+
+    protected void addPanelObject(String name) {
+        addPanelObject(name, createNewInstance());
+    }
+
+    protected void addPanelObject(String name, T object) {
+        if(object == null)
+            return;
+        if(objectList.contains(name)) {
+            Log.error(this.key + " with name " + name + " already exist!");
+            return;
+        }
+        object.setKey(name);
+        panelObjects.put(object.getKey(), object);
+        objectList.addElement(object.getKey());
+    }
+
+    private void removePanelObject(String name) {
+        objectList.removeElement(name);
+        panelObjects.remove(name);
+        Tools.removeSettings(objectPanel);
+    }
+
+    private void removeAllPanelObjects() {
+        objectList.clear();
+        panelObjects.clear();
+        Tools.removeSettings(objectPanel);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected T createNewInstance() {
+        T instance = null;
+        try { instance = (T) panelObject.getClass().newInstance();
+        } catch (InstantiationException | IllegalAccessException ex) { Log.error("Can not create Panel Object instance!", ex); }
+        return instance;
+    }
+
+    protected JButton createButton(String text, float x, float y, float width, ActionListener listener) {
+        JButton button = new JButton(text);
+        button.setBounds((int) x, (int) y, (int) width, BUTTON_HEIGHT);
+        button.addActionListener(listener);
+        return button;
+    }
 
 }

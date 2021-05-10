@@ -2,6 +2,7 @@ package de.undefinedhuman.projectcreate.engine.log;
 
 import com.badlogic.gdx.ApplicationLogger;
 import com.badlogic.gdx.Files;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
@@ -14,26 +15,29 @@ import javax.swing.*;
 import java.io.PrintStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class Log extends Manager implements ApplicationLogger, Serializable {
 
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat(Variables.LOG_DATE_FORMAT);
 
-    public static Log instance;
-    private static List<String> logMessages;
+    private static volatile Log instance;
 
+    private Level logLevel = Variables.LOG_LEVEL;
     private String fileName;
     private FsFile file;
 
-    public Log() {
-        if (instance == null)
-            instance = this;
+    private List<String> logMessages;
+    private List<LogEvent> logEvents;
+
+    public Files.FileType fileLocation = Files.FileType.External;
+
+    private Log() {
         logMessages = new ArrayList<>();
+        logEvents = new ArrayList<>();
     }
 
     @Override
@@ -43,7 +47,16 @@ public class Log extends Manager implements ApplicationLogger, Serializable {
 
     @Override
     public void delete() {
+        logEvents.clear();
         logMessages.clear();
+    }
+
+    @Override
+    public void load() {
+        checkLogs();
+        file = new FsFile(Paths.LOG_PATH, fileName, fileLocation);
+        if (file.exists())
+            info("Log file successfully created!");
     }
 
     @Override
@@ -57,111 +70,127 @@ public class Log extends Manager implements ApplicationLogger, Serializable {
         writer.close();
     }
 
-    @Override
-    public void load() {
-        checkLogs();
-        file = new FsFile(Paths.LOG_PATH, fileName, Files.FileType.External);
-        if (file.exists()) info("Log file successfully created!");
+    public void setLogLevel(Level logLevel) {
+        this.logLevel = logLevel;
     }
 
-    public void exit() {
-        close();
-        save();
+    public Level getLogLevel() {
+        return logLevel;
+    }
+
+    public void setFileLocation(Files.FileType fileLocation) {
+        this.fileLocation = fileLocation;
+    }
+
+    public void addLogEvent(LogEvent logEvent) {
+        if(logEvents.contains(logEvent))
+            return;
+        this.logEvents.add(logEvent);
+    }
+
+    public static void showErrorDialog(Level logLevel, String message, boolean exit) {
+        error(message);
+        JOptionPane.showMessageDialog(null, message, logLevel.getPrefix(), JOptionPane.ERROR_MESSAGE);
+        if(!exit)
+            return;
+        Log.getInstance().save();
+        Gdx.app.exit();
         System.exit(0);
     }
 
-    public void exit(String errorMessage) {
-        error(errorMessage);
-        exit();
+    public static void error(Object... messages) {
+        Log.getInstance().createMessage(System.err, Level.ERROR, messages);
     }
 
-    public static void crash(String title, String message, boolean exit) {
-        error(message);
-        JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
-        if(exit) Log.instance.exit();
+    public static void error(Object message, Exception ex) {
+        error(message, "\n", ex.getMessage());
     }
 
-    public static void error(Object msg) {
-        createMessage(System.err, "Error", msg);
+    public static void info(Object... messages) {
+        Log.getInstance().createMessage(System.out, Level.INFO, messages);
     }
 
-    public static void error(Object msg, Exception ex) {
-        createMessage(System.err, "Error", msg + "\n" + ex.getMessage());
+    public static void debug(Object... messages) {
+        Log.getInstance().createMessage(System.out, Level.DEBUG, messages);
     }
 
-    public static void info(Object msg) {
-        createMessage(System.out, "Info", msg);
+    public static void debug(Supplier<String> createMessages) {
+        if(Log.getInstance().getLogLevel() == Level.DEBUG)
+            Log.getInstance().createMessage(System.out, Level.DEBUG, createMessages.get());
     }
 
-    public static void info(Object... values) {
-        StringBuilder s = new StringBuilder();
-        for (int i = 0; i < values.length; i++) s.append(values[i]).append(i < values.length - 1 ? ", " : "");
-        createMessage(System.out, "Info", s.toString());
-    }
+    private void createMessage(PrintStream console, Level logLevel, Object... messages) {
+        if(logLevel.ordinal() > this.logLevel.ordinal())
+            return;
+        StringBuilder logMessage = new StringBuilder();
+        for (int i = 0; i < messages.length; i++) logMessage.append(messages[i]).append(i < messages.length - 1 ? ", " : "");
 
-    private static void createMessage(PrintStream console, String prefix, Object msg) {
-        String logMessage = Variables.LOG_MESSAGE_FORMAT
-                .replace("%prefix%", prefix)
+        String fullMessage = Variables.LOG_MESSAGE_FORMAT
+                .replace("%prefix%", logLevel.getPrefix())
                 .replace("%time%", getTime())
-                .replace("%message%", String.valueOf(msg))
+                .replace("%message%", logMessage.toString())
                 .replace("%name%", Variables.NAME)
                 .replace("%version%", Variables.VERSION.toString());
-        Log.instance.displayMessage(logMessage);
-        console.println(logMessage);
-        logMessages.add(logMessage);
+
+        console.println(fullMessage);
+        logMessages.add(fullMessage);
+        logEvents.forEach(logEvent -> logEvent.log(logLevel, fullMessage));
     }
 
     private void checkLogs() {
-        ArrayList<FileHandle> filesToRemove = new ArrayList<>();
         FsFile dir = new FsFile(Paths.LOG_PATH, Files.FileType.External);
         if (!dir.exists() || !dir.isDirectory())
             return;
         FileHandle[] files = dir.list();
         if(files == null)
             return;
-        for (FileHandle file : files)
-            if ((new Date().getTime() - file.lastModified()) > TimeUnit.DAYS.toMillis(Variables.LOG_DELETION_TIME_DAYS)) filesToRemove.add(file);
-        int dFiles = 0;
-        for (FileHandle file : filesToRemove) if (file.delete()) dFiles++;
-        info("Deleted " + dFiles + " log files!");
-        filesToRemove.clear();
+        long currentTime = new Date().getTime();
+        Stream<FileHandle> filesToRemove = Arrays.stream(files).filter(file -> (currentTime - file.lastModified()) > TimeUnit.DAYS.toMillis(Variables.LOG_DELETION_TIME_DAYS));
+        info("Deleted " + filesToRemove.filter(FileHandle::delete).count() + " log files!");
+        filesToRemove.close();
     }
 
     public static String getTime() {
         return DATE_FORMAT.format(Calendar.getInstance().getTime());
     }
 
-    public void displayMessage(String msg) {}
-
-    public void close() {}
+    public static Log getInstance() {
+        if (instance == null) {
+            synchronized (Log.class) {
+                if (instance == null)
+                    instance = new Log();
+            }
+        }
+        return instance;
+    }
 
     @Override
     public void log(String tag, String message) {
-        createMessage(System.out, tag, message);
+        info(message);
     }
 
     @Override
     public void log(String tag, String message, Throwable exception) {
-        createMessage(System.out, tag, message + "\n" + exception.getMessage());
+        error(message, exception);
     }
 
     @Override
     public void error(String tag, String message) {
-        createMessage(System.err, tag, message);
+        error(message);
     }
 
     @Override
     public void error(String tag, String message, Throwable exception) {
-        createMessage(System.err, tag, message + "\n" + exception.getMessage());
+        error(message, exception);
     }
 
     @Override
     public void debug(String tag, String message) {
-        createMessage(System.out, tag, message);
+        debug(message);
     }
 
     @Override
     public void debug(String tag, String message, Throwable exception) {
-        createMessage(System.out, tag, message + "\n" + exception.getMessage());
+        error(message, exception);
     }
 }

@@ -44,7 +44,9 @@ public class EquipScreen extends Gui implements InvTarget {
     @Override
     public InvSlot getClickedSlot(OrthographicCamera camera) {
         if (!visible) return null;
-        for (EquipSlot equipSlot : slots) if (equipSlot.isClicked(camera)) return equipSlot;
+        for (EquipSlot equipSlot : slots)
+            if (equipSlot.isClicked(camera))
+                return equipSlot;
         return null;
     }
 

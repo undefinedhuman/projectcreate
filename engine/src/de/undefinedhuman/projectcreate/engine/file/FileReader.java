@@ -1,5 +1,6 @@
 package de.undefinedhuman.projectcreate.engine.file;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import de.undefinedhuman.projectcreate.engine.log.Log;
@@ -72,8 +73,8 @@ public class FileReader {
         return !splitter.hasMoreValues();
     }
 
-    public FsFile getParentDirectory() {
-        return new FsFile(file.parent().path(), file.type());
+    public FileHandle parent() {
+        return file.parent();
     }
 
     public void close() {

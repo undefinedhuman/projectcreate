@@ -33,11 +33,14 @@ public class BlueprintManager extends Manager {
     public boolean loadBlueprints(Integer... ids) {
         boolean loaded = false;
         for (int id : ids) {
-            if (!hasBlueprint(id)) blueprints.put(id, loadBlueprint(new FsFile(Paths.ENTITY_PATH, id + "/settings.entity", Files.FileType.Internal)));
+            if (!hasBlueprint(id))
+                blueprints.put(id, loadBlueprint(new FsFile(Paths.ENTITY_PATH, id + "/settings.entity", Files.FileType.Internal)));
             loaded |= hasBlueprint(id);
         }
-        if (loaded)
-            Log.info("Blueprint" + Tools.appendSToString(ids.length) + " loaded successfully: " + Arrays.toString(ids));
+        Log.debug(() -> {
+            Object[] loadedBlueprints = Arrays.stream(ids).filter(id -> blueprints.containsKey(id)).toArray();
+            return "Loaded blueprint" + Tools.appendSToString(loadedBlueprints.length) + ": " + Tools.convertArrayToPrintableString(loadedBlueprints);
+        });
         return loaded;
     }
 
@@ -75,13 +78,13 @@ public class BlueprintManager extends Manager {
         SettingsObject object = Tools.loadSettings(reader);
 
         for(Setting setting : blueprint.settings.getSettings())
-            setting.loadSetting(reader.getParentDirectory(), object);
+            setting.loadSetting(reader.parent(), object);
 
         for(ComponentType type : ComponentType.values()) {
             if(!object.containsKey(type.name())) continue;
             Object componentObject = object.get(type.name());
             if(!(componentObject instanceof SettingsObject)) continue;
-            blueprint.addComponentBlueprint(type.createInstance(reader.getParentDirectory(), (SettingsObject) object.get(type.name())));
+            blueprint.addComponentBlueprint(type.createInstance(reader.parent(), (SettingsObject) object.get(type.name())));
         }
 
         reader.close();

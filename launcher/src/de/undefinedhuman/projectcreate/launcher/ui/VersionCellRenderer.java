@@ -1,19 +1,29 @@
 package de.undefinedhuman.projectcreate.launcher.ui;
 
 import de.undefinedhuman.projectcreate.engine.utils.Version;
-import de.undefinedhuman.projectcreate.launcher.Launcher;
-import de.undefinedhuman.projectcreate.launcher.config.LauncherConfig;
 import de.undefinedhuman.projectcreate.launcher.icon.IconManager;
-import de.undefinedhuman.projectcreate.updater.utils.InstallationUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.stream.Stream;
 
 public class VersionCellRenderer extends DefaultListCellRenderer {
+
+    public ArrayList<Version> versionDownloaded = new ArrayList<>();
+
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        label.setIcon(value != null && !InstallationUtils.isVersionDownloaded(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.getInstance().gameInstallationPath.getFile(), (Version) value) && index != -1 ? IconManager.getInstance().getIcon("download", 16, 16) : null);
+        if(value != null && !versionDownloaded.contains((Version) value) && index != -1 && label.getIcon() == null)
+            label.setIcon(IconManager.getInstance().getIcon("download", 16, 16));
+        else label.setIcon(null);
         return label;
     }
+
+    public void setVersionDownloaded(Stream<Version> versions) {
+        versionDownloaded.clear();
+        versions.forEach(versionDownloaded::add);
+    }
+
 }

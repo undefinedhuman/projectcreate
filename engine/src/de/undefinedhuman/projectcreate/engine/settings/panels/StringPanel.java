@@ -1,7 +1,5 @@
 package de.undefinedhuman.projectcreate.engine.settings.panels;
 
-import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 
 import javax.swing.*;
@@ -15,44 +13,22 @@ public class StringPanel<T extends PanelObject> extends Panel<T> {
     }
 
     @Override
-    protected void addValueMenuComponents(JPanel panel, Vector2 position) {
-        super.addValueMenuComponents(panel, position);
+    protected void createPanelObjectNameComponent(JPanel panel, int width) {
         objectName = new JTextField("");
-        objectName.setBounds((int) position.x - 175, (int) position.y + 30, 370, 25);
+        objectName.setBounds(0, 0, width, Panel.INPUT_HEIGHT);
         panel.add(objectName);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public void addObject() {
-        if(objectList.contains(objectName.getText())) {
-            Log.error(this.key + " with name " + objectName.getText() + " already exist!");
-            return;
-        }
-        T object = null;
-        try {
-            object = (T) this.panelObject.getClass().newInstance();
-            object.setKey(objectName.getText());
-            objects.put(object.getKey(), object);
-        } catch (InstantiationException | IllegalAccessException ex) { ex.printStackTrace(); }
-        if(object != null) objectList.addElement(object.getKey());
+    public String getSelectedObjectName() {
+        return objectName.getText();
     }
 
     @Override
-    public void removeObject() {
-        if(!objectList.contains(objectName.getText())) {
-            Log.error(this.key + " with name " + objectName.getText() + " does not exist!");
-            return;
-        }
-        objectList.removeElement(objectName.getText());
-        objects.remove(objectName.getText());
-    }
-
-    @Override
-    public void selectObject(T object) {
+    public void selectObject(T object, JPanel objectPanel, int containerWidth) {
         objectName.setText(object.getKey());
         Tools.removeSettings(objectPanel);
-        Tools.addSettings(objectPanel, object.getSettings());
+        Tools.addSettings(objectPanel, object.getSettings(), containerWidth);
     }
 
 }

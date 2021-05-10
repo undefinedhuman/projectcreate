@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.engine.entity;
 
+import com.badlogic.gdx.files.FileHandle;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
-import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
@@ -22,7 +22,7 @@ public abstract class ComponentBlueprint {
 
     public abstract Component createInstance(HashMap<ComponentType, ComponentParam> params);
 
-    public void load(FsFile parentDir, SettingsObject settingsObject) {
+    public void load(FileHandle parentDir, SettingsObject settingsObject) {
         for(Setting setting : this.settings.getSettings())
             setting.loadSetting(parentDir, settingsObject);
     }

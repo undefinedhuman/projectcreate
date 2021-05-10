@@ -34,10 +34,10 @@ public class ItemEditor extends Editor {
         itemComboBox.setSelectedIndex(0);
         itemComboBox.addActionListener(e -> {
             if(itemComboBox.getSelectedItem() == null) return;
-            Tools.removeSettings(settingsPanel);
+            Tools.removeSettings(rightPanel);
             ItemType type = ItemType.valueOf(itemComboBox.getSelectedItem().toString());
             currentItem = type.createInstance();
-            Tools.addSettings(settingsPanel, currentItem.getSettings());
+            Tools.addSettings(rightPanel, currentItem.getSettings());
         });
 
         middlePanel.add(itemComboBox);
@@ -86,11 +86,11 @@ public class ItemEditor extends Editor {
             if(!settingsObject.containsKey("Type")) return;
             ItemType type = ItemType.valueOf(((LineSplitter) settingsObject.get("Type")).getNextString());
             itemComboBox.setSelectedItem(type);
-            Tools.removeSettings(settingsPanel);
+            Tools.removeSettings(rightPanel);
             currentItem = type.createInstance();
             for(Setting setting : currentItem.getSettings().getSettings())
-                setting.loadSetting(reader.getParentDirectory(), settingsObject);
-            Tools.addSettings(settingsPanel, currentItem.getSettings());
+                setting.loadSetting(reader.parent(), settingsObject);
+            Tools.addSettings(rightPanel, currentItem.getSettings());
             loadWindow.setVisible(false);
             reader.close();
         });

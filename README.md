@@ -6,38 +6,35 @@
 > 2D Sandbox Game heavily focused on freedom of gameplay and exploration.
 
 ## Table of Contents
-1. [Requirements](#requirements)
-2. [Installation](#installation)
+1. [Technologies](#technologies)
+2. [Installation](#Installation)
 3. [Usage](#usage)
 4. [Documentation](#documentation)
 5. [License](#license)
 
+## Technologies
+Project is created with:
+* Java JDK Version 8
+* Gradle 6.8.3 (wrapper files, are already included in the repository)
+* Additional dependencies can be found in the root [build.gradle](http://gitlab.playprojectcreate.com/undefinedhuman/project-create/-/blob/main/build.gradle) file
+
 ## Installation
-> The project requires Java Version 8 and Gradle Version 6.8.3 (wrapper already included)
+> Required dependencies are automatically downloaded by Gradle.
+> Personally, I suggest using the Intellij IDE for easier installation and handling of the project.
+
 ```sh
-./gradlew build
+# Clone repository
+git clone http://gitlab.playprojectcreate.com/undefinedhuman/project-create.git
+cd project-create/
 ```
 
 ## Usage
 ```sh
-# Run either part of the game by replacing "NAME" with either "desktop, editor or server"
+# Run either part of the project by replacing "NAME" with either "game, editor, server, updater or launcher" to launch the specific module
 ./gradlew :NAME:run
 ```
 
-## Version
-STAGE.MAJOR.MINOR 
-INDEV - ALPHA - BETA - Early Access - Release
-Stage: 0 - 1 - 2 - 3 - 1
-Snapshot: Year Digits (2021 -> 21), w, Week number (04), build number of the week (01) increases with each release
-Snapshots: projectcreate-indev-21w01b1
-Snapshots: projectcreate-alpha-21w02b1
-Production: projectcreate-indev-0.0.0
-Production: projectcreate-alpha-0.5.0
-Production: projectcreate-beta-0.7.0
-Production: projectcreate-1.0.0-release
-
-## Documentation
 
 ## License
 
-Copyright © 2021 [Alexander Padberg](https://github.com/undefinedhuman)
+Copyright © 2021 [Alexander Padberg](http://undefinedhuman.de)

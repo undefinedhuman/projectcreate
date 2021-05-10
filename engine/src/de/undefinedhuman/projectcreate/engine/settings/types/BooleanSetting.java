@@ -1,24 +1,25 @@
 package de.undefinedhuman.projectcreate.engine.settings.types;
 
-import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingType;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
 
 public class BooleanSetting extends Setting {
 
     public JCheckBox checkBox;
+    private static final int CHECK_BOX_SIZE = Variables.DEFAULT_CONTENT_HEIGHT;
 
     public BooleanSetting(String key, boolean value) {
         super(SettingType.Boolean, key, value);
     }
 
     @Override
-    protected void addValueMenuComponents(JPanel panel, Vector2 position) {
+    protected void addValueMenuComponents(JPanel panel, int width) {
         checkBox = new JCheckBox();
         checkBox.setSelected(getBoolean());
-        checkBox.setBounds((int) position.x, (int) position.y, 25, 25);
+        checkBox.setSize(CHECK_BOX_SIZE, CHECK_BOX_SIZE);
         checkBox.addActionListener(e -> value = checkBox.isSelected());
         panel.add(checkBox);
     }

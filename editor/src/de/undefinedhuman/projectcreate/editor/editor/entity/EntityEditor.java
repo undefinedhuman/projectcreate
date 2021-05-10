@@ -4,8 +4,6 @@ import com.badlogic.gdx.Files;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.editor.editor.Editor;
-import de.undefinedhuman.projectcreate.engine.settings.types.SelectionSetting;
-import de.undefinedhuman.projectcreate.engine.settings.types.Vector2Setting;
 import de.undefinedhuman.projectcreate.engine.entity.ComponentBlueprint;
 import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
 import de.undefinedhuman.projectcreate.engine.entity.EntityType;
@@ -15,12 +13,15 @@ import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingType;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
+import de.undefinedhuman.projectcreate.engine.settings.types.SelectionSetting;
+import de.undefinedhuman.projectcreate.engine.settings.types.Vector2Setting;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class EntityEditor extends Editor {
@@ -49,7 +50,7 @@ public class EntityEditor extends Editor {
                 new Setting(SettingType.String, "Name", "Temp Name"),
                 new Vector2Setting("Size", new Vector2(0, 0)),
                 new SelectionSetting("Type", EntityType.values()));
-        Tools.addSettings(mainPanel, baseSettings);
+        Tools.addSettings(leftPanel, baseSettings);
 
         componentList = new DefaultListModel<>();
 
@@ -58,8 +59,8 @@ public class EntityEditor extends Editor {
         listPanel.addListSelectionListener(e -> {
             selectedComponent = listPanel.getSelectedValue() != null ? ComponentType.valueOf(listPanel.getSelectedValue()) : null;
             if(selectedComponent != null) {
-                Tools.removeSettings(settingsPanel);
-                Tools.addSettings(settingsPanel, components.get(selectedComponent).getSettings());
+                Tools.removeSettings(rightPanel);
+                Tools.addSettings(rightPanel, components.get(selectedComponent).getSettings());
             }
         });
 
@@ -70,7 +71,7 @@ public class EntityEditor extends Editor {
         addComponent.setBounds(20, 55, 150, 25);
         addComponent.addActionListener(e -> {
             if(componentComboBox.getSelectedItem() == null) return;
-            Tools.removeSettings(settingsPanel);
+            Tools.removeSettings(rightPanel);
             ComponentType type = ComponentType.valueOf(componentComboBox.getSelectedItem().toString());
             if(componentList.contains(type.toString())) return;
             componentList.addElement(type.toString());
@@ -82,7 +83,7 @@ public class EntityEditor extends Editor {
         removeComponent.addActionListener(e -> {
             if(listPanel.getSelectedValue() == null) return;
             ComponentType type = ComponentType.valueOf(listPanel.getSelectedValue());
-            Tools.removeSettings(settingsPanel);
+            Tools.removeSettings(rightPanel);
             components.remove(type);
             if(componentList.contains(type.toString())) componentList.removeElement(type.toString());
         });
@@ -110,6 +111,8 @@ public class EntityEditor extends Editor {
             reader.close();
         }
 
+        Collections.reverse(ids);
+
         JFrame chooseWindow = new JFrame("Load entity");
         chooseWindow.setSize(480,150);
         chooseWindow.setLocationRelativeTo(null);
@@ -128,20 +131,20 @@ public class EntityEditor extends Editor {
             if(comboBox.getSelectedItem() == null) return;
             componentList.clear();
             components.clear();
-            Tools.removeSettings(settingsPanel);
+            Tools.removeSettings(rightPanel);
 
             FileReader reader = new FileReader(new FsFile(Paths.ENTITY_PATH, Integer.parseInt(((String) comboBox.getSelectedItem()).split("-")[0]) + "/settings.entity", Files.FileType.Internal), true);
             SettingsObject settingsObject = Tools.loadSettings(reader);
 
             for(Setting setting : baseSettings.getSettings())
-                setting.loadSetting(reader.getParentDirectory(), settingsObject);
+                setting.loadSetting(reader.parent(), settingsObject);
 
             for(ComponentType type : ComponentType.values()) {
                 if(!settingsObject.containsKey(type.name())) continue;
                 componentList.addElement(type.name());
                 Object componentObject = settingsObject.get(type.name());
                 if(!(componentObject instanceof SettingsObject)) continue;
-                components.put(type, type.createInstance(reader.getParentDirectory(), (SettingsObject) settingsObject.get(type.name())));
+                components.put(type, type.createInstance(reader.parent(), (SettingsObject) settingsObject.get(type.name())));
             }
 
             chooseWindow.setVisible(false);
@@ -162,7 +165,7 @@ public class EntityEditor extends Editor {
         if(entityDir.exists())
             FileUtils.deleteFile(entityDir);
 
-        FileWriter writer = new FsFile(entityDir.path(), "settings.entity", Files.FileType.Local).getFileWriter(true);
+        FileWriter writer = new FsFile(entityDir, "settings.entity", Files.FileType.Local).getFileWriter(true);
         Tools.saveSettings(writer, baseSettings);
         for(ComponentBlueprint componentBlueprint : this.components.values())
             componentBlueprint.save(writer);

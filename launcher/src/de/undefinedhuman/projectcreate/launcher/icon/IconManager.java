@@ -38,8 +38,8 @@ public class IconManager extends Manager {
     }
 
     private void updateKey(String name, int width, int height) {
-        TEMP_KEY.key1 = name;
-        TEMP_KEY.key2.set(width, height);
+        TEMP_KEY.setKey1(name);
+        TEMP_KEY.getKey2().set(width, height);
     }
 
     public static IconManager getInstance() {

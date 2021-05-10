@@ -2,7 +2,6 @@ package de.undefinedhuman.projectcreate.engine.settings.panels;
 
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.file.FileReader;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
@@ -25,8 +24,7 @@ public class SelectionPanel<T extends PanelObject> extends Panel<T> {
     }
 
     @Override
-    protected void addValueMenuComponents(JPanel panel, Vector2 position) {
-        super.addValueMenuComponents(panel, position);
+    protected void createPanelObjectNameComponent(JPanel panel, int width) {
         FileHandle[] itemDirs = ResourceManager.loadDir(Paths.ITEM_PATH).list();
         ArrayList<String> ids = new ArrayList<>();
 
@@ -41,45 +39,24 @@ public class SelectionPanel<T extends PanelObject> extends Panel<T> {
         Arrays.sort(idArray, Comparator.comparing(c -> Integer.valueOf(c.split("-")[0])));
 
         selection = new JComboBox<>(idArray);
-        selection.setBounds((int) position.x - 175, (int) position.y + 30, 370, 25);
+        selection.setBounds(0, 0, width, Panel.INPUT_HEIGHT);
         panel.add(selection);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public void addObject() {
+    protected String getSelectedObjectName() {
         if(selection.getSelectedItem() == null) {
-            Log.error("No selected Item!");
-            return;
+            Log.error("Please select a object from the panel!");
+            return "";
         }
-        T object = null;
-        try {
-            object = (T) this.panelObject.getClass().newInstance();
-            object.setKey((String) selection.getSelectedItem());
-            if(objects.containsKey(object.getKey())) {
-                Log.error(this.key + " with name " + object.getKey() + " already exist!");
-                return;
-            }
-            objects.put(object.getKey(), object);
-        } catch (InstantiationException | IllegalAccessException ex) { ex.printStackTrace(); }
-        if(object != null) objectList.addElement(object.getKey());
+        return (String) selection.getSelectedItem();
     }
 
     @Override
-    public void removeObject() {
-        if(selection.getSelectedItem() == null || !objectList.contains(selection.getSelectedItem())) {
-            Log.error(this.key + " with name " + selection.getSelectedItem() + " does not exist!");
-            return;
-        }
-        objectList.removeElement(selection.getSelectedItem());
-        objects.remove(String.valueOf(selection.getSelectedItem()));
-    }
-
-    @Override
-    public void selectObject(T object) {
+    public void selectObject(T object, JPanel objectPanel, int containerWidth) {
         selection.setSelectedItem(object.getKey());
         Tools.removeSettings(objectPanel);
-        Tools.addSettings(objectPanel, object.getSettings());
+        Tools.addSettings(objectPanel, object.getSettings(), containerWidth);
     }
 
 }
