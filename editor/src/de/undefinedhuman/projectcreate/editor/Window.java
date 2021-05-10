@@ -31,6 +31,7 @@ public class Window extends JFrame {
 
     private Window() {
         FlatDarculaLaf.install();
+        setUIComponentProperties();
         LwjglAWTCanvas canvas = new LwjglAWTCanvas(new Main());
         canvas.getCanvas().setBounds(25, 300, 480, 345);
 
@@ -120,6 +121,16 @@ public class Window extends JFrame {
             hasError = false;
             errorTime = 15;
         }
+    }
+
+    private void setUIComponentProperties() {
+        UIManager.put("Button.arc", 0);
+        UIManager.put("Component.arc", 0);
+        UIManager.put("CheckBox.arc", 0);
+        UIManager.put("ProgressBar.arc", 0);
+
+        UIManager.put("Component.arrowType", "chevron");
+        UIManager.put("Component.focusWidth", 1);
     }
 
     public static Window getInstance() {

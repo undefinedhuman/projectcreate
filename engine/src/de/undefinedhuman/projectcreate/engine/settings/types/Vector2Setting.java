@@ -33,7 +33,7 @@ public class Vector2Setting extends Setting {
 
     @Override
     protected void addValueMenuComponents(JPanel panel, int width) {
-        int textFieldWidth = width/2 - Variables.OFFSET;
+        int textFieldWidth = (int) (width/2f - Variables.OFFSET/2f);
         xTextField = createTextField(getVector2().x, new Vector2(0, 0), new Vector2(textFieldWidth, Variables.DEFAULT_CONTENT_HEIGHT), new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
@@ -42,7 +42,7 @@ public class Vector2Setting extends Setting {
             }
         });
 
-        yTextField = createTextField(getVector2().y, new Vector2(textFieldWidth + Variables.OFFSET*2, 0), new Vector2(textFieldWidth, Variables.DEFAULT_CONTENT_HEIGHT), new KeyAdapter() {
+        yTextField = createTextField(getVector2().y, new Vector2(width/2f + Variables.OFFSET/2f, 0), new Vector2(textFieldWidth, Variables.DEFAULT_CONTENT_HEIGHT), new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 if(yTextField.getText() == null || yTextField.getText().equalsIgnoreCase("")) return;

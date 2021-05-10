@@ -13,9 +13,9 @@ public class StringPanel<T extends PanelObject> extends Panel<T> {
     }
 
     @Override
-    protected void createObjectNameField(JPanel panel, int x, int y, int width, int height) {
+    protected void createPanelObjectNameComponent(JPanel panel, int width) {
         objectName = new JTextField("");
-        objectName.setBounds(x, y, width, height);
+        objectName.setBounds(0, 0, width, Panel.INPUT_HEIGHT);
         panel.add(objectName);
     }
 

@@ -20,10 +20,9 @@ public abstract class BatchPanel<T extends PanelObject> extends StringPanel<T> {
     }
 
     @Override
-    protected void createObjectNameField(JPanel panel, int x, int y, int width, int height) {
-        super.createObjectNameField(panel, x + width/2 + Variables.OFFSET, y, width/2 - Variables.OFFSET, height);
-        JButton loadTextureLayers = new JButton("Load Layers");
-        loadTextureLayers.addActionListener(e -> {
+    protected void createUtilityButtons(JPanel panel, int y, int width) {
+        super.createUtilityButtons(panel, y, width);
+        panel.add(createButton("Load Layers", 0, y, width/3f*2f - Variables.OFFSET/2f, e -> {
             JFileChooser chooser = new JFileChooser();
             chooser.setCurrentDirectory(new FsFile(Paths.EDITOR_PATH, Files.FileType.Internal).file());
             chooser.setFileFilter(new FileNameExtensionFilter("Sprite Layer Data", "json"));
@@ -36,9 +35,7 @@ public abstract class BatchPanel<T extends PanelObject> extends StringPanel<T> {
                 return;
             }
             loadBatch(dataFile);
-        });
-        loadTextureLayers.setBounds(x, y, width/2 - Variables.OFFSET, height);
-        panel.add(loadTextureLayers);
+        }));
     }
 
     public abstract void loadBatch(File file);

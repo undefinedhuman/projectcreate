@@ -16,7 +16,7 @@ import java.util.HashMap;
 
 public abstract class Panel<T extends PanelObject> extends Setting {
 
-    private static final int INPUT_HEIGHT = Variables.DEFAULT_CONTENT_HEIGHT;
+    protected static final int INPUT_HEIGHT = Variables.DEFAULT_CONTENT_HEIGHT;
     private static final int BUTTON_HEIGHT = Variables.DEFAULT_CONTENT_HEIGHT;
     private static final int OBJECT_PANEL_HEIGHT = Variables.DEFAULT_CONTENT_HEIGHT*4;
 
@@ -62,32 +62,26 @@ public abstract class Panel<T extends PanelObject> extends Setting {
         objectPanel.setBounds(0, INPUT_HEIGHT + BUTTON_HEIGHT + OBJECT_PANEL_HEIGHT + BUTTON_HEIGHT + Variables.OFFSET*4, width, getPanelObjectContentHeight());
         objectPanel.setOpaque(true);
 
-        createObjectNameField(panel, 0, 0, width, INPUT_HEIGHT);
-        panel.add(createButton("Add", 0, INPUT_HEIGHT + Variables.OFFSET, width/2f - Variables.OFFSET, e -> {
-            String name = getSelectedObjectName();
-            if(name.equalsIgnoreCase(""))
-                return;
-            addPanelObject(name);
-        }));
-        panel.add(createButton("Remove",
-                width/2f + Variables.OFFSET,
+        createPanelObjectNameComponent(panel, width);
+        panel.add(createButton("Add",
+                0,
                 INPUT_HEIGHT + Variables.OFFSET,
-                width/2f - Variables.OFFSET,
+                width/2f - Variables.OFFSET/2f,
+                e -> {
+                    String name = getSelectedObjectName();
+                    if(name.equalsIgnoreCase(""))
+                        return;
+                    addPanelObject(name);
+                }
+        ));
+        panel.add(createButton("Remove",
+                width/2f + Variables.OFFSET/2f,
+                INPUT_HEIGHT + Variables.OFFSET,
+                width/2f - Variables.OFFSET/2f,
                 e -> removePanelObject(getSelectedObjectName())));
         panel.add(objectSelectionPanel);
-        panel.add(createButton("Clear All",
-                width/3f*2f + Variables.OFFSET/2f,
-                INPUT_HEIGHT + BUTTON_HEIGHT + OBJECT_PANEL_HEIGHT + Variables.OFFSET*3,
-                width/3f - Variables.OFFSET/2f,
-                e -> removeAllPanelObjects()));
+        createUtilityButtons(panel, INPUT_HEIGHT + BUTTON_HEIGHT + OBJECT_PANEL_HEIGHT + Variables.OFFSET*3, width);
         panel.add(objectPanel);
-    }
-
-    private JButton createButton(String text, float x, float y, float width, ActionListener listener) {
-        JButton button = new JButton(text);
-        button.setBounds((int) x, (int) y, (int) width, BUTTON_HEIGHT);
-        button.addActionListener(listener);
-        return button;
     }
 
     @SuppressWarnings("unchecked")
@@ -130,9 +124,17 @@ public abstract class Panel<T extends PanelObject> extends Setting {
         return panelObjects.values();
     }
 
-    protected abstract void createObjectNameField(JPanel panel, int x, int y, int width, int height);
+    protected abstract void createPanelObjectNameComponent(JPanel panel, int width);
     protected abstract String getSelectedObjectName();
     protected abstract void selectObject(T object, JPanel panel, int containerWidth);
+
+    protected void createUtilityButtons(JPanel panel, int y, int width) {
+        panel.add(createButton("Clear All",
+                width/3f*2f + Variables.OFFSET/2f,
+                y,
+                width/3f - Variables.OFFSET/2f,
+                e -> removeAllPanelObjects()));
+    }
 
     protected void addPanelObject(String name) {
         addPanelObject(name, createNewInstance());
@@ -168,6 +170,13 @@ public abstract class Panel<T extends PanelObject> extends Setting {
         try { instance = (T) panelObject.getClass().newInstance();
         } catch (InstantiationException | IllegalAccessException ex) { Log.error("Can not create Panel Object instance!", ex); }
         return instance;
+    }
+
+    protected JButton createButton(String text, float x, float y, float width, ActionListener listener) {
+        JButton button = new JButton(text);
+        button.setBounds((int) x, (int) y, (int) width, BUTTON_HEIGHT);
+        button.addActionListener(listener);
+        return button;
     }
 
 }

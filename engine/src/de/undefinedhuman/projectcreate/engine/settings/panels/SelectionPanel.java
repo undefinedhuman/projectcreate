@@ -24,7 +24,7 @@ public class SelectionPanel<T extends PanelObject> extends Panel<T> {
     }
 
     @Override
-    protected void createObjectNameField(JPanel panel, int x, int y, int width, int height) {
+    protected void createPanelObjectNameComponent(JPanel panel, int width) {
         FileHandle[] itemDirs = ResourceManager.loadDir(Paths.ITEM_PATH).list();
         ArrayList<String> ids = new ArrayList<>();
 
@@ -39,7 +39,7 @@ public class SelectionPanel<T extends PanelObject> extends Panel<T> {
         Arrays.sort(idArray, Comparator.comparing(c -> Integer.valueOf(c.split("-")[0])));
 
         selection = new JComboBox<>(idArray);
-        selection.setBounds(x, y, width, height);
+        selection.setBounds(0, 0, width, Panel.INPUT_HEIGHT);
         panel.add(selection);
     }
 
