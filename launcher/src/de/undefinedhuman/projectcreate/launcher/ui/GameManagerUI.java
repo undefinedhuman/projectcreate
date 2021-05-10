@@ -65,7 +65,7 @@ public class GameManagerUI extends JPanel {
         List<Version> availableVersion = InstallationUtils.fetchAvailableVersions(Launcher.DOWNLOAD_GAME_URL);
         Collections.reverse(availableVersion);
         versionSelectionModel = new DefaultComboBoxModel<>(availableVersion.toArray(new Version[0]));
-        versionSelection = new JComboBox<>(InstallationUtils.fetchAvailableVersions(Launcher.DOWNLOAD_GAME_URL).toArray(new Version[0]));
+        versionSelection = new JComboBox<>(versionSelectionModel);
         versionSelection.setBounds(25, getHeight()/2-ICON_SIZE.y/2, 200, ICON_SIZE.y);
         versionCellRenderer = new VersionCellRenderer();
         versionSelection.setRenderer(versionCellRenderer);
