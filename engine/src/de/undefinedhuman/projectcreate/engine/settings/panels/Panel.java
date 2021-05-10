@@ -65,7 +65,7 @@ public abstract class Panel<T extends PanelObject> extends Setting {
         createPanelObjectNameComponent(panel, width);
         panel.add(createButton("Add",
                 0,
-                INPUT_HEIGHT + Variables.OFFSET,
+                (float) INPUT_HEIGHT + Variables.OFFSET,
                 width/2f - Variables.OFFSET/2f,
                 e -> {
                     String name = getSelectedObjectName();
@@ -76,7 +76,7 @@ public abstract class Panel<T extends PanelObject> extends Setting {
         ));
         panel.add(createButton("Remove",
                 width/2f + Variables.OFFSET/2f,
-                INPUT_HEIGHT + Variables.OFFSET,
+                (float) INPUT_HEIGHT + Variables.OFFSET,
                 width/2f - Variables.OFFSET/2f,
                 e -> removePanelObject(getSelectedObjectName())));
         panel.add(objectSelectionPanel);
