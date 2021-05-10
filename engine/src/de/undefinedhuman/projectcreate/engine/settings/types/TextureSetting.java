@@ -1,7 +1,6 @@
 package de.undefinedhuman.projectcreate.engine.settings.types;
 
 import com.badlogic.gdx.Files;
-import com.badlogic.gdx.math.Vector2;
 import com.sixlegs.png.PngImage;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
@@ -26,6 +25,8 @@ import java.io.IOException;
 
 public class TextureSetting extends Setting {
 
+    private static final int PREVIEW_TEXTURE_LABEL_SIZE = 200;
+
     private BufferedImage texture;
     private JLabel textureLabel;
 
@@ -33,14 +34,14 @@ public class TextureSetting extends Setting {
         super(SettingType.Texture, key, value);
         loadTexture("Unknown.png");
         setValue("Unknown.png");
-        this.offset = 200;
+        setContentHeight(200);
     }
 
     @Override
-    protected void addValueMenuComponents(JPanel panel, Vector2 position) {
+    protected void addValueMenuComponents(JPanel panel, int width) {
         textureLabel = new JLabel();
         textureLabel.setHorizontalAlignment(JLabel.CENTER);
-        textureLabel.setBounds((int) position.x, (int) position.y, 200, 200);
+        textureLabel.setBounds(width/2 - PREVIEW_TEXTURE_LABEL_SIZE/2, 0, PREVIEW_TEXTURE_LABEL_SIZE, PREVIEW_TEXTURE_LABEL_SIZE);
         setTextureIcon();
         textureLabel.addMouseListener(new MouseAdapter() {
             @Override
@@ -66,11 +67,11 @@ public class TextureSetting extends Setting {
         writer.writeString(key).writeString(value.toString());
         FsFile file = new FsFile(writer.getParentDirectory().path() + Variables.FILE_SEPARATOR + getString(),  Files.FileType.Local);
         try { ImageIO.write(texture, "png", file.file());
-        } catch (IOException ex) { Log.getInstance().showErrorDialog(Level.CRASH, "Can not save texture (" + this + "): \n" + ex.getMessage(), true); }
+        } catch (IOException ex) { Log.showErrorDialog(Level.CRASH, "Can not save texture (" + this + "): \n" + ex.getMessage(), true); }
     }
 
     @Override
-    public void load(FsFile parentDir, Object value) {
+    public void loadValue(FsFile parentDir, Object value) {
         if(!(value instanceof LineSplitter))
             return;
         setValue(((LineSplitter) value).getNextString());
@@ -94,14 +95,25 @@ public class TextureSetting extends Setting {
         if(TextureManager.instance != null) TextureManager.instance.removeTexture(getString());
     }
 
+    public void setTexture(String path, Files.FileType type) {
+        loadTexture(path, type);
+        setTextureIcon();
+    }
+
     private void loadTexture(String path) {
-        try { texture = new PngImage().read(new FsFile(path, Files.FileType.Internal).read(), true);
-        } catch (IOException ex) { Log.getInstance().showErrorDialog(Level.CRASH, "Can not load texture (" + this + "): \n" + ex.getMessage(), true); }
-        if(texture == null && !path.equals("Unknown.png")) loadTexture("Unknown.png");
+        loadTexture(path, Files.FileType.Internal);
+    }
+
+    private void loadTexture(String path, Files.FileType type) {
+        try { texture = new PngImage().read(new FsFile(path, type).read(), true);
+        } catch (IOException ex) { Log.showErrorDialog(Level.CRASH, "Can not load texture (" + this + "): \n" + ex.getMessage(), true); }
+        if(texture == null && !path.equals("Unknown.png"))
+            loadTexture("Unknown.png");
     }
 
     private void setTextureIcon() {
-        if(textureLabel == null) return;
+        if(textureLabel == null)
+            return;
         float scaleFactor = (float) textureLabel.getHeight() / texture.getHeight();
         textureLabel.setIcon(new ImageIcon(texture.getScaledInstance((int) (texture.getWidth() * scaleFactor), (int) (texture.getHeight() * scaleFactor), Image.SCALE_SMOOTH)));
     }

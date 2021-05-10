@@ -7,6 +7,7 @@ import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingType;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
@@ -14,14 +15,12 @@ import java.awt.event.KeyEvent;
 
 public class StringArraySetting extends Setting {
 
-    private JTextField valueField;
-
     public StringArraySetting(String key, String[] value) {
         super(SettingType.StringArray, key, value);
     }
 
     @Override
-    public void load(FsFile parentDir, Object value) {
+    public void loadValue(FsFile parentDir, Object value) {
         if(!(value instanceof LineSplitter)) return;
         LineSplitter splitter = (LineSplitter) value;
         String[] values = new String[splitter.getNextInt()];
@@ -35,8 +34,9 @@ public class StringArraySetting extends Setting {
         for(String s : getStringArray()) writer.writeString(s);
     }
 
-    protected void addValueMenuComponents(JPanel panel, Vector2 position) {
-        valueField = createTextField(Tools.convertArrayToString(getStringArray()), position, new Vector2(200, 25), new KeyAdapter() {
+    @Override
+    protected void addValueMenuComponents(JPanel panel, int width) {
+        valueField = createTextField(Tools.convertArrayToString(getStringArray()), new Vector2(0, 0), new Vector2(width, Variables.DEFAULT_CONTENT_HEIGHT), new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 if(valueField.getText() == null || valueField.getText().equalsIgnoreCase("")) return;

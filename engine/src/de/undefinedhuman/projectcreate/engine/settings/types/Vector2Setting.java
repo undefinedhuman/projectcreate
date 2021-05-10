@@ -6,6 +6,7 @@ import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingType;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
@@ -20,7 +21,7 @@ public class Vector2Setting extends Setting {
     }
 
     @Override
-    public void load(FsFile parentDir, Object value) {
+    public void loadValue(FsFile parentDir, Object value) {
         if(!(value instanceof LineSplitter)) return;
         setValue(((LineSplitter) value).getNextVector2());
     }
@@ -31,8 +32,9 @@ public class Vector2Setting extends Setting {
     }
 
     @Override
-    protected void addValueMenuComponents(JPanel panel, Vector2 position) {
-        xTextField = createTextField(getVector2().x, position, new Vector2(95, 25), new KeyAdapter() {
+    protected void addValueMenuComponents(JPanel panel, int width) {
+        int textFieldWidth = width/2 - Variables.OFFSET;
+        xTextField = createTextField(getVector2().x, new Vector2(0, 0), new Vector2(textFieldWidth, Variables.DEFAULT_CONTENT_HEIGHT), new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 if(xTextField.getText() == null || xTextField.getText().equalsIgnoreCase("")) return;
@@ -40,7 +42,7 @@ public class Vector2Setting extends Setting {
             }
         });
 
-        yTextField = createTextField(getVector2().y, new Vector2(position).add(105, 0), new Vector2(95, 25), new KeyAdapter() {
+        yTextField = createTextField(getVector2().y, new Vector2(textFieldWidth + Variables.OFFSET*2, 0), new Vector2(textFieldWidth, Variables.DEFAULT_CONTENT_HEIGHT), new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 if(yTextField.getText() == null || yTextField.getText().equalsIgnoreCase("")) return;

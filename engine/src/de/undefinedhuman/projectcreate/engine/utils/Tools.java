@@ -96,17 +96,17 @@ public class Tools {
     public static void addSettings(JPanel panel, int x, int y, int offset, Setting... settings) {
         int currentOffset = 0;
         for (Setting setting : settings) {
-            setting.addMenuComponents(panel, new Vector2(x, y + currentOffset));
-            currentOffset += setting.offset + offset;
+            setting.addMenuComponents(panel, new Vector2(x, y + currentOffset), Variables.CONTENT_WIDTH + Variables.BORDER_WIDTH);
+            currentOffset += setting.getTotalHeight() + offset;
         }
         resetPanel(panel);
     }
 
-    public static void addSettings(JPanel panel, ArrayList<Setting> settings) {
+    public static void addSettings(JPanel panel, ArrayList<Setting> settings, int width) {
         int currentOffset = 0;
         for (Setting setting : settings) {
-            setting.addMenuComponents(panel, new Vector2(0, currentOffset));
-            currentOffset += setting.offset;
+            setting.addMenuComponents(panel, new Vector2(0, currentOffset), width);
+            currentOffset += setting.getTotalHeight();
         }
         resetPanel(panel);
     }
@@ -118,8 +118,8 @@ public class Tools {
     public static void addSettings(JPanel panel, SettingsList settings, int x, int y, int offset) {
         int currentOffset = 0;
         for (Setting setting : settings.getSettings()) {
-            setting.addMenuComponents(panel, new Vector2(x, y + currentOffset));
-            currentOffset += setting.offset + offset;
+            setting.addMenuComponents(panel, new Vector2(x, y + currentOffset), Variables.CONTENT_WIDTH);
+            currentOffset += setting.getTotalHeight() + offset;
         }
         resetPanel(panel);
     }

@@ -1,10 +1,10 @@
 package de.undefinedhuman.projectcreate.engine.settings.types;
 
-import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingType;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 
 import javax.swing.*;
@@ -34,13 +34,13 @@ public class SliderSetting extends Setting {
     }
 
     @Override
-    protected void addValueMenuComponents(JPanel panel, Vector2 position) {
+    protected void addValueMenuComponents(JPanel panel, int width) {
         JLabel progressLabel = new JLabel(getString());
-        progressLabel.setBounds((int) position.x + 150, (int) position.y, 50, 25);
+        progressLabel.setBounds((int) (width*0.75f), 0, (int) (width*0.25f), Variables.DEFAULT_CONTENT_HEIGHT);
         slider = new JSlider(bounds.x, bounds.y, (int) (getFloat() * conversionValue));
         slider.setMajorTickSpacing(tickSpeed);
         slider.setSnapToTicks(true);
-        slider.setBounds((int) position.x, (int) position.y, 150, 25);
+        slider.setBounds(0, 0, (int) (width*0.75f), Variables.DEFAULT_CONTENT_HEIGHT);
         slider.addChangeListener(e -> {
             double value = Math.floor((slider.getValue() / conversionValue) * 100) / 100;
             setValue(value);

@@ -13,11 +13,11 @@ public class SpriteComponent extends Component {
     private HashMap<String, SpriteData> spriteData;
     private SortedMap<Integer, ArrayList<SpriteData>> orderedSpriteData = new TreeMap<>();
 
-    public SpriteComponent(int animationBounds, HashMap<String, SpriteLayer> params) {
+    public SpriteComponent(HashMap<String, SpriteLayer> params) {
         this.spriteData = new HashMap<>();
         for (String name : params.keySet()) {
             SpriteLayer layer = params.get(name);
-            SpriteData data = new SpriteData(layer.texture.getString(), layer.isAnimated.getBoolean() ? animationBounds : 1, layer.renderLevel.getInt());
+            SpriteData data = new SpriteData(layer.texture.getString(), layer.frameCount.getInt(), layer.renderLevel.getInt());
             spriteData.put(name, data);
         }
         this.type = ComponentType.SPRITE;

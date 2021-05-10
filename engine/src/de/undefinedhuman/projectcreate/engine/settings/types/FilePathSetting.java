@@ -1,6 +1,5 @@
 package de.undefinedhuman.projectcreate.engine.settings.types;
 
-import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingType;
@@ -19,8 +18,8 @@ public abstract class FilePathSetting extends Setting {
     }
 
     @Override
-    protected void addValueMenuComponents(JPanel panel, Vector2 position) {
-        super.addValueMenuComponents(panel, position);
+    protected void addValueMenuComponents(JPanel panel, int width) {
+        super.addValueMenuComponents(panel, width);
         valueField.setEditable(false);
         valueField.addMouseListener(new MouseAdapter() {
             @Override

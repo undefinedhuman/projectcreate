@@ -13,6 +13,13 @@ public class Variables {
     public static final float GAME_CAMERA_ZOOM = 3f;
     public static final float DELTA_MULTIPLIER = 1.0f;
 
+    // Settings
+    public static final int BORDER_HEIGHT = 25;
+    public static final int BORDER_WIDTH = 10;
+    public static final int CONTENT_WIDTH = 390;
+    public static final int DEFAULT_CONTENT_HEIGHT = 25;
+    public static final int OFFSET = 5;
+
     // File System
     public static final String SEPARATOR = ";";
     public static final String FILE_SEPARATOR = "/";
