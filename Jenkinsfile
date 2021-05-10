@@ -73,6 +73,7 @@ pipeline {
         }
 
         stage('Static Code Analysis') {
+            when { expression { BRANCH_NAME != "dev" } }
             tools {
                 jdk "openjdk-11"
             }
@@ -94,6 +95,7 @@ pipeline {
             }
         }
         stage("Quality Gate") {
+            when { expression { BRANCH_NAME != "dev" } }
             steps {
                 updateGitlabCommitStatus name: 'Quality Gate', state: 'pending'
                 timeout(time: 15, unit: 'MINUTES') {
