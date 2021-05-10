@@ -1,8 +1,8 @@
 package de.undefinedhuman.projectcreate.engine.settings.types;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
-import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingType;
@@ -21,7 +21,7 @@ public class Vector2Setting extends Setting {
     }
 
     @Override
-    public void loadValue(FsFile parentDir, Object value) {
+    public void loadValue(FileHandle parentDir, Object value) {
         if(!(value instanceof LineSplitter)) return;
         setValue(((LineSplitter) value).getNextVector2());
     }

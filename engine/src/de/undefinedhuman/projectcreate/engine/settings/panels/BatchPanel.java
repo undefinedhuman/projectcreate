@@ -2,10 +2,8 @@ package de.undefinedhuman.projectcreate.engine.settings.panels;
 
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.utils.JsonReader;
-import de.undefinedhuman.projectcreate.engine.entity.components.sprite.SpriteLayer;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
-import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
@@ -13,7 +11,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 
-public abstract class BatchPanel<T extends SpriteLayer> extends StringPanel<T> {
+public abstract class BatchPanel<T extends PanelObject> extends StringPanel<T> {
 
     protected static JsonReader reader = new JsonReader();
 
@@ -34,7 +32,7 @@ public abstract class BatchPanel<T extends SpriteLayer> extends StringPanel<T> {
             if(returnVal != JFileChooser.APPROVE_OPTION) return;
             File dataFile = chooser.getSelectedFile();
             if(dataFile == null) {
-                Log.showErrorDialog(Level.ERROR, "Please select a valid json data file!", false);
+                Log.error("Please select a valid json data file!");
                 return;
             }
             loadBatch(dataFile);

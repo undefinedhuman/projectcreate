@@ -134,14 +134,14 @@ public class EntityEditor extends Editor {
             SettingsObject settingsObject = Tools.loadSettings(reader);
 
             for(Setting setting : baseSettings.getSettings())
-                setting.loadSetting(reader.getParentDirectory(), settingsObject);
+                setting.loadSetting(reader.parent(), settingsObject);
 
             for(ComponentType type : ComponentType.values()) {
                 if(!settingsObject.containsKey(type.name())) continue;
                 componentList.addElement(type.name());
                 Object componentObject = settingsObject.get(type.name());
                 if(!(componentObject instanceof SettingsObject)) continue;
-                components.put(type, type.createInstance(reader.getParentDirectory(), (SettingsObject) settingsObject.get(type.name())));
+                components.put(type, type.createInstance(reader.parent(), (SettingsObject) settingsObject.get(type.name())));
             }
 
             chooseWindow.setVisible(false);
@@ -162,7 +162,7 @@ public class EntityEditor extends Editor {
         if(entityDir.exists())
             FileUtils.deleteFile(entityDir);
 
-        FileWriter writer = new FsFile(entityDir.path(), "settings.entity", Files.FileType.Local).getFileWriter(true);
+        FileWriter writer = new FsFile(entityDir, "settings.entity", Files.FileType.Local).getFileWriter(true);
         Tools.saveSettings(writer, baseSettings);
         for(ComponentBlueprint componentBlueprint : this.components.values())
             componentBlueprint.save(writer);

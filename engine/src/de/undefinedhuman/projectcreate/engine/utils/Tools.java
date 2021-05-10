@@ -20,8 +20,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Tools {
 
@@ -39,19 +39,19 @@ public class Tools {
     public static void loadSettings(FileReader reader, Setting... settings) {
         SettingsObject object = loadSettings(reader);
         for(Setting setting : settings)
-            setting.loadSetting(reader.getParentDirectory(), object);
+            setting.loadSetting(reader.parent(), object);
     }
 
     public static void loadSettings(FileReader reader, SettingsList settings) {
         SettingsObject object = loadSettings(reader);
         for(Setting setting : settings.getSettings())
-            setting.loadSetting(reader.getParentDirectory(), object);
+            setting.loadSetting(reader.parent(), object);
     }
 
     private static String loadKey(String key) {
         String[] values = key.split(":");
         if(values.length < 2)
-            Log.getInstance().showErrorDialog(Level.CRASH, "Can't find key in string: " + key, true);
+            Log.showErrorDialog(Level.CRASH, "Can't find key in string: " + key, true);
         return values[1];
     }
 
@@ -89,8 +89,8 @@ public class Tools {
         return logMessage.toString();
     }
 
-    public static String convertStreamToPrintableString(Stream<?> messages) {
-        return messages.map(Object::toString).collect(Collectors.joining(", "));
+    public static String convertArrayToPrintableString(Object[] messages) {
+        return Arrays.stream(messages).map(Object::toString).collect(Collectors.joining(", "));
     }
 
     public static void addSettings(JPanel panel, int x, int y, int offset, Setting... settings) {

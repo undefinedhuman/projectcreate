@@ -1,5 +1,6 @@
 package de.undefinedhuman.projectcreate.engine.file;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Base64Coder;
 import de.undefinedhuman.projectcreate.engine.log.Level;
@@ -49,8 +50,8 @@ public class FileWriter {
         return writeFloat(vector.x).writeFloat(vector.y);
     }
 
-    public FsFile getParentDirectory() {
-        return new FsFile(file.parent().path(), file.type());
+    public FileHandle parent() {
+        return file.parent();
     }
 
     public FileWriter writeValue(Object v) {

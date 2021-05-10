@@ -1,6 +1,7 @@
 package de.undefinedhuman.projectcreate.engine.settings.types;
 
 import com.badlogic.gdx.Files;
+import com.badlogic.gdx.files.FileHandle;
 import com.sixlegs.png.PngImage;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
@@ -33,8 +34,7 @@ public class TextureSetting extends Setting {
     public TextureSetting(String key, Object value) {
         super(SettingType.Texture, key, value);
         loadTexture("Unknown.png");
-        setValue("Unknown.png");
-        setContentHeight(200);
+        setContentHeight(PREVIEW_TEXTURE_LABEL_SIZE);
     }
 
     @Override
@@ -53,10 +53,9 @@ public class TextureSetting extends Setting {
                 int returnVal = chooser.showOpenDialog(null);
                 if(returnVal != JFileChooser.APPROVE_OPTION) return;
                 File textureFile = chooser.getSelectedFile();
-                if(textureFile == null) return;
-                loadTexture(textureFile.getPath());
-                setValue(textureFile.getName());
-                setTextureIcon();
+                if(textureFile == null)
+                    return;
+                setTexture(textureFile.getPath(), Files.FileType.Internal);
             }
         });
         panel.add(textureLabel);
@@ -65,13 +64,13 @@ public class TextureSetting extends Setting {
     @Override
     public void save(FileWriter writer) {
         writer.writeString(key).writeString(value.toString());
-        FsFile file = new FsFile(writer.getParentDirectory().path() + Variables.FILE_SEPARATOR + getString(),  Files.FileType.Local);
+        FsFile file = new FsFile(writer.parent(), getString(),  Files.FileType.Local);
         try { ImageIO.write(texture, "png", file.file());
         } catch (IOException ex) { Log.showErrorDialog(Level.CRASH, "Can not save texture (" + this + "): \n" + ex.getMessage(), true); }
     }
 
     @Override
-    public void loadValue(FsFile parentDir, Object value) {
+    public void loadValue(FileHandle parentDir, Object value) {
         if(!(value instanceof LineSplitter))
             return;
         setValue(((LineSplitter) value).getNextString());
@@ -79,10 +78,9 @@ public class TextureSetting extends Setting {
         loadTexture(path);
         if(texture == null)
             loadTexture("Unknown.png");
-        if(TextureManager.instance != null) {
-            setValue(path);
-            TextureManager.instance.addTexture(getString());
-        }
+        if(TextureManager.instance == null)
+            return;
+        TextureManager.instance.addTexture(path);
     }
 
     @Override
@@ -105,10 +103,12 @@ public class TextureSetting extends Setting {
     }
 
     private void loadTexture(String path, Files.FileType type) {
-        try { texture = new PngImage().read(new FsFile(path, type).read(), true);
+        FsFile textureFile = new FsFile(path, type);
+        try { texture = new PngImage().read(textureFile.read(), true);
         } catch (IOException ex) { Log.showErrorDialog(Level.CRASH, "Can not load texture (" + this + "): \n" + ex.getMessage(), true); }
         if(texture == null && !path.equals("Unknown.png"))
             loadTexture("Unknown.png");
+        setValue(textureFile.path());
     }
 
     private void setTextureIcon() {

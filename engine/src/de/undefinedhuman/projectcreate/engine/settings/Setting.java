@@ -2,6 +2,7 @@ package de.undefinedhuman.projectcreate.engine.settings;
 
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.entity.EntityType;
@@ -79,7 +80,7 @@ public class Setting {
 
     public SettingType getType() { return type; }
 
-    public void loadSetting(FsFile parentDir, SettingsObject settingsObject) {
+    public void loadSetting(FileHandle parentDir, SettingsObject settingsObject) {
         if(!settingsObject.containsKey(key)) return;
         loadValue(parentDir, settingsObject.get(key));
         setValueInMenu(value);
@@ -90,7 +91,7 @@ public class Setting {
         writer.writeString(value.toString());
     }
 
-    protected void loadValue(FsFile parentDir, Object value) {
+    protected void loadValue(FileHandle parentDir, Object value) {
         if(!(value instanceof LineSplitter)) return;
         setValue(((LineSplitter) value).getNextString());
     }

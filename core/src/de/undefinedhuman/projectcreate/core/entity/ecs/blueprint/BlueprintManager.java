@@ -6,7 +6,6 @@ import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
 import de.undefinedhuman.projectcreate.engine.file.FileReader;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
-import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
@@ -14,7 +13,6 @@ import de.undefinedhuman.projectcreate.engine.utils.Manager;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.stream.Stream;
 
 public class BlueprintManager extends Manager {
 
@@ -35,13 +33,14 @@ public class BlueprintManager extends Manager {
     public boolean loadBlueprints(Integer... ids) {
         boolean loaded = false;
         for (int id : ids) {
-            if (!hasBlueprint(id)) blueprints.put(id, loadBlueprint(new FsFile(Paths.ENTITY_PATH, id + "/settings.entity", Files.FileType.Internal)));
+            if (!hasBlueprint(id))
+                blueprints.put(id, loadBlueprint(new FsFile(Paths.ENTITY_PATH, id + "/settings.entity", Files.FileType.Internal)));
             loaded |= hasBlueprint(id);
         }
-        if(Log.getInstance().getLogLevel() == Level.DEBUG) {
-            Stream<Integer> loadedBlueprints = Arrays.stream(ids).filter(id -> blueprints.containsKey(id));
-            Log.debug("Loaded texture" + de.undefinedhuman.projectcreate.engine.utils.Tools.appendSToString(loadedBlueprints.count()) + ":" + Tools.convertStreamToPrintableString(loadedBlueprints));
-        }
+        Log.debug(() -> {
+            Object[] loadedBlueprints = Arrays.stream(ids).filter(id -> blueprints.containsKey(id)).toArray();
+            return "Loaded blueprint" + Tools.appendSToString(loadedBlueprints.length) + ": " + Tools.convertArrayToPrintableString(loadedBlueprints);
+        });
         return loaded;
     }
 
@@ -79,13 +78,13 @@ public class BlueprintManager extends Manager {
         SettingsObject object = Tools.loadSettings(reader);
 
         for(Setting setting : blueprint.settings.getSettings())
-            setting.loadSetting(reader.getParentDirectory(), object);
+            setting.loadSetting(reader.parent(), object);
 
         for(ComponentType type : ComponentType.values()) {
             if(!object.containsKey(type.name())) continue;
             Object componentObject = object.get(type.name());
             if(!(componentObject instanceof SettingsObject)) continue;
-            blueprint.addComponentBlueprint(type.createInstance(reader.getParentDirectory(), (SettingsObject) object.get(type.name())));
+            blueprint.addComponentBlueprint(type.createInstance(reader.parent(), (SettingsObject) object.get(type.name())));
         }
 
         reader.close();

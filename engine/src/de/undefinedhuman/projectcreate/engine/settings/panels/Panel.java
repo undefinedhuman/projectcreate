@@ -1,11 +1,12 @@
 package de.undefinedhuman.projectcreate.engine.settings.panels;
 
+import com.badlogic.gdx.files.FileHandle;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
-import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingType;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
+import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
@@ -30,7 +31,7 @@ public abstract class Panel<T extends PanelObject> extends Setting {
     public Panel(String key, T panelObject) {
         super(SettingType.Panel, key, "");
         this.panelObject = panelObject;
-        setContentHeight(INPUT_HEIGHT + BUTTON_HEIGHT + OBJECT_PANEL_HEIGHT + Variables.OFFSET*3 + getPanelObjectContentHeight());
+        setContentHeight(INPUT_HEIGHT + BUTTON_HEIGHT + OBJECT_PANEL_HEIGHT + BUTTON_HEIGHT + Variables.OFFSET*4 + getPanelObjectContentHeight());
     }
 
     @Override
@@ -58,31 +59,40 @@ public abstract class Panel<T extends PanelObject> extends Setting {
         objectSelectionPanel.setBounds(0, INPUT_HEIGHT + BUTTON_HEIGHT + Variables.OFFSET*2, width, OBJECT_PANEL_HEIGHT);
 
         objectPanel = new JPanel(null);
-        objectPanel.setBounds(0, INPUT_HEIGHT + BUTTON_HEIGHT + OBJECT_PANEL_HEIGHT + Variables.OFFSET*3, width, getPanelObjectContentHeight());
+        objectPanel.setBounds(0, INPUT_HEIGHT + BUTTON_HEIGHT + OBJECT_PANEL_HEIGHT + BUTTON_HEIGHT + Variables.OFFSET*4, width, getPanelObjectContentHeight());
         objectPanel.setOpaque(true);
 
         createObjectNameField(panel, 0, 0, width, INPUT_HEIGHT);
-        panel.add(createButton("Add", 0, width, e -> {
+        panel.add(createButton("Add", 0, INPUT_HEIGHT + Variables.OFFSET, width/2f - Variables.OFFSET, e -> {
             String name = getSelectedObjectName();
             if(name.equalsIgnoreCase(""))
                 return;
             addPanelObject(name);
         }));
-        panel.add(createButton("Remove", width/2 + Variables.OFFSET, width, e -> removeObject(objectPanel)));
+        panel.add(createButton("Remove",
+                width/2f + Variables.OFFSET,
+                INPUT_HEIGHT + Variables.OFFSET,
+                width/2f - Variables.OFFSET,
+                e -> removePanelObject(getSelectedObjectName())));
         panel.add(objectSelectionPanel);
+        panel.add(createButton("Clear All",
+                width/3f*2f + Variables.OFFSET/2f,
+                INPUT_HEIGHT + BUTTON_HEIGHT + OBJECT_PANEL_HEIGHT + Variables.OFFSET*3,
+                width/3f - Variables.OFFSET/2f,
+                e -> removeAllPanelObjects()));
         panel.add(objectPanel);
     }
 
-    private JButton createButton(String text, int x, int width, ActionListener listener) {
+    private JButton createButton(String text, float x, float y, float width, ActionListener listener) {
         JButton button = new JButton(text);
-        button.setBounds(x, INPUT_HEIGHT + Variables.OFFSET, width/2 - Variables.OFFSET, BUTTON_HEIGHT);
+        button.setBounds((int) x, (int) y, (int) width, BUTTON_HEIGHT);
         button.addActionListener(listener);
         return button;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    protected void loadValue(FsFile parentDir, Object value) {
+    protected void loadValue(FileHandle parentDir, Object value) {
         if(!(value instanceof SettingsObject)) return;
         SettingsObject settingsObject = (SettingsObject) value;
         HashMap<String, Object> settings = settingsObject.getSettings();
@@ -122,7 +132,6 @@ public abstract class Panel<T extends PanelObject> extends Setting {
 
     protected abstract void createObjectNameField(JPanel panel, int x, int y, int width, int height);
     protected abstract String getSelectedObjectName();
-    protected abstract void removeObject(JPanel panel);
     protected abstract void selectObject(T object, JPanel panel, int containerWidth);
 
     protected void addPanelObject(String name) {
@@ -139,6 +148,18 @@ public abstract class Panel<T extends PanelObject> extends Setting {
         object.setKey(name);
         panelObjects.put(object.getKey(), object);
         objectList.addElement(object.getKey());
+    }
+
+    private void removePanelObject(String name) {
+        objectList.removeElement(name);
+        panelObjects.remove(name);
+        Tools.removeSettings(objectPanel);
+    }
+
+    private void removeAllPanelObjects() {
+        objectList.clear();
+        panelObjects.clear();
+        Tools.removeSettings(objectPanel);
     }
 
     @SuppressWarnings("unchecked")

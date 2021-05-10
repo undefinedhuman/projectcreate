@@ -20,6 +20,9 @@ public class SpritePanel extends BatchPanel<SpriteLayer> {
         JsonValue frameData = base.get("frames");
         JsonValue metaData = base.get("meta");
 
+        if(metaData == null || frameData == null)
+            return;
+
         int renderLevel = 0;
         for (JsonValue layer : metaData.get("layers")) {
             String name = layer.getString("name");

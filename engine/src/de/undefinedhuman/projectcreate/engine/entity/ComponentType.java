@@ -1,5 +1,6 @@
 package de.undefinedhuman.projectcreate.engine.entity;
 
+import com.badlogic.gdx.files.FileHandle;
 import de.undefinedhuman.projectcreate.engine.entity.components.animation.AnimationBlueprint;
 import de.undefinedhuman.projectcreate.engine.entity.components.arm.RightArmBlueprint;
 import de.undefinedhuman.projectcreate.engine.entity.components.arm.ShoulderBlueprint;
@@ -14,7 +15,6 @@ import de.undefinedhuman.projectcreate.engine.entity.components.sprite.SpriteBlu
 import de.undefinedhuman.projectcreate.engine.entity.components.stats.food.FoodBlueprint;
 import de.undefinedhuman.projectcreate.engine.entity.components.stats.health.HealthBlueprint;
 import de.undefinedhuman.projectcreate.engine.entity.components.stats.mana.ManaBlueprint;
-import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
 
@@ -41,7 +41,7 @@ public enum ComponentType {
         this.componentBlueprint = componentBlueprint;
     }
 
-    public ComponentBlueprint createInstance(FsFile parentDir, SettingsObject settingsObject) {
+    public ComponentBlueprint createInstance(FileHandle parentDir, SettingsObject settingsObject) {
         ComponentBlueprint componentBlueprint = null;
         try { componentBlueprint = this.componentBlueprint.newInstance();
         } catch (InstantiationException | IllegalAccessException ex) {

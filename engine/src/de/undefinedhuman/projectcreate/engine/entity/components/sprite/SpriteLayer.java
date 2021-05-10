@@ -12,7 +12,7 @@ public class SpriteLayer extends PanelObject {
 
     public Setting
             renderLevel = new Setting(SettingType.Int, "Render Level", 0),
-            frameCount = new Setting(SettingType.Int, "Frame Count", 0);
+            frameCount = new Setting(SettingType.Int, "Frame Count", 1);
 
     public SpriteLayer() {
         settings.addSettings(texture, renderLevel, frameCount);

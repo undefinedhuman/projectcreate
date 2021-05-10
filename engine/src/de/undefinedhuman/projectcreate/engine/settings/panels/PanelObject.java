@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.engine.settings.panels;
 
+import com.badlogic.gdx.files.FileHandle;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
-import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
@@ -21,7 +21,7 @@ public class PanelObject {
         writer.writeString("}").nextLine();
     }
 
-    public PanelObject load(FsFile parentDir, SettingsObject settingsObject) {
+    public PanelObject load(FileHandle parentDir, SettingsObject settingsObject) {
         for(Setting setting : settings.getSettings())
             setting.loadSetting(parentDir, settingsObject);
         return this;

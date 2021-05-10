@@ -89,7 +89,7 @@ public class ItemEditor extends Editor {
             Tools.removeSettings(rightPanel);
             currentItem = type.createInstance();
             for(Setting setting : currentItem.getSettings().getSettings())
-                setting.loadSetting(reader.getParentDirectory(), settingsObject);
+                setting.loadSetting(reader.parent(), settingsObject);
             Tools.addSettings(rightPanel, currentItem.getSettings());
             loadWindow.setVisible(false);
             reader.close();

@@ -46,15 +46,16 @@ public class AnimationComponent extends Component {
     }
 
     private int getLocalFrameIndex() {
-        Animation currentParam = getCurrentAnimation();
-        if (currentParam.getSize() == 1) return -1;
-        int frameNumber = (int) (animationTime / currentParam.frameTime.getFloat());
-        switch (currentParam.playMode.getPlayMode()) {
+        Animation currentAnimation = getCurrentAnimation();
+        if (currentAnimation.getSize() == 1)
+            return 0;
+        int frameNumber = (int) (animationTime / currentAnimation.frameTime.getFloat());
+        switch (currentAnimation.playMode.getPlayMode()) {
             case NORMAL:
-                frameNumber = Math.min(currentParam.getSize() - 2, frameNumber - 1);
+                frameNumber = Math.min(currentAnimation.getSize() - 1, frameNumber);
                 break;
             case LOOP:
-                frameNumber = (frameNumber % currentParam.getSize()) - 1;
+                frameNumber = (frameNumber % currentAnimation.getSize());
                 break;
         }
 

@@ -53,17 +53,6 @@ public class SelectionPanel<T extends PanelObject> extends Panel<T> {
     }
 
     @Override
-    public void removeObject(JPanel panel) {
-        if(selection.getSelectedItem() == null || !objectList.contains(selection.getSelectedItem())) {
-            Log.error(this.key + " with name " + selection.getSelectedItem() + " does not exist!");
-            return;
-        }
-        objectList.removeElement(selection.getSelectedItem());
-        panelObjects.remove(String.valueOf(selection.getSelectedItem()));
-        Tools.removeSettings(panel);
-    }
-
-    @Override
     public void selectObject(T object, JPanel objectPanel, int containerWidth) {
         selection.setSelectedItem(object.getKey());
         Tools.removeSettings(objectPanel);

@@ -17,6 +17,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class Log extends Manager implements ApplicationLogger, Serializable {
@@ -111,6 +112,11 @@ public class Log extends Manager implements ApplicationLogger, Serializable {
 
     public static void debug(Object... messages) {
         Log.getInstance().createMessage(System.out, Level.DEBUG, messages);
+    }
+
+    public static void debug(Supplier<String> createMessages) {
+        if(Log.getInstance().getLogLevel() == Level.DEBUG)
+            Log.getInstance().createMessage(System.out, Level.DEBUG, createMessages.get());
     }
 
     private void createMessage(PrintStream console, Level logLevel, Object... messages) {
