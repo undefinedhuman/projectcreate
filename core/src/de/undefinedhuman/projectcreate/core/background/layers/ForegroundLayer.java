@@ -27,7 +27,7 @@ public class ForegroundLayer extends Layer {
 
     @Override
     public void init() {
-        TextureManager.instance.addTexture(texture);
+        TextureManager.instance.loadTextures(texture);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class ForegroundLayer extends Layer {
 
     @Override
     public void delete() {
-        TextureManager.instance.removeTexture(texture);
+        TextureManager.instance.removeTextures(texture);
     }
 
 }

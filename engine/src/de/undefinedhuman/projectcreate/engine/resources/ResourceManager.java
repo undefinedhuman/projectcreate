@@ -19,9 +19,7 @@ public class ResourceManager {
     public static Texture loadTexture(String path) {
         Texture texture = null;
         try { texture = new Texture(Gdx.files.internal(path));
-        } catch (Exception ex) {
-            Log.error("Error while loading texture: " + path + "\n" + ex.getMessage());
-        }
+        } catch (Exception ex) { Log.error("Error while loading texture: " + path + "\n" + ex.getMessage()); }
         if(texture == null && path.equals("Unknown.png"))
             Log.showErrorDialog(Level.CRASH, "Can't load default texture!", true);
         return texture != null ? texture : loadTexture("Unknown.png");
@@ -34,7 +32,7 @@ public class ResourceManager {
             Log.error("Error while loading image: " + path + "\n" + ex.getMessage());
         }
         if(image == null && path.equals("Unknown.png"))
-            Log.getInstance().showErrorDialog(Level.CRASH, "Can't load default image!", true);
+            Log.showErrorDialog(Level.CRASH, "Can't load default image!", true);
         return image != null ? image : loadImage("Unknown.png");
     }
 

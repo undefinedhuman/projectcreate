@@ -115,8 +115,12 @@ public class Log extends Manager implements ApplicationLogger, Serializable {
     }
 
     public static void debug(Supplier<String> createMessages) {
-        if(Log.getInstance().getLogLevel() == Level.DEBUG)
-            Log.getInstance().createMessage(System.out, Level.DEBUG, createMessages.get());
+        if(Log.getInstance().getLogLevel() != Level.DEBUG)
+            return;
+        String message = createMessages.get();
+        if(message.equals(""))
+            return;
+        Log.getInstance().createMessage(System.out, Level.DEBUG, message);
     }
 
     private void createMessage(PrintStream console, Level logLevel, Object... messages) {
@@ -133,6 +137,7 @@ public class Log extends Manager implements ApplicationLogger, Serializable {
                 .replace("%version%", Variables.VERSION.toString());
 
         console.println(fullMessage);
+        console.flush();
         logMessages.add(fullMessage);
         logEvents.forEach(logEvent -> logEvent.log(logLevel, fullMessage));
     }

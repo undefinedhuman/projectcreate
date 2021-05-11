@@ -47,17 +47,15 @@ public class GuiManager extends Manager {
 
     @Override
     public void renderGui(SpriteBatch batch, OrthographicCamera camera) {
-        for (GuiTransform guiTransform : guiTransforms)
-            guiTransform.render(batch, camera);
+        guiTransforms
+                .forEach(guiTransform -> guiTransform.render(batch, camera));
     }
 
     @Override
     public void delete() {
-        for (GuiTemplate template : GuiTemplate.values())
-            template.delete();
         screen.delete();
-        for(GuiTransform guiTransform : guiTransforms)
-            guiTransform.delete();
+        guiTransforms
+                .forEach(GuiTransform::delete);
         guiTransforms.clear();
     }
 

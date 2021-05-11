@@ -35,7 +35,7 @@ public class GuiTexture {
 
     public GuiTexture init() {
         for(String texture : textureNames)
-            TextureManager.instance.addTexture(texture);
+            TextureManager.instance.addTextures(texture);
         return this;
     }
 
@@ -81,7 +81,7 @@ public class GuiTexture {
         if(template != null)
             template = null;
         for (String textureName : textureNames)
-            TextureManager.instance.removeTexture(textureName);
+            TextureManager.instance.removeTextures(textureName);
         deleteInternalTexture();
         textureNames.clear();
     }

@@ -81,7 +81,7 @@ public class TextureSetting extends Setting {
         if(TextureManager.instance == null)
             return;
         setValue(path);
-        TextureManager.instance.addTexture(getString());
+        TextureManager.instance.loadTextures(getString());
     }
 
     @Override
@@ -93,7 +93,7 @@ public class TextureSetting extends Setting {
     protected void delete() {
         if(TextureManager.instance == null)
             return;
-        TextureManager.instance.removeTexture(getString());
+        TextureManager.instance.removeTextures(getString());
     }
 
     public void setTexture(String path, Files.FileType type) {

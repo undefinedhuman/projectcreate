@@ -30,18 +30,20 @@ public class BlueprintManager extends Manager {
         loadBlueprints(0, 1);
     }
 
-    public boolean loadBlueprints(Integer... ids) {
-        boolean loaded = false;
-        for (int id : ids) {
-            if (!hasBlueprint(id))
-                blueprints.put(id, loadBlueprint(new FsFile(Paths.ENTITY_PATH, id + "/settings.entity", Files.FileType.Internal)));
-            loaded |= hasBlueprint(id);
-        }
+    public boolean loadBlueprints(int... ids) {
+        Arrays.stream(ids)
+                .filter(id -> !hasBlueprint(id))
+                .forEach(id -> blueprints.put(id, loadBlueprint(id)));
+        Object[] loadedBlueprints = Arrays.stream(ids)
+                .filter(id -> blueprints.containsKey(id) && blueprints.get(id) != null)
+                .mapToObj(Integer::toString)
+                .toArray();
         Log.debug(() -> {
-            Object[] loadedBlueprints = Arrays.stream(ids).filter(id -> blueprints.containsKey(id)).toArray();
-            return "Loaded blueprint" + Tools.appendSToString(loadedBlueprints.length) + ": " + Tools.convertArrayToPrintableString(loadedBlueprints);
+            if(loadedBlueprints.length == 0)
+                return "";
+            return "Blueprint" + Tools.appendSToString(loadedBlueprints.length) + " loaded: " + Arrays.toString(loadedBlueprints);
         });
-        return loaded;
+        return loadedBlueprints.length == ids.length;
     }
 
     public boolean hasBlueprint(int id) {
@@ -72,7 +74,8 @@ public class BlueprintManager extends Manager {
         return hasBlueprint(0) ? getBlueprint(0) : null;
     }
 
-    public static Blueprint loadBlueprint(FsFile file) {
+    public static Blueprint loadBlueprint(int id) {
+        FsFile file = new FsFile(Paths.ENTITY_PATH, id + "/settings.entity", Files.FileType.Internal);
         Blueprint blueprint = new Blueprint();
         FileReader reader = file.getFileReader(true);
         SettingsObject object = Tools.loadSettings(reader);
@@ -84,7 +87,7 @@ public class BlueprintManager extends Manager {
             if(!object.containsKey(type.name())) continue;
             Object componentObject = object.get(type.name());
             if(!(componentObject instanceof SettingsObject)) continue;
-            blueprint.addComponentBlueprint(type.createInstance(reader.parent(), (SettingsObject) object.get(type.name())));
+            blueprint.addComponentBlueprint(type.createInstance(reader.parent(), (SettingsObject) componentObject));
         }
 
         reader.close();

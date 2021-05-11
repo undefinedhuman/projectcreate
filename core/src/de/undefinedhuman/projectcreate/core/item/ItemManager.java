@@ -2,6 +2,10 @@ package de.undefinedhuman.projectcreate.core.item;
 
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
+import de.undefinedhuman.projectcreate.core.inventory.InventoryManager;
+import de.undefinedhuman.projectcreate.core.utils.Tools;
+import de.undefinedhuman.projectcreate.core.world.World;
+import de.undefinedhuman.projectcreate.core.world.WorldManager;
 import de.undefinedhuman.projectcreate.engine.file.FileReader;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
@@ -13,13 +17,11 @@ import de.undefinedhuman.projectcreate.engine.resources.ResourceManager;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
-import de.undefinedhuman.projectcreate.core.inventory.InventoryManager;
-import de.undefinedhuman.projectcreate.core.utils.Tools;
-import de.undefinedhuman.projectcreate.core.world.World;
-import de.undefinedhuman.projectcreate.core.world.WorldManager;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ItemManager extends Manager {
 
@@ -34,19 +36,23 @@ public class ItemManager extends Manager {
     @Override
     public void init() {
         super.init();
-        addItems(0, 1, 2);
+        loadItems(0, 1, 2);
     }
 
-    public boolean addItems(int... ids) {
-        boolean loaded = false;
-        for (int id : ids) {
-            if (hasItem(id) || !ResourceManager.existItem(id)) continue;
-            items.put(id, loadItem(id));
-            loaded = true;
-        }
-        if(loaded)
-            Log.info("Item" + Tools.appendSToString(ids.length) + " loaded successfully: " + Arrays.toString(ids));
-        return loaded;
+    public boolean loadItems(int... ids) {
+        Arrays.stream(ids)
+                .filter(id -> !hasItem(id) && ResourceManager.existItem(id))
+                .forEach(id -> items.put(id, loadItem(id)));
+        Object[] loadedItems = Arrays.stream(ids)
+                .filter(id -> items.containsKey(id) && items.get(id) != null)
+                .mapToObj(Integer::toString)
+                .toArray();
+        Log.debug(() -> {
+            if(loadedItems.length == 0)
+                return "";
+            return "Item" + Tools.appendSToString(loadedItems.length) + " loaded: " + Arrays.toString(loadedItems);
+        });
+        return loadedItems.length == ids.length;
     }
 
     public boolean hasItem(int id) {
@@ -54,16 +60,18 @@ public class ItemManager extends Manager {
     }
 
     public void removeItems(int... ids) {
-        for(int id : ids) {
-            if (!hasItem(id))
-                continue;
-            items.get(id).delete();
-            items.remove(id);
-        }
+        Stream<String> removedItems = Arrays.stream(ids)
+                .filter(this::hasItem)
+                .mapToObj(id -> {
+                    items.get(id).delete();
+                    items.remove(id);
+                    return Integer.toString(id);
+                });
+        Log.debug(() -> "Item" + de.undefinedhuman.projectcreate.engine.utils.Tools.appendSToString(ids.length) + " unloaded: " + removedItems.collect(Collectors.joining(", ")));
     }
 
     public Item getItem(int id) {
-        if (hasItem(id) || addItems(id)) return items.get(id);
+        if (hasItem(id) || loadItems(id)) return items.get(id);
         return null;
     }
 
