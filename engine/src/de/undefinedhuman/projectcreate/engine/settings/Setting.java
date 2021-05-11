@@ -96,7 +96,7 @@ public class Setting {
         setValue(((LineSplitter) value).getNextString());
     }
 
-    public void addMenuComponents(JPanel container, Vector2 position, int containerWidth) {
+    public void addMenuComponents(JComponent container, Vector2 position, int containerWidth) {
         int contentWidth = containerWidth - Variables.BORDER_WIDTH;
         JPanel contentPanel = new JPanel(null);
         contentPanel.setSize(contentWidth, contentHeight);

@@ -50,7 +50,7 @@ public class EntityEditor extends Editor {
                 new Setting(SettingType.String, "Name", "Temp Name"),
                 new Vector2Setting("Size", new Vector2(0, 0)),
                 new SelectionSetting("Type", EntityType.values()));
-        Tools.addSettings(leftPanel, baseSettings);
+        Tools.addSettings(leftPanel, baseSettings.getSettings().stream());
 
         componentList = new DefaultListModel<>();
 
@@ -60,7 +60,7 @@ public class EntityEditor extends Editor {
             selectedComponent = listPanel.getSelectedValue() != null ? ComponentType.valueOf(listPanel.getSelectedValue()) : null;
             if(selectedComponent != null) {
                 Tools.removeSettings(rightPanel);
-                Tools.addSettings(rightPanel, components.get(selectedComponent).getSettings());
+                Tools.addSettings(rightPanel, components.get(selectedComponent).getSettingsStream());
             }
         });
 
@@ -85,7 +85,8 @@ public class EntityEditor extends Editor {
             ComponentType type = ComponentType.valueOf(listPanel.getSelectedValue());
             Tools.removeSettings(rightPanel);
             components.remove(type);
-            if(componentList.contains(type.toString())) componentList.removeElement(type.toString());
+            if(componentList.contains(type.toString()))
+                componentList.removeElement(type.toString());
         });
 
         middlePanel.add(componentComboBox);

@@ -26,7 +26,7 @@ import java.io.IOException;
 
 public class TextureSetting extends Setting {
 
-    private static final int PREVIEW_TEXTURE_LABEL_SIZE = 200;
+    private static final int PREVIEW_TEXTURE_LABEL_SIZE = 128;
 
     private BufferedImage texture;
     private JLabel textureLabel;
@@ -41,7 +41,7 @@ public class TextureSetting extends Setting {
     protected void addValueMenuComponents(JPanel panel, int width) {
         textureLabel = new JLabel();
         textureLabel.setHorizontalAlignment(JLabel.CENTER);
-        textureLabel.setBounds(width/2 - PREVIEW_TEXTURE_LABEL_SIZE/2, 0, PREVIEW_TEXTURE_LABEL_SIZE, PREVIEW_TEXTURE_LABEL_SIZE);
+        textureLabel.setBounds(0, 0, width, PREVIEW_TEXTURE_LABEL_SIZE);
         setTextureIcon();
         textureLabel.addMouseListener(new MouseAdapter() {
             @Override

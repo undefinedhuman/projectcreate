@@ -8,6 +8,8 @@ import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Stream;
 
 public abstract class ComponentBlueprint {
 
@@ -33,8 +35,16 @@ public abstract class ComponentBlueprint {
         writer.writeString("}").nextLine();
     }
 
-    public SettingsList getSettings() {
+    public SettingsList getSettingsList() {
         return settings;
+    }
+
+    public List<Setting> getSettings() {
+        return settings.getSettings();
+    }
+
+    public Stream<Setting> getSettingsStream() {
+        return settings.getSettings().stream();
     }
 
     public void delete() {

@@ -34,10 +34,11 @@ public class ItemEditor extends Editor {
         itemComboBox.setSelectedIndex(0);
         itemComboBox.addActionListener(e -> {
             if(itemComboBox.getSelectedItem() == null) return;
-            Tools.removeSettings(rightPanel);
+            Tools.removeSettings(leftPanel, rightPanel);
             ItemType type = ItemType.valueOf(itemComboBox.getSelectedItem().toString());
             currentItem = type.createInstance();
-            Tools.addSettings(rightPanel, currentItem.getSettings());
+            Tools.addSettings(leftPanel, currentItem.getSettings().subList(0, currentItem.getDefaultQuantityOfSettings()).stream());
+            Tools.addSettings(rightPanel, currentItem.getSettings().subList(currentItem.getDefaultQuantityOfSettings(), currentItem.getSettings().size()).stream());
         });
 
         middlePanel.add(itemComboBox);
@@ -86,11 +87,11 @@ public class ItemEditor extends Editor {
             if(!settingsObject.containsKey("Type")) return;
             ItemType type = ItemType.valueOf(((LineSplitter) settingsObject.get("Type")).getNextString());
             itemComboBox.setSelectedItem(type);
-            Tools.removeSettings(rightPanel);
+            Tools.removeSettings(leftPanel, rightPanel);
             currentItem = type.createInstance();
-            for(Setting setting : currentItem.getSettings().getSettings())
+            for(Setting setting : currentItem.getSettingsList().getSettings())
                 setting.loadSetting(reader.parent(), settingsObject);
-            Tools.addSettings(rightPanel, currentItem.getSettings());
+            Tools.addSettings(rightPanel, currentItem.getSettingsStream());
             loadWindow.setVisible(false);
             reader.close();
         });
@@ -103,14 +104,14 @@ public class ItemEditor extends Editor {
     @Override
     public void save() {
         if(currentItem == null) return;
-        FsFile itemDir = new FsFile(Paths.ITEM_PATH, currentItem.getSettings().getSettings().get(0).getInt() + Variables.FILE_SEPARATOR, Files.FileType.Local);
+        FsFile itemDir = new FsFile(Paths.ITEM_PATH, currentItem.getSettingsList().getSettings().get(0).getInt() + Variables.FILE_SEPARATOR, Files.FileType.Local);
         if(itemDir.exists())
             FileUtils.deleteFile(itemDir);
 
         FileWriter writer = new FsFile(itemDir.path(), "settings.item", Files.FileType.Local).getFileWriter(true);
         writer.writeString("Type").writeString(currentItem.type.name());
         writer.nextLine();
-        Tools.saveSettings(writer, currentItem.getSettings());
+        Tools.saveSettings(writer, currentItem.getSettingsList());
         writer.close();
     }
 

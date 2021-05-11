@@ -106,7 +106,7 @@ public class ItemManager extends Manager {
         if(!settingsObject.containsKey("Type")) return null;
         ItemType type = ItemType.valueOf(((LineSplitter) settingsObject.get("Type")).getNextString());
         Item item = type.createInstance();
-        for(Setting setting : item.getSettings().getSettings())
+        for(Setting setting : item.getSettingsList().getSettings())
             setting.loadSetting(reader.parent(), settingsObject);
         item.init();
         reader.close();

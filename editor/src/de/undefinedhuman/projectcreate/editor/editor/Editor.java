@@ -16,10 +16,10 @@ public abstract class Editor {
     private JPanel addPanel(Container container, String name, int x, int width) {
         JPanel panel = new JPanel(null, true);
         panel.setPreferredSize(new Dimension(width - 25, 960 - 25));
-        JScrollPane scrollPane = new JScrollPane(panel);
+        JScrollPane scrollPane = new JScrollPane(panel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setBounds(x, 15, width, 990);
         scrollPane.setBorder(BorderFactory.createTitledBorder(name));
-        container.add(scrollPane);
+        container.add(scrollPane, BorderLayout.CENTER);
         return panel;
     }
 

@@ -16,12 +16,13 @@ import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector4;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Tools {
 
@@ -93,43 +94,28 @@ public class Tools {
         return Arrays.stream(messages).map(Object::toString).collect(Collectors.joining(", "));
     }
 
-    public static void addSettings(JPanel panel, int x, int y, int offset, Setting... settings) {
-        int currentOffset = 0;
-        for (Setting setting : settings) {
-            setting.addMenuComponents(panel, new Vector2(x, y + currentOffset), Variables.CONTENT_WIDTH + Variables.BORDER_WIDTH);
-            currentOffset += setting.getTotalHeight() + offset;
+    public static void addSettings(JComponent panel, Stream<Setting> settings) {
+        addSettings(panel, 0, 0, Variables.OFFSET, Variables.CONTENT_WIDTH + Variables.BORDER_WIDTH, settings);
+    }
+
+    public static void addSettings(JComponent panel, int x, int y, int offset, int width, Stream<Setting> settings) {
+        int currentHeight = 0;
+        for(Setting setting : settings.collect(Collectors.toList())) {
+            setting.addMenuComponents(panel, new Vector2(x, y + currentHeight), width);
+            currentHeight += setting.getTotalHeight() + offset;
         }
-        resetPanel(panel);
+        panel.setPreferredSize(new Dimension(width, currentHeight));
+        updatePanel(panel);
     }
 
-    public static void addSettings(JPanel panel, ArrayList<Setting> settings, int width) {
-        int currentOffset = 0;
-        for (Setting setting : settings) {
-            setting.addMenuComponents(panel, new Vector2(0, currentOffset), width);
-            currentOffset += setting.getTotalHeight();
+    public static void removeSettings(JComponent... panels) {
+        for(JComponent panel : panels) {
+            panel.removeAll();
+            updatePanel(panel);
         }
-        resetPanel(panel);
     }
 
-    public static void addSettings(JPanel panel, SettingsList settings) {
-        addSettings(panel, settings, 0, 0, 0);
-    }
-
-    public static void addSettings(JPanel panel, SettingsList settings, int x, int y, int offset) {
-        int currentOffset = 0;
-        for (Setting setting : settings.getSettings()) {
-            setting.addMenuComponents(panel, new Vector2(x, y + currentOffset), Variables.CONTENT_WIDTH);
-            currentOffset += setting.getTotalHeight() + offset;
-        }
-        resetPanel(panel);
-    }
-
-    public static void removeSettings(JPanel panel) {
-        panel.removeAll();
-        resetPanel(panel);
-    }
-
-    public static void resetPanel(JPanel panel) {
+    public static void updatePanel(JComponent panel) {
         panel.revalidate();
         panel.repaint();
     }
