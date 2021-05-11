@@ -11,21 +11,22 @@ import java.awt.event.MouseListener;
 
 public class IconButton extends JButton implements MouseListener {
 
-    private static final Vector2i SIZE = new Vector2i(32, 32);
-    private static final Vector2i SIZE_HOVER = new Vector2i(36, 36);
-    private static final Vector2i POSITION_OFFSET = new Vector2i().set(SIZE_HOVER).sub(SIZE).div(2);
+    private static final float HOVER_SCALE = 0.125f;
 
     private String iconName;
     private Vector2i position = new Vector2i();
 
-    public IconButton(String iconName, int x, int y, ActionListener listener) {
+    private Vector2i iconSize = new Vector2i();
+
+    public IconButton(String iconName, int x, int y, Vector2i iconSize, ActionListener listener) {
         this.iconName = iconName;
         this.position.set(x, y);
-        setIcon(IconManager.getInstance().getIcon(iconName, SIZE.x, SIZE.y));
+        this.iconSize.set(iconSize);
+        setIcon(IconManager.getInstance().getIcon(iconName, iconSize.x, iconSize.y));
         setOpaque(false);
         setBackground(new Color(0, 0, 0, 0));
         setBorderPainted(false);
-        setBounds(x, y, SIZE.x, SIZE.y);
+        setBounds(x, y, iconSize.x, iconSize.y);
         addMouseListener(this);
         addActionListener(listener);
     }
@@ -39,7 +40,7 @@ public class IconButton extends JButton implements MouseListener {
     public void mouseEntered(MouseEvent e) {
         if(!isEnabled())
             return;
-        setBounds(position.x - POSITION_OFFSET.x, position.y - POSITION_OFFSET.y, SIZE_HOVER.x, SIZE_HOVER.y);
+        setBounds((int) (position.x - iconSize.x*HOVER_SCALE/2), (int) (position.y - iconSize.y*HOVER_SCALE/2), (int) (iconSize.x * (1f+HOVER_SCALE)), (int) (iconSize.y * (1f+HOVER_SCALE)));
         updateIcon();
     }
 
@@ -47,14 +48,14 @@ public class IconButton extends JButton implements MouseListener {
     public void mouseExited(MouseEvent e) {
         if(!isEnabled())
             return;
-        setBounds(position.x, position.y, SIZE.x, SIZE.y);
+        setBounds(position.x, position.y, iconSize.x, iconSize.y);
         updateIcon();
     }
 
     @Override
     public void setEnabled(boolean b) {
         super.setEnabled(b);
-        setBounds(position.x, position.y, SIZE.x, SIZE.y);
+        setBounds(position.x, position.y, iconSize.x, iconSize.y);
     }
 
     @Override

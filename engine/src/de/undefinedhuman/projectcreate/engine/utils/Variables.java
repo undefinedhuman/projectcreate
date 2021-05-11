@@ -1,8 +1,9 @@
 package de.undefinedhuman.projectcreate.engine.utils;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.log.Level;
+
+import java.awt.*;
 
 public class Variables {
     // General
@@ -35,7 +36,6 @@ public class Variables {
     public static final String LOG_DATE_FORMAT = "dd-MM-yyyy - HH-mm-ss";
 
     public static final boolean DEBUG = false;
-    public static final Color HITBOX_COLOR = new Color(0.41568628f, 0.3529412f, 0.8039216f, 0.4f);
 
     // World
     public static final int CHUNK_SIZE = 20;
@@ -65,6 +65,7 @@ public class Variables {
 
     // Editor
     public static final int PLAYER_TEXTURE_OFFSET = 64;
+    public static final Color BACKGROUND_COLOR = new Color(60, 63, 65);
 
     // Player
     public static final int BLOCK_PLACEMENT_RANGE = 6;

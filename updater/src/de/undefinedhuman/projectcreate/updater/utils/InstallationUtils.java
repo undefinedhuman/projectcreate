@@ -17,7 +17,6 @@ import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class InstallationUtils {
@@ -34,21 +33,21 @@ public class InstallationUtils {
         defaultInstallationDirectory.mkdirs();
         ArrayList<String> errorMessages = FileError.checkFileForErrors(defaultInstallationDirectory, FileError.NON_EXISTENT, FileError.NO_DIRECTORY, FileError.NOT_WRITEABLE);
         if(!errorMessages.isEmpty())
-            Log.getInstance().showErrorDialog(Level.ERROR, "An error occurred while creating the default installation directory! \nPlease choose another writable installation directory!", false);
+            Log.showErrorDialog(Level.ERROR, "An error occurred while creating the default installation directory! \nPlease choose another writable installation directory!", false);
         else chooser.setCurrentDirectory(defaultInstallationDirectory.file());
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
         if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION)
-            Log.getInstance().showErrorDialog(Level.CRASH, "Please choose a writable installation directory!\nPlease restart!", true);
+            Log.showErrorDialog(Level.CRASH, "Please choose a writable installation directory!\nPlease restart!", true);
         FsFile selectedFile = new FsFile(chooser.getSelectedFile().getAbsolutePath(), Files.FileType.Absolute);
         if(!selectedFile.file().equals(defaultInstallationDirectory.file()) && defaultInstallationDirectory.delete())
             Log.info("Deleted default installation directory!");
         if(FileError.checkFileForErrors("checking installation directory", selectedFile, FileError.NULL, FileError.NON_EXISTENT, FileError.NO_DIRECTORY, FileError.NOT_WRITEABLE))
-            Log.getInstance().showErrorDialog(Level.CRASH, "Please choose a writable installation directory!\nPlease restart!", true);
+            Log.showErrorDialog(Level.CRASH, "Please choose a writable installation directory!\nPlease restart!", true);
         return selectedFile.file().getAbsolutePath();
     }
 
-    public static List<Version> fetchAvailableVersions(String url) {
+    public static List<Version> fetchAvailableVersions(String url, Stage excludedStages) {
         ArrayList<Version> availableVersions = new ArrayList<>();
         Document doc = null;
         try {
@@ -65,14 +64,12 @@ public class InstallationUtils {
             regex.deleteCharAt(regex.length()-1).append(").*");
             if(!fileName.matches(regex.toString()))
                 continue;
-            availableVersions.add(Version.parse(fileName.split(DownloadUtils.DOWNLOAD_FILE_EXTENSION)[0]));
+            Version version = Version.parse(fileName.split(DownloadUtils.DOWNLOAD_FILE_EXTENSION)[0]);
+            if(version.getStage().equals(excludedStages))
+                continue;
+            availableVersions.add(version);
         }
         return availableVersions;
-    }
-
-    public static boolean hasSufficientSpace(String downloadURL, FsFile installationDirectory) {
-        Version newestVersion = Collections.max(fetchAvailableVersions(downloadURL));
-        return hasSufficientSpace(downloadURL, installationDirectory, newestVersion);
     }
 
     public static boolean hasSufficientSpace(String downloadURL, FsFile installationDirectory, Version version) {
@@ -96,7 +93,7 @@ public class InstallationUtils {
         projectDotDirectory.mkdirs();
         ArrayList<String> errorMessages = FileError.checkFileForErrors(projectDotDirectory, FileError.NON_EXISTENT, FileError.NO_DIRECTORY, FileError.NOT_WRITEABLE);
         if(!errorMessages.isEmpty())
-            Log.getInstance().showErrorDialog(Level.CRASH, "An error occurred while creating the root directory of the project. \nPlease contact the author.\n" + errorMessages, true);
+            Log.showErrorDialog(Level.CRASH, "An error occurred while creating the root directory of the project. \nPlease contact the author.\n" + errorMessages, true);
     }
 
 }

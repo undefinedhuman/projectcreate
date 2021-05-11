@@ -9,6 +9,7 @@ import de.undefinedhuman.projectcreate.editor.editor.entity.EntityEditor;
 import de.undefinedhuman.projectcreate.editor.editor.item.ItemEditor;
 import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,7 +51,7 @@ public class Window extends JFrame {
         setResizable(false);
         setSize(1920, 1080);
         container = getContentPane();
-        container.setBackground(new Color(60, 63, 65));
+        container.setBackground(Variables.BACKGROUND_COLOR);
         addMenu();
 
         setEditor(EditorType.ENTITY);

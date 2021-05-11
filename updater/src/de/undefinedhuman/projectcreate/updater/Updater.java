@@ -78,9 +78,9 @@ public class Updater extends JFrame {
         updaterUI.updateProgressText("Checking for installed version...");
         sleep();
         FsFile currentlyInstalledVersion = new FsFile(UpdaterConfig.getInstance().installationPath.getFile(), UpdaterConfig.getInstance().version.getString() + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
-        List<Version> versions = InstallationUtils.fetchAvailableVersions(DOWNLOAD_LAUNCHER_URL);
+        List<Version> versions = InstallationUtils.fetchAvailableVersions(DOWNLOAD_LAUNCHER_URL, null);
         if(versions.isEmpty())
-            Log.getInstance().showErrorDialog(Level.CRASH, "Error while fetching available launcher versions. \nPlease restart, if the error persists, please contact the author.", true);
+            Log.showErrorDialog(Level.CRASH, "Error while fetching available launcher versions. \nPlease restart, if the error persists, please contact the author.", true);
         Version maxVersion = Collections.max(versions);
         String downloadUrl = DOWNLOAD_LAUNCHER_URL + maxVersion + DownloadUtils.DOWNLOAD_FILE_EXTENSION;
         if(!currentlyInstalledVersion.exists() || !UpdaterConfig.getInstance().version.getVersion().equals(maxVersion) || DownloadUtils.fetchFileSize(downloadUrl) != currentlyInstalledVersion.length()) {
@@ -92,7 +92,7 @@ public class Updater extends JFrame {
             try {
                 DownloadUtils.downloadFile(downloadUrl, currentlyInstalledVersion);
             } catch (IOException | URISyntaxException e) {
-                Log.getInstance().showErrorDialog(Level.CRASH, "Error while downloading launcher version " + maxVersion + "\nPlease restart, if the error persists, please contact the author.", true);
+                Log.showErrorDialog(Level.CRASH, "Error while downloading launcher version " + maxVersion + "\nPlease restart, if the error persists, please contact the author.", true);
             }
         } else Log.info("Launcher already up to date. Version: " + maxVersion);
 

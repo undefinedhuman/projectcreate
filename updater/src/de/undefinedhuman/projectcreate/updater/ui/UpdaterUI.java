@@ -1,6 +1,7 @@
 package de.undefinedhuman.projectcreate.updater.ui;
 
 import de.undefinedhuman.projectcreate.engine.resources.ResourceManager;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 
 import javax.swing.*;
@@ -15,7 +16,7 @@ public class UpdaterUI extends JPanel {
 
     public UpdaterUI() {
         setLayout(null);
-        setBackground(new Color(60, 63, 65));
+        setBackground(Variables.BACKGROUND_COLOR);
         setSize(WINDOW_SIZE);
         add(createLogoLabel());
         add(createProgressBarUI());

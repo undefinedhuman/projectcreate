@@ -10,8 +10,12 @@ public class Version implements Comparable<Version>{
         data = new int[] { major, minor, patch, rc };
     }
 
-    public int[] data() {
+    public int[] getData() {
         return data;
+    }
+
+    public Stage getStage() {
+        return stage;
     }
 
     @Override
@@ -49,10 +53,10 @@ public class Version implements Comparable<Version>{
         int stageComparison = stage.compareTo(other.stage);
         if(stageComparison != 0)
             return stageComparison;
-        int length = Math.max(data.length, other.data().length);
+        int length = Math.max(data.length, other.getData().length);
         for(int i = 0; i < length; i++) {
             int data = i < this.data.length ? this.data[i] : 0;
-            int otherData = i < other.data().length ? other.data()[i] : 0;
+            int otherData = i < other.getData().length ? other.getData()[i] : 0;
             if(data < otherData) return -1;
             if(data > otherData) return 1;
         }

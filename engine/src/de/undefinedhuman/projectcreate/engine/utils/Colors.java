@@ -7,6 +7,8 @@ public class Colors {
         throw new UnsupportedOperationException("Container class to centralize main colors for the game");
     }
 
+    public static final Color HITBOX_COLOR = new Color(0.41568628f, 0.3529412f, 0.8039216f, 0.4f);
+
     public static final Color WHITE = new Color(0.8f, 0.8f, 0.8f, 1f);
     public static final Color LIGHT_GREEN = new Color(0.22f, 0.66f, 0.2f, 1f);
     public static final Color LIGHT_BLUE = new Color(0.21f, 0.54f, 0.63f, 1f);

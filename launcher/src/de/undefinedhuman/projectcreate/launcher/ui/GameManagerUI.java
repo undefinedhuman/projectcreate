@@ -4,6 +4,7 @@ import com.badlogic.gdx.Files;
 import de.undefinedhuman.projectcreate.engine.file.FileError;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.log.Log;
+import de.undefinedhuman.projectcreate.engine.utils.Stage;
 import de.undefinedhuman.projectcreate.engine.utils.Version;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 import de.undefinedhuman.projectcreate.launcher.Launcher;
@@ -16,12 +17,15 @@ import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
 public class GameManagerUI extends JPanel {
 
+    private static final int WIDTH = Launcher.WINDOW_WIDTH/2;
+    private static final int HEIGHT = 100;
     private static final Vector2i ICON_SIZE = new Vector2i(32, 32);
 
     private static volatile GameManagerUI instance;
@@ -38,7 +42,7 @@ public class GameManagerUI extends JPanel {
 
     private GameManagerUI() {
         setLayout(null);
-        setBounds(0, 620, 640, 100);
+        setBounds(0, Launcher.WINDOW_HEIGHT - HEIGHT, WIDTH, HEIGHT);
 
         initVersionSelection();
         initVersionButton();
@@ -52,28 +56,24 @@ public class GameManagerUI extends JPanel {
         if(selectedIndex == -1 || !InstallationUtils.isVersionDownloaded(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.getInstance().gameInstallationPath.getFile(), lastPlayed)) {
             selectedIndex = 0;
             for(int i = 0; i < versionSelectionModel.getSize(); i++) {
-                Version currentVersion = versionSelectionModel.getElementAt(i);
-                if((InstallationUtils.isVersionDownloaded(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.getInstance().gameInstallationPath.getFile(), currentVersion)
-                        && currentVersion.compareTo(versionSelectionModel.getElementAt(selectedIndex)) > 0))
-                    selectedIndex = i;
+                if(!InstallationUtils.isVersionDownloaded(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.getInstance().gameInstallationPath.getFile(), versionSelectionModel.getElementAt(i)))
+                    continue;
+                selectedIndex = i;
+                break;
             }
         }
         versionSelection.setSelectedItem(versionSelectionModel.getElementAt(selectedIndex));
     }
 
     private void initVersionSelection() {
-        List<Version> availableVersion = InstallationUtils.fetchAvailableVersions(Launcher.DOWNLOAD_GAME_URL);
-        Collections.reverse(availableVersion);
-        versionSelectionModel = new DefaultComboBoxModel<>(availableVersion.toArray(new Version[0]));
-        versionSelection = new JComboBox<>(versionSelectionModel);
+        versionSelection = new JComboBox<>(versionSelectionModel = new DefaultComboBoxModel<>(getAvailableVersions()));
         versionSelection.setBounds(25, getHeight()/2-ICON_SIZE.y/2, 200, ICON_SIZE.y);
         versionCellRenderer = new VersionCellRenderer();
         versionSelection.setRenderer(versionCellRenderer);
         versionSelection.addPopupMenuListener(new PopupMenuListener() {
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                Stream<Version> downloadedVersions = availableVersion
-                        .stream()
+                Stream<Version> downloadedVersions = Arrays.stream(getAvailableVersions())
                         .filter(version -> InstallationUtils.isVersionDownloaded(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.getInstance().gameInstallationPath.getFile(), version));
                 versionCellRenderer.setVersionDownloaded(downloadedVersions);
             }
@@ -93,15 +93,21 @@ public class GameManagerUI extends JPanel {
         add(versionSelection);
     }
 
+    private Version[] getAvailableVersions() {
+        List<Version> availableVersion = InstallationUtils.fetchAvailableVersions(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.getInstance().includeSnapshots.getBoolean() ? null : Stage.SNAPSHOT);
+        Collections.reverse(availableVersion);
+        return availableVersion.toArray(new Version[0]);
+    }
+
     private void initVersionButton() {
-        versionButton = new IconButton("download", 235, getHeight()/2-ICON_SIZE.y/2, e -> {
+        versionButton = new IconButton("download", 235, getHeight()/2-ICON_SIZE.y/2, ICON_SIZE, e -> {
             currentAction.onClick(selectedVersion);
         });
         add(versionButton);
     }
 
     private void initDeleteButton() {
-        deleteButton = new IconButton("delete", 277, getHeight()/2-ICON_SIZE.y/2, e -> {
+        deleteButton = new IconButton("delete", 277, getHeight()/2-ICON_SIZE.y/2, ICON_SIZE, e -> {
             FsFile installationFile = new FsFile(LauncherConfig.getInstance().gameInstallationPath.getFile(), selectedVersion.toString() + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
             ArrayList<String> errorMessages = FileError.checkFileForErrors(installationFile, FileError.NULL, FileError.NON_EXISTENT, FileError.NO_FILE);
             if(errorMessages.isEmpty() && installationFile.delete())
@@ -113,8 +119,14 @@ public class GameManagerUI extends JPanel {
     }
 
     private void initSettingsButton() {
-        IconButton settingsButton = new IconButton("settings", 319, getHeight()/2-ICON_SIZE.y/2, e -> {
-            SettingsUI.getInstance().openConfig(
+        IconButton settingsButton = new IconButton("settings", 319, getHeight()/2-ICON_SIZE.y/2, ICON_SIZE, e -> {
+            SettingsUI.openConfigUI(
+                    onClose -> {
+                        LauncherConfig.getInstance().validate();
+                        versionSelectionModel.removeAllElements();
+                        versionSelectionModel = new DefaultComboBoxModel<>(getAvailableVersions());
+                        versionSelection.setModel(versionSelectionModel);
+                    },
                     LauncherConfig.getInstance().gameInstallationPath,
                     LauncherConfig.getInstance().includeSnapshots,
                     LauncherConfig.getInstance().closeLauncherAfterGameStart,
