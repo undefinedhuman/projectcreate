@@ -61,6 +61,7 @@ public class TextureManager extends Manager {
             textures.remove(name);
             texture.delete();
         }
+        Log.debug("Delete texture" + Tools.appendSToString(names.length) + ": " + Tools.convertArrayToPrintableString(names));
     }
 
     public TextureRegion getTexture(String name) {

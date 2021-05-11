@@ -33,7 +33,7 @@ public class TextureSetting extends Setting {
 
     public TextureSetting(String key, Object value) {
         super(SettingType.Texture, key, value);
-        loadTexture("Unknown.png");
+        loadTexture(Variables.DEFAULT_TEXTURE);
         setContentHeight(PREVIEW_TEXTURE_LABEL_SIZE);
     }
 
@@ -77,10 +77,11 @@ public class TextureSetting extends Setting {
         String path = parentDir.path() + Variables.FILE_SEPARATOR + getString();
         loadTexture(path);
         if(texture == null)
-            loadTexture("Unknown.png");
+            loadTexture(path = "Unknown.png");
         if(TextureManager.instance == null)
             return;
-        TextureManager.instance.addTexture(path);
+        setValue(path);
+        TextureManager.instance.addTexture(getString());
     }
 
     @Override
@@ -90,7 +91,9 @@ public class TextureSetting extends Setting {
 
     @Override
     protected void delete() {
-        if(TextureManager.instance != null) TextureManager.instance.removeTexture(getString());
+        if(TextureManager.instance == null)
+            return;
+        TextureManager.instance.removeTexture(getString());
     }
 
     public void setTexture(String path, Files.FileType type) {
@@ -108,7 +111,7 @@ public class TextureSetting extends Setting {
         } catch (IOException ex) { Log.showErrorDialog(Level.CRASH, "Can not load texture (" + this + "): \n" + ex.getMessage(), true); }
         if(texture == null && !path.equals("Unknown.png"))
             loadTexture("Unknown.png");
-        setValue(textureFile.path());
+        setValue(textureFile.name());
     }
 
     private void setTextureIcon() {

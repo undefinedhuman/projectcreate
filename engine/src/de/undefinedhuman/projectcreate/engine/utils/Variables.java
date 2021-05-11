@@ -12,6 +12,7 @@ public class Variables {
     // Engine
     public static final float GAME_CAMERA_ZOOM = 3f;
     public static final float DELTA_MULTIPLIER = 1.0f;
+    public static final String DEFAULT_TEXTURE = "Unknown.png";
 
     // Settings
     public static final int BORDER_HEIGHT = 25;

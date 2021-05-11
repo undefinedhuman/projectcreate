@@ -23,7 +23,7 @@ public class ResourceManager {
             Log.error("Error while loading texture: " + path + "\n" + ex.getMessage());
         }
         if(texture == null && path.equals("Unknown.png"))
-            Log.getInstance().showErrorDialog(Level.CRASH, "Can't load default texture!", true);
+            Log.showErrorDialog(Level.CRASH, "Can't load default texture!", true);
         return texture != null ? texture : loadTexture("Unknown.png");
     }
 
