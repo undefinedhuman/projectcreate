@@ -2,12 +2,14 @@ package de.undefinedhuman.projectcreate.launcher.ui;
 
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.launcher.config.LauncherConfig;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Arrays;
 
 public class SettingsUI extends JFrame {
 
@@ -37,7 +39,7 @@ public class SettingsUI extends JFrame {
 
     public void openConfig(Setting... settings) {
         Tools.removeSettings(settingsPanel);
-        Tools.addSettings(settingsPanel, 32, 32, 5, settings);
+        Tools.addSettings(settingsPanel, 32, 32, 5, Variables.CONTENT_WIDTH + Variables.BORDER_WIDTH, Arrays.stream(settings));
         setVisible(true);
     }
 
