@@ -10,7 +10,6 @@ import de.undefinedhuman.projectcreate.engine.entity.EntityType;
 import de.undefinedhuman.projectcreate.engine.file.*;
 import de.undefinedhuman.projectcreate.engine.resources.ResourceManager;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
-import de.undefinedhuman.projectcreate.engine.settings.SettingType;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
 import de.undefinedhuman.projectcreate.engine.settings.types.SelectionSetting;
@@ -46,8 +45,8 @@ public class EntityEditor extends Editor {
         componentComboBox.setBounds(20, 25, 150, 25);
 
         baseSettings.addSettings(
-                new Setting(SettingType.Int, "ID", 0),
-                new Setting(SettingType.String, "Name", "Temp Name"),
+                new Setting("ID", 0),
+                new Setting("Name", "Temp Name"),
                 new Vector2Setting("Size", new Vector2(0, 0)),
                 new SelectionSetting("Type", EntityType.values()));
         Tools.addSettings(leftPanel, baseSettings.getSettings().stream());

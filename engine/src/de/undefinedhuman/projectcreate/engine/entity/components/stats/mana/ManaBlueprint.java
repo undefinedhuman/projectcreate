@@ -5,13 +5,12 @@ import de.undefinedhuman.projectcreate.engine.entity.ComponentBlueprint;
 import de.undefinedhuman.projectcreate.engine.entity.ComponentParam;
 import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
-import de.undefinedhuman.projectcreate.engine.settings.SettingType;
 
 import java.util.HashMap;
 
 public class ManaBlueprint extends ComponentBlueprint {
 
-    public Setting maxMana = new Setting(SettingType.Int, "Max Mana", 0);
+    public Setting maxMana = new Setting("Max Mana", 0);
 
     public ManaBlueprint() {
         settings.addSettings(maxMana);

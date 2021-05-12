@@ -6,7 +6,6 @@ import de.undefinedhuman.projectcreate.engine.entity.ComponentBlueprint;
 import de.undefinedhuman.projectcreate.engine.entity.ComponentParam;
 import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
-import de.undefinedhuman.projectcreate.engine.settings.SettingType;
 import de.undefinedhuman.projectcreate.engine.settings.types.Vector2Setting;
 
 import java.util.HashMap;
@@ -14,7 +13,7 @@ import java.util.HashMap;
 public class HealthBlueprint extends ComponentBlueprint {
 
     public Setting
-            maxHealth = new Setting(SettingType.Int, "Max Health", 0),
+            maxHealth = new Setting("Max Health", 0),
             profileImageOffset = new Vector2Setting("Profile Offset", new Vector2());
 
     public HealthBlueprint() {

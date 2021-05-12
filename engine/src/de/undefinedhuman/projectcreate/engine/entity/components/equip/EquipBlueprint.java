@@ -5,19 +5,18 @@ import de.undefinedhuman.projectcreate.engine.entity.Component;
 import de.undefinedhuman.projectcreate.engine.entity.ComponentBlueprint;
 import de.undefinedhuman.projectcreate.engine.entity.ComponentParam;
 import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.engine.settings.SettingType;
+import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.types.StringArraySetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.TextureOffsetSetting;
-import de.undefinedhuman.projectcreate.engine.settings.Setting;
 
 import java.util.HashMap;
 
 public class EquipBlueprint extends ComponentBlueprint {
 
     private Setting
-            itemLayer = new Setting(SettingType.String, "Item Layer", "Item"),
-            armLayer = new Setting(SettingType.String, "Arm Layer", "Right Arm"),
-            hitboxLayer = new Setting(SettingType.String, "Hitbox Layer", "ItemHitbox"),
+            itemLayer = new Setting("Item Layer", "Item"),
+            armLayer = new Setting("Arm Layer", "Right Arm"),
+            hitboxLayer = new Setting("Hitbox Layer", "ItemHitbox"),
             invisibleLayers = new StringArraySetting("Invisible Layers", new String[0]),
             itemPositions = new TextureOffsetSetting("Item Positions", new Vector2[0], false),
             itemOffsets = new TextureOffsetSetting("Item Offsets", new Vector2[0], true);

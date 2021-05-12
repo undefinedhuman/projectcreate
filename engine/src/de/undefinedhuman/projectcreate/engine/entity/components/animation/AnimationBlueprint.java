@@ -5,14 +5,13 @@ import de.undefinedhuman.projectcreate.engine.entity.ComponentBlueprint;
 import de.undefinedhuman.projectcreate.engine.entity.ComponentParam;
 import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
-import de.undefinedhuman.projectcreate.engine.settings.SettingType;
 import de.undefinedhuman.projectcreate.engine.settings.panels.Panel;
 
 import java.util.HashMap;
 
 public class AnimationBlueprint extends ComponentBlueprint {
 
-    private Setting defaultAnimation = new Setting(SettingType.String, "Default Animation", "Idle");
+    private Setting defaultAnimation = new Setting("Default Animation", "Idle");
     private Panel<Animation> animations = new AnimationPanel("Animation", new Animation());
 
     public AnimationBlueprint() {

@@ -3,7 +3,6 @@ package de.undefinedhuman.projectcreate.launcher.config;
 import de.undefinedhuman.projectcreate.engine.config.Config;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
-import de.undefinedhuman.projectcreate.engine.settings.SettingType;
 import de.undefinedhuman.projectcreate.engine.settings.types.BooleanSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.FilePathSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.SliderSetting;
@@ -28,7 +27,7 @@ public class LauncherConfig extends Config {
             maximumMemory = new SliderSetting("Xmx", 0, Tools.AVAILABLE_MAX_MEMORY_IN_MB_HALVED, 0, 500, 1000f).setIncludeType(false),
             initialMemory = new SliderSetting("Xms", 0, Tools.AVAILABLE_MAX_MEMORY_IN_MB_HALVED, 0, 500, 1000f).setIncludeType(false),
             closeLauncherAfterGameStart = new BooleanSetting("Close Launcher", true).setIncludeType(false),
-            lastPlayedGameVersion = new Setting(SettingType.Version, "lastPlayedVersion", new Version(Stage.INDEV, 0, 0, 0, 0).toString());
+            lastPlayedGameVersion = new Setting("lastPlayedVersion", new Version(Stage.INDEV, 0, 0, 0, 0).toString());
 
     private LauncherConfigValidator validator;
 

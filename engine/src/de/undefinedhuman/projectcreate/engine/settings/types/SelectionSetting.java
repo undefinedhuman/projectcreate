@@ -1,7 +1,6 @@
 package de.undefinedhuman.projectcreate.engine.settings.types;
 
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
-import de.undefinedhuman.projectcreate.engine.settings.SettingType;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
@@ -12,7 +11,7 @@ public class SelectionSetting extends Setting {
     private String[] values;
 
     public SelectionSetting(String key, Object[] values) {
-        super(SettingType.Selection, key, values[0]);
+        super(key, values[0]);
         this.values = new String[values.length];
         for(int i = 0; i < values.length; i++)
             this.values[i] = values[i].toString();

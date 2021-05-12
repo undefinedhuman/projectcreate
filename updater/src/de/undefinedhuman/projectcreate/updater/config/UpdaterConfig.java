@@ -3,7 +3,6 @@ package de.undefinedhuman.projectcreate.updater.config;
 import de.undefinedhuman.projectcreate.engine.config.Config;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
-import de.undefinedhuman.projectcreate.engine.settings.SettingType;
 import de.undefinedhuman.projectcreate.engine.settings.types.BooleanSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.FilePathSetting;
 import de.undefinedhuman.projectcreate.engine.utils.Stage;
@@ -23,7 +22,7 @@ public class UpdaterConfig extends Config {
                     return InstallationUtils.chooseInstallationDirectory(defaultFile);
                 }
             },
-            version = new Setting(SettingType.Version, "version", new Version(Stage.INDEV, 0, 0, 0, 0).toString());
+            version = new Setting("version", new Version(Stage.INDEV, 0, 0, 0, 0).toString());
 
     private UpdaterConfig() {
         super("updater");

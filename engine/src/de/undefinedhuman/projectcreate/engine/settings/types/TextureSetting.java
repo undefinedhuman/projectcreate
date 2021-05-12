@@ -11,7 +11,6 @@ import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
-import de.undefinedhuman.projectcreate.engine.settings.SettingType;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.imageio.ImageIO;
@@ -32,7 +31,7 @@ public class TextureSetting extends Setting {
     private JLabel textureLabel;
 
     public TextureSetting(String key, Object value) {
-        super(SettingType.Texture, key, value);
+        super(key, value);
         loadTexture(Variables.DEFAULT_TEXTURE);
         setContentHeight(PREVIEW_TEXTURE_LABEL_SIZE);
     }

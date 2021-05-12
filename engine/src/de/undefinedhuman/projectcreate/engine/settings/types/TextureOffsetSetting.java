@@ -3,7 +3,6 @@ package de.undefinedhuman.projectcreate.engine.settings.types;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
-import de.undefinedhuman.projectcreate.engine.settings.SettingType;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
@@ -24,7 +23,7 @@ public class TextureOffsetSetting extends Vector2ArraySetting {
     private boolean offset;
 
     public TextureOffsetSetting(String key, Vector2[] value, boolean offset) {
-        super(SettingType.Texture, key, value);
+        super(key, value);
         try { texture = ImageIO.read(new FsFile("Unknown.png", Files.FileType.Internal).read());
         } catch (IOException e) { e.printStackTrace(); }
         this.offset = offset;

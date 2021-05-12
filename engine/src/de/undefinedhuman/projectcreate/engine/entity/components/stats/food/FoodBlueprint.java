@@ -5,13 +5,12 @@ import de.undefinedhuman.projectcreate.engine.entity.ComponentBlueprint;
 import de.undefinedhuman.projectcreate.engine.entity.ComponentParam;
 import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
-import de.undefinedhuman.projectcreate.engine.settings.SettingType;
 
 import java.util.HashMap;
 
 public class FoodBlueprint extends ComponentBlueprint {
 
-    public Setting maxFood = new Setting(SettingType.Int, "Max Food", 0);
+    public Setting maxFood = new Setting("Max Food", 0);
 
     public FoodBlueprint() {
         settings.addSettings(maxFood);

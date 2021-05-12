@@ -2,7 +2,6 @@ package de.undefinedhuman.projectcreate.engine.settings.types;
 
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
-import de.undefinedhuman.projectcreate.engine.settings.SettingType;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
@@ -13,7 +12,7 @@ public abstract class FilePathSetting extends Setting {
     private FsFile defaultFile;
 
     public FilePathSetting(String key, FsFile defaultFile) {
-        super(SettingType.FilePath, key, defaultFile.file().getAbsolutePath());
+        super(key, defaultFile.file().getAbsolutePath());
         this.defaultFile = defaultFile;
     }
 

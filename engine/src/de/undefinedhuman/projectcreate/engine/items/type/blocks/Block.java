@@ -7,17 +7,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.items.Item;
 import de.undefinedhuman.projectcreate.engine.items.recipe.RecipeType;
+import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.types.BooleanSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.SelectionSetting;
-import de.undefinedhuman.projectcreate.engine.settings.Setting;
-import de.undefinedhuman.projectcreate.engine.settings.SettingType;
 
 public class Block extends Item {
 
     public Setting
             blockType = new SelectionSetting("Block Type", BlockType.values()),
-            durability = new Setting(SettingType.Int, "Durability", 0),
-            dropID = new Setting(SettingType.Int, "DropID", 0),
+            durability = new Setting("Durability", 0),
+            dropID = new Setting("DropID", 0),
             hasStates = new BooleanSetting("HasStates", true),
             hasCollision = new BooleanSetting("Collides", false),
             isFull = new BooleanSetting("IsFull", true),

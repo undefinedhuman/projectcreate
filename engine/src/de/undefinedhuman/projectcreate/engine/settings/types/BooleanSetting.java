@@ -1,7 +1,6 @@
 package de.undefinedhuman.projectcreate.engine.settings.types;
 
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
-import de.undefinedhuman.projectcreate.engine.settings.SettingType;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
@@ -12,7 +11,7 @@ public class BooleanSetting extends Setting {
     private static final int CHECK_BOX_SIZE = Variables.DEFAULT_CONTENT_HEIGHT;
 
     public BooleanSetting(String key, boolean value) {
-        super(SettingType.Boolean, key, value);
+        super(key, value);
     }
 
     @Override

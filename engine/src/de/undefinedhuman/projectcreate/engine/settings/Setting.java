@@ -28,10 +28,8 @@ public class Setting {
     protected boolean includeType = true;
 
     public JTextField valueField;
-    private SettingType type;
 
-    public Setting(SettingType type, String key, Object value) {
-        this.type = type;
+    public Setting(String key, Object value) {
         this.key = key;
         this.value = value;
     }
@@ -80,8 +78,6 @@ public class Setting {
         this.contentHeight = contentHeight;
     }
 
-    public SettingType getType() { return type; }
-
     public void loadSetting(FileHandle parentDir, SettingsObject settingsObject) {
         if(!settingsObject.containsKey(key)) return;
         loadValue(parentDir, settingsObject.get(key));
@@ -107,7 +103,7 @@ public class Setting {
 
         JScrollPane settingsContainer = new JScrollPane(contentPanel);
         settingsContainer.setBounds((int) position.x, (int) position.y, containerWidth, contentHeight + Variables.BORDER_HEIGHT);
-        settingsContainer.setBorder(BorderFactory.createTitledBorder(key + (includeType ? " (" + type.name() + ")" : "")));
+        settingsContainer.setBorder(BorderFactory.createTitledBorder(key + (includeType ? " (" + ")" : "")));
         container.add(settingsContainer);
     }
 

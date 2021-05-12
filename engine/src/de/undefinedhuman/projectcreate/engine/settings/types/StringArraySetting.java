@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
-import de.undefinedhuman.projectcreate.engine.settings.SettingType;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
@@ -16,7 +15,7 @@ import java.awt.event.KeyEvent;
 public class StringArraySetting extends Setting {
 
     public StringArraySetting(String key, String[] value) {
-        super(SettingType.StringArray, key, value);
+        super(key, value);
     }
 
     @Override

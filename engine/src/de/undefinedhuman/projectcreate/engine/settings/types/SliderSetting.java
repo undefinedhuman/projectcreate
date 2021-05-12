@@ -2,7 +2,6 @@ package de.undefinedhuman.projectcreate.engine.settings.types;
 
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
-import de.undefinedhuman.projectcreate.engine.settings.SettingType;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
@@ -21,7 +20,7 @@ public class SliderSetting extends Setting {
     }
 
     public SliderSetting(String key, int min, int max, int defaultValue, int tickSpeed, float conversionValue) {
-        super(SettingType.Selection, key, defaultValue / conversionValue);
+        super(key, defaultValue / conversionValue);
         this.bounds.set(min, max);
         this.tickSpeed = tickSpeed;
         this.includeType = false;

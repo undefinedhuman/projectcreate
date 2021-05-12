@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
-import de.undefinedhuman.projectcreate.engine.settings.SettingType;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
@@ -18,11 +17,7 @@ public class Vector2ArraySetting extends Setting {
     protected JTextField valueField;
 
     public Vector2ArraySetting(String key, Vector2[] value) {
-        super(SettingType.Vector2Array, key, value);
-    }
-
-    public Vector2ArraySetting(SettingType type, String key, Vector2[] value) {
-        super(type, key, value);
+        super(key, value);
     }
 
     @Override

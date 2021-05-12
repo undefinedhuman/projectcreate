@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Color;
 import de.undefinedhuman.projectcreate.engine.utils.Colors;
 
 public enum Rarity {
-
     COMMON("Common", Colors.WHITE),
     UNCOMMON("Uncommon", Colors.LIGHT_GREEN),
     RARE("Rare", Colors.LIGHT_BLUE),

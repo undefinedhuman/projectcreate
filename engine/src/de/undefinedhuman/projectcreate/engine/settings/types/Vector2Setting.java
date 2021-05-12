@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
-import de.undefinedhuman.projectcreate.engine.settings.SettingType;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
@@ -17,7 +16,7 @@ public class Vector2Setting extends Setting {
     private JTextField xTextField, yTextField;
 
     public Vector2Setting(String key, Vector2 value) {
-        super(SettingType.Vector2, key, value);
+        super(key, value);
     }
 
     @Override
