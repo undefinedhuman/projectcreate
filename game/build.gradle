@@ -5,7 +5,7 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 
 sourceSets.main.java.srcDirs = ["src/"]
 
-project.ext.mainClassName = "de.undefinedhuman.projectcreate.game.DesktopLauncher"
+project.ext.mainClassName = "de.undefinedhuman.projectcreate.game.Game"
 project.ext.assetsDir = new File("../assets")
 
 jar {

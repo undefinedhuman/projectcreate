@@ -12,6 +12,7 @@ import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.items.Rarity;
 import de.undefinedhuman.projectcreate.engine.items.type.blocks.BlockType;
+import de.undefinedhuman.projectcreate.engine.items.type.blocks.PlacementLayer;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.Version;
 
@@ -57,6 +58,7 @@ public class Setting {
     public String[] getStringArray() { return (String[]) value; }
     public Vector2[] getVector2Array() { return (Vector2[]) value; }
 
+    public PlacementLayer getPlacementLayer() { return PlacementLayer.valueOf(getString()); }
     public Rarity getRarity() { return Rarity.valueOf(getString()); }
     public Animation.PlayMode getPlayMode() {
         return Animation.PlayMode.valueOf(getString());
