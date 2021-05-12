@@ -16,7 +16,6 @@ import de.undefinedhuman.projectcreate.launcher.icon.IconManager;
 import de.undefinedhuman.projectcreate.launcher.ui.GameManagerUI;
 import de.undefinedhuman.projectcreate.updater.utils.DownloadUtils;
 import de.undefinedhuman.projectcreate.updater.utils.InstallationUtils;
-import de.undefinedhuman.projectcreate.updater.window.HeadlessApplicationListener;
 
 import javax.swing.*;
 import java.awt.*;

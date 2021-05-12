@@ -8,6 +8,7 @@ import de.undefinedhuman.projectcreate.engine.config.ConfigManager;
 import de.undefinedhuman.projectcreate.engine.file.FileUtils;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
+import de.undefinedhuman.projectcreate.engine.gl.HeadlessApplicationListener;
 import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.utils.ManagerList;
@@ -17,7 +18,6 @@ import de.undefinedhuman.projectcreate.updater.config.UpdaterConfig;
 import de.undefinedhuman.projectcreate.updater.ui.UpdaterUI;
 import de.undefinedhuman.projectcreate.updater.utils.DownloadUtils;
 import de.undefinedhuman.projectcreate.updater.utils.InstallationUtils;
-import de.undefinedhuman.projectcreate.updater.window.HeadlessApplicationListener;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;

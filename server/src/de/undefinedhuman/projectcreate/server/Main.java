@@ -3,6 +3,7 @@ package de.undefinedhuman.projectcreate.server;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
+import de.undefinedhuman.projectcreate.engine.gl.HeadlessApplicationListener;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 
 public class Main {
