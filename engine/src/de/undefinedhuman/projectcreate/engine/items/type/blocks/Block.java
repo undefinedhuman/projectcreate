@@ -21,7 +21,7 @@ public class Block extends Item {
             hasStates = new BooleanSetting("HasStates", true),
             hasCollision = new BooleanSetting("Collides", false),
             isFull = new BooleanSetting("IsFull", true),
-            canBePlacedInBackLayer = new BooleanSetting("Place in Back", false),
+            placementLayer = new SelectionSetting("Placement Layer", PlacementLayer.values()),
             needBack = new BooleanSetting("Need Back", false);
 
     public TextureRegion[] blockTextures;
@@ -29,7 +29,7 @@ public class Block extends Item {
 
     public Block() {
         super();
-        settings.addSettings(blockType, durability, dropID, hasStates, hasCollision, isFull, canBePlacedInBackLayer, needBack);
+        settings.addSettings(blockType, durability, dropID, hasStates, hasCollision, isFull, placementLayer, needBack);
         this.recipeType = RecipeType.BLOCK;
     }
 
