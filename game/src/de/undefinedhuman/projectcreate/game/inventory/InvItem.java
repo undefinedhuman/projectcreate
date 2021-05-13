@@ -22,7 +22,7 @@ public class InvItem extends Gui {
     }
 
     public InvItem(int id, int amount) {
-        super(ItemManager.getInstance().getItem(id).iconTexture.getString());
+        super(ItemManager.getInstance().getItem(id).iconTexture.getValue());
         updateItem(id, amount);
         set(new CenterConstraint(), new CenterConstraint(), new PixelConstraint(Variables.ITEM_SIZE), new PixelConstraint(Variables.ITEM_SIZE));
         setOffset(new CenterOffset(), new CenterOffset());
@@ -43,7 +43,7 @@ public class InvItem extends Gui {
     public void setStats(int id, int amount) {
         updateItem(id, amount);
         updateAmountText();
-        setTexture(ItemManager.getInstance().getItem(id).iconTexture.getString());
+        setTexture(ItemManager.getInstance().getItem(id).iconTexture.getValue());
         resize();
     }
 

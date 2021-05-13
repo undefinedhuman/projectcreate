@@ -74,21 +74,21 @@ public class Updater extends JFrame {
     public void updateLauncher() {
         updaterUI.updateProgressText("Checking the installation directory...");
         sleep();
-        InstallationUtils.loadInstallationDirectory(UpdaterConfig.getInstance().firstRun.getBoolean(), UpdaterConfig.getInstance().installationPath, DEFAULT_INSTALLATION_DIRECTORY);
+        InstallationUtils.loadInstallationDirectory(UpdaterConfig.getInstance().firstRun.getValue(), UpdaterConfig.getInstance().installationPath, DEFAULT_INSTALLATION_DIRECTORY);
         updaterUI.updateProgressText("Checking for installed version...");
         sleep();
-        FsFile currentlyInstalledVersion = new FsFile(UpdaterConfig.getInstance().installationPath.getFile(), UpdaterConfig.getInstance().version.getString() + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
+        FsFile currentlyInstalledVersion = new FsFile(UpdaterConfig.getInstance().installationPath.getValue(), UpdaterConfig.getInstance().version.getValue() + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
         List<Version> versions = InstallationUtils.fetchAvailableVersions(DOWNLOAD_LAUNCHER_URL, null);
         if(versions.isEmpty())
             Log.showErrorDialog(Level.CRASH, "Error while fetching available launcher versions. \nPlease restart, if the error persists, please contact the author.", true);
         Version maxVersion = Collections.max(versions);
         String downloadUrl = DOWNLOAD_LAUNCHER_URL + maxVersion + DownloadUtils.DOWNLOAD_FILE_EXTENSION;
-        if(!currentlyInstalledVersion.exists() || !UpdaterConfig.getInstance().version.getVersion().equals(maxVersion) || DownloadUtils.fetchFileSize(downloadUrl) != currentlyInstalledVersion.length()) {
+        if(!currentlyInstalledVersion.exists() || !UpdaterConfig.getInstance().version.getValue().equals(maxVersion) || DownloadUtils.fetchFileSize(downloadUrl) != currentlyInstalledVersion.length()) {
             updaterUI.updateProgressText("Download launcher version " + maxVersion + "...");
             sleep();
             FileUtils.deleteFile(currentlyInstalledVersion);
             Log.info(maxVersion);
-            currentlyInstalledVersion = new FsFile(UpdaterConfig.getInstance().installationPath.getFile(), maxVersion + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
+            currentlyInstalledVersion = new FsFile(UpdaterConfig.getInstance().installationPath.getValue(), maxVersion + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
             try {
                 DownloadUtils.downloadFile(downloadUrl, currentlyInstalledVersion);
             } catch (IOException | URISyntaxException e) {

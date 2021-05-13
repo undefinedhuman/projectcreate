@@ -1,8 +1,8 @@
 package de.undefinedhuman.projectcreate.game.crafting.recipe;
 
 import com.badlogic.gdx.graphics.Color;
-import de.undefinedhuman.projectcreate.engine.crafting.RecipeItem;
-import de.undefinedhuman.projectcreate.engine.items.Item;
+import de.undefinedhuman.projectcreate.core.crafting.RecipeItem;
+import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.engine.resources.font.Font;
 import de.undefinedhuman.projectcreate.engine.utils.Colors;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
@@ -79,7 +79,7 @@ public class RecipePreviewPanel extends Gui {
                 )
                 .addListener((ClickListener) () -> {
                     Item item = ItemManager.getInstance().getItem(currentItemID);
-                    InventoryManager.instance.craftItem(currentItemID, item.recipeQuantity.getInt(), item.recipeItems.values());
+                    InventoryManager.instance.craftItem(currentItemID, item.recipeQuantity.getValue(), item.recipeItems.values());
                 })
                 .set(new RelativeConstraint(0.975f), new RelativeConstraint(0.025f), new PixelConstraint(50), new PixelConstraint(Variables.SLOT_SIZE))
                 .setOffsetX(new RelativeOffset(-1f));
@@ -98,14 +98,14 @@ public class RecipePreviewPanel extends Gui {
         currentItemID = itemID;
         ingredients.clear();
         Item currentItem = ItemManager.getInstance().getItem(itemID);
-        itemPreview.setTexture(currentItem.previewTexture.getString());
+        itemPreview.setTexture(currentItem.previewTexture.getValue());
         for(RecipeItem item : currentItem.recipeItems.values())
                 ingredients.addContent().update(item);
         name
-                .setText(currentItem.name.getString())
-                .setColor(currentItem.rarity.getRarity().getColor());
+                .setText(currentItem.name.getValue())
+                .setColor(currentItem.rarity.getValue().getColor());
         category.setText(currentItem.type.getTitle());
-        description.setText(currentItem.desc.getString());
+        description.setText(currentItem.desc.getValue());
         resize();
     }
 

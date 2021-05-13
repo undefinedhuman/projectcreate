@@ -1,13 +1,12 @@
 package de.undefinedhuman.projectcreate.game.equip;
 
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.engine.entity.components.equip.EquipComponent;
-import de.undefinedhuman.projectcreate.engine.entity.components.sprite.SpriteComponent;
-import de.undefinedhuman.projectcreate.engine.entity.components.sprite.SpriteData;
-import de.undefinedhuman.projectcreate.engine.items.Item;
-import de.undefinedhuman.projectcreate.engine.items.ItemType;
-import de.undefinedhuman.projectcreate.engine.items.type.Armor.Armor;
+import de.undefinedhuman.projectcreate.core.ecs.equip.EquipComponent;
+import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteComponent;
+import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteData;
+import de.undefinedhuman.projectcreate.core.items.Item;
+import de.undefinedhuman.projectcreate.core.items.ItemType;
+import de.undefinedhuman.projectcreate.core.items.types.Armor.Armor;
 import de.undefinedhuman.projectcreate.game.entity.Entity;
 import de.undefinedhuman.projectcreate.game.item.ItemManager;
 import de.undefinedhuman.projectcreate.game.network.ClientManager;
@@ -29,12 +28,12 @@ public class EquipManager {
     // TODO Look into the Vector(0, 0) hitbox Vector in the last line
 
     public void equipItem(Entity entity, int id, boolean armor) {
-        SpriteComponent spriteComponent = (SpriteComponent) entity.getComponent(ComponentType.SPRITE);
-        EquipComponent equipComponent = (EquipComponent) entity.getComponent(ComponentType.EQUIP);
+        SpriteComponent spriteComponent = (SpriteComponent) entity.getComponent(SpriteComponent.class);
+        EquipComponent equipComponent = (EquipComponent) entity.getComponent(EquipComponent.class);
         Item item = ItemManager.getInstance().getItem(id);
         equipComponent.setItemID(armor ? getItemIndex(item.type) : 0, id);
-        setSpriteData(spriteComponent, armor ? Tools.capitalizeFirstLetter(item.type.name()) : "Item", item.useIconAsHandTexture.getBoolean() ? item.iconTexture.getString() : item.itemTexture.getString(), item.useIconAsHandTexture.getBoolean() ? new Vector2(16, 16) : new Vector2(128, 64), true);
-        if (armor) setVisible(spriteComponent, false, ((Armor) item).inVisibleSprites.getStringArray());
+        setSpriteData(spriteComponent, armor ? Tools.capitalizeFirstLetter(item.type.name()) : "Item", item.useIconAsHandTexture.getValue() ? item.iconTexture.getValue() : item.itemTexture.getValue(), item.useIconAsHandTexture.getValue() ? new Vector2(16, 16) : new Vector2(128, 64), true);
+        if (armor) setVisible(spriteComponent, false, ((Armor) item).inVisibleSprites.getValue());
         else setSpriteData(spriteComponent, "Item Hitbox", null, new Vector2(0, 0), true);
     }
 
@@ -61,19 +60,19 @@ public class EquipManager {
     }
 
     public void unEquipItem(Entity entity, int id, boolean armor) {
-        SpriteComponent spriteComponent = (SpriteComponent) entity.getComponent(ComponentType.SPRITE);
-        EquipComponent equipComponent = (EquipComponent) entity.getComponent(ComponentType.EQUIP);
+        SpriteComponent spriteComponent = (SpriteComponent) entity.getComponent(SpriteComponent.class);
+        EquipComponent equipComponent = (EquipComponent) entity.getComponent(EquipComponent.class);
         Item item = ItemManager.getInstance().getItem(id);
         equipComponent.setItemID(armor ? getItemIndex(item.type) : 0, -1);
         setVisible(spriteComponent, false, armor ? Tools.capitalizeFirstLetter(item.type.name()) : "Item");
-        if (armor) setVisible(spriteComponent, true, ((Armor) item).inVisibleSprites.getStringArray());
+        if (armor) setVisible(spriteComponent, true, ((Armor) item).inVisibleSprites.getValue());
     }
 
     public void checkEquip(Entity entity) {
 
         EquipComponent equipComponent;
 
-        if ((equipComponent = (EquipComponent) entity.getComponent(ComponentType.EQUIP)) != null) {
+        if ((equipComponent = (EquipComponent) entity.getComponent(EquipComponent.class)) != null) {
 
             for (int i = 0; i < equipComponent.itemIDs.length; i++) {
                 int id = equipComponent.itemIDs[i];

@@ -37,15 +37,15 @@ public class Tools {
         return settingsObject;
     }
 
-    public static void loadSettings(FileReader reader, Setting... settings) {
+    public static void loadSettings(FileReader reader, Setting<?>... settings) {
         SettingsObject object = loadSettings(reader);
-        for(Setting setting : settings)
+        for(Setting<?> setting : settings)
             setting.loadSetting(reader.parent(), object);
     }
 
     public static void loadSettings(FileReader reader, SettingsList settings) {
         SettingsObject object = loadSettings(reader);
-        for(Setting setting : settings.getSettings())
+        for(Setting<?> setting : settings.getSettings())
             setting.loadSetting(reader.parent(), object);
     }
 
@@ -57,14 +57,7 @@ public class Tools {
     }
 
     public static void saveSettings(FileWriter writer, SettingsList settings) {
-        for(Setting setting : settings.getSettings()) {
-            setting.save(writer);
-            writer.nextLine();
-        }
-    }
-
-    public static void saveSettings(FileWriter writer, Setting... settings) {
-        for(Setting setting : settings) {
+        for(Setting<?> setting : settings.getSettings()) {
             setting.save(writer);
             writer.nextLine();
         }
@@ -94,13 +87,13 @@ public class Tools {
         return Arrays.stream(messages).map(Object::toString).collect(Collectors.joining(", "));
     }
 
-    public static void addSettings(JComponent panel, Stream<Setting> settings) {
+    public static void addSettings(JComponent panel, Stream<Setting<?>> settings) {
         addSettings(panel, 0, 0, Variables.OFFSET, Variables.CONTENT_WIDTH + Variables.BORDER_WIDTH, settings);
     }
 
-    public static void addSettings(JComponent panel, int x, int y, int offset, int width, Stream<Setting> settings) {
+    public static void addSettings(JComponent panel, int x, int y, int offset, int width, Stream<Setting<?>> settings) {
         int currentHeight = 0;
-        for(Setting setting : settings.collect(Collectors.toList())) {
+        for(Setting<?> setting : settings.collect(Collectors.toList())) {
             setting.addMenuComponents(panel, new Vector2(x, y + currentHeight), width);
             currentHeight += setting.getTotalHeight() + offset;
         }

@@ -13,7 +13,7 @@ import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.HashMap;
 
-public abstract class Panel<T extends PanelObject> extends Setting {
+public abstract class Panel<T extends PanelObject> extends Setting<String> {
 
     protected static final int INPUT_HEIGHT = Variables.DEFAULT_CONTENT_HEIGHT;
     private static final int BUTTON_HEIGHT = Variables.DEFAULT_CONTENT_HEIGHT;
@@ -28,7 +28,7 @@ public abstract class Panel<T extends PanelObject> extends Setting {
     private JPanel objectPanel;
 
     public Panel(String key, T panelObject) {
-        super(key, "");
+        super(key, "", String::valueOf);
         this.panelObject = panelObject;
         setContentHeight(INPUT_HEIGHT + BUTTON_HEIGHT + OBJECT_PANEL_HEIGHT + BUTTON_HEIGHT + Variables.OFFSET*4 + getPanelObjectContentHeight());
     }
@@ -110,7 +110,7 @@ public abstract class Panel<T extends PanelObject> extends Setting {
 
     private int getPanelObjectContentHeight() {
         int height = 0;
-        for(Setting setting : panelObject.getSettings())
+        for(Setting<?> setting : panelObject.getSettings())
             height += setting.getTotalHeight();
         return height;
     }

@@ -57,7 +57,7 @@ public class Main extends Game {
 
     @Override
     public void resize(int width, int height) {
-        int guiSetting = GameConfig.getInstance().guiScale.getInt();
+        int guiSetting = GameConfig.getInstance().guiScale.getValue();
         guiScale = (int) Math.max((guiSetting == 5 ? Math.ceil(width/640f) : guiSetting) / 2, 1);
         managerList.resize(width, height);
         super.resize(width, height);

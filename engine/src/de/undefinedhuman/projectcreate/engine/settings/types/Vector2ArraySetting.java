@@ -12,12 +12,12 @@ import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class Vector2ArraySetting extends Setting {
+public class Vector2ArraySetting extends Setting<Vector2[]> {
 
     protected JTextField valueField;
 
-    public Vector2ArraySetting(String key, Vector2[] value) {
-        super(key, value);
+    public Vector2ArraySetting(String key, Vector2[] defaultValue) {
+        super(key, defaultValue, value -> (Vector2[]) value);
     }
 
     @Override
@@ -31,13 +31,13 @@ public class Vector2ArraySetting extends Setting {
 
     @Override
     public void save(FileWriter writer) {
-        writer.writeString(key).writeInt(getVector2Array().length);
-        for(Vector2 vector : getVector2Array()) writer.writeVector2(vector);
+        writer.writeString(key).writeInt(getValue().length);
+        for(Vector2 vector : getValue()) writer.writeVector2(vector);
     }
 
     @Override
     protected void addValueMenuComponents(JPanel panel, int width) {
-        valueField = createTextField(Tools.convertArrayToString(getVector2Array()), new Vector2(0, 0), new Vector2(width, Variables.DEFAULT_CONTENT_HEIGHT), new KeyAdapter() {
+        valueField = createTextField(Tools.convertArrayToString(getValue()), new Vector2(0, 0), new Vector2(width, Variables.DEFAULT_CONTENT_HEIGHT), new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 if(valueField.getText() == null || valueField.getText().equalsIgnoreCase("")) return;
@@ -52,7 +52,7 @@ public class Vector2ArraySetting extends Setting {
 
     @Override
     protected void setValueInMenu(Object value) {
-        if(valueField != null) valueField.setText(Tools.convertArrayToString(getVector2Array()));
+        if(valueField != null) valueField.setText(Tools.convertArrayToString(getValue()));
     }
 
 }

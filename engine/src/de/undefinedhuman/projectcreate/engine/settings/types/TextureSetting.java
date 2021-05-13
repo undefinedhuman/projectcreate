@@ -23,15 +23,15 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class TextureSetting extends Setting {
+public class TextureSetting extends Setting<String> {
 
     private static final int PREVIEW_TEXTURE_LABEL_SIZE = 128;
 
     private BufferedImage texture;
     private JLabel textureLabel;
 
-    public TextureSetting(String key, Object value) {
-        super(key, value);
+    public TextureSetting(String key, Object defaultValue) {
+        super(key, defaultValue, String::valueOf);
         loadTexture(Variables.DEFAULT_TEXTURE);
         setContentHeight(PREVIEW_TEXTURE_LABEL_SIZE);
     }
@@ -63,7 +63,7 @@ public class TextureSetting extends Setting {
     @Override
     public void save(FileWriter writer) {
         writer.writeString(key).writeString(value.toString());
-        FsFile file = new FsFile(writer.parent(), getString(),  Files.FileType.Local);
+        FsFile file = new FsFile(writer.parent(), getValue(),  Files.FileType.Local);
         try { ImageIO.write(texture, "png", file.file());
         } catch (IOException ex) { Log.showErrorDialog(Level.CRASH, "Can not save texture (" + this + "): \n" + ex.getMessage(), true); }
     }
@@ -73,14 +73,14 @@ public class TextureSetting extends Setting {
         if(!(value instanceof LineSplitter))
             return;
         setValue(((LineSplitter) value).getNextString());
-        String path = parentDir.path() + Variables.FILE_SEPARATOR + getString();
+        String path = parentDir.path() + Variables.FILE_SEPARATOR + getValue();
         loadTexture(path);
         if(texture == null)
             loadTexture(path = "Unknown.png");
         if(TextureManager.instance == null)
             return;
         setValue(path);
-        TextureManager.instance.loadTextures(getString());
+        TextureManager.instance.loadTextures(getValue());
     }
 
     @Override
@@ -92,7 +92,7 @@ public class TextureSetting extends Setting {
     protected void delete() {
         if(TextureManager.instance == null)
             return;
-        TextureManager.instance.removeTextures(getString());
+        TextureManager.instance.removeTextures(getValue());
     }
 
     public void setTexture(String path, Files.FileType type) {

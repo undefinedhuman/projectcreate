@@ -3,8 +3,8 @@ package de.undefinedhuman.projectcreate.game.network;
 import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Listener;
-import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.engine.entity.components.mouse.AngleComponent;
+import de.undefinedhuman.projectcreate.core.ecs.equip.EquipComponent;
+import de.undefinedhuman.projectcreate.core.ecs.mouse.AngleComponent;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
 import de.undefinedhuman.projectcreate.game.camera.CameraManager;
@@ -44,15 +44,15 @@ public class ClientManager extends Manager {
 
         playerUpdateTimer60 = new Timer(0.015f, true, () -> {
             Entity player = GameManager.instance.player;
-            ((AngleComponent) player.getComponent(ComponentType.ANGLE)).mousePos = Tools.getMouseCoordsInWorldSpace(CameraManager.gameCamera);
-            ComponentPacket packet = PacketUtils.createComponentPacket(player, ComponentType.ANGLE);
+            ((AngleComponent) player.getComponent(AngleComponent.class)).mousePos = Tools.getMouseCoordsInWorldSpace(CameraManager.gameCamera);
+            ComponentPacket packet = PacketUtils.createComponentPacket(player, AngleComponent.class);
             ClientManager.instance.sendUDP(packet);
         });
 
         playerUpdateTimer10 = new Timer(0.1f, true, () -> {
             Entity player = GameManager.instance.player;
             InvItem item = Selector.instance.getSelectedInvItem();
-            ComponentPacket packet = PacketUtils.createComponentPacket(player, ComponentType.EQUIP);
+            ComponentPacket packet = PacketUtils.createComponentPacket(player, EquipComponent.class);
             ClientManager.instance.sendUDP(packet);
         });
 

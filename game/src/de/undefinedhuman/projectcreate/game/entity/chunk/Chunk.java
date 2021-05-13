@@ -1,9 +1,8 @@
 package de.undefinedhuman.projectcreate.game.entity.chunk;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.engine.entity.EntityType;
-import de.undefinedhuman.projectcreate.engine.entity.components.collision.CollisionComponent;
+import de.undefinedhuman.projectcreate.engine.ecs.EntityType;
+import de.undefinedhuman.projectcreate.core.ecs.collision.CollisionComponent;
 import de.undefinedhuman.projectcreate.engine.utils.ds.MultiMap;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector4;
 import de.undefinedhuman.projectcreate.game.collision.CollisionManager;
@@ -30,12 +29,12 @@ public class Chunk {
     public void addEntity(Entity entity) {
         if(entity == null || entitiesByType.hasValue(entity.getType(), entity)) return;
         this.entitiesByType.add(entity.getType(), entity);
-        if (entity.hasComponent(ComponentType.COLLISION)) entitiesForCollision.add(entity);
+        if (entity.hasComponent(CollisionComponent.class)) entitiesForCollision.add(entity);
     }
 
     public void removeEntity(Entity entity) {
         if(entity == null || !entitiesByType.hasValue(entity.getType(), entity)) return;
-        if (entity.hasComponent(ComponentType.COLLISION)) entitiesForCollision.remove(entity);
+        if (entity.hasComponent(CollisionComponent.class)) entitiesForCollision.remove(entity);
         entitiesByType.removeValue(entity.getType(), entity);
     }
 
@@ -47,7 +46,7 @@ public class Chunk {
         ArrayList<Entity> entitiesInRange = new ArrayList<>();
         for (Entity entity : entitiesForCollision)
             if(CollisionManager.collideAABB(bounds,
-                    ((CollisionComponent) entity.getComponent(ComponentType.COLLISION)).getBounds(entity.getPosition())))
+                    ((CollisionComponent) entity.getComponent(CollisionComponent.class)).getBounds(entity.getPosition())))
                 entitiesInRange.add(entity);
         return entitiesInRange;
     }

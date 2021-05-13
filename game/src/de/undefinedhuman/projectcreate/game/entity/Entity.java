@@ -2,10 +2,9 @@ package de.undefinedhuman.projectcreate.game.entity;
 
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.base.GameObject;
-import de.undefinedhuman.projectcreate.engine.entity.Component;
-import de.undefinedhuman.projectcreate.engine.entity.ComponentList;
-import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.engine.entity.EntityType;
+import de.undefinedhuman.projectcreate.engine.ecs.Component;
+import de.undefinedhuman.projectcreate.engine.ecs.ComponentList;
+import de.undefinedhuman.projectcreate.engine.ecs.EntityType;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.LineWriter;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
@@ -55,14 +54,14 @@ public class Entity extends GameObject implements NetworkComponent {
         for(Component component : components) this.components.addComponent(component);
     }
 
-    public Component getComponent(ComponentType type) {
+    public Component getComponent(Class<? extends Component> type) {
         if(!hasComponent(type)) return null;
         return components.getComponent(type);
     }
 
-    public boolean hasComponent(ComponentType... types) {
+    public boolean hasComponent(Class<? extends Component>... types) {
         boolean hasComponents = true;
-        for (ComponentType type : types) if (!components.hasComponent(type)) hasComponents = false;
+        for (Class<? extends Component> type : types) if (!components.hasComponent(type)) hasComponents = false;
         return hasComponents;
     }
 

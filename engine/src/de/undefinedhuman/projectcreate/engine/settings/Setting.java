@@ -1,70 +1,34 @@
 package de.undefinedhuman.projectcreate.engine.settings;
 
-import com.badlogic.gdx.Files;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.engine.entity.EntityType;
-import de.undefinedhuman.projectcreate.engine.file.FileUtils;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
-import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
-import de.undefinedhuman.projectcreate.engine.items.Rarity;
-import de.undefinedhuman.projectcreate.engine.items.type.blocks.BlockType;
-import de.undefinedhuman.projectcreate.engine.items.type.blocks.PlacementLayer;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
-import de.undefinedhuman.projectcreate.engine.utils.Version;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class Setting {
+public class Setting<T> {
 
     protected String key;
     protected Object value;
     private int contentHeight = Variables.DEFAULT_CONTENT_HEIGHT;
-    protected boolean includeType = true;
+
+    protected Getter<T> getter;
 
     public JTextField valueField;
 
-    public Setting(String key, Object value) {
+    public Setting(String key, Object defaultValue, Getter<T> getter) {
         this.key = key;
-        this.value = value;
-    }
-
-    public Setting setIncludeType(boolean includeType) {
-        this.includeType = includeType;
-        return this;
+        this.value = defaultValue;
+        this.getter = getter;
     }
 
     public String getKey() { return key; }
-    public Object getValue() { return value; }
+    public T getValue() { return getter.get(value); }
     public void setValue(Object value) { this.value = value; }
-
-    public String getString() { return String.valueOf(value); }
-    public float getFloat() { return Float.parseFloat(getString()); }
-    public boolean getBoolean() { return FileUtils.readBoolean(getString()); }
-    public int getInt() { return Integer.parseInt(getString()); }
-    public byte getByte() { return Byte.parseByte(getString()); }
-
-    public Vector2 getVector2() { return (Vector2) value; }
-
-    public int getInputKey() { return Input.Keys.valueOf(getString()); }
-
-    public String[] getStringArray() { return (String[]) value; }
-    public Vector2[] getVector2Array() { return (Vector2[]) value; }
-
-    public PlacementLayer getPlacementLayer() { return PlacementLayer.valueOf(getString()); }
-    public Rarity getRarity() { return Rarity.valueOf(getString()); }
-    public Animation.PlayMode getPlayMode() {
-        return Animation.PlayMode.valueOf(getString());
-    }
-    public EntityType getEntityType() { return EntityType.valueOf(getString()); }
-    public BlockType getBlockType() { return BlockType.valueOf(getString()); }
-    public Version getVersion() { return Version.parse(getString()); }
-    public FsFile getFile() { return new FsFile(getString(), Files.FileType.Absolute); }
 
     public int getTotalHeight() {
         return contentHeight + Variables.BORDER_HEIGHT;
@@ -79,7 +43,8 @@ public class Setting {
     }
 
     public void loadSetting(FileHandle parentDir, SettingsObject settingsObject) {
-        if(!settingsObject.containsKey(key)) return;
+        if(!settingsObject.containsKey(key))
+            return;
         loadValue(parentDir, settingsObject.get(key));
         setValueInMenu(value);
     }
@@ -90,7 +55,8 @@ public class Setting {
     }
 
     protected void loadValue(FileHandle parentDir, Object value) {
-        if(!(value instanceof LineSplitter)) return;
+        if(!(value instanceof LineSplitter))
+            return;
         setValue(((LineSplitter) value).getNextString());
     }
 
@@ -103,7 +69,7 @@ public class Setting {
 
         JScrollPane settingsContainer = new JScrollPane(contentPanel);
         settingsContainer.setBounds((int) position.x, (int) position.y, containerWidth, contentHeight + Variables.BORDER_HEIGHT);
-        settingsContainer.setBorder(BorderFactory.createTitledBorder(key + (includeType ? " (" + ")" : "")));
+        settingsContainer.setBorder(BorderFactory.createTitledBorder(key));
         container.add(settingsContainer);
     }
 
@@ -127,7 +93,8 @@ public class Setting {
     }
 
     protected void setValueInMenu(Object value) {
-        if(valueField != null) valueField.setText(value.toString());
+        if(valueField != null)
+            valueField.setText(value.toString());
     }
 
     protected void delete() { value = null; }

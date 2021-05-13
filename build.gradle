@@ -104,7 +104,7 @@ project(":engine") {
 
 project(":editor") {
     dependencies {
-        compile project(":engine")
+        compile project(":core")
 
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"

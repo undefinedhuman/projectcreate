@@ -12,10 +12,10 @@ import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class StringArraySetting extends Setting {
+public class StringArraySetting extends Setting<String[]> {
 
-    public StringArraySetting(String key, String[] value) {
-        super(key, value);
+    public StringArraySetting(String key, String[] defaultValue) {
+        super(key, defaultValue, value -> (String[]) value);
     }
 
     @Override
@@ -29,13 +29,13 @@ public class StringArraySetting extends Setting {
 
     @Override
     public void save(FileWriter writer) {
-        writer.writeString(key).writeInt(getStringArray().length);
-        for(String s : getStringArray()) writer.writeString(s);
+        writer.writeString(key).writeInt(getValue().length);
+        for(String s : getValue()) writer.writeString(s);
     }
 
     @Override
     protected void addValueMenuComponents(JPanel panel, int width) {
-        valueField = createTextField(Tools.convertArrayToString(getStringArray()), new Vector2(0, 0), new Vector2(width, Variables.DEFAULT_CONTENT_HEIGHT), new KeyAdapter() {
+        valueField = createTextField(Tools.convertArrayToString(getValue()), new Vector2(0, 0), new Vector2(width, Variables.DEFAULT_CONTENT_HEIGHT), new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 if(valueField.getText() == null || valueField.getText().equalsIgnoreCase("")) return;
@@ -48,7 +48,8 @@ public class StringArraySetting extends Setting {
 
     @Override
     protected void setValueInMenu(Object value) {
-        if(valueField != null) valueField.setText(Tools.convertArrayToString(getStringArray()));
+        if(valueField != null)
+            valueField.setText(Tools.convertArrayToString(getValue()));
     }
 
 }

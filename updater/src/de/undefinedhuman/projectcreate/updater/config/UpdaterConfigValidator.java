@@ -11,7 +11,7 @@ public class UpdaterConfigValidator extends ConfigValidator<UpdaterConfig> {
     public UpdaterConfigValidator() {
         super(
                 new ValidationRule<>(
-                        config -> !FileError.checkFileForErrors("checking installation directory", config.installationPath.getFile(), FileError.NULL, FileError.NO_DIRECTORY, FileError.NOT_WRITEABLE),
+                        config -> !FileError.checkFileForErrors("checking installation directory", config.installationPath.getValue(), FileError.NULL, FileError.NO_DIRECTORY, FileError.NOT_WRITEABLE),
                         "Error validating the installation directory!",
                         config -> config.installationPath.setValue(InstallationUtils.chooseInstallationDirectory(Updater.DEFAULT_INSTALLATION_DIRECTORY))
                 )

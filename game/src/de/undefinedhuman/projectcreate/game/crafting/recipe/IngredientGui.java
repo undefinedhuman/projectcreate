@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.game.crafting.recipe;
 
-import de.undefinedhuman.projectcreate.engine.crafting.RecipeItem;
-import de.undefinedhuman.projectcreate.engine.items.Item;
+import de.undefinedhuman.projectcreate.core.crafting.RecipeItem;
+import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.engine.resources.font.Font;
 import de.undefinedhuman.projectcreate.engine.utils.Colors;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
@@ -73,12 +73,12 @@ public class IngredientGui extends Gui implements Poolable {
     public IngredientGui update(RecipeItem item) {
         InventoryManager.instance.removeListener(currentItemID, listener);
         currentItemID = Integer.parseInt(item.getKey());
-        currentAmount = item.quantity.getInt();
+        currentAmount = item.quantity.getValue();
         Item currentItem = ItemManager.getInstance().getItem(currentItemID);
-        this.icon.setTexture(currentItem.iconTexture.getString());
+        this.icon.setTexture(currentItem.iconTexture.getValue());
         this.name
-                .setText(currentItem.name.getString())
-                .setColor(currentItem.rarity.getRarity().getColor());
+                .setText(currentItem.name.getValue())
+                .setColor(currentItem.rarity.getValue().getColor());
         updateAmountText(currentItemID, currentAmount);
         InventoryManager.instance.addListener(currentItemID, listener);
         return this;

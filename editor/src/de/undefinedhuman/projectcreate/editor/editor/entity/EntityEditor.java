@@ -3,10 +3,10 @@ package de.undefinedhuman.projectcreate.editor.editor.entity;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.projectcreate.core.ecs.ComponentTypes;
 import de.undefinedhuman.projectcreate.editor.editor.Editor;
-import de.undefinedhuman.projectcreate.engine.entity.ComponentBlueprint;
-import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.engine.entity.EntityType;
+import de.undefinedhuman.projectcreate.engine.ecs.ComponentBlueprint;
+import de.undefinedhuman.projectcreate.engine.ecs.EntityType;
 import de.undefinedhuman.projectcreate.engine.file.*;
 import de.undefinedhuman.projectcreate.engine.resources.ResourceManager;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
@@ -14,6 +14,8 @@ import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
 import de.undefinedhuman.projectcreate.engine.settings.types.SelectionSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.Vector2Setting;
+import de.undefinedhuman.projectcreate.engine.settings.types.primitive.IntSetting;
+import de.undefinedhuman.projectcreate.engine.settings.types.primitive.StringSetting;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
@@ -25,14 +27,14 @@ import java.util.HashMap;
 
 public class EntityEditor extends Editor {
 
-    private JComboBox<ComponentType> componentComboBox;
+    private JComboBox<String> componentComboBox;
 
     private DefaultListModel<String> componentList;
     private JList<String> listPanel;
 
-    private ComponentType selectedComponent;
+    private String selectedComponent;
 
-    private HashMap<ComponentType, ComponentBlueprint> components;
+    private HashMap<String, ComponentBlueprint> components;
 
     private SettingsList baseSettings = new SettingsList();
 
@@ -40,15 +42,15 @@ public class EntityEditor extends Editor {
         super(container);
         components = new HashMap<>();
 
-        componentComboBox = new JComboBox<>(ComponentType.values());
+        componentComboBox = new JComboBox<>(ComponentTypes.keySet().toArray(new String[0]));
         componentComboBox.setSelectedItem(null);
         componentComboBox.setBounds(20, 25, 150, 25);
 
         baseSettings.addSettings(
-                new Setting("ID", 0),
-                new Setting("Name", "Temp Name"),
+                new IntSetting("ID", 0),
+                new StringSetting("Name", "Temp Name"),
                 new Vector2Setting("Size", new Vector2(0, 0)),
-                new SelectionSetting("Type", EntityType.values()));
+                new SelectionSetting<>("Type", EntityType.values(), value -> EntityType.valueOf(String.valueOf(value))));
         Tools.addSettings(leftPanel, baseSettings.getSettings().stream());
 
         componentList = new DefaultListModel<>();
@@ -56,7 +58,7 @@ public class EntityEditor extends Editor {
         listPanel = new JList<>(componentList);
         listPanel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         listPanel.addListSelectionListener(e -> {
-            selectedComponent = listPanel.getSelectedValue() != null ? ComponentType.valueOf(listPanel.getSelectedValue()) : null;
+            selectedComponent = listPanel.getSelectedValue() != null ? listPanel.getSelectedValue() : null;
             if(selectedComponent != null) {
                 Tools.removeSettings(rightPanel);
                 Tools.addSettings(rightPanel, components.get(selectedComponent).getSettingsStream());
@@ -71,21 +73,26 @@ public class EntityEditor extends Editor {
         addComponent.addActionListener(e -> {
             if(componentComboBox.getSelectedItem() == null) return;
             Tools.removeSettings(rightPanel);
-            ComponentType type = ComponentType.valueOf(componentComboBox.getSelectedItem().toString());
-            if(componentList.contains(type.toString())) return;
-            componentList.addElement(type.toString());
-            components.put(type, type.createInstance());
+            String componentName = String.valueOf(componentComboBox.getSelectedItem());
+            if(componentList.contains(componentName))
+                return;
+            ComponentBlueprint blueprint = ComponentTypes.createNewInstance(componentName);
+            if(blueprint == null)
+                return;
+            componentList.addElement(componentName);
+            components.put(componentName, blueprint);
         });
 
         JButton removeComponent = new JButton("Remove");
         removeComponent.setBounds(20, 85, 150, 25);
         removeComponent.addActionListener(e -> {
-            if(listPanel.getSelectedValue() == null) return;
-            ComponentType type = ComponentType.valueOf(listPanel.getSelectedValue());
+            if(listPanel.getSelectedValue() == null)
+                return;
+            String componentName = String.valueOf(componentComboBox.getSelectedItem());
             Tools.removeSettings(rightPanel);
-            components.remove(type);
-            if(componentList.contains(type.toString()))
-                componentList.removeElement(type.toString());
+            components.remove(componentName);
+            if(componentList.contains(componentName))
+                componentList.removeElement(componentName);
         });
 
         middlePanel.add(componentComboBox);
@@ -136,15 +143,20 @@ public class EntityEditor extends Editor {
             FileReader reader = new FileReader(new FsFile(Paths.ENTITY_PATH, Integer.parseInt(((String) comboBox.getSelectedItem()).split("-")[0]) + "/settings.entity", Files.FileType.Internal), true);
             SettingsObject settingsObject = Tools.loadSettings(reader);
 
-            for(Setting setting : baseSettings.getSettings())
+            for(Setting<?> setting : baseSettings.getSettings())
                 setting.loadSetting(reader.parent(), settingsObject);
 
-            for(ComponentType type : ComponentType.values()) {
-                if(!settingsObject.containsKey(type.name())) continue;
-                componentList.addElement(type.name());
-                Object componentObject = settingsObject.get(type.name());
-                if(!(componentObject instanceof SettingsObject)) continue;
-                components.put(type, type.createInstance(reader.parent(), (SettingsObject) settingsObject.get(type.name())));
+            for(String componentName : ComponentTypes.keySet()) {
+                if(!settingsObject.containsKey(componentName))
+                    continue;
+                Object componentObject = settingsObject.get(componentName);
+                if(!(componentObject instanceof SettingsObject))
+                    continue;
+                ComponentBlueprint blueprint = ComponentTypes.loadComponentBlueprint(componentName, reader.parent(), (SettingsObject) settingsObject.get(componentName));
+                if(blueprint == null)
+                    continue;
+                componentList.addElement(componentName);
+                components.put(componentName, blueprint);
             }
 
             chooseWindow.setVisible(false);
@@ -161,7 +173,7 @@ public class EntityEditor extends Editor {
 
     @Override
     public void save() {
-        FsFile entityDir = new FsFile(Paths.ENTITY_PATH, baseSettings.getSettings().get(0).getString() + Variables.FILE_SEPARATOR, Files.FileType.Local);
+        FsFile entityDir = new FsFile(Paths.ENTITY_PATH, baseSettings.getSettings().get(0).getValue() + Variables.FILE_SEPARATOR, Files.FileType.Local);
         if(entityDir.exists())
             FileUtils.deleteFile(entityDir);
 

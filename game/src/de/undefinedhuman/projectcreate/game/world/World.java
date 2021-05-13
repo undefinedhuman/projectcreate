@@ -3,7 +3,7 @@ package de.undefinedhuman.projectcreate.game.world;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.engine.collision.Hitbox;
-import de.undefinedhuman.projectcreate.engine.items.type.blocks.Block;
+import de.undefinedhuman.projectcreate.core.items.types.blocks.Block;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 import de.undefinedhuman.projectcreate.game.camera.CameraManager;
@@ -71,19 +71,19 @@ public class World {
         for (int i = CameraManager.getInstance().blockBounds.x; i <= CameraManager.getInstance().blockBounds.z; i++)
             for (int j = CameraManager.getInstance().blockBounds.y; j <= CameraManager.getInstance().blockBounds.w; j++) {
                 Block block = (Block) ItemManager.getInstance().getItem(getBlock(i, j, MAIN_LAYER));
-                if (block.id.getInt() != 0 || getState(i, j, MAIN_LAYER) == 0 || block.isFull.getBoolean()) return;
+                if (block.id.getValue() != 0 || getState(i, j, MAIN_LAYER) == 0 || block.isFull.getValue()) return;
                 renderBlock(batch, batchColor.set(0.45f, 0.45f, 0.45f, 1), i, j, BACK_LAYER);
             }
     }
 
     private void renderBlock(SpriteBatch batch, Color color, int x, int y, byte worldLayer) {
         Block block = (Block) ItemManager.getInstance().getItem(getBlock(x, y, worldLayer));
-        if (block == null || block.id.getInt() == 0) return;
+        if (block == null || block.id.getValue() == 0) return;
 
         batch.setColor(color);
         batch.draw(block.blockTextures[getState(x, y, worldLayer)], x * Variables.BLOCK_SIZE, y * Variables.BLOCK_SIZE, Variables.BLOCK_SIZE, Variables.BLOCK_SIZE);
 
-        if (block.id.getInt() == 3 && getBlock(x, y + 1, worldLayer) == 0)
+        if (block.id.getValue() == 3 && getBlock(x, y + 1, worldLayer) == 0)
             TopLayerManager.instance.render(batch, x, y, TopLayerType.GRASS, getBlock(x - 1, y, worldLayer) != 0, getBlock(x + 1, y, worldLayer) != 0);
     }
 
@@ -95,7 +95,7 @@ public class World {
    public void setBlock(int x, int y, byte worldLayer, byte blockID) {
         if(y < 0 || y >= size.y) return;
         setBlockData(x, y, worldLayer, BLOCK_LAYER, blockID);
-        if(worldLayer == MAIN_LAYER) setCollisionBlock(x, y, blockID != 0 && ((Block) ItemManager.getInstance().getItem(blockID)).hasCollision.getBoolean());
+        if(worldLayer == MAIN_LAYER) setCollisionBlock(x, y, blockID != 0 && ((Block) ItemManager.getInstance().getItem(blockID)).hasCollision.getValue());
     }
 
     public byte getState(int x, int y, byte worldLayer) {

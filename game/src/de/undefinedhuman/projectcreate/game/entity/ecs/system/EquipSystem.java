@@ -1,15 +1,14 @@
 package de.undefinedhuman.projectcreate.game.entity.ecs.system;
 
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.engine.entity.components.animation.AnimationComponent;
-import de.undefinedhuman.projectcreate.engine.entity.components.arm.ShoulderComponent;
-import de.undefinedhuman.projectcreate.engine.entity.components.equip.EquipComponent;
-import de.undefinedhuman.projectcreate.engine.entity.components.mouse.AngleComponent;
-import de.undefinedhuman.projectcreate.engine.entity.components.sprite.SpriteComponent;
-import de.undefinedhuman.projectcreate.engine.entity.components.sprite.SpriteData;
-import de.undefinedhuman.projectcreate.engine.items.Item;
-import de.undefinedhuman.projectcreate.engine.items.ItemType;
+import de.undefinedhuman.projectcreate.core.ecs.animation.AnimationComponent;
+import de.undefinedhuman.projectcreate.core.ecs.arm.ShoulderComponent;
+import de.undefinedhuman.projectcreate.core.ecs.equip.EquipComponent;
+import de.undefinedhuman.projectcreate.core.ecs.mouse.AngleComponent;
+import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteComponent;
+import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteData;
+import de.undefinedhuman.projectcreate.core.items.Item;
+import de.undefinedhuman.projectcreate.core.items.ItemType;
 import de.undefinedhuman.projectcreate.game.entity.Entity;
 import de.undefinedhuman.projectcreate.game.entity.ecs.System;
 import de.undefinedhuman.projectcreate.game.item.ItemManager;
@@ -20,7 +19,7 @@ public class EquipSystem extends System {
     public void init(Entity entity) {
         SpriteComponent spriteComponent;
         EquipComponent equipComponent;
-        if ((spriteComponent = (SpriteComponent) entity.getComponent(ComponentType.SPRITE)) != null && (equipComponent = (EquipComponent) entity.getComponent(ComponentType.EQUIP)) != null)
+        if ((spriteComponent = (SpriteComponent) entity.getComponent(SpriteComponent.class)) != null && (equipComponent = (EquipComponent) entity.getComponent(EquipComponent.class)) != null)
             setVisible(spriteComponent, equipComponent.getInvisibleSprites());
     }
 
@@ -33,11 +32,11 @@ public class EquipSystem extends System {
         AnimationComponent animationComponent;
         ShoulderComponent shoulderComponent;
 
-        if ((spriteComponent = (SpriteComponent) entity.getComponent(ComponentType.SPRITE)) == null
-                || (equipComponent = (EquipComponent) entity.getComponent(ComponentType.EQUIP)) == null
-                || (angleComponent = (AngleComponent) entity.getComponent(ComponentType.ANGLE)) == null
-                || (shoulderComponent = (ShoulderComponent) entity.getComponent(ComponentType.SHOULDER)) == null
-                || (animationComponent = (AnimationComponent) entity.getComponent(ComponentType.ANIMATION)) == null) return;
+        if ((spriteComponent = (SpriteComponent) entity.getComponent(SpriteComponent.class)) == null
+                || (equipComponent = (EquipComponent) entity.getComponent(EquipComponent.class)) == null
+                || (angleComponent = (AngleComponent) entity.getComponent(AngleComponent.class)) == null
+                || (shoulderComponent = (ShoulderComponent) entity.getComponent(ShoulderComponent.class)) == null
+                || (animationComponent = (AnimationComponent) entity.getComponent(AnimationComponent.class)) == null) return;
 
         int equipID = equipComponent.itemIDs[0];
 

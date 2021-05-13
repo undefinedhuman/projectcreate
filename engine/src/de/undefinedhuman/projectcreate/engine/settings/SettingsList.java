@@ -5,19 +5,19 @@ import java.util.Arrays;
 
 public class SettingsList {
 
-    private ArrayList<Setting> settings = new ArrayList<>();
+    private ArrayList<Setting<?>> settings = new ArrayList<>();
 
-    public void addSettings(Setting... settings) {
+    public void addSettings(Setting<?>... settings) {
         this.settings.addAll(Arrays.asList(settings));
     }
 
     public void delete() {
-        for(Setting setting : settings)
+        for(Setting<?> setting : settings)
             setting.delete();
         settings.clear();
     }
 
-    public ArrayList<Setting> getSettings() {
+    public ArrayList<Setting<?>> getSettings() {
         return settings;
     }
 

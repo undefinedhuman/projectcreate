@@ -51,12 +51,12 @@ public class GameManagerUI extends JPanel {
     }
 
     public void init() {
-        Version lastPlayed = LauncherConfig.getInstance().lastPlayedGameVersion.getVersion();
+        Version lastPlayed = LauncherConfig.getInstance().lastPlayedGameVersion.getValue();
         int selectedIndex = versionSelectionModel.getIndexOf(lastPlayed);
-        if(selectedIndex == -1 || !InstallationUtils.isVersionDownloaded(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.getInstance().gameInstallationPath.getFile(), lastPlayed)) {
+        if(selectedIndex == -1 || !InstallationUtils.isVersionDownloaded(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.getInstance().gameInstallationPath.getValue(), lastPlayed)) {
             selectedIndex = 0;
             for(int i = 0; i < versionSelectionModel.getSize(); i++) {
-                if(!InstallationUtils.isVersionDownloaded(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.getInstance().gameInstallationPath.getFile(), versionSelectionModel.getElementAt(i)))
+                if(!InstallationUtils.isVersionDownloaded(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.getInstance().gameInstallationPath.getValue(), versionSelectionModel.getElementAt(i)))
                     continue;
                 selectedIndex = i;
                 break;
@@ -74,7 +74,7 @@ public class GameManagerUI extends JPanel {
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
                 Stream<Version> downloadedVersions = Arrays.stream(getAvailableVersions())
-                        .filter(version -> InstallationUtils.isVersionDownloaded(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.getInstance().gameInstallationPath.getFile(), version));
+                        .filter(version -> InstallationUtils.isVersionDownloaded(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.getInstance().gameInstallationPath.getValue(), version));
                 versionCellRenderer.setVersionDownloaded(downloadedVersions);
             }
 
@@ -94,7 +94,7 @@ public class GameManagerUI extends JPanel {
     }
 
     private Version[] getAvailableVersions() {
-        List<Version> availableVersion = InstallationUtils.fetchAvailableVersions(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.getInstance().includeSnapshots.getBoolean() ? null : Stage.SNAPSHOT);
+        List<Version> availableVersion = InstallationUtils.fetchAvailableVersions(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.getInstance().includeSnapshots.getValue() ? null : Stage.SNAPSHOT);
         Collections.reverse(availableVersion);
         return availableVersion.toArray(new Version[0]);
     }
@@ -108,7 +108,7 @@ public class GameManagerUI extends JPanel {
 
     private void initDeleteButton() {
         deleteButton = new IconButton("delete", 277, getHeight()/2-ICON_SIZE.y/2, ICON_SIZE, e -> {
-            FsFile installationFile = new FsFile(LauncherConfig.getInstance().gameInstallationPath.getFile(), selectedVersion.toString() + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
+            FsFile installationFile = new FsFile(LauncherConfig.getInstance().gameInstallationPath.getValue(), selectedVersion.toString() + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
             ArrayList<String> errorMessages = FileError.checkFileForErrors(installationFile, FileError.NULL, FileError.NON_EXISTENT, FileError.NO_FILE);
             if(errorMessages.isEmpty() && installationFile.delete())
                 Log.info("Successfully deleted game version " + selectedVersion.toString());
@@ -138,7 +138,7 @@ public class GameManagerUI extends JPanel {
     }
 
     public void checkVersion(Version version) {
-        boolean isVersionDownloaded = InstallationUtils.isVersionDownloaded(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.getInstance().gameInstallationPath.getFile(), version);
+        boolean isVersionDownloaded = InstallationUtils.isVersionDownloaded(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.getInstance().gameInstallationPath.getValue(), version);
         deleteButton.setEnabled(isVersionDownloaded);
         versionButton.setIcon(isVersionDownloaded ? "play" : "download");
         currentAction = isVersionDownloaded ? GameAction.playAction() : GameAction.downloadAction();

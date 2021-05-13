@@ -1,9 +1,9 @@
 package de.undefinedhuman.projectcreate.game.world;
 
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.engine.items.type.blocks.Block;
-import de.undefinedhuman.projectcreate.engine.items.type.blocks.PlacementLayer;
-import de.undefinedhuman.projectcreate.engine.items.type.tools.Pickaxe;
+import de.undefinedhuman.projectcreate.core.items.types.blocks.Block;
+import de.undefinedhuman.projectcreate.core.items.types.blocks.PlacementLayer;
+import de.undefinedhuman.projectcreate.core.items.types.tools.Pickaxe;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector4;
@@ -55,12 +55,12 @@ public class WorldManager {
         }
 
         Pickaxe pickaxe = (Pickaxe) Selector.instance.getSelectedItem();
-        if (oldPickaxeID != pickaxe.id.getInt()) {
+        if (oldPickaxeID != pickaxe.id.getValue()) {
             setDestroyVariables(oldPickaxeID);
             return;
         }
         this.destroyTime += delta;
-        if (destroyTime > pickaxe.speed.getFloat()) canDestroy = true;
+        if (destroyTime > pickaxe.speed.getValue()) canDestroy = true;
     }
 
     public void placeBlock(byte worldLayer) {
@@ -79,14 +79,14 @@ public class WorldManager {
         for (Entity entity : EntityManager.getInstance().getEntitiesWithCollision(new Vector4(x, y, x + Variables.BLOCK_SIZE, y + Variables.BLOCK_SIZE))) {
             if (!CollisionManager.blockCanBePlaced(entity, x, y)) return;
         }
-        if(World.instance.getBlock(x, y, World.BACK_LAYER) != 0 || (!block.needBack.getBoolean() && isBlockInRange(x, y, World.MAIN_LAYER))) placeBlock(x, y, World.MAIN_LAYER, block.id.getByte(), true);
+        if(World.instance.getBlock(x, y, World.BACK_LAYER) != 0 || (!block.needBack.getValue() && isBlockInRange(x, y, World.MAIN_LAYER))) placeBlock(x, y, World.MAIN_LAYER, block.id.getValue(), true);
     }
 
     private void placeBlockInBackLayer(int x, int y, Block block) {
         Block mainLayerBlock = getBlock(x, y, World.MAIN_LAYER);
-        if(World.instance.getBlock(x, y, World.BACK_LAYER) != 0 || block.placementLayer.getPlacementLayer() == PlacementLayer.FRONT || (isBlockInRange(x, y, World.BACK_LAYER) || !(mainLayerBlock != null && mainLayerBlock.hasCollision.getBoolean())))
+        if(World.instance.getBlock(x, y, World.BACK_LAYER) != 0 || block.placementLayer.getValue() == PlacementLayer.FRONT || (isBlockInRange(x, y, World.BACK_LAYER) || !(mainLayerBlock != null && mainLayerBlock.hasCollision.getValue())))
             return;
-        placeBlock(x, y, World.BACK_LAYER, block.id.getByte(), true);
+        placeBlock(x, y, World.BACK_LAYER, block.id.getValue(), true);
     }
 
     public void placeBlock(int x, int y, byte worldLayer, byte blockID, boolean send) {
@@ -106,12 +106,12 @@ public class WorldManager {
         Vector2i blockPos = Tools.convertToBlockPos(Tools.getWorldPos(CameraManager.gameCamera, Mouse.getMouseCoords())), playerCenter = Tools.convertToBlockPos(new Vector2().add(GameManager.instance.player.getPosition()).add(GameManager.instance.player.getCenter()));
         Block currentBlock = (Block) ItemManager.getInstance().getItem(World.instance.getBlock(blockPos.x, blockPos.y, World.MAIN_LAYER));
 
-        if (currentBlock.id.getInt() == 0 || !isInRange(blockPos, playerCenter, pickaxe.range.getInt()) || currentBlock.durability.getInt() == -1)
+        if (currentBlock.id.getValue() == 0 || !isInRange(blockPos, playerCenter, pickaxe.range.getValue()) || currentBlock.durability.getValue() == -1)
             return;
 
         if (oldBreakPos != blockPos || oldLayer != worldLayer) {
             oldBreakPos = blockPos;
-            currentDurability = currentBlock.durability.getFloat();
+            currentDurability = currentBlock.durability.getValue();
             oldLayer = worldLayer;
         }
 
@@ -131,7 +131,7 @@ public class WorldManager {
         checkCells(x, y, worldLayer);
         if(send)
             ClientManager.instance.sendTCP(PacketUtils.createBlockPacket(x, y, worldLayer, (byte) -1));
-        if(worldLayer == World.BACK_LAYER && getBlock(x, y, World.MAIN_LAYER).needBack.getBoolean()) {
+        if(worldLayer == World.BACK_LAYER && getBlock(x, y, World.MAIN_LAYER).needBack.getValue()) {
             destroyBlock(x, y, World.MAIN_LAYER, send);
         }
     }
@@ -185,11 +185,11 @@ public class WorldManager {
 
     public byte isSolid(int x, int y, byte worldLayer, byte value) {
         Block block = getBlock(x, y, worldLayer);
-        return (block != null && block.id.getInt() != 0 && block.hasCollision.getBoolean()) ? value : 0;
+        return (block != null && block.id.getValue() != 0 && block.hasCollision.getValue()) ? value : 0;
     }
 
     public boolean isTransparent(byte blockID) {
-        return blockID == 0 || !((Block) ItemManager.getInstance().getItem(blockID)).isFull.getBoolean();
+        return blockID == 0 || !((Block) ItemManager.getInstance().getItem(blockID)).isFull.getValue();
     }
 
     private boolean isInRange(Vector2i position1, Vector2i position2, int range) {
@@ -205,7 +205,7 @@ public class WorldManager {
     }
 
     private boolean hasCollision(int x, int y, byte worldLayer) {
-        return ((Block) ItemManager.getInstance().getItem(World.instance.getBlock(x, y, worldLayer))).hasCollision.getBoolean();
+        return ((Block) ItemManager.getInstance().getItem(World.instance.getBlock(x, y, worldLayer))).hasCollision.getValue();
     }
 
 }

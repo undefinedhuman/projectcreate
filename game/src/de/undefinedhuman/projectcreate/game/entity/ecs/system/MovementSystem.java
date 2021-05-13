@@ -2,10 +2,9 @@ package de.undefinedhuman.projectcreate.game.entity.ecs.system;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.engine.entity.components.animation.AnimationComponent;
-import de.undefinedhuman.projectcreate.engine.entity.components.collision.CollisionComponent;
-import de.undefinedhuman.projectcreate.engine.entity.components.movement.MovementComponent;
+import de.undefinedhuman.projectcreate.core.ecs.animation.AnimationComponent;
+import de.undefinedhuman.projectcreate.core.ecs.collision.CollisionComponent;
+import de.undefinedhuman.projectcreate.core.ecs.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.game.entity.Entity;
 import de.undefinedhuman.projectcreate.game.entity.ecs.System;
@@ -22,9 +21,9 @@ public class MovementSystem extends System {
         CollisionComponent collisionComponent;
         AnimationComponent animationComponent;
 
-        if ((movementComponent = (MovementComponent) entity.getComponent(ComponentType.MOVEMENT)) == null
-                || (collisionComponent = (CollisionComponent) entity.getComponent(ComponentType.COLLISION)) == null
-                || (animationComponent = (AnimationComponent) entity.getComponent(ComponentType.ANIMATION)) == null) return;
+        if ((movementComponent = (MovementComponent) entity.getComponent(MovementComponent.class)) == null
+                || (collisionComponent = (CollisionComponent) entity.getComponent(CollisionComponent.class)) == null
+                || (animationComponent = (AnimationComponent) entity.getComponent(AnimationComponent.class)) == null) return;
 
         movementComponent.velocity.x += ((movementComponent.getDirection() * movementComponent.getSpeed()) - movementComponent.velocity.x) * 0.175f;
         if(movementComponent.getDirection() == 0 && Tools.isInRange(movementComponent.velocity.x, -5, 5)) movementComponent.velocity.x = 0;

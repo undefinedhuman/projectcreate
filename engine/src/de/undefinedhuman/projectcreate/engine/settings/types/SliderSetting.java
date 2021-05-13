@@ -8,7 +8,7 @@ import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 
 import javax.swing.*;
 
-public class SliderSetting extends Setting {
+public class SliderSetting extends Setting<Float> {
 
     public JSlider slider;
     private Vector2i bounds = new Vector2i();
@@ -20,10 +20,9 @@ public class SliderSetting extends Setting {
     }
 
     public SliderSetting(String key, int min, int max, int defaultValue, int tickSpeed, float conversionValue) {
-        super(key, defaultValue / conversionValue);
+        super(key, defaultValue / conversionValue, value -> Float.parseFloat(String.valueOf(value)));
         this.bounds.set(min, max);
         this.tickSpeed = tickSpeed;
-        this.includeType = false;
         this.conversionValue = conversionValue;
     }
 
@@ -34,9 +33,9 @@ public class SliderSetting extends Setting {
 
     @Override
     protected void addValueMenuComponents(JPanel panel, int width) {
-        JLabel progressLabel = new JLabel(getString());
+        JLabel progressLabel = new JLabel(String.valueOf(getValue()));
         progressLabel.setBounds((int) (width*0.75f), 0, (int) (width*0.25f), Variables.DEFAULT_CONTENT_HEIGHT);
-        slider = new JSlider(bounds.x, bounds.y, (int) (getFloat() * conversionValue));
+        slider = new JSlider(bounds.x, bounds.y, (int) (getValue() * conversionValue));
         slider.setMajorTickSpacing(tickSpeed);
         slider.setSnapToTicks(true);
         slider.setBounds(0, 0, (int) (width*0.75f), Variables.DEFAULT_CONTENT_HEIGHT);
@@ -58,7 +57,7 @@ public class SliderSetting extends Setting {
             return;
         }
         float valueParsed = Float.parseFloat(value.toString());
-        slider.setValue(Tools.isInRange(valueParsed, bounds.x, bounds.y) ? (int) (valueParsed * conversionValue) : bounds.x);
+        slider.setValue(Tools.isInRange(valueParsed, bounds.x, bounds.y) ? (int) (valueParsed * conversionValue) : (int) (bounds.x * conversionValue));
     }
 
 }

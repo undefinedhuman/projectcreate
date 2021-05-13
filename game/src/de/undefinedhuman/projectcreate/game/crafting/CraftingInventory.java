@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.game.crafting;
 
 import com.badlogic.gdx.graphics.Color;
-import de.undefinedhuman.projectcreate.engine.items.recipe.RecipeType;
+import de.undefinedhuman.projectcreate.core.crafting.RecipeType;
 import de.undefinedhuman.projectcreate.engine.resources.font.Font;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.ds.MultiMap;

@@ -3,7 +3,7 @@ package de.undefinedhuman.projectcreate.game.inventory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import de.undefinedhuman.projectcreate.engine.crafting.RecipeItem;
+import de.undefinedhuman.projectcreate.core.crafting.RecipeItem;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
 import de.undefinedhuman.projectcreate.engine.utils.ds.MultiMap;
 import de.undefinedhuman.projectcreate.game.camera.CameraManager;
@@ -62,11 +62,11 @@ public class InventoryManager extends Manager {
 
     private void addTempItems(Inventory inventory, int... ids) {
         for (int id : ids)
-            inventory.addItem(id, ItemManager.getInstance().getItem(id).maxAmount.getInt());
+            inventory.addItem(id, ItemManager.getInstance().getItem(id).maxAmount.getValue());
     }
 
     private void addTempItems(Inventory inventory, Set<Integer> ids) {
-        for (int id : ids) inventory.addItem(id, ItemManager.getInstance().getItem(id).maxAmount.getInt());
+        for (int id : ids) inventory.addItem(id, ItemManager.getInstance().getItem(id).maxAmount.getValue());
     }
 
     public void addGuiToSlot(Gui gui) {
@@ -164,12 +164,12 @@ public class InventoryManager extends Manager {
 
     public synchronized boolean craftItem(int id, int quantity, Collection<RecipeItem> ingredients) {
         for(RecipeItem ingredient : ingredients)
-            if(amountOf(ingredient.getID()) < ingredient.quantity.getInt())
+            if(amountOf(ingredient.getID()) < ingredient.quantity.getValue())
                 return false;
         if(isFull(id, quantity))
             return false;
         for(RecipeItem ingredient : ingredients)
-            removeItem(ingredient.getID(), ingredient.quantity.getInt());
+            removeItem(ingredient.getID(), ingredient.quantity.getValue());
         addItem(id, quantity);
         return true;
     }

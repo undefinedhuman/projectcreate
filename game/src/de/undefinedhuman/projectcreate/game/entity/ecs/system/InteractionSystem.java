@@ -2,8 +2,7 @@ package de.undefinedhuman.projectcreate.game.entity.ecs.system;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.engine.entity.components.interaction.InteractionComponent;
+import de.undefinedhuman.projectcreate.core.ecs.interaction.InteractionComponent;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.game.entity.Entity;
 import de.undefinedhuman.projectcreate.game.entity.ecs.System;
@@ -31,7 +30,7 @@ public class InteractionSystem extends System {
 
         helpText.setVisible(false);
 
-        if ((interactionComponent = (InteractionComponent) entity.getComponent(ComponentType.INTERACTION)) == null) return;
+        if ((interactionComponent = (InteractionComponent) entity.getComponent(InteractionComponent.class)) == null) return;
 
         if (distanceVector.set(entity.getCenterPosition()).dst(GameManager.instance.player.getCenterPosition()) < interactionComponent.getRange()) {
 

@@ -50,13 +50,13 @@ public class TextureOffsetSetting extends Vector2ArraySetting {
                 try { texture = ImageIO.read(textureFile);
                 } catch (IOException e) { return; }
                 setValue(calculateVectors(texture));
-                setValueInMenu(getVector2Array());
+                setValueInMenu(getValue());
             }
 
         });
         panel.add(textureLabel);
         valueField = createTextField(
-                Tools.convertArrayToString(getVector2Array()),
+                Tools.convertArrayToString(getValue()),
                 new Vector2(Variables.DEFAULT_CONTENT_HEIGHT + Variables.OFFSET, 0),
                 new Vector2(
                         width - Variables.DEFAULT_CONTENT_HEIGHT - Variables.OFFSET,

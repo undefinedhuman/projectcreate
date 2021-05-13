@@ -2,7 +2,7 @@ package de.undefinedhuman.projectcreate.game.equip;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import de.undefinedhuman.projectcreate.engine.items.ItemType;
+import de.undefinedhuman.projectcreate.core.items.ItemType;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.game.gui.Gui;
 import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.CenterConstraint;

@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.game.collision;
 
-import de.undefinedhuman.projectcreate.engine.items.type.blocks.Block;
-import de.undefinedhuman.projectcreate.engine.items.type.blocks.BlockType;
+import de.undefinedhuman.projectcreate.core.items.types.blocks.Block;
+import de.undefinedhuman.projectcreate.core.items.types.blocks.BlockType;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector4;
 import de.undefinedhuman.projectcreate.game.entity.Entity;
 import de.undefinedhuman.projectcreate.game.item.ItemManager;
@@ -17,7 +17,7 @@ public class CollisionManager {
 
     // TODO Refactor through
     public static boolean collide(byte id) {
-        return ((Block) ItemManager.getInstance().getItem(id)).blockType.getBlockType() == BlockType.Block;
+        return ((Block) ItemManager.getInstance().getItem(id)).blockType.getValue() == BlockType.Block;
     }
 
     public static boolean collideAABB(Vector4 bounds1, Vector4 bounds2) {

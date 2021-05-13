@@ -22,12 +22,12 @@ public class PanelObject {
     }
 
     public PanelObject load(FileHandle parentDir, SettingsObject settingsObject) {
-        for(Setting setting : settings.getSettings())
+        for(Setting<?> setting : settings.getSettings())
             setting.loadSetting(parentDir, settingsObject);
         return this;
     }
 
-    public ArrayList<Setting> getSettings() {
+    public ArrayList<Setting<?>> getSettings() {
         return settings.getSettings();
     }
 

@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.game.inventory.player;
 
 import com.badlogic.gdx.graphics.Color;
-import de.undefinedhuman.projectcreate.engine.items.Item;
+import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.engine.resources.font.Font;
 import de.undefinedhuman.projectcreate.game.gui.Gui;
 import de.undefinedhuman.projectcreate.game.gui.text.Text;
@@ -23,7 +23,7 @@ public class InspectScreen extends Gui {
         if(instance == null) instance = this;
         // setSize(Tools.getInventoryWidth(GuiTemplate.SMALL_PANEL, 5), Tools.getInventoryHeight(GuiTemplate.SMALL_PANEL, 10));
         Item item = ItemManager.getInstance().getItem(2);
-        previewImage = new Gui(item.previewTexture.getString());
+        previewImage = new Gui(item.previewTexture.getValue());
         previewImage.set(new CenterConstraint(), new RelativeConstraint(0.85f), new PixelConstraint(32), new PixelConstraint(32));
         addChild(previewImage);
         nameText = new Text(item.name).setFont(Font.Title).setLineLength(new RelativeConstraint(0.75f));
@@ -36,7 +36,7 @@ public class InspectScreen extends Gui {
     }
 
     public void openInspectScreen(Item item) {
-        previewImage.setTexture(item.previewTexture.getString());
+        previewImage.setTexture(item.previewTexture.getValue());
         nameText.setText(item.name);
         nameText.setColor(Color.RED);
         descriptionText.setText(item.desc);

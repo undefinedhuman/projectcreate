@@ -1,8 +1,6 @@
 package de.undefinedhuman.projectcreate.game.network.utils;
 
-import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
-import de.undefinedhuman.projectcreate.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.engine.ecs.Component;
 import de.undefinedhuman.projectcreate.game.entity.Entity;
 import de.undefinedhuman.projectcreate.game.entity.EntityManager;
 import de.undefinedhuman.projectcreate.game.equip.EquipManager;
@@ -15,7 +13,7 @@ import de.undefinedhuman.projectcreate.game.world.WorldManager;
 
 public class PacketUtils {
 
-    public static ComponentPacket createComponentPacket(Entity entity, ComponentType... types) {
+    public static ComponentPacket createComponentPacket(Entity entity, Class<? extends Component>... types) {
 
         ComponentPacket packet = new ComponentPacket();
         packet.worldID = GameManager.instance.player.getWorldID();
@@ -54,14 +52,6 @@ public class PacketUtils {
     }
 
     public static void handleComponentPacket(ComponentPacket packet) {
-
-        Entity entity = EntityManager.getInstance().getEntity(packet.worldID);
-        if (entity != null) {
-            LineSplitter s = new LineSplitter(packet.data, true, Variables.SEPARATOR);
-            int size = s.getNextInt();
-            for (int i = 0; i < size; i++)
-                entity.getComponent(ComponentType.valueOf(s.getNextString())).receive(s);
-        }
 
     }
 

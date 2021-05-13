@@ -2,10 +2,10 @@ package de.undefinedhuman.projectcreate.editor.editor.item;
 
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.files.FileHandle;
+import de.undefinedhuman.projectcreate.core.items.Item;
+import de.undefinedhuman.projectcreate.core.items.ItemType;
 import de.undefinedhuman.projectcreate.editor.editor.Editor;
 import de.undefinedhuman.projectcreate.engine.file.*;
-import de.undefinedhuman.projectcreate.engine.items.Item;
-import de.undefinedhuman.projectcreate.engine.items.ItemType;
 import de.undefinedhuman.projectcreate.engine.resources.ResourceManager;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
@@ -89,7 +89,7 @@ public class ItemEditor extends Editor {
             itemComboBox.setSelectedItem(type);
             Tools.removeSettings(leftPanel, rightPanel);
             currentItem = type.createInstance();
-            for(Setting setting : currentItem.getSettingsList().getSettings())
+            for(Setting<?> setting : currentItem.getSettingsList().getSettings())
                 setting.loadSetting(reader.parent(), settingsObject);
             Tools.addSettings(rightPanel, currentItem.getSettingsStream());
             loadWindow.setVisible(false);
@@ -104,7 +104,7 @@ public class ItemEditor extends Editor {
     @Override
     public void save() {
         if(currentItem == null) return;
-        FsFile itemDir = new FsFile(Paths.ITEM_PATH, currentItem.getSettingsList().getSettings().get(0).getInt() + Variables.FILE_SEPARATOR, Files.FileType.Local);
+        FsFile itemDir = new FsFile(Paths.ITEM_PATH, currentItem.getSettingsList().getSettings().get(0).getValue() + Variables.FILE_SEPARATOR, Files.FileType.Local);
         if(itemDir.exists())
             FileUtils.deleteFile(itemDir);
 

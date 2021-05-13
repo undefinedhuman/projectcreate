@@ -1,14 +1,15 @@
 package de.undefinedhuman.projectcreate.game.entity.ecs.blueprint;
 
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.engine.entity.ComponentBlueprint;
-import de.undefinedhuman.projectcreate.engine.entity.ComponentParam;
-import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.engine.entity.EntityType;
-import de.undefinedhuman.projectcreate.engine.settings.Setting;
+import de.undefinedhuman.projectcreate.engine.ecs.Component;
+import de.undefinedhuman.projectcreate.engine.ecs.ComponentBlueprint;
+import de.undefinedhuman.projectcreate.engine.ecs.ComponentParam;
+import de.undefinedhuman.projectcreate.engine.ecs.EntityType;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.types.SelectionSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.Vector2Setting;
+import de.undefinedhuman.projectcreate.engine.settings.types.primitive.IntSetting;
+import de.undefinedhuman.projectcreate.engine.settings.types.primitive.StringSetting;
 import de.undefinedhuman.projectcreate.game.entity.Entity;
 
 import java.util.HashMap;
@@ -17,13 +18,16 @@ public class Blueprint {
 
     public SettingsList settings = new SettingsList();
 
-    public Setting
-            id = new Setting(SettingType.Int, "ID", 0),
-            name = new Setting(SettingType.String, "Name", ""),
-            size = new Vector2Setting("Size", new Vector2()),
-            type = new SelectionSetting("Type", EntityType.values());
+    public IntSetting
+            id = new IntSetting("ID", 0);
+    public StringSetting
+            name = new StringSetting("Name", "");
+    public Vector2Setting
+            size = new Vector2Setting("Size", new Vector2());
+    public SelectionSetting<EntityType>
+            type = new SelectionSetting<>("Type", EntityType.values(), value -> EntityType.valueOf(String.valueOf(value)));
 
-    private HashMap<ComponentType, ComponentBlueprint> componentBlueprints;
+    private HashMap<Class<? extends Component>, ComponentBlueprint> componentBlueprints;
 
     public Blueprint() {
         settings.addSettings(id, name, size, type);
@@ -31,8 +35,8 @@ public class Blueprint {
     }
 
     public Entity createInstance(ComponentParam... param) {
-        Entity entity = new Entity(this, size.getVector2());
-        HashMap<ComponentType, ComponentParam> params = new HashMap<>();
+        Entity entity = new Entity(this, size.getValue());
+        HashMap<Class<? extends Component>, ComponentParam> params = new HashMap<>();
         for (ComponentParam p : param) params.put(p.getType(), p);
         for (ComponentBlueprint blueprint : componentBlueprints.values())
             entity.addComponents(blueprint.createInstance(params));
@@ -41,26 +45,26 @@ public class Blueprint {
     }
 
     public int getID() {
-        return id.getInt();
+        return id.getValue();
     }
     public EntityType getType() {
-        return type.getEntityType();
+        return type.getValue();
     }
 
     public void addComponentBlueprint(ComponentBlueprint blueprint) {
         componentBlueprints.putIfAbsent(blueprint.getType(), blueprint);
     }
 
-    public ComponentBlueprint getComponentBlueprint(ComponentType type) {
+    public ComponentBlueprint getComponentBlueprint(Class<? extends Component> type) {
         if(!hasComponentBlueprints(type)) return null;
         return componentBlueprints.get(type);
     }
 
-    public boolean hasComponentBlueprints(ComponentType type) {
+    public boolean hasComponentBlueprints(Class<? extends Component> type) {
         return componentBlueprints.containsKey(type);
     }
 
-    public HashMap<ComponentType, ComponentBlueprint> getComponentBlueprints() {
+    public HashMap<Class<? extends Component>, ComponentBlueprint> getComponentBlueprints() {
         return componentBlueprints;
     }
 

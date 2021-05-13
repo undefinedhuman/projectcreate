@@ -5,8 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.engine.entity.components.movement.MovementComponent;
+import de.undefinedhuman.projectcreate.core.ecs.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
@@ -65,7 +64,7 @@ public class BackgroundManager extends Manager {
         layers[0].update(delta, 5f);
         Entity player = GameManager.instance.player;
         if(player == null) return;
-        speed = Math.abs(Tools.floorBackgroundSpeed(lastX - player.getX())) * -((MovementComponent) player.getComponent(ComponentType.MOVEMENT)).velocity.x;
+        speed = Math.abs(Tools.floorBackgroundSpeed(lastX - player.getX())) * -((MovementComponent) player.getComponent(MovementComponent.class)).velocity.x;
         lastX = player.getX();
         for(int i = 1; i < layers.length; i++)
             layers[i].update(delta, speed);

@@ -3,7 +3,7 @@ package de.undefinedhuman.projectcreate.game.equip;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.engine.items.ItemType;
+import de.undefinedhuman.projectcreate.core.items.ItemType;
 import de.undefinedhuman.projectcreate.engine.resources.font.Font;
 import de.undefinedhuman.projectcreate.game.gui.Gui;
 import de.undefinedhuman.projectcreate.game.gui.texture.GuiTemplate;

@@ -1,17 +1,19 @@
 package de.undefinedhuman.projectcreate.engine.settings.types;
 
+import de.undefinedhuman.projectcreate.engine.settings.Getter;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
+import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
 
-public class SelectionSetting extends Setting {
+public class SelectionSetting<T> extends Setting<T> {
 
     public JComboBox<String> selection;
     private String[] values;
 
-    public SelectionSetting(String key, Object[] values) {
-        super(key, values[0]);
+    public SelectionSetting(String key, Object[] values, Getter<T> getter) {
+        super(key, values[0], getter);
         this.values = new String[values.length];
         for(int i = 0; i < values.length; i++)
             this.values[i] = values[i].toString();
@@ -24,7 +26,8 @@ public class SelectionSetting extends Setting {
     }
 
     public void setSelected(int i) {
-        if(i < 0 || i >= values.length) return;
+        if(!Tools.isInRange(i, 0, values.length-1))
+            return;
         setValue(values[i]);
         selection.setSelectedItem(values[i]);
     }
@@ -33,8 +36,8 @@ public class SelectionSetting extends Setting {
     protected void addValueMenuComponents(JPanel panel, int width) {
         selection = new JComboBox<>(values);
         selection.setSize(width, Variables.DEFAULT_CONTENT_HEIGHT);
-        if(hasValue(getString()))
-            selection.setSelectedItem(getString());
+        if(hasValue(getValue().toString()))
+            selection.setSelectedItem(getValue());
         selection.addActionListener(e -> setValue(selection.getSelectedItem()));
         panel.add(selection);
     }

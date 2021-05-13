@@ -1,9 +1,8 @@
 package de.undefinedhuman.projectcreate.game.entity.ecs.system;
 
-import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.engine.entity.components.mouse.AngleComponent;
-import de.undefinedhuman.projectcreate.engine.entity.components.sprite.SpriteComponent;
-import de.undefinedhuman.projectcreate.engine.entity.components.sprite.SpriteData;
+import de.undefinedhuman.projectcreate.core.ecs.mouse.AngleComponent;
+import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteComponent;
+import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteData;
 import de.undefinedhuman.projectcreate.game.camera.CameraManager;
 import de.undefinedhuman.projectcreate.game.entity.Entity;
 import de.undefinedhuman.projectcreate.game.entity.ecs.System;
@@ -16,7 +15,7 @@ public class AngleSystem extends System {
         AngleComponent angleComponent;
         SpriteComponent spriteComponent;
 
-        if ((angleComponent = (AngleComponent) entity.getComponent(ComponentType.ANGLE)) == null) return;
+        if ((angleComponent = (AngleComponent) entity.getComponent(AngleComponent.class)) == null) return;
 
         if (entity.mainPlayer) {
             angleComponent.mousePos = Tools.getMouseCoordsInWorldSpace(CameraManager.gameCamera);
@@ -25,7 +24,7 @@ public class AngleSystem extends System {
             angleComponent.isTurned = !turned;
         }
 
-        if ((spriteComponent = (SpriteComponent) entity.getComponent(ComponentType.SPRITE)) == null) return;
+        if ((spriteComponent = (SpriteComponent) entity.getComponent(SpriteComponent.class)) == null) return;
         for (SpriteData data : spriteComponent.getSpriteData())
             data.setTurned(angleComponent.isTurned);
     }

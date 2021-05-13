@@ -2,7 +2,7 @@ package de.undefinedhuman.projectcreate.game.inventory.slot;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import de.undefinedhuman.projectcreate.engine.items.ItemType;
+import de.undefinedhuman.projectcreate.core.items.ItemType;
 import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.Constraint;
 import de.undefinedhuman.projectcreate.game.inventory.InvItem;
 import de.undefinedhuman.projectcreate.game.item.ItemManager;
@@ -59,7 +59,7 @@ public class InvSlot extends Slot {
             if(invItem.getAmount() != -1) {
                 if (id != invItem.getID())
                     return amount;
-                int maxAmount = ItemManager.getInstance().getItem(id).maxAmount.getInt();
+                int maxAmount = ItemManager.getInstance().getItem(id).maxAmount.getValue();
                 if ((invItem.getAmount() + amount) <= maxAmount)
                     setInvItem(invItem.getAmount() + amount);
                 else {

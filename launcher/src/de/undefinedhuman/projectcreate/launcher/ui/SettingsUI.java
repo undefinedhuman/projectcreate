@@ -11,10 +11,12 @@ import java.util.Arrays;
 
 public class SettingsUI extends JFrame {
 
+    private static SettingsUI instance;
+
     private static final int WINDOW_WIDTH = 480;
     private static final int WINDOW_HEIGHT = 720;
 
-    public SettingsUI(ActionListener onSave, Setting... settings) {
+    public SettingsUI(ActionListener onSave, Setting<?>... settings) {
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setResizable(false);
         setUndecorated(true);
@@ -34,8 +36,7 @@ public class SettingsUI extends JFrame {
                 Variables.CONTENT_WIDTH/4,
                 Variables.DEFAULT_CONTENT_HEIGHT);
         cancelButton.addActionListener(e -> {
-            setVisible(false);
-            dispose();
+            close();
         });
         settingsPanel.add(cancelButton);
 
@@ -47,8 +48,7 @@ public class SettingsUI extends JFrame {
                 Variables.DEFAULT_CONTENT_HEIGHT);
         saveButton.addActionListener(e -> {
             onSave.actionPerformed(e);
-            setVisible(false);
-            dispose();
+            close();
         });
         settingsPanel.add(saveButton);
 
@@ -56,8 +56,16 @@ public class SettingsUI extends JFrame {
         setVisible(true);
     }
 
-    public static void openConfigUI(ActionListener onSave, Setting... settings) {
-        new SettingsUI(onSave, settings);
+    private void close() {
+        setVisible(false);
+        dispose();
+        instance = null;
+    }
+
+    public static void openConfigUI(ActionListener onSave, Setting<?>... settings) {
+        if(instance != null)
+            instance.close();
+        instance = new SettingsUI(onSave, settings);
     }
 
 }

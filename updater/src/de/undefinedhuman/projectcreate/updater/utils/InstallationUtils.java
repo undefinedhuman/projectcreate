@@ -6,7 +6,7 @@ import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
-import de.undefinedhuman.projectcreate.engine.settings.Setting;
+import de.undefinedhuman.projectcreate.engine.settings.types.FilePathSetting;
 import de.undefinedhuman.projectcreate.engine.utils.Stage;
 import de.undefinedhuman.projectcreate.engine.utils.Version;
 import org.jsoup.Jsoup;
@@ -21,8 +21,8 @@ import java.util.List;
 
 public class InstallationUtils {
 
-    public static void loadInstallationDirectory(boolean firstRun, Setting installationPath, FsFile defaultInstallationDirectory) {
-        ArrayList<String> errorMessages = FileError.checkFileForErrors(installationPath.getFile(), FileError.NULL, FileError.NON_EXISTENT, FileError.NO_DIRECTORY, FileError.NOT_WRITEABLE);
+    public static void loadInstallationDirectory(boolean firstRun, FilePathSetting installationPath, FsFile defaultInstallationDirectory) {
+        ArrayList<String> errorMessages = FileError.checkFileForErrors(installationPath.getValue(), FileError.NULL, FileError.NON_EXISTENT, FileError.NO_DIRECTORY, FileError.NOT_WRITEABLE);
         if(firstRun || !errorMessages.isEmpty())
             installationPath.setValue(chooseInstallationDirectory(defaultInstallationDirectory));
     }

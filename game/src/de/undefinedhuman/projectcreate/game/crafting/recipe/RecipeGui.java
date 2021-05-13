@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.game.crafting.recipe;
 
 import com.badlogic.gdx.graphics.Color;
-import de.undefinedhuman.projectcreate.engine.items.Item;
+import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.engine.resources.font.Font;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.ds.Poolable;
@@ -54,10 +54,10 @@ public class RecipeGui extends Gui implements Poolable {
     public RecipeGui update(int itemID) {
         this.itemID = itemID;
         Item currentItem = ItemManager.getInstance().getItem(itemID);
-        this.icon.setTexture(currentItem.iconTexture.getString());
+        this.icon.setTexture(currentItem.iconTexture.getValue());
         this.name
-                .setText(currentItem.name.getString())
-                .setColor(currentItem.rarity.getRarity().getColor());
+                .setText(currentItem.name.getValue())
+                .setColor(currentItem.rarity.getValue().getColor());
         return this;
     }
 

@@ -2,9 +2,8 @@ package de.undefinedhuman.projectcreate.game.entity;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.engine.entity.EntityType;
-import de.undefinedhuman.projectcreate.engine.entity.components.collision.CollisionComponent;
+import de.undefinedhuman.projectcreate.engine.ecs.EntityType;
+import de.undefinedhuman.projectcreate.core.ecs.collision.CollisionComponent;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
@@ -112,7 +111,7 @@ public class EntityManager extends Manager {
 
     public ArrayList<Entity> getEntitiesWithCollision(Entity entity) {
         CollisionComponent collisionComponent;
-        if((collisionComponent = (CollisionComponent) entity.getComponent(ComponentType.COLLISION)) == null) return new ArrayList<>();
+        if((collisionComponent = (CollisionComponent) entity.getComponent(CollisionComponent.class)) == null) return new ArrayList<>();
         return getEntitiesWithCollision(collisionComponent.getBounds(entity.getPosition()));
     }
 

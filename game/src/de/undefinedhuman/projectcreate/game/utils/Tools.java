@@ -10,8 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
-import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.engine.entity.components.equip.EquipComponent;
+import de.undefinedhuman.projectcreate.core.ecs.equip.EquipComponent;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
@@ -292,7 +291,7 @@ public class Tools extends de.undefinedhuman.projectcreate.engine.utils.Tools {
 
     public static boolean isItemSelected(Entity entity) {
         EquipComponent equipComponent;
-        if ((equipComponent = (EquipComponent) entity.getComponent(ComponentType.EQUIP)) != null || entity.mainPlayer)
+        if ((equipComponent = (EquipComponent) entity.getComponent(EquipComponent.class)) != null || entity.mainPlayer)
             return (entity.mainPlayer ? Selector.instance.getSelectedInvItem() != null : equipComponent.itemIDs[0] != -1);
         return false;
     }

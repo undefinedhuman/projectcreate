@@ -3,7 +3,7 @@ package de.undefinedhuman.projectcreate.game.item.drop;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.engine.entity.EntityType;
+import de.undefinedhuman.projectcreate.engine.ecs.EntityType;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.game.collision.CollisionManager;
@@ -32,7 +32,7 @@ public class DropItem {
         this.position = position;
 
         this.target = null;
-        this.sprite = new Sprite(TextureManager.instance.getTexture(ItemManager.getInstance().getItem(id).iconTexture.getString()));
+        this.sprite = new Sprite(TextureManager.instance.getTexture(ItemManager.getInstance().getItem(id).iconTexture.getValue()));
 
     }
 

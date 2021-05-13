@@ -2,19 +2,18 @@ package de.undefinedhuman.projectcreate.game.entity.ecs.system;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.engine.entity.components.animation.AnimationComponent;
-import de.undefinedhuman.projectcreate.engine.entity.components.arm.RightArmComponent;
-import de.undefinedhuman.projectcreate.engine.entity.components.arm.ShoulderComponent;
-import de.undefinedhuman.projectcreate.engine.entity.components.combat.CombatComponent;
-import de.undefinedhuman.projectcreate.engine.entity.components.equip.EquipComponent;
-import de.undefinedhuman.projectcreate.engine.entity.components.mouse.AngleComponent;
-import de.undefinedhuman.projectcreate.engine.entity.components.sprite.SpriteComponent;
-import de.undefinedhuman.projectcreate.engine.entity.components.sprite.SpriteData;
-import de.undefinedhuman.projectcreate.engine.entity.components.stats.health.HealthComponent;
-import de.undefinedhuman.projectcreate.engine.items.Item;
-import de.undefinedhuman.projectcreate.engine.items.ItemType;
-import de.undefinedhuman.projectcreate.engine.items.type.weapons.Sword;
+import de.undefinedhuman.projectcreate.core.ecs.animation.AnimationComponent;
+import de.undefinedhuman.projectcreate.core.ecs.arm.RightArmComponent;
+import de.undefinedhuman.projectcreate.core.ecs.arm.ShoulderComponent;
+import de.undefinedhuman.projectcreate.core.ecs.combat.CombatComponent;
+import de.undefinedhuman.projectcreate.core.ecs.equip.EquipComponent;
+import de.undefinedhuman.projectcreate.core.ecs.mouse.AngleComponent;
+import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteComponent;
+import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteData;
+import de.undefinedhuman.projectcreate.core.ecs.stats.health.HealthComponent;
+import de.undefinedhuman.projectcreate.core.items.Item;
+import de.undefinedhuman.projectcreate.core.items.ItemType;
+import de.undefinedhuman.projectcreate.core.items.types.weapons.Sword;
 import de.undefinedhuman.projectcreate.game.Main;
 import de.undefinedhuman.projectcreate.game.entity.Entity;
 import de.undefinedhuman.projectcreate.game.entity.EntityManager;
@@ -38,12 +37,12 @@ public class ArmSystem extends System {
         ShoulderComponent shoulderComponent;
         AnimationComponent animationComponent;
 
-        if ((spriteComponent = (SpriteComponent) entity.getComponent(ComponentType.SPRITE)) == null
-                || (angleComponent = (AngleComponent) entity.getComponent(ComponentType.ANGLE)) == null
-                || (rightArmComponent = (RightArmComponent) entity.getComponent(ComponentType.RIGHTARM)) == null
-                || (equipComponent = (EquipComponent) entity.getComponent(ComponentType.EQUIP)) == null
-                || (shoulderComponent = (ShoulderComponent) entity.getComponent(ComponentType.SHOULDER)) == null
-                || (animationComponent = (AnimationComponent) entity.getComponent(ComponentType.ANIMATION)) == null) return;
+        if ((spriteComponent = (SpriteComponent) entity.getComponent(SpriteComponent.class)) == null
+                || (angleComponent = (AngleComponent) entity.getComponent(AngleComponent.class)) == null
+                || (rightArmComponent = (RightArmComponent) entity.getComponent(RightArmComponent.class)) == null
+                || (equipComponent = (EquipComponent) entity.getComponent(EquipComponent.class)) == null
+                || (shoulderComponent = (ShoulderComponent) entity.getComponent(ShoulderComponent.class)) == null
+                || (animationComponent = (AnimationComponent) entity.getComponent(AnimationComponent.class)) == null) return;
 
         SpriteData data = spriteComponent.getSpriteData(rightArmComponent.getSelectedTexture());
         Vector2 mousePos = angleComponent.mousePos;
@@ -57,7 +56,7 @@ public class ArmSystem extends System {
             if (Selector.instance.getSelectedInvItem() != null) {
                 Item item = ItemManager.getInstance().getItem(Selector.instance.getSelectedItemID());
                 boolean hasSword = (item.type == ItemType.SWORD);
-                CombatComponent combatComponent = (CombatComponent) entity.getComponent(ComponentType.COMBAT);
+                CombatComponent combatComponent = (CombatComponent) entity.getComponent(CombatComponent.class);
                 calculateShake(rightArmComponent, item);
 
                 if (hasSword && combatComponent != null)
@@ -82,7 +81,7 @@ public class ArmSystem extends System {
 
     private void calculateShake(RightArmComponent component, Item item) {
 
-        if (InventoryManager.instance.canUseItem() && item.canShake.getBoolean()) {
+        if (InventoryManager.instance.canUseItem() && item.canShake.getValue()) {
 
             if (Gdx.input.isButtonPressed(0) || Gdx.input.isButtonPressed(1)) {
 
@@ -103,13 +102,13 @@ public class ArmSystem extends System {
 
         if (InventoryManager.instance.canUseItem()) {
 
-            if (!Gdx.input.isButtonPressed(0) && combatComponent.currentDamage > sword.damage.getFloat() / 2) {
+            if (!Gdx.input.isButtonPressed(0) && combatComponent.currentDamage > sword.damage.getValue() / 2) {
 
                 if (combatComponent.charged || combatComponent.canAttack) {
 
                     combatComponent.charged = false;
                     combatComponent.canAttack = true;
-                    combatComponent.currentDamage -= Main.delta * sword.damage.getFloat() * 24 / 30;
+                    combatComponent.currentDamage -= Main.delta * sword.damage.getValue() * 24 / 30;
                     currentAngle = Tools.swordLerpTurned(angleComponentAngle, 0, 24, !isTurned);
 
                     // TODO Make the collision with the hitbox not the entity itself
@@ -117,9 +116,9 @@ public class ArmSystem extends System {
                     ArrayList<Entity> entitiesWithCollision = EntityManager.getInstance().getEntitiesWithCollision(combatEntity);
 
                     for (Entity entity : entitiesWithCollision) {
-                        if (!entity.hasComponent(ComponentType.HEALTH) || entity == combatEntity && !combatComponent.touchedEntityList.contains(entity)) continue;
-                        SpriteData data = ((SpriteComponent) combatEntity.getComponent(ComponentType.SPRITE)).getSpriteData("Item Hitbox");
-                        ((HealthComponent) entity.getComponent(ComponentType.HEALTH)).damage(sword.damage.getFloat());
+                        if (!entity.hasComponent(HealthComponent.class) || entity == combatEntity && !combatComponent.touchedEntityList.contains(entity)) continue;
+                        SpriteData data = ((SpriteComponent) combatEntity.getComponent(SpriteComponent.class)).getSpriteData("Item Hitbox");
+                        ((HealthComponent) entity.getComponent(HealthComponent.class)).damage(sword.damage.getValue());
                         combatComponent.touchedEntityList.add(entity);
                     }
                 }
@@ -131,15 +130,15 @@ public class ArmSystem extends System {
 
                 if (Gdx.input.isButtonPressed(0)) {
 
-                    currentAngle = Tools.swordLerpTurned(angleComponentAngle, 180, 16 * sword.speed.getFloat(), isTurned);
+                    currentAngle = Tools.swordLerpTurned(angleComponentAngle, 180, 16 * sword.speed.getValue(), isTurned);
                     if (currentAngle == 180) combatComponent.charged = true;
-                    combatComponent.currentDamage += 16 * sword.speed.getFloat() * Main.delta * sword.damage.getFloat() / 10;
+                    combatComponent.currentDamage += 16 * sword.speed.getValue() * Main.delta * sword.damage.getValue() / 10;
 
-                } else combatComponent.currentDamage -= Main.delta * sword.damage.getFloat();
+                } else combatComponent.currentDamage -= Main.delta * sword.damage.getValue();
 
             }
 
-            combatComponent.currentDamage = Math.min(combatComponent.currentDamage, sword.damage.getFloat() * 1.5f);
+            combatComponent.currentDamage = Math.min(combatComponent.currentDamage, sword.damage.getValue() * 1.5f);
 
         }
 

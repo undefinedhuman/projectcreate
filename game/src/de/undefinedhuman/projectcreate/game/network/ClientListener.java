@@ -2,8 +2,6 @@ package de.undefinedhuman.projectcreate.game.network;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import de.undefinedhuman.projectcreate.engine.entity.ComponentType;
-import de.undefinedhuman.projectcreate.engine.entity.components.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.game.entity.Entity;
 import de.undefinedhuman.projectcreate.game.entity.EntityManager;
@@ -105,9 +103,6 @@ public class ClientListener extends Listener {
             }
 
             if (o instanceof JumpPacket) {
-
-                JumpPacket packet = (JumpPacket) o;
-                ((MovementComponent) EntityManager.getInstance().getEntity(packet.id).getComponent(ComponentType.MOVEMENT)).setJump();
 
             }
 
