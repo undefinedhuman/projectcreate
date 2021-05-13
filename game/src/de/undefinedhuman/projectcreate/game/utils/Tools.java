@@ -103,7 +103,7 @@ public class Tools extends de.undefinedhuman.projectcreate.engine.utils.Tools {
         Vector2 vec = new Vector2(x2 - x, y2 - y);
         Color bColor = batch.getColor();
         batch.setColor(col);
-        batch.draw(new TextureRegion(TextureManager.instance.getTexture("blank.png")), x - w / 2, y, w / 2, 0, w, vec.len(), 1, 1, vec.angle() - 90);
+        batch.draw(new TextureRegion(TextureManager.getInstance().getTexture("blank.png")), x - w / 2, y, w / 2, 0, w, vec.len(), 1, 1, vec.angle() - 90);
         batch.setColor(bColor);
     }
 
@@ -143,7 +143,7 @@ public class Tools extends de.undefinedhuman.projectcreate.engine.utils.Tools {
     public static void drawRect(SpriteBatch batch, float x, float y, float w, float h, Color color) {
         Color batchColor = batch.getColor();
         batch.setColor(color);
-        batch.draw(TextureManager.instance.getTexture("blank.png"), x, y, w, h);
+        batch.draw(TextureManager.getInstance().getTexture("blank.png"), x, y, w, h);
         batch.setColor(batchColor);
     }
 
@@ -292,7 +292,7 @@ public class Tools extends de.undefinedhuman.projectcreate.engine.utils.Tools {
     public static boolean isItemSelected(Entity entity) {
         EquipComponent equipComponent;
         if ((equipComponent = (EquipComponent) entity.getComponent(EquipComponent.class)) != null || entity.mainPlayer)
-            return (entity.mainPlayer ? Selector.instance.getSelectedInvItem() != null : equipComponent.itemIDs[0] != -1);
+            return (entity.mainPlayer ? Selector.getInstance().getSelectedInvItem() != null : equipComponent.itemIDs[0] != -1);
         return false;
     }
 

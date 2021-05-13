@@ -22,7 +22,7 @@ public class EquipManager {
     public void equipItemNetwork(Entity entity, int id, boolean armor) {
         equipItem(entity, id, armor);
         if (entity.mainPlayer)
-            ClientManager.instance.sendTCP(PacketUtils.createEquipPacket(entity, armor ? getItemIndex(ItemManager.getInstance().getItem(id).type) : 0, id, true, armor));
+            ClientManager.getInstance().sendTCP(PacketUtils.createEquipPacket(entity, armor ? getItemIndex(ItemManager.getInstance().getItem(id).type) : 0, id, true, armor));
     }
 
     // TODO Look into the Vector(0, 0) hitbox Vector in the last line
@@ -56,7 +56,7 @@ public class EquipManager {
     public void unEquipItemNetwork(Entity entity, int id, boolean armor) {
         unEquipItem(entity, id, armor);
         if (entity.mainPlayer)
-            ClientManager.instance.sendTCP(PacketUtils.createEquipPacket(entity, armor ? getItemIndex(ItemManager.getInstance().getItem(id).type) : 0, id, false, armor));
+            ClientManager.getInstance().sendTCP(PacketUtils.createEquipPacket(entity, armor ? getItemIndex(ItemManager.getInstance().getItem(id).type) : 0, id, false, armor));
     }
 
     public void unEquipItem(Entity entity, int id, boolean armor) {

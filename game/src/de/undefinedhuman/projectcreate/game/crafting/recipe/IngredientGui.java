@@ -67,11 +67,11 @@ public class IngredientGui extends Gui implements Poolable {
     @Override
     public void delete() {
         super.delete();
-        InventoryManager.instance.removeListener(currentItemID, listener);
+        InventoryManager.getInstance().removeListener(currentItemID, listener);
     }
 
     public IngredientGui update(RecipeItem item) {
-        InventoryManager.instance.removeListener(currentItemID, listener);
+        InventoryManager.getInstance().removeListener(currentItemID, listener);
         currentItemID = Integer.parseInt(item.getKey());
         currentAmount = item.quantity.getValue();
         Item currentItem = ItemManager.getInstance().getItem(currentItemID);
@@ -80,12 +80,12 @@ public class IngredientGui extends Gui implements Poolable {
                 .setText(currentItem.name.getValue())
                 .setColor(currentItem.rarity.getValue().getColor());
         updateAmountText(currentItemID, currentAmount);
-        InventoryManager.instance.addListener(currentItemID, listener);
+        InventoryManager.getInstance().addListener(currentItemID, listener);
         return this;
     }
 
     private void updateAmountText(int id, int amount) {
-        int totalItemsInInventory = InventoryManager.instance.amountOf(id);
+        int totalItemsInInventory = InventoryManager.getInstance().amountOf(id);
         this.amount
                 .setText(totalItemsInInventory + "/" + amount)
                 .setColor(totalItemsInInventory >= amount ? Colors.LIGHT_GREEN : Colors.RED);

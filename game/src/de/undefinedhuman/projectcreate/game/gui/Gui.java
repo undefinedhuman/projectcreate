@@ -53,7 +53,8 @@ public class Gui extends GuiComponent {
     public void resize(int width, int height) {
         super.resize(width, height);
         this.texture.resize(getCurrentValue(Axis.WIDTH), getCurrentValue(Axis.HEIGHT), Main.guiScale);
-        for (GuiTransform transform : children) transform.resize(width, height);
+        for (GuiTransform transform : children)
+            transform.resize(width, height);
     }
 
     @Override

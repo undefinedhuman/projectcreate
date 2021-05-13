@@ -22,14 +22,14 @@ import java.io.IOException;
 
 public class ClientManager extends Manager {
 
-    public static ClientManager instance;
+    private static volatile ClientManager instance;
 
     public String ip = "127.0.0.1";
     public boolean connected = false;
     private Timer playerUpdateTimer60, playerUpdateTimer10;
     private Client client;
 
-    public ClientManager() {
+    private ClientManager() {
 
         client = new Client(1048576, 1048576);
         client.start();
@@ -46,14 +46,14 @@ public class ClientManager extends Manager {
             Entity player = GameManager.instance.player;
             ((AngleComponent) player.getComponent(AngleComponent.class)).mousePos = Tools.getMouseCoordsInWorldSpace(CameraManager.gameCamera);
             ComponentPacket packet = PacketUtils.createComponentPacket(player, AngleComponent.class);
-            ClientManager.instance.sendUDP(packet);
+            ClientManager.getInstance().sendUDP(packet);
         });
 
         playerUpdateTimer10 = new Timer(0.1f, true, () -> {
             Entity player = GameManager.instance.player;
-            InvItem item = Selector.instance.getSelectedInvItem();
+            InvItem item = Selector.getInstance().getSelectedInvItem();
             ComponentPacket packet = PacketUtils.createComponentPacket(player, EquipComponent.class);
-            ClientManager.instance.sendUDP(packet);
+            ClientManager.getInstance().sendUDP(packet);
         });
 
     }
@@ -111,6 +111,16 @@ public class ClientManager extends Manager {
 
     public void sendTCP(Object object) {
         client.sendTCP(object);
+    }
+
+    public static ClientManager getInstance() {
+        if (instance == null) {
+            synchronized (ClientManager.class) {
+                if (instance == null)
+                    instance = new ClientManager();
+            }
+        }
+        return instance;
     }
 
 }

@@ -24,7 +24,7 @@ public class GuiTransform {
     private HashMap<Axis, Constraint> constraints = new HashMap<>();
 
     public GuiTransform() {
-        this.parent = GuiManager.instance.screen;
+        this.parent = GuiManager.getInstance().screen;
         set(new PixelConstraint(0), new PixelConstraint(0), new PixelConstraint(0), new PixelConstraint(0));
         Arrays.fill(currentValues, 0);
     }

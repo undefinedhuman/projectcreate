@@ -13,15 +13,12 @@ import java.util.ArrayList;
 
 public class GuiManager extends Manager {
 
-    public static GuiManager instance;
+    private static volatile GuiManager instance;
     public GuiTransform screen = null;
 
     private ArrayList<GuiTransform> guiTransforms = new ArrayList<>();
 
-    public GuiManager() {
-        if (instance == null)
-            instance = this;
-    }
+    private GuiManager() { }
 
     @Override
     public void init() {
@@ -74,6 +71,16 @@ public class GuiManager extends Manager {
     public void removeGui(GuiTransform gui) {
         if (hasGui(gui))
             this.guiTransforms.remove(gui);
+    }
+
+    public static GuiManager getInstance() {
+        if (instance == null) {
+            synchronized (GuiManager.class) {
+                if (instance == null)
+                    instance = new GuiManager();
+            }
+        }
+        return instance;
     }
 
 }

@@ -20,7 +20,7 @@ public class EquipScreen extends Gui implements InvTarget {
     private String[] texture = new String[] {"gui/preview/equip/Helmet-Preview.png", "gui/preview/equip/Chestplate-Preview.png", "gui/preview/equip/Arms-Preview.png", "gui/preview/equip/Boots-Preview.png"};
     private ItemType[] type = new ItemType[] { ItemType.HELMET, ItemType.ARMOR, ItemType.ARMOR, ItemType.ARMOR };
 
-    public EquipScreen() {
+    private EquipScreen() {
         super(GuiTemplate.SMALL_PANEL);
         setSize(Tools.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 5), Tools.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 10));
         setTitle("Character", Font.Title, Color.WHITE);

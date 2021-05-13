@@ -13,14 +13,13 @@ import de.undefinedhuman.projectcreate.game.item.ItemManager;
 
 public class InspectScreen extends Gui {
 
-    public static InspectScreen instance;
+    private static volatile InspectScreen instance;
 
     private Text nameText, descriptionText;
     private Gui previewImage;
 
-    public InspectScreen() {
+    private InspectScreen() {
         super(GuiTemplate.SMALL_PANEL);
-        if(instance == null) instance = this;
         // setSize(Tools.getInventoryWidth(GuiTemplate.SMALL_PANEL, 5), Tools.getInventoryHeight(GuiTemplate.SMALL_PANEL, 10));
         Item item = ItemManager.getInstance().getItem(2);
         previewImage = new Gui(item.previewTexture.getValue());
@@ -40,6 +39,16 @@ public class InspectScreen extends Gui {
         nameText.setText(item.name);
         nameText.setColor(Color.RED);
         descriptionText.setText(item.desc);
+    }
+
+    public static InspectScreen getInstance() {
+        if (instance == null) {
+            synchronized (InspectScreen.class) {
+                if (instance == null)
+                    instance = new InspectScreen();
+            }
+        }
+        return instance;
     }
 
 }

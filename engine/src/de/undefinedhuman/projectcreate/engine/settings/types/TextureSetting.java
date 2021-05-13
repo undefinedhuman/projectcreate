@@ -77,10 +77,10 @@ public class TextureSetting extends Setting<String> {
         loadTexture(path);
         if(texture == null)
             loadTexture(path = "Unknown.png");
-        if(TextureManager.instance == null)
+        if(TextureManager.getInstance() == null)
             return;
         setValue(path);
-        TextureManager.instance.loadTextures(getValue());
+        TextureManager.getInstance().loadTextures(getValue());
     }
 
     @Override
@@ -90,9 +90,9 @@ public class TextureSetting extends Setting<String> {
 
     @Override
     protected void delete() {
-        if(TextureManager.instance == null)
+        if(TextureManager.getInstance() == null)
             return;
-        TextureManager.instance.removeTextures(getValue());
+        TextureManager.getInstance().removeTextures(getValue());
     }
 
     public void setTexture(String path, Files.FileType type) {

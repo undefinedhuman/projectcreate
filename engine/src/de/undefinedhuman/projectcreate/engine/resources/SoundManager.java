@@ -7,13 +7,12 @@ import java.util.HashMap;
 
 public class SoundManager extends Manager {
 
-    public static SoundManager instance;
+    private static volatile SoundManager instance;
 
     private HashMap<String, Sound> sounds;
 
-    public SoundManager() {
+    private SoundManager() {
         sounds = new HashMap<>();
-        if (instance == null) instance = this;
     }
 
     @Override
@@ -44,6 +43,16 @@ public class SoundManager extends Manager {
     public Sound getSound(String name) {
         if (hasSound(name)) return sounds.get(name);
         return getSound("dirtSound.wav");
+    }
+
+    public static SoundManager getInstance() {
+        if (instance == null) {
+            synchronized (SoundManager.class) {
+                if (instance == null)
+                    instance = new SoundManager();
+            }
+        }
+        return instance;
     }
 
 }

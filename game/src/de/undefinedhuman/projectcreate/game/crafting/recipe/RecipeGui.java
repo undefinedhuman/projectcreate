@@ -58,6 +58,7 @@ public class RecipeGui extends Gui implements Poolable {
         this.name
                 .setText(currentItem.name.getValue())
                 .setColor(currentItem.rarity.getValue().getColor());
+        resize();
         return this;
     }
 

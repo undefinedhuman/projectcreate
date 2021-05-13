@@ -25,7 +25,7 @@ import java.util.Set;
 
 public class InventoryManager extends Manager {
 
-    public static InventoryManager instance;
+    private static volatile InventoryManager instance;
 
     private Gui[] slots = new Gui[4];
     private int maxSlot = -1;
@@ -34,19 +34,18 @@ public class InventoryManager extends Manager {
 
     private DragAndDrop dragAndDrop;
 
-    public InventoryManager() {
-        if (instance == null) instance = this;
+    private InventoryManager() {
         dragAndDrop = new DragAndDrop(CameraManager.guiCamera);
-        GuiManager.instance.addGui(new Selector(), new SidePanel(), new InspectScreen(), new EquipScreen(), new PlayerInventory());
-        dragAndDrop.addTarget(PlayerInventory.instance, Selector.instance, EquipScreen.getInstance());
+        GuiManager.getInstance().addGui(Selector.getInstance(), SidePanel.getInstance(), InspectScreen.getInstance(), EquipScreen.getInstance(), PlayerInventory.getInstance());
+        dragAndDrop.addTarget(PlayerInventory.getInstance(), Selector.getInstance(), EquipScreen.getInstance());
     }
 
     @Override
     public void init() {
         super.init();
-        addTempItems(Selector.instance, 1, 2);
-        addTempItems(PlayerInventory.instance, ItemManager.getInstance().getItems().keySet());
-        Selector.instance.setSelected(0);
+        addTempItems(Selector.getInstance(), 1, 2);
+        addTempItems(PlayerInventory.getInstance(), ItemManager.getInstance().getItems().keySet());
+        Selector.getInstance().setSelected(0);
     }
 
     @Override
@@ -71,7 +70,7 @@ public class InventoryManager extends Manager {
 
     public void addGuiToSlot(Gui gui) {
         if (gui == null) return;
-        if (!SidePanel.instance.isVisible()) SidePanel.instance.setVisible(true);
+        if (!SidePanel.getInstance().isVisible()) SidePanel.getInstance().setVisible(true);
         maxSlot = Tools.clamp(maxSlot + 1, 0, 3);
         if (slots[maxSlot] != null) removeGui(maxSlot);
         this.slots[maxSlot] = gui;
@@ -111,7 +110,7 @@ public class InventoryManager extends Manager {
 
     public void addGuiToSlot(int id, Gui gui) {
         if (gui == null) return;
-        if (!SidePanel.instance.isVisible()) SidePanel.instance.setVisible(true);
+        if (!SidePanel.getInstance().isVisible()) SidePanel.getInstance().setVisible(true);
         if (!Tools.isInRange(id, 0, 3)) return;
         if (slots[id] == null) this.slots[id] = gui;
         for (int i = 0; i < slots.length; i++) if (slots[i] != null) maxSlot = i;
@@ -125,7 +124,7 @@ public class InventoryManager extends Manager {
     }
 
     private int getWidth(int id) {
-        int width = (int) (-25 - 10 * (id + 1) - SidePanel.instance.getBaseValue(Axis.WIDTH));
+        int width = (int) (-25 - 10 * (id + 1) - SidePanel.getInstance().getBaseValue(Axis.WIDTH));
         for (int i = 0; i <= id; i++) if (slots[i] != null) width -= slots[i].getBaseValue(Axis.WIDTH);
         return width;
     }
@@ -145,19 +144,19 @@ public class InventoryManager extends Manager {
     }
 
     public synchronized boolean isFull(int id, int amount) {
-        return PlayerInventory.instance.isFull(id, amount) && Selector.instance.isFull(id, amount);
+        return PlayerInventory.getInstance().isFull(id, amount) && Selector.getInstance().isFull(id, amount);
     }
 
     public synchronized int addItem(int id, int amount) {
-        int i = Selector.instance.addItem(id, amount);
-        if (i != 0) i = PlayerInventory.instance.addItem(id, i);
+        int i = Selector.getInstance().addItem(id, amount);
+        if (i != 0) i = PlayerInventory.getInstance().addItem(id, i);
         notifyListeners(id, amount - i);
         return i;
     }
 
     public synchronized int removeItem(int id, int amount) {
-        int i = Selector.instance.removeItem(id, amount);
-        if (i != 0) i = PlayerInventory.instance.removeItem(id, i);
+        int i = Selector.getInstance().removeItem(id, amount);
+        if (i != 0) i = PlayerInventory.getInstance().removeItem(id, i);
         notifyListeners(id, amount - i);
         return i;
     }
@@ -175,7 +174,7 @@ public class InventoryManager extends Manager {
     }
 
     public synchronized int amountOf(int id) {
-        return PlayerInventory.instance.amountOf(id) + Selector.instance.amountOf(id);
+        return PlayerInventory.getInstance().amountOf(id) + Selector.getInstance().amountOf(id);
     }
 
     public void addListener(int id, ItemChangeListener listener) {
@@ -197,7 +196,7 @@ public class InventoryManager extends Manager {
     }
 
     public boolean isInventoryOpened() {
-        return PlayerInventory.instance.isVisible();
+        return PlayerInventory.getInstance().isVisible();
     }
 
     public boolean canUseItem() {
@@ -205,7 +204,7 @@ public class InventoryManager extends Manager {
     }
 
     public boolean overGui() {
-        return Tools.isOverGuis(CameraManager.guiCamera, Selector.instance, SidePanel.instance, slots[0], slots[1], slots[2], slots[3]);
+        return Tools.isOverGuis(CameraManager.guiCamera, Selector.getInstance(), SidePanel.getInstance(), slots[0], slots[1], slots[2], slots[3]);
     }
 
     public void handleClick(int id) {
@@ -213,7 +212,7 @@ public class InventoryManager extends Manager {
         switch (id) {
 
             case 0:
-                openGui(PlayerInventory.instance);
+                openGui(PlayerInventory.getInstance());
                 break;
             case 1:
                 openGui(EquipScreen.getInstance());
@@ -230,6 +229,16 @@ public class InventoryManager extends Manager {
 
         }
 
+    }
+
+    public static InventoryManager getInstance() {
+        if (instance == null) {
+            synchronized (InventoryManager.class) {
+                if (instance == null)
+                    instance = new InventoryManager();
+            }
+        }
+        return instance;
     }
 
 }

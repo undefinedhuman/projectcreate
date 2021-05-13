@@ -36,7 +36,7 @@ public class SpriteData {
     }
 
     public void setTexture(String textureName, int frameCount) {
-        TextureRegion texture = TextureManager.instance.getTexture(textureName);
+        TextureRegion texture = TextureManager.getInstance().getTexture(textureName);
         this.textures = texture.split(texture.getRegionWidth() / frameCount, texture.getRegionHeight())[0];
         setFrameIndex(0);
     }

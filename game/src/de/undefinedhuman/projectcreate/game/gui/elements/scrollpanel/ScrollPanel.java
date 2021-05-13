@@ -113,6 +113,7 @@ public class ScrollPanel<T extends Gui> extends Gui {
     public void addContent(T gui) {
         gui.setOffsetY(new PixelOffset(calculateContentHeight() / Main.guiScale + (content.size() > 0 ? Variables.SLOT_SPACE : 0)));
         gui.parent = viewport;
+        gui.setValue(Axis.Y, -offset);
         this.content.add(gui);
         resize();
         initContent();
@@ -135,10 +136,8 @@ public class ScrollPanel<T extends Gui> extends Gui {
     }
 
     private int calculateContentHeight() {
-        if(content.size() == 0)
-            return 0;
-        if(content.size() == 1)
-            return content.get(0).getCurrentValue(Axis.HEIGHT);
+        if(Tools.isInRange(content.size(), 0, 1))
+            return content.stream().map(gui -> gui.getCurrentValue(Axis.HEIGHT)).reduce(0, Integer::sum);
         Gui lastItem = content.get(content.size()-1);
         return lastItem.getCurrentValue(Axis.Y) + lastItem.getCurrentValue(Axis.HEIGHT) - content.get(0).getCurrentValue(Axis.Y);
     }

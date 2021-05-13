@@ -35,7 +35,7 @@ public class GuiTexture {
 
     public GuiTexture init() {
         for(String texture : textureNames)
-            TextureManager.instance.addTextures(texture);
+            TextureManager.getInstance().addTextures(texture);
         return this;
     }
 
@@ -47,7 +47,7 @@ public class GuiTexture {
         pixmap.setFilter(Pixmap.Filter.NearestNeighbour);
         if(template == null)
             for (String textureName : textureNames) {
-                Pixmap source = TextureManager.instance.getPixmap(textureName);
+                Pixmap source = TextureManager.getInstance().getPixmap(textureName);
                 pixmap.drawPixmap(source, 0, 0, source.getWidth(), source.getHeight(), 0, 0, width, height);
             }
         else {
@@ -81,7 +81,7 @@ public class GuiTexture {
         if(template != null)
             template = null;
         for (String textureName : textureNames)
-            TextureManager.instance.removeTextures(textureName);
+            TextureManager.getInstance().removeTextures(textureName);
         deleteInternalTexture();
         textureNames.clear();
     }
@@ -113,7 +113,7 @@ public class GuiTexture {
     public Vector2 getOffset() { return new Vector2(cornerSize, cornerSize); }
 
     private void drawToPixmap(Pixmap pixmap, int textureIndex, int x, int y, int width, int height, int scale) {
-        Pixmap source = TextureManager.instance.getPixmap(textureNames.get(textureIndex));
+        Pixmap source = TextureManager.getInstance().getPixmap(textureNames.get(textureIndex));
         for(int i = 0; i < width; i++)
             for(int j = 0; j < height; j++)
                 pixmap.drawPixel(x + i, y + j, source.getPixel((i / scale) % source.getWidth(), (j / scale) % source.getHeight()));

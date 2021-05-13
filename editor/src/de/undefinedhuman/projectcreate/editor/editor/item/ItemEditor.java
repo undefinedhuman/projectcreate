@@ -91,7 +91,8 @@ public class ItemEditor extends Editor {
             currentItem = type.createInstance();
             for(Setting<?> setting : currentItem.getSettingsList().getSettings())
                 setting.loadSetting(reader.parent(), settingsObject);
-            Tools.addSettings(rightPanel, currentItem.getSettingsStream());
+            Tools.addSettings(leftPanel, currentItem.getSettings().subList(0, currentItem.getDefaultQuantityOfSettings()).stream());
+            Tools.addSettings(rightPanel, currentItem.getSettings().subList(currentItem.getDefaultQuantityOfSettings(), currentItem.getSettings().size()).stream());
             loadWindow.setVisible(false);
             reader.close();
         });
@@ -108,7 +109,7 @@ public class ItemEditor extends Editor {
         if(itemDir.exists())
             FileUtils.deleteFile(itemDir);
 
-        FileWriter writer = new FsFile(itemDir.path(), "settings.item", Files.FileType.Local).getFileWriter(true);
+        FileWriter writer = new FsFile(itemDir, "settings.item", Files.FileType.Local).getFileWriter(true);
         writer.writeString("Type").writeString(currentItem.type.name());
         writer.nextLine();
         Tools.saveSettings(writer, currentItem.getSettingsList());

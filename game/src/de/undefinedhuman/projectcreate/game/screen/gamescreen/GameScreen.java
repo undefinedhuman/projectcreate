@@ -16,7 +16,7 @@ public class GameScreen implements Screen {
     public void show() {
         GameManager.instance.init();
         Gdx.graphics.setResizable(true);
-        Gdx.input.setInputProcessor(Inputs.instance);
+        Gdx.input.setInputProcessor(Inputs.getInstance());
     }
 
     @Override

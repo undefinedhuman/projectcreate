@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import de.undefinedhuman.projectcreate.core.ecs.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
+import de.undefinedhuman.projectcreate.game.crafting.CraftingInventory;
 import de.undefinedhuman.projectcreate.game.entity.Entity;
 import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
 import de.undefinedhuman.projectcreate.game.inventory.player.Selector;
@@ -15,11 +16,9 @@ import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 
 public class Inputs extends Manager implements InputProcessor {
 
-    public static Inputs instance;
+    private static volatile Inputs instance;
 
-    public Inputs() {
-        if (instance == null) instance = this;
-    }
+    private Inputs() { }
 
     @Override
     public boolean keyDown(int keycode) {
@@ -30,51 +29,51 @@ public class Inputs extends Manager implements InputProcessor {
 
             case Input.Keys.A:
                 ((MovementComponent) player.getComponent(MovementComponent.class)).move(true, false);
-                ClientManager.instance.sendTCP(PacketUtils.createComponentPacket(player, MovementComponent.class));
+                ClientManager.getInstance().sendTCP(PacketUtils.createComponentPacket(player, MovementComponent.class));
                 break;
             case Input.Keys.D:
                 ((MovementComponent) player.getComponent(MovementComponent.class)).move(false, true);
-                ClientManager.instance.sendTCP(PacketUtils.createComponentPacket(player, MovementComponent.class));
+                ClientManager.getInstance().sendTCP(PacketUtils.createComponentPacket(player, MovementComponent.class));
                 break;
             case Input.Keys.SPACE:
                 if (((MovementComponent) player.getComponent(MovementComponent.class)).jump()) {
                     JumpPacket packet = new JumpPacket();
                     packet.id = player.getWorldID();
-                    ClientManager.instance.sendTCP(packet);
+                    ClientManager.getInstance().sendTCP(packet);
                 }
                 break;
             case Input.Keys.NUM_1:
-                Selector.instance.setSelected(0);
+                Selector.getInstance().setSelected(0);
                 break;
             case Input.Keys.NUM_2:
-                Selector.instance.setSelected(1);
+                Selector.getInstance().setSelected(1);
                 break;
             case Input.Keys.NUM_3:
-                Selector.instance.setSelected(2);
+                Selector.getInstance().setSelected(2);
                 break;
             case Input.Keys.NUM_4:
-                Selector.instance.setSelected(3);
+                Selector.getInstance().setSelected(3);
                 break;
             case Input.Keys.NUM_5:
-                Selector.instance.setSelected(4);
+                Selector.getInstance().setSelected(4);
                 break;
             case Input.Keys.NUM_6:
-                Selector.instance.setSelected(5);
+                Selector.getInstance().setSelected(5);
                 break;
             case Input.Keys.NUM_7:
-                Selector.instance.setSelected(6);
+                Selector.getInstance().setSelected(6);
                 break;
             case Input.Keys.NUM_8:
-                Selector.instance.setSelected(7);
+                Selector.getInstance().setSelected(7);
                 break;
             case Input.Keys.NUM_9:
-                Selector.instance.setSelected(8);
+                Selector.getInstance().setSelected(8);
                 break;
             case Input.Keys.E:
-                InventoryManager.instance.handleClick(0);
+                InventoryManager.getInstance().handleClick(0);
                 break;
             case Input.Keys.R:
-                InventoryManager.instance.handleClick(1);
+                InventoryManager.getInstance().handleClick(1);
                 break;
 
         }
@@ -93,12 +92,12 @@ public class Inputs extends Manager implements InputProcessor {
             case Input.Keys.A:
                 boolean moveRight = Gdx.input.isKeyPressed(Input.Keys.D);
                 ((MovementComponent) player.getComponent(MovementComponent.class)).move(false, moveRight);
-                ClientManager.instance.sendTCP(PacketUtils.createComponentPacket(player, MovementComponent.class));
+                ClientManager.getInstance().sendTCP(PacketUtils.createComponentPacket(player, MovementComponent.class));
                 break;
             case Input.Keys.D:
                 boolean moveLeft = Gdx.input.isKeyPressed(Input.Keys.A);
                 ((MovementComponent) player.getComponent(MovementComponent.class)).move(moveLeft, false);
-                ClientManager.instance.sendTCP(PacketUtils.createComponentPacket(player, MovementComponent.class));
+                ClientManager.getInstance().sendTCP(PacketUtils.createComponentPacket(player, MovementComponent.class));
                 break;
 
         }
@@ -132,11 +131,21 @@ public class Inputs extends Manager implements InputProcessor {
 
     @Override
     public boolean scrolled(float amountX, float amountY) {
-        if (InventoryManager.instance.isInventoryOpened())
+        if (InventoryManager.getInstance().isInventoryOpened())
             return false;
-        int selected = (int) (Selector.instance.getSelected() + amountY), selectorLength = Selector.instance.getInventory()[0].length;
-        Selector.instance.setSelected((selectorLength + selected) % selectorLength);
+        int selected = (int) (Selector.getInstance().getSelected() + amountY), selectorLength = Selector.getInstance().getInventory()[0].length;
+        Selector.getInstance().setSelected((selectorLength + selected) % selectorLength);
         return true;
+    }
+
+    public static Inputs getInstance() {
+        if (instance == null) {
+            synchronized (Inputs.class) {
+                if (instance == null)
+                    instance = new Inputs();
+            }
+        }
+        return instance;
     }
 
 }

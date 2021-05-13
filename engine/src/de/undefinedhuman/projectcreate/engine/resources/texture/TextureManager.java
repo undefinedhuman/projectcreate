@@ -16,13 +16,11 @@ import java.util.stream.Stream;
 
 public class TextureManager extends Manager {
 
-    public static TextureManager instance;
+    private static volatile TextureManager instance;
 
     private HashMap<String, TextureValue> textures = new HashMap<>();
 
-    public TextureManager() {
-        if (instance == null) instance = this;
-    }
+    private TextureManager() { }
 
     @Override
     public void init() {
@@ -97,6 +95,16 @@ public class TextureManager extends Manager {
         if (hasTexture(name) || loadTextures(name))
             return textures.get(name).getPixmap();
         return hasTexture("Unknown.png") && !name.equals("Unknown.png") ? getPixmap("Unknown.png") : null;
+    }
+
+    public static TextureManager getInstance() {
+        if (instance == null) {
+            synchronized (TextureManager.class) {
+                if (instance == null)
+                    instance = new TextureManager();
+            }
+        }
+        return instance;
     }
 
 }

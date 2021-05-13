@@ -67,11 +67,12 @@ public class ItemManager extends Manager {
                     items.remove(id);
                     return Integer.toString(id);
                 });
-        Log.debug(() -> "Item" + de.undefinedhuman.projectcreate.engine.utils.Tools.appendSToString(ids.length) + " unloaded: " + removedItems.collect(Collectors.joining(", ")));
+        Log.debug(() -> "Item" + Tools.appendSToString(ids.length) + " unloaded: " + removedItems.collect(Collectors.joining(", ")));
     }
 
     public Item getItem(int id) {
-        if (hasItem(id) || loadItems(id)) return items.get(id);
+        if (hasItem(id) || loadItems(id))
+            return items.get(id);
         return null;
     }
 
@@ -80,16 +81,16 @@ public class ItemManager extends Manager {
     }
 
     public void useItem(int id) {
-        if(!InventoryManager.instance.canUseItem()) return;
+        if(!InventoryManager.getInstance().canUseItem()) return;
         Item item = ItemManager.instance.getItem(id);
         if (item == null) return;
         boolean mouseLeft = Gdx.input.isButtonPressed(0), mouseRight = Gdx.input.isButtonPressed(1);
         switch (item.type) {
             case BLOCK:
-                if (mouseLeft || mouseRight) WorldManager.instance.placeBlock(mouseLeft ? World.MAIN_LAYER : World.BACK_LAYER);
+                if (mouseLeft || mouseRight) WorldManager.getInstance().placeBlock(mouseLeft ? World.MAIN_LAYER : World.BACK_LAYER);
                 break;
             case PICKAXE:
-                if (mouseLeft || mouseRight) WorldManager.instance.destroyBlock(mouseLeft ? World.MAIN_LAYER : World.BACK_LAYER);
+                if (mouseLeft || mouseRight) WorldManager.getInstance().destroyBlock(mouseLeft ? World.MAIN_LAYER : World.BACK_LAYER);
                 break;
         }
     }
@@ -106,7 +107,7 @@ public class ItemManager extends Manager {
         if(!settingsObject.containsKey("Type")) return null;
         ItemType type = ItemType.valueOf(((LineSplitter) settingsObject.get("Type")).getNextString());
         Item item = type.createInstance();
-        for(Setting setting : item.getSettingsList().getSettings())
+        for(Setting<?> setting : item.getSettingsList().getSettings())
             setting.loadSetting(reader.parent(), settingsObject);
         item.init();
         reader.close();

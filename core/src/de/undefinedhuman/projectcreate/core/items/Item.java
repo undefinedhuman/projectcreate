@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.core.items;
 
-import de.undefinedhuman.projectcreate.core.crafting.RecipeType;
 import de.undefinedhuman.projectcreate.core.crafting.RecipeItem;
+import de.undefinedhuman.projectcreate.core.crafting.RecipeType;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.panels.SelectionPanel;

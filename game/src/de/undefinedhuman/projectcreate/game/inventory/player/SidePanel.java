@@ -1,6 +1,7 @@
 package de.undefinedhuman.projectcreate.game.inventory.player;
 
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.game.crafting.CraftingInventory;
 import de.undefinedhuman.projectcreate.game.gui.Gui;
 import de.undefinedhuman.projectcreate.game.gui.texture.GuiTemplate;
 import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.CenterConstraint;
@@ -14,7 +15,7 @@ import de.undefinedhuman.projectcreate.game.utils.Tools;
 
 public class SidePanel extends Gui {
 
-    public static SidePanel instance;
+    private static volatile SidePanel instance;
 
     private String[] textures = new String[] {
             "gui/Inventory Icon.png",
@@ -28,17 +29,25 @@ public class SidePanel extends Gui {
             "gui/Locked-Icon.png",
             "gui/Locked-Icon.png"};
 
-    public SidePanel() {
+    private SidePanel() {
         super(GuiTemplate.SMALL_PANEL);
-        if(instance == null) instance = this;
-
         set(new RelativeConstraint(1), new CenterConstraint(), Tools.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 1), Tools.getInventoryConstraint(GuiTemplate.SMALL_PANEL, textures.length)).setOffset(new PixelOffset(-Tools.getInventorySize(GuiTemplate.SMALL_PANEL, 1) - 25), new CenterOffset());
         for (int i = textures.length-1; i >= 0; i--)
             addMenuItem(i, textures.length - i - 1);
     }
 
     private void addMenuItem(int i, int index) {
-        addChild(new MenuSlot(new PixelConstraint(0), new PixelConstraint((Variables.SLOT_SIZE + Variables.SLOT_SPACE) * i), textures[index], () -> InventoryManager.instance.handleClick(index)));
+        addChild(new MenuSlot(new PixelConstraint(0), new PixelConstraint((Variables.SLOT_SIZE + Variables.SLOT_SPACE) * i), textures[index], () -> InventoryManager.getInstance().handleClick(index)));
+    }
+
+    public static SidePanel getInstance() {
+        if (instance == null) {
+            synchronized (SidePanel.class) {
+                if (instance == null)
+                    instance = new SidePanel();
+            }
+        }
+        return instance;
     }
 
 }

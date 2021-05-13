@@ -6,13 +6,22 @@ import de.undefinedhuman.projectcreate.game.inventory.Inventory;
 
 public class PlayerInventory extends Inventory {
 
-    public static PlayerInventory instance;
+    private static volatile PlayerInventory instance;
 
-    public PlayerInventory() {
+    private PlayerInventory() {
         super(10, 5);
-        if(instance == null) instance = this;
         setTitle("Inventory", Font.Title, Color.WHITE);
         setVisible(false);
+    }
+
+    public static PlayerInventory getInstance() {
+        if (instance == null) {
+            synchronized (PlayerInventory.class) {
+                if (instance == null)
+                    instance = new PlayerInventory();
+            }
+        }
+        return instance;
     }
 
 }

@@ -4,22 +4,20 @@ import de.undefinedhuman.projectcreate.engine.utils.Manager;
 import de.undefinedhuman.projectcreate.engine.utils.ds.Key;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 import de.undefinedhuman.projectcreate.game.Main;
+import de.undefinedhuman.projectcreate.game.crafting.CraftingInventory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GuiTextureManager extends Manager {
 
-    public static GuiTextureManager instance;
+    private static volatile GuiTextureManager instance;
 
     private ArrayList<Key<String, Vector2i>> toBeRemoved = new ArrayList<>();
     private Key<String, Vector2i> tempKey = new Key<>("", new Vector2i());
     private HashMap<Key<String, Vector2i>, GuiTexture> guiTextures = new HashMap<>();
 
-    public GuiTextureManager() {
-        if(instance == null)
-             instance = this;
-    }
+    private GuiTextureManager() { }
 
     @Override
     public void resize(int width, int height) {
@@ -89,6 +87,16 @@ public class GuiTextureManager extends Manager {
     private void setKey(String textureName, int width, int height) {
         this.tempKey.setKey1(textureName);
         this.tempKey.getKey2().set(width, height);
+    }
+
+    public static GuiTextureManager getInstance() {
+        if (instance == null) {
+            synchronized (GuiTextureManager.class) {
+                if (instance == null)
+                    instance = new GuiTextureManager();
+            }
+        }
+        return instance;
     }
 
 }

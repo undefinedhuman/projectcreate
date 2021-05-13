@@ -64,7 +64,7 @@ public class Slider extends Gui {
     }
 
     private void initProgress(String texture, boolean wrap) {
-        progressTexture = new Texture(TextureManager.instance.getTexture(texture).getTexture().getTextureData());
+        progressTexture = new Texture(TextureManager.getInstance().getTexture(texture).getTexture().getTextureData());
         if (wrap) progressTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.ClampToEdge);
     }
 

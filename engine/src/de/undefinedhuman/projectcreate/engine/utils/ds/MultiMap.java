@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class MultiMap<K, V> {
 
@@ -55,4 +56,8 @@ public class MultiMap<K, V> {
         map.clear();
     }
 
+    @Override
+    public String toString() {
+        return map.keySet().stream().map(key -> key.toString() + ": " + map.get(key).toString()).collect(Collectors.joining("\n"));
+    }
 }

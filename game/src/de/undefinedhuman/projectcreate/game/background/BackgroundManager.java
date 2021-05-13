@@ -43,9 +43,9 @@ public class BackgroundManager extends Manager {
 
     @Override
     public void init() {
-        birdTexture = TextureManager.instance.getTexture("background/Bird.png").split((int) Variables.BIRD_SIZE.x, (int) Variables.BIRD_SIZE.y)[0];
+        birdTexture = TextureManager.getInstance().getTexture("background/Bird.png").split((int) Variables.BIRD_SIZE.x, (int) Variables.BIRD_SIZE.y)[0];
         for(int i = 0; i < Variables.CLOUD_COUNT; i++) cloudTextures[i] = "background/clouds/Cloud " + i + ".png";
-        TextureManager.instance.loadTextures(cloudTextures);
+        TextureManager.getInstance().loadTextures(cloudTextures);
         Time.load();
         for(Layer layer : layers)
             layer.init();
@@ -78,8 +78,8 @@ public class BackgroundManager extends Manager {
     @Override
     public void delete() {
         for(Layer layer : layers) layer.delete();
-        TextureManager.instance.removeTextures(cloudTextures);
-        TextureManager.instance.removeTextures("background/Bird.png");
+        TextureManager.getInstance().removeTextures(cloudTextures);
+        TextureManager.getInstance().removeTextures("background/Bird.png");
         birdTexture = new TextureRegion[0];
         Time.delete();
     }

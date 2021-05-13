@@ -35,7 +35,7 @@ public class TopLayerManager {
         for (TopLayerTexture texture : topLayerTextures)
             if (texture.left == left && texture.right == right) {
                 World.instance.random.setSeed(World.instance.seed + i);
-                batch.draw(TextureManager.instance.getTexture(texture.textures[World.instance.random.nextInt(texture.textures.length)]), i * Variables.BLOCK_SIZE + texture.offset.x, j * Variables.BLOCK_SIZE + texture.offset.y);
+                batch.draw(TextureManager.getInstance().getTexture(texture.textures[World.instance.random.nextInt(texture.textures.length)]), i * Variables.BLOCK_SIZE + texture.offset.x, j * Variables.BLOCK_SIZE + texture.offset.y);
             }
     }
 

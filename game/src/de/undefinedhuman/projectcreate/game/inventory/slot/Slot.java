@@ -27,13 +27,13 @@ public class Slot extends GuiComponent {
         int size = Variables.SLOT_SIZE + (selected ? Variables.SELECTED_SIZE : 0);
         setSize(size, size);
         super.resize(width, height);
-        GuiTextureManager.instance.addGuiTexture(GuiTemplate.SLOT, getCurrentValue(Axis.WIDTH), getCurrentValue(Axis.HEIGHT));
+        GuiTextureManager.getInstance().addGuiTexture(GuiTemplate.SLOT, getCurrentValue(Axis.WIDTH), getCurrentValue(Axis.HEIGHT));
     }
 
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         super.render(batch, camera);
-        GuiTexture texture = GuiTextureManager.instance.getGuiTexture(GuiTemplate.SLOT, getCurrentValue(Axis.WIDTH), getCurrentValue(Axis.HEIGHT));
+        GuiTexture texture = GuiTextureManager.getInstance().getGuiTexture(GuiTemplate.SLOT, getCurrentValue(Axis.WIDTH), getCurrentValue(Axis.HEIGHT));
         int offset = -(selected ? (Variables.SELECTED_SIZE / 2) : 0) * Main.guiScale;
         if(texture != null)
             texture.render(batch, getCurrentValue(Axis.X) + offset, getCurrentValue(Axis.Y) + offset, alpha);
@@ -56,7 +56,7 @@ public class Slot extends GuiComponent {
 
     private void removeGuiTextureFromManager() {
         if(getCurrentValue(Axis.WIDTH) != 0 || getCurrentValue(Axis.HEIGHT) != 0)
-            GuiTextureManager.instance.removeGuiTexture(GuiTemplate.SLOT, getCurrentValue(Axis.WIDTH), getCurrentValue(Axis.HEIGHT));
+            GuiTextureManager.getInstance().removeGuiTexture(GuiTemplate.SLOT, getCurrentValue(Axis.WIDTH), getCurrentValue(Axis.HEIGHT));
     }
 
 }

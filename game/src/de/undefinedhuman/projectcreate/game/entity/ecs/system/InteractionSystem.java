@@ -20,7 +20,7 @@ public class InteractionSystem extends System {
     @Override
     public void init(Entity entity) {
         helpText = new Text("");
-        GuiManager.instance.addGui(helpText.setPosition(new RelativeConstraint(0.5f), new PixelConstraint(50)).setVisible(true));
+        GuiManager.getInstance().addGui(helpText.setPosition(new RelativeConstraint(0.5f), new PixelConstraint(50)).setVisible(true));
     }
 
     @Override

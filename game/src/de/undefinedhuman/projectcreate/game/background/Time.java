@@ -26,7 +26,7 @@ public enum Time {
     }
 
     public static void load() {
-        TextureManager.instance.loadTextures(Time.getTextures());
+        TextureManager.getInstance().loadTextures(Time.getTextures());
     }
 
     public static String[] getTextures() {
@@ -36,7 +36,7 @@ public enum Time {
     }
 
     public static void delete() {
-        TextureManager.instance.removeTextures(Time.getTextures());
+        TextureManager.getInstance().removeTextures(Time.getTextures());
     }
 
 }

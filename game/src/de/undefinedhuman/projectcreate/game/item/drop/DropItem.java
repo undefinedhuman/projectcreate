@@ -32,7 +32,7 @@ public class DropItem {
         this.position = position;
 
         this.target = null;
-        this.sprite = new Sprite(TextureManager.instance.getTexture(ItemManager.getInstance().getItem(id).iconTexture.getValue()));
+        this.sprite = new Sprite(TextureManager.getInstance().getTexture(ItemManager.getInstance().getItem(id).iconTexture.getValue()));
 
     }
 
@@ -62,7 +62,7 @@ public class DropItem {
                 if (dist < 25) {
 
                     int i;
-                    if ((i = InventoryManager.instance.addItem(id, amount)) == 0) amount = i;
+                    if ((i = InventoryManager.getInstance().addItem(id, amount)) == 0) amount = i;
                     if (amount == 0) isDead = true;
 
                 } else {

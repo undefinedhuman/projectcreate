@@ -55,11 +55,11 @@ public class TestScreen implements Screen {
 
         Main.instance.setScreen(GameScreen.instance);
 
-        /*ClientManager.instance.connect();
+        /*ClientManager.getInstance().connect();
 
         LoginPacket packet = new LoginPacket();
         packet.name = "GentleXD " + new Random().nextInt(100);
-        ClientManager.instance.sendTCP(packet);*/
+        ClientManager.getInstance().sendTCP(packet);*/
 
         Gdx.graphics.setResizable(true);
 

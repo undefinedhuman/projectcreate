@@ -53,8 +53,8 @@ public class ArmSystem extends System {
             float angle = new Vector2(mousePos).sub(shoulderPosition).sub(entity.getPosition()).angle() + (angleComponent.isTurned ? 0 : 180);
             angle += angleComponent.isTurned ? 95 : -95;
 
-            if (Selector.instance.getSelectedInvItem() != null) {
-                Item item = ItemManager.getInstance().getItem(Selector.instance.getSelectedItemID());
+            if (Selector.getInstance().getSelectedInvItem() != null) {
+                Item item = ItemManager.getInstance().getItem(Selector.getInstance().getSelectedItemID());
                 boolean hasSword = (item.type == ItemType.SWORD);
                 CombatComponent combatComponent = (CombatComponent) entity.getComponent(CombatComponent.class);
                 calculateShake(rightArmComponent, item);
@@ -81,7 +81,7 @@ public class ArmSystem extends System {
 
     private void calculateShake(RightArmComponent component, Item item) {
 
-        if (InventoryManager.instance.canUseItem() && item.canShake.getValue()) {
+        if (InventoryManager.getInstance().canUseItem() && item.canShake.getValue()) {
 
             if (Gdx.input.isButtonPressed(0) || Gdx.input.isButtonPressed(1)) {
 
@@ -100,7 +100,7 @@ public class ArmSystem extends System {
 
         // 24 Sword Downtime, 16 Sword Uptime
 
-        if (InventoryManager.instance.canUseItem()) {
+        if (InventoryManager.getInstance().canUseItem()) {
 
             if (!Gdx.input.isButtonPressed(0) && combatComponent.currentDamage > sword.damage.getValue() / 2) {
 

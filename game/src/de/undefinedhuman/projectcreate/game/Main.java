@@ -43,7 +43,7 @@ public class Main extends Game {
     public Main() {
         instance = this;
         managerList = new ManagerList();
-        managerList.addManager(Log.getInstance(), ConfigManager.getInstance().setConfigs(GameConfig.getInstance()), new LanguageManager(), new TextureManager(), new SoundManager(), new FontManager(), new Inputs(), new GuiManager(), new GuiTextureManager(), BlueprintManager.getInstance(), ItemManager.getInstance());
+        managerList.addManager(Log.getInstance(), ConfigManager.getInstance().setConfigs(GameConfig.getInstance()), LanguageManager.getInstance(), TextureManager.getInstance(), SoundManager.getInstance(), FontManager.getInstance(), Inputs.getInstance(), GuiManager.getInstance(), GuiTextureManager.getInstance(), BlueprintManager.getInstance(), ItemManager.getInstance());
         timer = new Timer(1, true, () -> Window.instance.update());
     }
 
@@ -109,11 +109,11 @@ public class Main extends Game {
         GameScreen.instance = new GameScreen();
 
         EquipManager.getInstance();
-        InventoryManager.instance = new InventoryManager();
+        InventoryManager.getInstance();
 
-        WorldManager.instance = new WorldManager();
+        WorldManager.getInstance();
 
-        ClientManager.instance = new ClientManager();
+        ClientManager.getInstance();
 
         TopLayerManager.instance = new TopLayerManager();
         TopLayerManager.instance.load();

@@ -20,6 +20,7 @@ import de.undefinedhuman.projectcreate.game.item.ItemManager;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CraftingInventory extends Gui {
 
@@ -33,7 +34,7 @@ public class CraftingInventory extends Gui {
     private MultiMap<RecipeType, Integer> recipes = new MultiMap<>();
     private RecipeType currentRecipeType = null;
 
-    public CraftingInventory() {
+    private CraftingInventory() {
         super(GuiTemplate.SMALL_PANEL);
         setPosition(new CenterConstraint(), new CenterConstraint());
         setSize(Tools.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 15), Tools.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 10));
@@ -45,7 +46,7 @@ public class CraftingInventory extends Gui {
     @Override
     public void init() {
         super.init();
-        setRecipes(2);
+        setRecipes(1, 2, 3);
     }
 
     private void initBackgrounds() {
@@ -90,8 +91,9 @@ public class CraftingInventory extends Gui {
 
     public void updateRecipes() {
         recipesScrollPanel.clear();
-        for(int itemID : recipes.getValuesWithKey(currentRecipeType))
-            recipesScrollPanel.addContent().update(itemID);
+        List<Integer> recipeIDs = recipes.getValuesWithKey(currentRecipeType);
+        for(int i = recipeIDs.size()-1; i >= 0; i--)
+            recipesScrollPanel.addContent().update(recipeIDs.get(i));
     }
 
     public void updateRecipe(int itemID) {

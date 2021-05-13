@@ -47,8 +47,8 @@ public class PacketUtils {
     }
 
     public static void handleBlockPacket(BlockPacket packet) {
-        if (packet.blockID == -1) WorldManager.instance.destroyBlock(packet.x, packet.y, packet.worldLayer, false);
-        else WorldManager.instance.placeBlock(packet.x, packet.y, packet.worldLayer, packet.blockID, false);
+        if (packet.blockID == -1) WorldManager.getInstance().destroyBlock(packet.x, packet.y, packet.worldLayer, false);
+        else WorldManager.getInstance().placeBlock(packet.x, packet.y, packet.worldLayer, packet.blockID, false);
     }
 
     public static void handleComponentPacket(ComponentPacket packet) {

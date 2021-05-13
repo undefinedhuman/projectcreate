@@ -20,7 +20,7 @@ public class Projectile {
 
         velocity = new Vector2(velocityX, velocityY);
         rotation = velocity.angle() - 45;
-        texture = TextureManager.instance.getTexture("Arrow.png");
+        texture = TextureManager.getInstance().getTexture("Arrow.png");
 
         this.ownerWorldID = owner.getWorldID();
         this.position = new Vector2(position);

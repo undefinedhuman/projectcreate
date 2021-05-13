@@ -115,7 +115,7 @@ public class Tools {
 
     public static void drawLine(SpriteBatch batch, Vector2 point1, Vector2 point2, int lineWidth, Color color) {
         Vector2 vec = new Vector2(point2).sub(point1);
-        TextureRegion texture = TextureManager.instance.getTexture("blank.png");
+        TextureRegion texture = TextureManager.getInstance().getTexture("blank.png");
         Sprite sprite = new Sprite(texture, 0, 0, lineWidth, (int) vec.len());
         sprite.setColor(color);
         sprite.setOrigin(0, 0);

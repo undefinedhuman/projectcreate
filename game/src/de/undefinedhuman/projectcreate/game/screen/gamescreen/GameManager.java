@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.engine.utils.ManagerList;
 import de.undefinedhuman.projectcreate.game.background.BackgroundManager;
 import de.undefinedhuman.projectcreate.game.camera.CameraManager;
+import de.undefinedhuman.projectcreate.game.crafting.CraftingInventory;
 import de.undefinedhuman.projectcreate.game.entity.Entity;
 import de.undefinedhuman.projectcreate.game.entity.EntityManager;
 import de.undefinedhuman.projectcreate.game.entity.ecs.blueprint.BlueprintManager;
@@ -35,7 +36,7 @@ public class GameManager {
         BackgroundManager.getInstance().init();
         loadManager();
 
-        //GuiManager.instance.addGui(new CraftingInventory());
+        GuiManager.getInstance().addGui(CraftingInventory.getInstance());
     }
 
     public void resize(int width, int height) {
@@ -45,23 +46,23 @@ public class GameManager {
 
         BackgroundManager.getInstance().resize(width, height);
 
-        GuiManager.instance.resize(width, height);
-        InventoryManager.instance.resize(width, height);
+        GuiManager.getInstance().resize(width, height);
+        InventoryManager.getInstance().resize(width, height);
     }
 
     public void update(float delta) {
 
-        //if (!ClientManager.instance.isConnected()) Main.instance.setScreen(MenuScreen.instance);
-        //ClientManager.instance.update(delta);
+        //if (!ClientManager.getInstance().isConnected()) Main.instance.setScreen(MenuScreen.instance);
+        //ClientManager.getInstance().update(delta);
         manager.update(delta);
 
         if (projectile != null) projectile.update(delta);
 
-        GuiManager.instance.update(delta);
-        InventoryManager.instance.update(delta);
+        GuiManager.getInstance().update(delta);
+        InventoryManager.getInstance().update(delta);
         DropItemManager.instance.update(delta);
         EntityManager.getInstance().update(delta);
-        WorldManager.instance.update(delta);
+        WorldManager.getInstance().update(delta);
 
         BackgroundManager.getInstance().update(delta);
 
@@ -82,8 +83,8 @@ public class GameManager {
 
         batch.setProjectionMatrix(CameraManager.guiCamera.combined);
         batch.begin();
-        GuiManager.instance.renderGui(batch, CameraManager.guiCamera);
-        InventoryManager.instance.render(batch, CameraManager.guiCamera);
+        GuiManager.getInstance().renderGui(batch, CameraManager.guiCamera);
+        InventoryManager.getInstance().render(batch, CameraManager.guiCamera);
         batch.end();
 
     }
@@ -100,7 +101,7 @@ public class GameManager {
 
     private void loadManager() {
         ItemManager.getInstance().init();
-        InventoryManager.instance.init();
+        InventoryManager.getInstance().init();
         DropItemManager.instance = new DropItemManager();
     }
 

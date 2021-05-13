@@ -70,8 +70,8 @@ public class BackgroundLayer extends Layer {
 
     private void renderLayer(SpriteBatch batch, OrthographicCamera camera, int id, float renderX, float blendFactor) {
         batch.setColor(1, 1, 1, blendFactor);
-        if(camera != null) batch.draw(TextureManager.instance.getTexture(Time.valueOf(id).texture), (camera.position.x - camera.viewportWidth * 0.5f) + renderX, (camera.position.y - camera.viewportHeight * 0.5f), size.x, size.y);
-        else batch.draw(TextureManager.instance.getTexture(Time.valueOf(id).texture), 0 + renderX, 0, size.x, size.y);
+        if(camera != null) batch.draw(TextureManager.getInstance().getTexture(Time.valueOf(id).texture), (camera.position.x - camera.viewportWidth * 0.5f) + renderX, (camera.position.y - camera.viewportHeight * 0.5f), size.x, size.y);
+        else batch.draw(TextureManager.getInstance().getTexture(Time.valueOf(id).texture), 0 + renderX, 0, size.x, size.y);
     }
 
 }

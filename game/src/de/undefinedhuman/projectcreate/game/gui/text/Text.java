@@ -30,14 +30,14 @@ public class Text extends GuiComponent {
     public Text(Object text) {
         super();
         this.text = String.valueOf(text);
-        this.font = FontManager.instance.getFont(fontType, Main.guiScale * fontSize);
+        this.font = FontManager.getInstance().getFont(fontType, Main.guiScale * fontSize);
         setSize(new TextConstraint(layout), new TextConstraint(layout));
         lineLength = new PixelConstraint(0).setGui(this).setAxis(Axis.WIDTH);
     }
 
     @Override
     public void resize(int width, int height) {
-        font = FontManager.instance.getFont(fontType, Main.guiScale * fontSize);
+        font = FontManager.getInstance().getFont(fontType, Main.guiScale * fontSize);
         int lineLength = this.lineLength.getValue(Main.guiScale);
         layout.setText(font, text, 0, text.length(), color, lineLength, align, wrap, wrap || lineLength == 0 ? null : truncate);
         super.resize(width, height);

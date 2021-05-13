@@ -1,6 +1,8 @@
 package de.undefinedhuman.projectcreate.game.crafting.recipe;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.core.crafting.RecipeItem;
 import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.engine.resources.font.Font;
@@ -79,7 +81,7 @@ public class RecipePreviewPanel extends Gui {
                 )
                 .addListener((ClickListener) () -> {
                     Item item = ItemManager.getInstance().getItem(currentItemID);
-                    InventoryManager.instance.craftItem(currentItemID, item.recipeQuantity.getValue(), item.recipeItems.values());
+                    InventoryManager.getInstance().craftItem(currentItemID, item.recipeQuantity.getValue(), item.recipeItems.values());
                 })
                 .set(new RelativeConstraint(0.975f), new RelativeConstraint(0.025f), new PixelConstraint(50), new PixelConstraint(Variables.SLOT_SIZE))
                 .setOffsetX(new RelativeOffset(-1f));
@@ -107,6 +109,11 @@ public class RecipePreviewPanel extends Gui {
         category.setText(currentItem.type.getTitle());
         description.setText(currentItem.desc.getValue());
         resize();
+    }
+
+    @Override
+    public void render(SpriteBatch batch, OrthographicCamera camera) {
+        super.render(batch, camera);
     }
 
     public void setChildrenVisible(boolean childrenVisible) {

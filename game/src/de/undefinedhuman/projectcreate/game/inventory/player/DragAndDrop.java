@@ -30,7 +30,7 @@ public class DragAndDrop {
         targets = new ArrayList<>();
         lastSlot = null;
         currentItem = new InvItem(0);
-        currentItem.parent = GuiManager.instance.screen;
+        currentItem.parent = GuiManager.getInstance().screen;
         currentItem.setPosition(new MouseConstraint(camera), new MouseConstraint(camera));
     }
 
@@ -38,7 +38,7 @@ public class DragAndDrop {
 
         boolean leftMouse = Gdx.input.isButtonPressed(0), rightMouse = Gdx.input.isButtonPressed(1), isClicked = false;
 
-        if (InventoryManager.instance.isInventoryOpened()) {
+        if (InventoryManager.getInstance().isInventoryOpened()) {
 
             if (moving) {
 
@@ -81,7 +81,7 @@ public class DragAndDrop {
 
                 } else {
 
-                    if (InventoryManager.instance.overGui()) cancelMoving();
+                    if (InventoryManager.getInstance().overGui()) cancelMoving();
                     else {
                         DropItemManager.instance.addDropItem((byte) currentItem.getID(), currentItem.getAmount(), Tools.getWorldPos(CameraManager.gameCamera, new Vector2(Mouse.getX() - 8, Mouse.getY() - 8)));
                         removeTempItem();

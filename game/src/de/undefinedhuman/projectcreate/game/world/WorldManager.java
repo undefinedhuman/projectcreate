@@ -22,13 +22,15 @@ import de.undefinedhuman.projectcreate.game.utils.Tools;
 
 public class WorldManager {
 
-    public static WorldManager instance;
+    private static volatile WorldManager instance;
 
     private boolean canPlace = true, canDestroy = true;
     private float currentDurability = 0, destroyTime = 0, placeTime = 0, placeDuration = 0.05f;
     private byte oldLayer = -1;
     private int oldPickaxeID = 0;
     private Vector2i oldBreakPos = new Vector2i();
+
+    private WorldManager() {}
 
     private static final byte[] collisionMask = new byte[] {
             0, 0, 0, 2, 0, 0, 3, 1, 0, 4, 0, 1, 5, 1, 1, 1
@@ -49,12 +51,12 @@ public class WorldManager {
 
     private void updateDestroyVariables(float delta) {
         if (canDestroy) return;
-        if (!(Selector.instance.getSelectedItem() instanceof Pickaxe)) {
+        if (!(Selector.getInstance().getSelectedItem() instanceof Pickaxe)) {
             setDestroyVariables(-1);
             return;
         }
 
-        Pickaxe pickaxe = (Pickaxe) Selector.instance.getSelectedItem();
+        Pickaxe pickaxe = (Pickaxe) Selector.getInstance().getSelectedItem();
         if (oldPickaxeID != pickaxe.id.getValue()) {
             setDestroyVariables(oldPickaxeID);
             return;
@@ -65,7 +67,7 @@ public class WorldManager {
 
     public void placeBlock(byte worldLayer) {
         if (!canPlace) return;
-        int id = Selector.instance.getSelectedItemID();
+        int id = Selector.getInstance().getSelectedItemID();
         Block block = (Block) ItemManager.getInstance().getItem(id);
         Vector2i blockPos = Tools.convertToBlockPos(Tools.getWorldPos(CameraManager.gameCamera, Mouse.getMouseCoords()));
 
@@ -94,15 +96,15 @@ public class WorldManager {
         checkCells(x, y, worldLayer);
         canPlace = false;
         if(!send) return;
-        ClientManager.instance.sendTCP(PacketUtils.createBlockPacket(x, y, worldLayer, blockID));
-        Selector.instance.getSelectedInvItem().removeItem();
+        ClientManager.getInstance().sendTCP(PacketUtils.createBlockPacket(x, y, worldLayer, blockID));
+        Selector.getInstance().getSelectedInvItem().removeItem();
     }
 
     public void destroyBlock(byte worldLayer) {
 
         if (!canDestroy) return;
 
-        Pickaxe pickaxe = (Pickaxe) Selector.instance.getSelectedItem();
+        Pickaxe pickaxe = (Pickaxe) Selector.getInstance().getSelectedItem();
         Vector2i blockPos = Tools.convertToBlockPos(Tools.getWorldPos(CameraManager.gameCamera, Mouse.getMouseCoords())), playerCenter = Tools.convertToBlockPos(new Vector2().add(GameManager.instance.player.getPosition()).add(GameManager.instance.player.getCenter()));
         Block currentBlock = (Block) ItemManager.getInstance().getItem(World.instance.getBlock(blockPos.x, blockPos.y, World.MAIN_LAYER));
 
@@ -130,7 +132,7 @@ public class WorldManager {
         World.instance.setBlock(x, y, worldLayer, (byte) 0);
         checkCells(x, y, worldLayer);
         if(send)
-            ClientManager.instance.sendTCP(PacketUtils.createBlockPacket(x, y, worldLayer, (byte) -1));
+            ClientManager.getInstance().sendTCP(PacketUtils.createBlockPacket(x, y, worldLayer, (byte) -1));
         if(worldLayer == World.BACK_LAYER && getBlock(x, y, World.MAIN_LAYER).needBack.getValue()) {
             destroyBlock(x, y, World.MAIN_LAYER, send);
         }
@@ -206,6 +208,16 @@ public class WorldManager {
 
     private boolean hasCollision(int x, int y, byte worldLayer) {
         return ((Block) ItemManager.getInstance().getItem(World.instance.getBlock(x, y, worldLayer))).hasCollision.getValue();
+    }
+
+    public static WorldManager getInstance() {
+        if (instance == null) {
+            synchronized (WorldManager.class) {
+                if (instance == null)
+                    instance = new WorldManager();
+            }
+        }
+        return instance;
     }
 
 }

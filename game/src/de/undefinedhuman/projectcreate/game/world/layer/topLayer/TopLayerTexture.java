@@ -14,11 +14,11 @@ public class TopLayerTexture {
         this.offset = offset;
         this.left = left;
         this.right = right;
-        TextureManager.instance.addTextures(textures);
+        TextureManager.getInstance().addTextures(textures);
     }
 
     public void delete() {
-        TextureManager.instance.removeTextures(textures);
+        TextureManager.getInstance().removeTextures(textures);
     }
 
 }

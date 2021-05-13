@@ -3,6 +3,7 @@ package de.undefinedhuman.projectcreate.game.inventory.player;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.core.items.Item;
+import de.undefinedhuman.projectcreate.game.crafting.CraftingInventory;
 import de.undefinedhuman.projectcreate.game.equip.EquipManager;
 import de.undefinedhuman.projectcreate.game.gui.texture.GuiTemplate;
 import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.CenterConstraint;
@@ -18,13 +19,12 @@ import de.undefinedhuman.projectcreate.game.utils.Tools;
 
 public class Selector extends Inventory {
 
-    public static Selector instance;
+    private static volatile Selector instance;
 
     private int selected = 0;
 
-    public Selector() {
+    private Selector() {
         super(1, 9, GuiTemplate.HOTBAR);
-        if(instance == null) instance = this;
         setPosition(new CenterConstraint(), new RelativeConstraint(1)).setOffset(new CenterOffset(), new PixelOffset(-Tools.getInventorySize(GuiTemplate.HOTBAR, 1) - 10));
     }
 
@@ -47,7 +47,7 @@ public class Selector extends Inventory {
     }
 
     public void setSelected(int index) {
-        if(InventoryManager.instance.isInventoryOpened())
+        if(InventoryManager.getInstance().isInventoryOpened())
             return;
         inventory[0][selected].setSelected(false);
         this.selected = index;
@@ -68,6 +68,16 @@ public class Selector extends Inventory {
 
     public int getSelected() {
         return this.selected;
+    }
+
+    public static Selector getInstance() {
+        if (instance == null) {
+            synchronized (Selector.class) {
+                if (instance == null)
+                    instance = new Selector();
+            }
+        }
+        return instance;
     }
 
 }

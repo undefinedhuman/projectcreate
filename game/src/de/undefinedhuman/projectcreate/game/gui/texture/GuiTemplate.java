@@ -27,7 +27,7 @@ public enum GuiTemplate {
     public void load() {
         for (int i = 0; i < 9; i++)
             textures[i] = Paths.GUI_PATH + "template/" + templateName + "/" + i + ".png";
-        TextureManager.instance.loadTextures(textures);
+        TextureManager.getInstance().loadTextures(textures);
     }
 
     public Vector2 getOffset() {
@@ -35,7 +35,7 @@ public enum GuiTemplate {
     }
 
     public void delete() {
-        TextureManager.instance.removeTextures(textures);
+        TextureManager.getInstance().removeTextures(textures);
     }
 
 }

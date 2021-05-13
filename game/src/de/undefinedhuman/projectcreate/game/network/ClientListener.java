@@ -28,7 +28,7 @@ public class ClientListener extends Listener {
 
     @Override
     public void disconnected(Connection connection) {
-        ClientManager.instance.connected = false;
+        ClientManager.getInstance().connected = false;
     }
 
     public void received(Connection c, Object o) {
@@ -55,13 +55,13 @@ public class ClientListener extends Listener {
             GameManager.instance.player = player;
             EntityManager.getInstance().addEntity(packet.worldID, player);
 
-            ClientManager.instance.connected = true;
+            ClientManager.getInstance().connected = true;
 
 //            Main.instance.setScreen(LoadingScreen.instance);
 
         }
 
-        if (ClientManager.instance.connected) {
+        if (ClientManager.getInstance().connected) {
 
             if (o instanceof AddEntityPacket) {
 
@@ -79,7 +79,7 @@ public class ClientListener extends Listener {
             }
 
             if (o instanceof ServerClosedPacket) {
-//                ClientManager.instance.connected = false;
+//                ClientManager.getInstance().connected = false;
 //                Main.instance.setScreen(MenuScreen.instance);
 //                MenuScreen.instance.setErrorMessage("Server closed!");
             }
