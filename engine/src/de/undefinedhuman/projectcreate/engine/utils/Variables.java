@@ -66,6 +66,7 @@ public class Variables {
     // Editor
     public static final int PLAYER_TEXTURE_OFFSET = 64;
     public static final Color BACKGROUND_COLOR = new Color(60, 63, 65);
+    public static boolean IS_EDITOR = false;
 
     // Player
     public static final int BLOCK_PLACEMENT_RANGE = 6;
