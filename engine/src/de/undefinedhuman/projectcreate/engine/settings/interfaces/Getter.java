@@ -1,4 +1,4 @@
-package de.undefinedhuman.projectcreate.engine.settings;
+package de.undefinedhuman.projectcreate.engine.settings.interfaces;
 
 @FunctionalInterface
 public interface Getter<T> {

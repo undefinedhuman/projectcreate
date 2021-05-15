@@ -133,7 +133,7 @@ public class Tools {
     }
 
     public static boolean isInRange(Object val, int min, int max) {
-        if(!isInteger(val.toString()))
+        if(isInteger(val.toString()) == null)
             return false;
         int value = Integer.parseInt(val.toString());
         return value >= min && value <= max;
@@ -186,22 +186,34 @@ public class Tools {
         return new Vector4(position.x + offset.x, position.y + offset.y, position.x + offset.x + size.x, position.y + offset.y + size.y);
     }
 
-    public static boolean isFloat(String text) {
+    public static Float isFloat(String text) {
         try {
-            Float.parseFloat(text);
-            return true;
-        } catch (NumberFormatException ex) {
-            return false;
-        }
+            return Float.parseFloat(text);
+        } catch (NumberFormatException ex) { return null; }
     }
 
-    public static boolean isInteger(String text) {
+    public static Integer isInteger(String text) {
         try {
-            Integer.parseInt(text);
-            return true;
-        } catch (NumberFormatException ex) {
-            return false;
-        }
+            return Integer.parseInt(text);
+        } catch (NumberFormatException ex) { return null; }
+    }
+
+    public static Long isLong(String text) {
+        try {
+            return Long.parseLong(text);
+        } catch (NumberFormatException ex) { return null; }
+    }
+
+    public static Byte isByte(String text) {
+        try {
+            return Byte.parseByte(text);
+        } catch (NumberFormatException ex) { return null; }
+    }
+
+    public static Short isShort(String text) {
+        try {
+            return Short.parseShort(text);
+        } catch (NumberFormatException ex) { return null; }
     }
 
     public static Vector2 getTextureSize(TextureRegion texture) {
