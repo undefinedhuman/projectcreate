@@ -4,7 +4,7 @@ import com.badlogic.gdx.Files;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.core.ecs.ComponentTypes;
-import de.undefinedhuman.projectcreate.editor.editor.Editor;
+import de.undefinedhuman.projectcreate.editor.editor.ThreePanelEditor;
 import de.undefinedhuman.projectcreate.engine.ecs.ComponentBlueprint;
 import de.undefinedhuman.projectcreate.engine.ecs.EntityType;
 import de.undefinedhuman.projectcreate.engine.file.*;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-public class EntityEditor extends Editor {
+public class EntityEditor extends ThreePanelEditor {
 
     private JComboBox<String> componentComboBox;
 

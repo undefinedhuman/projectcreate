@@ -4,7 +4,7 @@ import com.badlogic.gdx.Files;
 import com.badlogic.gdx.files.FileHandle;
 import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.core.items.ItemType;
-import de.undefinedhuman.projectcreate.editor.editor.Editor;
+import de.undefinedhuman.projectcreate.editor.editor.ThreePanelEditor;
 import de.undefinedhuman.projectcreate.engine.file.*;
 import de.undefinedhuman.projectcreate.engine.resources.ResourceManager;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
-public class ItemEditor extends Editor {
+public class ItemEditor extends ThreePanelEditor {
 
     public JComboBox<ItemType> itemComboBox;
     public Item currentItem;

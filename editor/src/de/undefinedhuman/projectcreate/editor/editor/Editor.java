@@ -1,26 +1,32 @@
 package de.undefinedhuman.projectcreate.editor.editor;
 
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
+
 import javax.swing.*;
 import java.awt.*;
 
 public abstract class Editor {
 
-    protected JPanel leftPanel, middlePanel, rightPanel;
-
     public Editor(Container container) {
-        leftPanel = addPanel(container, "Main:", 20, 820);
-        middlePanel = addPanel(container, "Type:", 860, 200);
-        rightPanel = addPanel(container, "Settings:", 1080, 820);
+        Variables.IS_EDITOR = true;
     }
 
-    private JPanel addPanel(Container container, String name, int x, int width) {
+    protected void addPanel(Container container, JScrollPane... scrollPanes) {
+        for(JScrollPane scrollPane : scrollPanes)
+            container.add(scrollPane);
+    }
+
+    protected JPanel createJPanel(int width, int height) {
         JPanel panel = new JPanel(null, true);
-        panel.setPreferredSize(new Dimension(width - 25, 960 - 25));
-        JScrollPane scrollPane = new JScrollPane(panel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setBounds(x, 15, width, 990);
-        scrollPane.setBorder(BorderFactory.createTitledBorder(name));
-        container.add(scrollPane, BorderLayout.CENTER);
+        panel.setSize(new Dimension(width - Variables.BORDER_WIDTH, height - Variables.BORDER_HEIGHT));
         return panel;
+    }
+
+    protected JScrollPane createScrollPane(JPanel content, String title, int x, int y, int width, int height, int vsbPolicy, int hsbPolicy) {
+        JScrollPane scrollPane = new JScrollPane(content, vsbPolicy, hsbPolicy);
+        scrollPane.setBounds(x, y, width, height);
+        scrollPane.setBorder(BorderFactory.createTitledBorder(title));
+        return scrollPane;
     }
 
     public abstract void save();
