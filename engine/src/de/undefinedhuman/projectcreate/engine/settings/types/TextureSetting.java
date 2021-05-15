@@ -77,7 +77,7 @@ public class TextureSetting extends Setting<String> {
         loadTexture(path);
         if(texture == null)
             loadTexture(path = "Unknown.png");
-        if(TextureManager.getInstance() == null)
+        if(Variables.IS_EDITOR)
             return;
         setValue(path);
         TextureManager.getInstance().loadTextures(getValue());
