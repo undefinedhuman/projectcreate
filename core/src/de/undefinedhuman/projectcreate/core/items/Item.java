@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 public class Item {
 
     public ByteSetting
-            id = new ByteSetting("ID", 0);
+            id = new ByteSetting("ID", (byte) 0);
     public IntSetting
             maxAmount = new IntSetting("MaxAmount", 999),
             recipeQuantity = new IntSetting("Recipe Quantity", 1);

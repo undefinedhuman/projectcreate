@@ -68,7 +68,7 @@ public class Version implements Comparable<Version>{
         if(!Tools.isInRange(stageAndDataSplit.length, 2, 3))
             return new Version(Stage.SNAPSHOT, 0, 0, 0, 0);
         String[] data = stageAndDataSplit[1].split("\\.|([wb])");
-        if(data.length != 3 || !Tools.isInteger(data[0]) || !Tools.isInteger(data[1]) || !Tools.isInteger(data[2]))
+        if(data.length != 3 || Tools.isInteger(data[0]) == null || Tools.isInteger(data[1]) == null || Tools.isInteger(data[2]) == null)
             return new Version(Stage.SNAPSHOT, 0, 0, 0, 0);
         return new Version(
                 Stage.parse(stageAndDataSplit[0]),

@@ -5,7 +5,7 @@ import de.undefinedhuman.projectcreate.engine.utils.Tools;
 public class LongSetting extends NumberSetting<Long> {
 
     public LongSetting(String key, Long defaultValue) {
-        super(key, defaultValue, Tools::isLong, Long.MIN_VALUE, Long.MAX_VALUE);
+        super(key, defaultValue, Tools::isLong);
     }
 
     public LongSetting(String key, Long defaultValue, Long min, Long max) {

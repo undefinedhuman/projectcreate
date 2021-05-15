@@ -12,7 +12,7 @@ public class Animation extends PanelObject {
     public Vector2Setting
             bounds = new Vector2Setting("Bounds", new Vector2());
     public FloatSetting
-            frameTime = new FloatSetting("Frame Time", 0);
+            frameTime = new FloatSetting("Frame Time", 0f);
     public SelectionSetting<PlayMode>
             playMode = new SelectionSetting<>("Play Mode", PlayMode.values(), value -> PlayMode.valueOf(String.valueOf(value)));
 

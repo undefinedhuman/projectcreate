@@ -24,6 +24,7 @@ public class SliderSetting extends Setting<Float> {
         this.bounds.set(min, max);
         this.tickSpeed = tickSpeed;
         this.conversionValue = conversionValue;
+        setMenuTitle(key + ": Range [" + min + ", " + max + "]");
     }
 
     @Override
@@ -52,7 +53,7 @@ public class SliderSetting extends Setting<Float> {
     protected void setValueInMenu(Object value) {
         if(slider == null)
             return;
-        if(!Tools.isFloat(value.toString())) {
+        if(Tools.isFloat(value.toString()) == null) {
             Log.error("Error while setting value of setting (float conversion error): " + key);
             return;
         }

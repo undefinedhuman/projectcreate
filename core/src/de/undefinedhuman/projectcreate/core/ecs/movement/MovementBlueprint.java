@@ -10,10 +10,10 @@ import java.util.HashMap;
 public class MovementBlueprint extends ComponentBlueprint {
 
     private FloatSetting
-            speed = new FloatSetting("Speed", 0),
-            jumpSpeed = new FloatSetting("Jump Speed", 0),
-            gravity = new FloatSetting("Gravity", 0),
-            jumpAnimationTransition = new FloatSetting("Jump Transition", 25);
+            speed = new FloatSetting("Speed", 0f),
+            jumpSpeed = new FloatSetting("Jump Speed", 0f),
+            gravity = new FloatSetting("Gravity", 0f),
+            jumpAnimationTransition = new FloatSetting("Jump Transition", 25f);
 
     public MovementBlueprint() {
         super(MovementComponent.class);

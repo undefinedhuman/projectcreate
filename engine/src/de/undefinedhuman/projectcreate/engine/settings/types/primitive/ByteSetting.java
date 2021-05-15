@@ -4,7 +4,7 @@ import de.undefinedhuman.projectcreate.engine.utils.Tools;
 
 public class ByteSetting extends NumberSetting<Byte> {
     public ByteSetting(String key, Byte defaultValue) {
-        super(key, defaultValue, Tools::isByte, Byte.MIN_VALUE, Byte.MAX_VALUE);
+        super(key, defaultValue, Tools::isByte);
     }
 
     public ByteSetting(String key, Byte defaultValue, Byte min, Byte max) {

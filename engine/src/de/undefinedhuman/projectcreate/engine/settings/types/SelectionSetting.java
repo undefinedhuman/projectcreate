@@ -1,6 +1,6 @@
 package de.undefinedhuman.projectcreate.engine.settings.types;
 
-import de.undefinedhuman.projectcreate.engine.settings.Getter;
+import de.undefinedhuman.projectcreate.engine.settings.interfaces.Getter;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;

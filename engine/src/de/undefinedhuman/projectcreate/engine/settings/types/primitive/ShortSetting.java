@@ -4,7 +4,7 @@ import de.undefinedhuman.projectcreate.engine.utils.Tools;
 
 public class ShortSetting extends NumberSetting<Short> {
     public ShortSetting(String key, Short defaultValue) {
-        super(key, defaultValue, Tools::isShort, Short.MIN_VALUE, Short.MAX_VALUE);
+        super(key, defaultValue, Tools::isShort);
     }
 
     public ShortSetting(String key, Short defaultValue, Short min, Short max) {

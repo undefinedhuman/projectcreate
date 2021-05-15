@@ -4,7 +4,7 @@ import de.undefinedhuman.projectcreate.engine.utils.Tools;
 
 public class FloatSetting extends NumberSetting<Float> {
     public FloatSetting(String key, Float defaultValue) {
-        super(key, defaultValue, Tools::isFloat, Float.MIN_VALUE, Float.MAX_VALUE);
+        super(key, defaultValue, Tools::isFloat);
     }
 
     public FloatSetting(String key, Float defaultValue, Float min, Float max) {

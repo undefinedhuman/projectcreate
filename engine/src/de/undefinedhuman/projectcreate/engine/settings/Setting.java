@@ -4,6 +4,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
+import de.undefinedhuman.projectcreate.engine.settings.interfaces.Getter;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
@@ -13,6 +14,7 @@ import java.awt.event.KeyEvent;
 public class Setting<T> {
 
     protected String key;
+    private String menuTitle;
     protected Object value;
     private int contentHeight = Variables.DEFAULT_CONTENT_HEIGHT;
 
@@ -24,6 +26,11 @@ public class Setting<T> {
         this.key = key;
         this.value = defaultValue;
         this.getter = getter;
+        setMenuTitle(key + ":");
+    }
+
+    public void setMenuTitle(String menuTitle) {
+        this.menuTitle = menuTitle;
     }
 
     public String getKey() { return key; }
@@ -69,7 +76,7 @@ public class Setting<T> {
 
         JScrollPane settingsContainer = new JScrollPane(contentPanel);
         settingsContainer.setBounds((int) position.x, (int) position.y, containerWidth, contentHeight + Variables.BORDER_HEIGHT);
-        settingsContainer.setBorder(BorderFactory.createTitledBorder(key));
+        settingsContainer.setBorder(BorderFactory.createTitledBorder(menuTitle));
         container.add(settingsContainer);
     }
 

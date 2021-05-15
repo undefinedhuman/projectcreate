@@ -4,7 +4,7 @@ import de.undefinedhuman.projectcreate.engine.utils.Tools;
 
 public class IntSetting extends NumberSetting<Integer> {
     public IntSetting(String key, Integer defaultValue) {
-        super(key, defaultValue, Tools::isInteger, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        super(key, defaultValue, Tools::isInteger);
     }
 
     public IntSetting(String key, Integer defaultValue, Integer min, Integer max) {
