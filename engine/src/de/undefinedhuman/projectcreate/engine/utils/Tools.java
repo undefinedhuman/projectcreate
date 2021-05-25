@@ -7,11 +7,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.file.FileReader;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
-import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
+import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectAdapter;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector4;
 
 import javax.swing.*;
@@ -25,34 +25,10 @@ import java.util.stream.Stream;
 
 public class Tools {
 
-    public static SettingsObject loadSettings(FileReader reader) {
-        SettingsObject settingsObject = new SettingsObject();
-        while(reader.nextLine() != null) {
-            String key = reader.getNextString();
-            if(key.startsWith("}")) return settingsObject;
-            else if(key.startsWith("{")) settingsObject.addSetting(loadKey(key), loadSettings(reader));
-            else settingsObject.addSetting(key, reader.getRemainingRawData());
-        }
-        return settingsObject;
-    }
-
-    public static void loadSettings(FileReader reader, Setting<?>... settings) {
-        SettingsObject object = loadSettings(reader);
-        for(Setting<?> setting : settings)
-            setting.loadSetting(reader.parent(), object);
-    }
-
     public static void loadSettings(FileReader reader, SettingsList settings) {
-        SettingsObject object = loadSettings(reader);
+        SettingsObject object = new SettingsObjectAdapter(reader);
         for(Setting<?> setting : settings.getSettings())
             setting.loadSetting(reader.parent(), object);
-    }
-
-    private static String loadKey(String key) {
-        String[] values = key.split(":");
-        if(values.length < 2)
-            Log.showErrorDialog("Can't find key in string: " + key, true);
-        return values[1];
     }
 
     public static void saveSettings(FileWriter writer, SettingsList settings) {

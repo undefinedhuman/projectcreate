@@ -8,6 +8,7 @@ import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.resources.ResourceManager;
+import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectAdapter;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 
 import javax.swing.*;
@@ -31,7 +32,7 @@ public class SelectionPanel<T extends PanelObject> extends Panel<T> {
         for (FileHandle itemDir : itemDirs) {
             if (!itemDir.isDirectory()) continue;
             FileReader reader = new FileReader(new FsFile(Paths.ITEM_PATH, itemDir.name() + "/settings.item", Files.FileType.Internal), true);
-            ids.add(itemDir.name() + "-" + ((LineSplitter) Tools.loadSettings(reader).get("Name")).getNextString());
+            ids.add(itemDir.name() + "-" + ((LineSplitter) new SettingsObjectAdapter(reader).get("Name")).getNextString());
             reader.close();
         }
 

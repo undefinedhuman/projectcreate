@@ -29,7 +29,7 @@ public class SpritePanel extends BatchPanel<SpriteLayer> {
             if (panelObjects.containsKey(name))
                 continue;
             SpriteLayer spriteLayer = createNewInstance();
-            spriteLayer.texture.setTexture(dataFile.parent().path() + "/layers/" + name + ".png", Files.FileType.Absolute);
+            spriteLayer.texture.setTexture(new FileHandle(file).parent().path() + "/layers/" + name + ".png", Files.FileType.Absolute);
             spriteLayer.frameCount.setValue(frameData.size);
             spriteLayer.renderLevel.setValue(renderLevel++);
             addPanelObject(name, spriteLayer);

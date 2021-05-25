@@ -46,7 +46,7 @@ public enum FileError implements Predicate<FsFile> {
         return "(" + errorCode + ") " + errorMessage;
     }
 
-    public static boolean checkFileForErrors(String errorFileName, FsFile file, FileError... errors) {
+    public static boolean checkFileForErrors(String fileActionName, FsFile file, FileError... errors) {
         ArrayList<String> errorMessages = new ArrayList<>();
         for (FileError error : errors) {
             if (!error.test(file))
@@ -57,7 +57,7 @@ public enum FileError implements Predicate<FsFile> {
         }
         boolean hasErrors = errorMessages.size() > 0;
         if(hasErrors)
-            Log.error("Error" + Tools.appendSToString(errorMessages.size()) + " while " + errorFileName + " file: " + errorMessages);
+            Log.error("Error" + Tools.appendSToString(errorMessages.size()) + " while " + fileActionName + " file: " + errorMessages);
         errorMessages.clear();
         return hasErrors;
     }

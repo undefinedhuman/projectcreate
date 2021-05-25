@@ -9,6 +9,7 @@ import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
+import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectAdapter;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 
@@ -79,7 +80,7 @@ public class BlueprintManager extends Manager {
         FsFile file = new FsFile(Paths.ENTITY_PATH, id + "/settings.entity", Files.FileType.Internal);
         Blueprint blueprint = new Blueprint();
         FileReader reader = file.getFileReader(true);
-        SettingsObject object = Tools.loadSettings(reader);
+        SettingsObject object = new SettingsObjectAdapter(reader);
 
         for(Setting<?> setting : blueprint.settings.getSettings())
             setting.loadSetting(reader.parent(), object);
@@ -94,8 +95,6 @@ public class BlueprintManager extends Manager {
             componentBlueprint.load(reader.parent(), (SettingsObject) componentObject);
             blueprint.addComponentBlueprint(componentBlueprint);
         }
-
-        Log.info(blueprint.getComponentBlueprints().keySet());
 
         reader.close();
         return blueprint;

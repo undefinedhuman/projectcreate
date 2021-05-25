@@ -12,6 +12,7 @@ import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.resources.ResourceManager;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
+import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectAdapter;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
 import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
@@ -106,9 +107,13 @@ public class ItemManager extends Manager {
 
     private Item loadItem(int id) {
         FileReader reader = new FsFile(Paths.ITEM_PATH, id + "/settings.item", Files.FileType.Internal).getFileReader(true);
-        SettingsObject settingsObject = Tools.loadSettings(reader);
-        if(!settingsObject.containsKey("Type")) return null;
-        ItemType type = ItemType.valueOf(((LineSplitter) settingsObject.get("Type")).getNextString());
+        SettingsObject settingsObject = new SettingsObjectAdapter(reader);
+        if(!settingsObject.containsKey("Type"))
+            return null;
+        String typeName = ((LineSplitter) settingsObject.get("Type")).getNextString();
+        if(typeName == null || typeName.equals(""))
+            return null;
+        ItemType type = ItemType.valueOf(typeName);
         Item item = type.createInstance();
         for(Setting<?> setting : item.getSettingsList().getSettings())
             setting.loadSetting(reader.parent(), settingsObject);
