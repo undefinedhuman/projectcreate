@@ -7,13 +7,15 @@ public enum Level {
     DEBUG("Debug"),
     CRASH("Crash");
 
-    private String prefix;
+    private final String prefix;
 
     Level(String prefix) {
         this.prefix = prefix;
     }
 
     public String getPrefix() {
-        return prefix;
+        if(prefix.equals(""))
+            return "";
+        return "[" + prefix + "]";
     }
 }
