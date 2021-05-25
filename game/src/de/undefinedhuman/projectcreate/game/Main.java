@@ -8,6 +8,8 @@ import de.undefinedhuman.projectcreate.engine.config.ConfigManager;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.language.LanguageManager;
 import de.undefinedhuman.projectcreate.engine.log.Log;
+import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessage;
+import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessageDecorators;
 import de.undefinedhuman.projectcreate.engine.resources.SoundManager;
 import de.undefinedhuman.projectcreate.engine.resources.font.FontManager;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
@@ -43,7 +45,20 @@ public class Main extends Game {
     public Main() {
         instance = this;
         managerList = new ManagerList();
-        managerList.addManager(Log.getInstance(), ConfigManager.getInstance().setConfigs(GameConfig.getInstance()), LanguageManager.getInstance(), TextureManager.getInstance(), SoundManager.getInstance(), FontManager.getInstance(), Inputs.getInstance(), GuiManager.getInstance(), GuiTextureManager.getInstance(), BlueprintManager.getInstance(), ItemManager.getInstance());
+        managerList.addManager(
+                Log.getInstance().setLogMessageDecorator(
+                    new LogMessage().andThen(value -> LogMessageDecorators.withDate(value, Variables.LOG_DATE_FORMAT)).andThen(value -> LogMessageDecorators.withModuleName(value, "Game"))
+                ),
+                ConfigManager.getInstance().setConfigs(GameConfig.getInstance()),
+                LanguageManager.getInstance(),
+                TextureManager.getInstance(),
+                SoundManager.getInstance(),
+                FontManager.getInstance(),
+                Inputs.getInstance(),
+                GuiManager.getInstance(),
+                GuiTextureManager.getInstance(),
+                BlueprintManager.getInstance(),
+                ItemManager.getInstance());
         timer = new Timer(1, true, () -> Window.instance.update());
     }
 

@@ -21,6 +21,7 @@ public class Window {
         config.foregroundFPS = -1;
         config.backgroundFPS = 60;
         config.vSyncEnabled = false;
+        config.addIcon("logo/32x32.png", Files.FileType.Internal);
         config.addIcon("logo/64x64.png", Files.FileType.Internal);
         config.width = Variables.BASE_WINDOW_WIDTH;
         config.height = Variables.BASE_WINDOW_HEIGHT;

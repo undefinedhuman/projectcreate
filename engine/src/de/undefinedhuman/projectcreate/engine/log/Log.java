@@ -8,6 +8,10 @@ import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.file.Serializable;
+import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessage;
+import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessageDecorators;
+import de.undefinedhuman.projectcreate.engine.log.decoratorold.BaseLogMessage;
+import de.undefinedhuman.projectcreate.engine.log.decoratorold.LogMessageDecorator;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
@@ -17,6 +21,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -34,6 +39,8 @@ public class Log extends Manager implements ApplicationLogger, Serializable {
     private List<LogEvent> logEvents;
 
     public Files.FileType fileLocation = Files.FileType.External;
+
+    private Function<String, String> logMessage = new LogMessage();
 
     private Log() {
         logMessages = new ArrayList<>();
@@ -68,6 +75,11 @@ public class Log extends Manager implements ApplicationLogger, Serializable {
         for (String message : logMessages)
             writer.writeString(message).nextLine();
         writer.close();
+    }
+
+    public Log setLogMessageDecorator(Function<String, String> logMessageDecorator) {
+        this.logMessage = logMessageDecorator;
+        return getInstance();
     }
 
     public void setLogLevel(Level logLevel) {
@@ -134,12 +146,7 @@ public class Log extends Manager implements ApplicationLogger, Serializable {
         StringBuilder logMessage = new StringBuilder();
         for (int i = 0; i < messages.length; i++) logMessage.append(messages[i]).append(i < messages.length - 1 ? ", " : "");
 
-        String fullMessage = Variables.LOG_MESSAGE_FORMAT
-                .replace("%prefix%", logLevel.getPrefix())
-                .replace("%time%", getTime())
-                .replace("%message%", logMessage.toString())
-                .replace("%name%", Variables.NAME)
-                .replace("%version%", Variables.VERSION.toString());
+        String fullMessage = logLevel.getPrefix() + this.logMessage.apply(logMessage.toString());
 
         console.println(fullMessage);
         console.flush();

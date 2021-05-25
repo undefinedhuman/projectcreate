@@ -11,6 +11,8 @@ import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.gl.HeadlessApplicationListener;
 import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
+import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessage;
+import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessageDecorators;
 import de.undefinedhuman.projectcreate.engine.utils.ManagerList;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.Version;
@@ -68,6 +70,9 @@ public class Updater extends JFrame {
         InstallationUtils.checkProjectDotDirectory();
         managerList.init();
         Gdx.app.setApplicationLogger(Log.getInstance());
+        Log.getInstance().setLogMessageDecorator(
+                new LogMessage().andThen(value -> LogMessageDecorators.withDate(value, Variables.LOG_DATE_FORMAT)).andThen(value -> LogMessageDecorators.withModuleName(value, "Game"))
+        );
         Gdx.app.setLogLevel(Variables.LOG_LEVEL.ordinal());
     }
 
@@ -80,7 +85,7 @@ public class Updater extends JFrame {
         FsFile currentlyInstalledVersion = new FsFile(UpdaterConfig.getInstance().installationPath.getValue(), UpdaterConfig.getInstance().version.getValue() + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
         List<Version> versions = InstallationUtils.fetchAvailableVersions(DOWNLOAD_LAUNCHER_URL, null);
         if(versions.isEmpty())
-            Log.showErrorDialog(Level.CRASH, "Error while fetching available launcher versions. \nPlease restart, if the error persists, please contact the author.", true);
+            Log.showErrorDialog("Error while fetching available launcher versions. \nPlease restart, if the error persists, please contact the author.", true);
         Version maxVersion = Collections.max(versions);
         String downloadUrl = DOWNLOAD_LAUNCHER_URL + maxVersion + DownloadUtils.DOWNLOAD_FILE_EXTENSION;
         if(!currentlyInstalledVersion.exists() || !UpdaterConfig.getInstance().version.getValue().equals(maxVersion) || DownloadUtils.fetchFileSize(downloadUrl) != currentlyInstalledVersion.length()) {
@@ -92,7 +97,7 @@ public class Updater extends JFrame {
             try {
                 DownloadUtils.downloadFile(downloadUrl, currentlyInstalledVersion);
             } catch (IOException | URISyntaxException e) {
-                Log.showErrorDialog(Level.CRASH, "Error while downloading launcher version " + maxVersion + "\nPlease restart, if the error persists, please contact the author.", true);
+                Log.showErrorDialog("Error while downloading launcher version " + maxVersion + "\nPlease restart, if the error persists, please contact the author.", true);
             }
         } else Log.info("Launcher already up to date. Version: " + maxVersion);
 

@@ -16,6 +16,6 @@ public enum Level {
     public String getPrefix() {
         if(prefix.equals(""))
             return "";
-        return "[" + prefix + "]";
+        return "[" + prefix + "] ";
     }
 }

@@ -7,6 +7,8 @@ import de.undefinedhuman.projectcreate.editor.editor.Editor;
 import de.undefinedhuman.projectcreate.editor.editor.EditorType;
 import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
+import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessage;
+import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessageDecorators;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
@@ -38,12 +40,16 @@ public class Window extends JFrame {
         errorMessage.setBounds(22, 1002, 1880, 25);
         errorMessage.setForeground(new Color(255, 85, 85));
 
-        Log.getInstance().addLogEvent((level, message) -> {
-            if(level != Level.ERROR)
-                return;
-            errorMessage.setText(message);
-            hasError = true;
-        });
+        Log.getInstance()
+                .setLogMessageDecorator(
+                        new LogMessage().andThen(value -> LogMessageDecorators.withDate(value, Variables.LOG_DATE_FORMAT)).andThen(value -> LogMessageDecorators.withModuleName(value, "Editor"))
+                )
+                .addLogEvent((level, message) -> {
+                    if(level != Level.ERROR)
+                        return;
+                    errorMessage.setText(message);
+                    hasError = true;
+                });
         Log.getInstance().init();
         Log.getInstance().load();
         setResizable(false);

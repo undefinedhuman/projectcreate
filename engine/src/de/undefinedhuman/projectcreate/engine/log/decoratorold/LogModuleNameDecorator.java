@@ -1,10 +1,10 @@
-package de.undefinedhuman.projectcreate.engine.log.decorator;
+package de.undefinedhuman.projectcreate.engine.log.decoratorold;
 
 import de.undefinedhuman.projectcreate.engine.log.Level;
 
 public class LogModuleNameDecorator extends LogMessageDecorator {
 
-    private String moduleName;
+    private final String moduleName;
 
     public LogModuleNameDecorator(LogMessage logMessage, String moduleName) {
         super(logMessage);
@@ -12,8 +12,8 @@ public class LogModuleNameDecorator extends LogMessageDecorator {
     }
 
     @Override
-    public String createMessage(Level logLevel, String message) {
-        return "[" + moduleName + "]" + super.createMessage(logLevel, message);
+    public String createMessage(String message) {
+        return "[" + moduleName + "]" + message;
     }
 
 }

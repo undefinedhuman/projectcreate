@@ -1,4 +1,4 @@
-package de.undefinedhuman.projectcreate.engine.log.decorator;
+package de.undefinedhuman.projectcreate.engine.log.decoratorold;
 
 import de.undefinedhuman.projectcreate.engine.log.Level;
 
@@ -16,8 +16,8 @@ public class LogDateDecorator extends LogMessageDecorator {
     }
 
     @Override
-    public String createMessage(Level logLevel, String message) {
-        return dateFormat.format(Calendar.getInstance().getTime()) + super.createMessage(logLevel, message);
+    public String createMessage(String message) {
+        return dateFormat.format(Calendar.getInstance().getTime()) + message;
     }
 
 }

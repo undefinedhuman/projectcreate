@@ -1,7 +1,10 @@
 package de.undefinedhuman.projectcreate.engine.log.decorator;
 
-import de.undefinedhuman.projectcreate.engine.log.Level;
+import java.util.function.Function;
 
-public interface LogMessage {
-    String createMessage(Level logLevel, String message);
+public class LogMessage implements Function<String, String> {
+    @Override
+    public String apply(String s) {
+        return s;
+    }
 }

@@ -110,6 +110,14 @@ nbdist/
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
 
+# Package Files #
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
 ### Java template
 # Compiled class file
 *.class
@@ -122,14 +130,6 @@ nbdist/
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
-
-# Package Files #
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
@@ -211,7 +211,6 @@ fabric.properties
 .idea/
 
 SandboxGame/
-ProjectCreate/
 
 /noise.png
 /noise old.png
