@@ -9,6 +9,7 @@ import de.undefinedhuman.projectcreate.engine.file.*;
 import de.undefinedhuman.projectcreate.engine.resources.ResourceManager;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
+import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectAdapter;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
@@ -58,7 +59,7 @@ public class ItemEditor extends ThreePanelEditor {
             if(itemFile.length() == 0)
                 continue;
             FileReader reader = itemFile.getFileReader(true);
-            SettingsObject settings = Tools.loadSettings(reader);
+            SettingsObject settings = new SettingsObjectAdapter(reader);
             ids.add(itemDir.name() + "-" + ((LineSplitter) settings.get("Name")).getNextString());
             reader.close();
         }
@@ -83,7 +84,7 @@ public class ItemEditor extends ThreePanelEditor {
         loadButton.addActionListener(a -> {
             if(itemSelection.getSelectedItem() == null) return;
             FileReader reader = new FileReader(new FsFile(Paths.ITEM_PATH, Integer.parseInt(((String) itemSelection.getSelectedItem()).split("-")[0]) + "/settings.item", Files.FileType.Internal), true);
-            SettingsObject settingsObject = Tools.loadSettings(reader);
+            SettingsObject settingsObject = new SettingsObjectAdapter(reader);
             if(!settingsObject.containsKey("Type")) return;
             ItemType type = ItemType.valueOf(((LineSplitter) settingsObject.get("Type")).getNextString());
             itemComboBox.setSelectedItem(type);

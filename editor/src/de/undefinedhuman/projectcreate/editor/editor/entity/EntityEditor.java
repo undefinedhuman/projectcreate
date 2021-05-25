@@ -12,6 +12,7 @@ import de.undefinedhuman.projectcreate.engine.resources.ResourceManager;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
+import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectAdapter;
 import de.undefinedhuman.projectcreate.engine.settings.types.SelectionSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.Vector2Setting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.IntSetting;
@@ -111,7 +112,7 @@ public class EntityEditor extends ThreePanelEditor {
             FsFile entityFile = new FsFile(Paths.ENTITY_PATH, entityDir.name() + "/settings.entity", Files.FileType.Internal);
             if(entityFile.length() == 0) continue;
             FileReader reader = entityFile.getFileReader(true);
-            SettingsObject settings = Tools.loadSettings(reader);
+            SettingsObject settings = new SettingsObjectAdapter(reader);
             ids.add(entityDir.name() + "-" + ((LineSplitter) settings.get("Name")).getNextString());
             reader.close();
         }
@@ -139,7 +140,7 @@ public class EntityEditor extends ThreePanelEditor {
             Tools.removeSettings(rightPanel);
 
             FileReader reader = new FileReader(new FsFile(Paths.ENTITY_PATH, Integer.parseInt(((String) comboBox.getSelectedItem()).split("-")[0]) + "/settings.entity", Files.FileType.Internal), true);
-            SettingsObject settingsObject = Tools.loadSettings(reader);
+            SettingsObject settingsObject = new SettingsObjectAdapter(reader);
 
             for(Setting<?> setting : baseSettings.getSettings())
                 setting.loadSetting(reader.parent(), settingsObject);
