@@ -79,7 +79,7 @@ public class CollisionUtils {
     }
 
     public static boolean calculateMTV(Hitbox entityHitbox, int x, int y, Vector3 mtv) {
-        byte state = World.instance.getCollision(x, y, World.COLLISION_STATE_LAYER);
+        short state = World.instance.getCollision(x, y, World.COLLISION_STATE_LAYER);
         if(state == 0) return false;
         Hitbox hitbox = blockCollisionMask[state];
         hitbox.update(x * Variables.COLLISION_SIZE, y * Variables.COLLISION_SIZE);

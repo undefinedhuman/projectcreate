@@ -69,7 +69,7 @@ public class FileUtils {
 
     public static boolean readBoolean(String value) {
         if (value.equalsIgnoreCase("false") || value.equalsIgnoreCase("true")) return Boolean.parseBoolean(value);
-        else if(Tools.isInteger(value)) return Integer.parseInt(value) == 1;
+        else if(Tools.isInteger(value) != null) return Integer.parseInt(value) == 1;
         else return false;
     }
 

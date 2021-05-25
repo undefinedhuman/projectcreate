@@ -1,5 +1,6 @@
 package de.undefinedhuman.projectcreate.game.window;
 
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
@@ -20,6 +21,7 @@ public class Window {
         config.foregroundFPS = -1;
         config.backgroundFPS = 60;
         config.vSyncEnabled = false;
+        config.addIcon("logo/64x64.png", Files.FileType.Internal);
         config.width = Variables.BASE_WINDOW_WIDTH;
         config.height = Variables.BASE_WINDOW_HEIGHT;
         return config;

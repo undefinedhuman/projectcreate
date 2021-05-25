@@ -7,7 +7,6 @@ import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
-import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
@@ -65,7 +64,7 @@ public class TextureSetting extends Setting<String> {
         writer.writeString(key).writeString(value.toString());
         FsFile file = new FsFile(writer.parent(), getValue(),  Files.FileType.Local);
         try { ImageIO.write(texture, "png", file.file());
-        } catch (IOException ex) { Log.showErrorDialog(Level.CRASH, "Can not save texture (" + this + "): \n" + ex.getMessage(), true); }
+        } catch (IOException ex) { Log.showErrorDialog("Can not save texture (" + this + "): \n" + ex.getMessage(), true); }
     }
 
     @Override
@@ -107,7 +106,7 @@ public class TextureSetting extends Setting<String> {
     private void loadTexture(String path, Files.FileType type) {
         FsFile textureFile = new FsFile(path, type);
         try { texture = new PngImage().read(textureFile.read(), true);
-        } catch (IOException ex) { Log.showErrorDialog(Level.CRASH, "Can not load texture (" + this + "): \n" + ex.getMessage(), true); }
+        } catch (IOException ex) { Log.showErrorDialog("Can not load texture (" + this + "): \n" + ex.getMessage(), true); }
         if(texture == null && !path.equals("Unknown.png"))
             loadTexture("Unknown.png");
         setValue(textureFile.name());

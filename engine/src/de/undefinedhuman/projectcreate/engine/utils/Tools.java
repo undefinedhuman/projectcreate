@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.file.FileReader;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
-import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
@@ -52,7 +51,7 @@ public class Tools {
     private static String loadKey(String key) {
         String[] values = key.split(":");
         if(values.length < 2)
-            Log.showErrorDialog(Level.CRASH, "Can't find key in string: " + key, true);
+            Log.showErrorDialog("Can't find key in string: " + key, true);
         return values[1];
     }
 

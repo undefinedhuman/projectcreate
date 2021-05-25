@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
-import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 
 import javax.imageio.ImageIO;
@@ -21,7 +20,7 @@ public class ResourceManager {
         try { texture = new Texture(Gdx.files.internal(path));
         } catch (Exception ex) { Log.error("Error while loading texture: " + path + "\n" + ex.getMessage()); }
         if(texture == null && path.equals("Unknown.png"))
-            Log.showErrorDialog(Level.CRASH, "Can't load default texture!", true);
+            Log.showErrorDialog("Can't load default texture!", true);
         return texture != null ? texture : loadTexture("Unknown.png");
     }
 
@@ -32,7 +31,7 @@ public class ResourceManager {
             Log.error("Error while loading image: " + path + "\n" + ex.getMessage());
         }
         if(image == null && path.equals("Unknown.png"))
-            Log.showErrorDialog(Level.CRASH, "Can't load default image!", true);
+            Log.showErrorDialog("Can't load default image!", true);
         return image != null ? image : loadImage("Unknown.png");
     }
 

@@ -25,7 +25,7 @@ public class MovementSystem extends System {
                 || (collisionComponent = (CollisionComponent) entity.getComponent(CollisionComponent.class)) == null
                 || (animationComponent = (AnimationComponent) entity.getComponent(AnimationComponent.class)) == null) return;
 
-        movementComponent.velocity.x += ((movementComponent.getDirection() * movementComponent.getSpeed()) - movementComponent.velocity.x) * 0.175f;
+        movementComponent.velocity.x += ((movementComponent.getDirection() * movementComponent.getSpeed()) - movementComponent.velocity.x) * 0.1f;
         if(movementComponent.getDirection() == 0 && Tools.isInRange(movementComponent.velocity.x, -5, 5)) movementComponent.velocity.x = 0;
         movementComponent.velocity.y -= movementComponent.getGravity() * delta;
 

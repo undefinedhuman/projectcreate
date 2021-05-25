@@ -67,7 +67,7 @@ public class WorldManager {
 
     public void placeBlock(byte worldLayer) {
         if (!canPlace) return;
-        int id = Selector.getInstance().getSelectedItemID();
+        short id = Selector.getInstance().getSelectedItemID();
         Block block = (Block) ItemManager.getInstance().getItem(id);
         Vector2i blockPos = Tools.convertToBlockPos(Tools.getWorldPos(CameraManager.gameCamera, Mouse.getMouseCoords()));
 
@@ -190,7 +190,7 @@ public class WorldManager {
         return (block != null && block.id.getValue() != 0 && block.hasCollision.getValue()) ? value : 0;
     }
 
-    public boolean isTransparent(byte blockID) {
+    public boolean isTransparent(short blockID) {
         return blockID == 0 || !((Block) ItemManager.getInstance().getItem(blockID)).isFull.getValue();
     }
 

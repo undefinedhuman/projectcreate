@@ -1,6 +1,7 @@
 package de.undefinedhuman.projectcreate.core.ecs.equip;
 
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.engine.ecs.Component;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.LineWriter;
@@ -32,6 +33,13 @@ public class EquipComponent extends Component {
     public void setItemID(int index, int itemID) {
         if (!Tools.isInRange(index, 0, 4)) return;
         itemIDs[index] = itemID;
+    }
+
+    public void setItemID(int index, Item item) {
+        if (!Tools.isInRange(index, 0, 4))
+            return;
+        // itemIDs[index] = itemID;
+        // TODO ADD ARMOR
     }
 
     @Override

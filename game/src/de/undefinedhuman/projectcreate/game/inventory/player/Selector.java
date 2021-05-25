@@ -3,7 +3,6 @@ package de.undefinedhuman.projectcreate.game.inventory.player;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.core.items.Item;
-import de.undefinedhuman.projectcreate.game.crafting.CraftingInventory;
 import de.undefinedhuman.projectcreate.game.equip.EquipManager;
 import de.undefinedhuman.projectcreate.game.gui.texture.GuiTemplate;
 import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.CenterConstraint;
@@ -41,9 +40,9 @@ public class Selector extends Inventory {
         super.render(batch, camera);
     }
 
-    public int getSelectedItemID() {
+    public short getSelectedItemID() {
         InvItem item = inventory[0][selected].getItem();
-        return item.getAmount() != -1 ? item.getID() : 0;
+        return (short) (item.getAmount() != -1 ? item.getID() : 0);
     }
 
     public void setSelected(int index) {

@@ -34,8 +34,8 @@ public class World {
 
     private Color batchColor = new Color();
 
-    private byte[][][] blockLayer;       // Y, X, DATA LAYER (BLOCK, STATE)
-    private byte[][][] collisionLayer;   // Y, X, COLLISION LAYER
+    private short[][][] blockLayer;       // Y, X, DATA LAYER (BLOCK, STATE)
+    private short[][][] collisionLayer;   // Y, X, COLLISION LAYER
 
     public World(String name, int maxHeight, int width, int height, int seed) {
         this.name = name;
@@ -46,8 +46,8 @@ public class World {
         this.pixelSize.set(width * Variables.BLOCK_SIZE, height * Variables.BLOCK_SIZE);
         this.collisionSize.set(width*2, height*2);
 
-        this.blockLayer = new byte[size.y][size.x][4];
-        this.collisionLayer = new byte[collisionSize.y][collisionSize.x][2];
+        this.blockLayer = new short[size.y][size.x][4];
+        this.collisionLayer = new short[collisionSize.y][collisionSize.x][2];
     }
 
     public void renderMainLayer(SpriteBatch batch) {
@@ -59,7 +59,7 @@ public class World {
         if(Variables.DEBUG)
             for (int i = CameraManager.getInstance().blockBounds.x*2; i <= CameraManager.getInstance().blockBounds.z*2; i++)
                 for (int j = CameraManager.getInstance().blockBounds.y*2; j <= CameraManager.getInstance().blockBounds.w*2; j++) {
-                    byte state = getCollision(i, j, COLLISION_STATE_LAYER);
+                    short state = getCollision(i, j, COLLISION_STATE_LAYER);
                     if(state == 0) continue;
                     Hitbox hitbox = CollisionUtils.blockCollisionMask[state];
                     hitbox.update(i * Variables.COLLISION_SIZE, j * Variables.COLLISION_SIZE);
@@ -87,18 +87,18 @@ public class World {
             TopLayerManager.instance.render(batch, x, y, TopLayerType.GRASS, getBlock(x - 1, y, worldLayer) != 0, getBlock(x + 1, y, worldLayer) != 0);
     }
 
-    public byte getBlock(int x, int y, byte worldLayer) {
+    public short getBlock(int x, int y, byte worldLayer) {
         if(y < 0 || y >= size.y) return 0;
         return getBlockData(x, y, worldLayer, BLOCK_LAYER);
     }
 
-   public void setBlock(int x, int y, byte worldLayer, byte blockID) {
+   public void setBlock(int x, int y, byte worldLayer, short blockID) {
         if(y < 0 || y >= size.y) return;
         setBlockData(x, y, worldLayer, BLOCK_LAYER, blockID);
         if(worldLayer == MAIN_LAYER) setCollisionBlock(x, y, blockID != 0 && ((Block) ItemManager.getInstance().getItem(blockID)).hasCollision.getValue());
     }
 
-    public byte getState(int x, int y, byte worldLayer) {
+    public short getState(int x, int y, byte worldLayer) {
         if(getBlock(x, y, worldLayer) == 0) return 0;
         return getBlockData(x, y, worldLayer, STATE_LAYER);
     }
@@ -108,7 +108,7 @@ public class World {
         setBlockData(x, y, worldLayer, STATE_LAYER, state);
     }
 
-    public byte getCollision(int x, int y, byte collisionLayer) {
+    public short getCollision(int x, int y, byte collisionLayer) {
         if(y < 0 || y >= collisionSize.y) return 1;
         return this.collisionLayer[y][calculateXPosition(x, collisionSize.x)][collisionLayer];
     }
@@ -124,11 +124,11 @@ public class World {
                 setCollision(blockX*2+i, blockY*2+j, COLLISION_BASE_LAYER, (byte) (solid ? 1 : 0));
     }
 
-    private byte getBlockData(int x, int y, byte worldLayer, byte dataLayer) {
+    private short getBlockData(int x, int y, byte worldLayer, byte dataLayer) {
         return this.blockLayer[y][calculateXPosition(x, size.x)][worldLayer + dataLayer];
     }
 
-    private void setBlockData(int x, int y, byte worldLayer, byte dataLayer, byte blockID) {
+    private void setBlockData(int x, int y, byte worldLayer, byte dataLayer, short blockID) {
         this.blockLayer[y][calculateXPosition(x, size.x)][worldLayer + dataLayer] = blockID;
     }
 

@@ -5,8 +5,6 @@ import com.badlogic.gdx.backends.lwjgl.LwjglAWTCanvas;
 import com.formdev.flatlaf.FlatDarculaLaf;
 import de.undefinedhuman.projectcreate.editor.editor.Editor;
 import de.undefinedhuman.projectcreate.editor.editor.EditorType;
-import de.undefinedhuman.projectcreate.editor.editor.entity.EntityEditor;
-import de.undefinedhuman.projectcreate.editor.editor.item.ItemEditor;
 import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
@@ -54,7 +52,7 @@ public class Window extends JFrame {
         container.setBackground(Variables.BACKGROUND_COLOR);
         addMenu();
 
-        setEditor(EditorType.ENTITY);
+        setEditor(EditorType.WORLD);
 
         setLocationRelativeTo(null);
         setVisible(true);
@@ -80,8 +78,10 @@ public class Window extends JFrame {
         addMenuItem(fileMenu, "Save", e -> editor.save());
 
         editorMenu = addMenu("Editor");
-        addMenuItem(editorMenu, "Item", e -> setEditor(EditorType.ITEM));
-        addMenuItem(editorMenu, "Entity", e -> setEditor(EditorType.ENTITY));
+        for(EditorType editorType : EditorType.values()) {
+            String title = editorType.name().substring(0, 1).toUpperCase() + editorType.name().substring(1).toLowerCase();
+            addMenuItem(editorMenu, title, e -> setEditor(editorType));
+        }
 
         setJMenuBar(menuBar);
     }
@@ -102,14 +102,9 @@ public class Window extends JFrame {
         container.removeAll();
         container.add(errorMessage);
         container.setLayout(null);
-        switch (type) {
-            case ITEM:
-                editor = new ItemEditor(container);
-                break;
-            case ENTITY:
-                editor = new EntityEditor(container);
-                break;
-        }
+        editor = type.newInstance(container);
+        if(editor == null)
+            Log.showErrorDialog("Error while creating editor class instance!", true);
         revalidate();
         repaint();
     }

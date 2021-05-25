@@ -3,7 +3,6 @@ package de.undefinedhuman.projectcreate.engine.file;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Base64Coder;
-import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
@@ -56,13 +55,13 @@ public class FileWriter {
 
     public FileWriter writeValue(Object v) {
         try { writer.write(base ? Base64Coder.encodeString(String.valueOf(v)) + this.separator : v + this.separator);
-        } catch (IOException ex) { Log.showErrorDialog(Level.CRASH, "Can't write new value: \n" + ex.getMessage(), true); }
+        } catch (IOException ex) { Log.showErrorDialog("Can't write new value: \n" + ex.getMessage(), true); }
         return this;
     }
 
     public FileWriter nextLine() {
         try { writer.newLine();
-        } catch (IOException ex) { Log.showErrorDialog(Level.CRASH, "Can't write new line: \n" + ex.getMessage(), true); }
+        } catch (IOException ex) { Log.showErrorDialog("Can't write new line: \n" + ex.getMessage(), true); }
         return this;
     }
 

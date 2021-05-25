@@ -1,6 +1,6 @@
-package de.undefinedhuman.projectcreate.game.world;
+package de.undefinedhuman.projectcreate.core.noise;
 
-import de.undefinedhuman.projectcreate.game.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Tools;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -102,18 +102,21 @@ public class NoiseTest extends JFrame {
         int width = 640, height = 640;
         img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
-        Noise noise = new Noise(octaves, amplitude, roughness);
-        noise.setSeed(seed);
+        //OpenSimplex2F openSimplex = new OpenSimplex2F(seed);
+        /*Noise noise = new Noise(openSimplex::noise2);
+        noise.setOctaves(octaves);
+        noise.setLacunarity(amplitude);
+        noise.setGain(roughness);*/
 
         for (int i = 0; i < height/2; i++) {
 
             for (int j = 0; j < width/2; j++) {
 
                 int y = i*2, x = j*2;
-                float k = noise.select(threshold, (1f - noise.calculateFractalNoise(x, y))) ? 1 : 0;
-                int a = 255, r = (int) (k * 255f), g = (int) (k * 255f), b = (int) (k * 255f);
-                int p = (a << 24) | (r << 16) | (g << 8) | b;
-                img.setRGB(x, y, p);
+                //float k = noise.select(threshold, noise.gradient(x, y, 800, 1f)) ? 1 : 0;
+                //int a = 255, r = (int) (k * 255f), g = (int) (k * 255f), b = (int) (k * 255f);
+                int p = 0;
+                //img.setRGB(x, y, p);
                 img.setRGB(x, y+1, p);
                 img.setRGB(x+1, y, p);
                 img.setRGB(x+1, y+1, p);

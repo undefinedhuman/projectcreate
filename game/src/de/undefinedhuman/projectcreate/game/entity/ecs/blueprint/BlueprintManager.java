@@ -1,7 +1,8 @@
 package de.undefinedhuman.projectcreate.game.entity.ecs.blueprint;
 
 import com.badlogic.gdx.Files;
-import de.undefinedhuman.projectcreate.core.ecs.ComponentTypes;
+import de.undefinedhuman.projectcreate.core.ecs.ComponentType;
+import de.undefinedhuman.projectcreate.engine.ecs.ComponentBlueprint;
 import de.undefinedhuman.projectcreate.engine.file.FileReader;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
@@ -83,14 +84,18 @@ public class BlueprintManager extends Manager {
         for(Setting<?> setting : blueprint.settings.getSettings())
             setting.loadSetting(reader.parent(), object);
 
-        for(String componentName : ComponentTypes.keySet()) {
-            if(!object.containsKey(componentName))
+        for(ComponentType type : ComponentType.values()) {
+            if(!object.containsKey(type.name()))
                 continue;
-            Object componentObject = object.get(componentName);
+            Object componentObject = object.get(type.name());
             if(!(componentObject instanceof SettingsObject))
                 continue;
-            blueprint.addComponentBlueprint(ComponentTypes.loadComponentBlueprint(componentName, reader.parent(), (SettingsObject) componentObject));
+            ComponentBlueprint componentBlueprint = ComponentType.createNewInstance(type);
+            componentBlueprint.load(reader.parent(), (SettingsObject) componentObject);
+            blueprint.addComponentBlueprint(componentBlueprint);
         }
+
+        Log.info(blueprint.getComponentBlueprints().keySet());
 
         reader.close();
         return blueprint;

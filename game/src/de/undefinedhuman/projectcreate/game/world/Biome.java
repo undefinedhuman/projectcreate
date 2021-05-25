@@ -1,5 +1,6 @@
 package de.undefinedhuman.projectcreate.game.world;
 
+import de.undefinedhuman.projectcreate.core.noise.Noise;
 import de.undefinedhuman.projectcreate.game.world.layer.LayerList;
 import de.undefinedhuman.projectcreate.game.world.layer.LayerTransition;
 
@@ -40,7 +41,8 @@ public enum Biome {
     }
 
     public Noise getNoise(int seed) {
-        return new Noise(octaves, amplitude, roughness).setSeed(seed);
+        return null;
+        // return new Noise(octaves, amplitude, roughness).setSeed(seed);
     }
 
     public Biome getRandomNeighbor() {

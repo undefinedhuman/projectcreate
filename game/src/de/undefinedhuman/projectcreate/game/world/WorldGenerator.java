@@ -1,6 +1,7 @@
 package de.undefinedhuman.projectcreate.game.world;
 
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.projectcreate.core.noise.Noise;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 import de.undefinedhuman.projectcreate.game.world.layer.Layer;
 import de.undefinedhuman.projectcreate.game.world.settings.BiomeSetting;
@@ -115,14 +116,14 @@ public class WorldGenerator {
             currentHeight = 400;
             for (int y = 0; y < currentHeight; y++) {
                 currentY = tempY[y];
-                if (currentNoise.select(0.5f, isTransition ? Tools.lerp(currentNoise.gradient(currentX + biomeSetting.getTransition(), y, currentHeight), nextNoise.gradient(nextBiomeID == 0 ? currentX + biomeSetting.getTransition() - world.size.x : currentX + biomeSetting.getTransition(), y, currentHeight), biomeTransitions[transitionX]) : currentNoise.gradient(currentX + biomeSetting.getTransition(), y, currentHeight)) && caveNoise.select(borderSizes[currentX] * caveHeight[y], caveNoise.calculateFractalNoise(currentX, currentY)))
-                    world.setBlock(currentX, currentY, World.MAIN_LAYER, getBlockID(World.MAIN_LAYER, currentX, currentY, borderSizes, biomes[isTransition && currentNoise.select(0.5f, Tools.lerp(0, 1, biomeTransitions[transitionX] + currentNoise.calculateInterpolatedNoise(currentX, y))) ? nextBiomeID : biomeID], list));
+                if (currentNoise.select(0.5f, isTransition ? Tools.lerp(currentNoise.gradient(y, currentHeight), nextNoise.gradient(y, currentHeight), biomeTransitions[transitionX]) : currentNoise.gradient(y, currentHeight)) && caveNoise.select(borderSizes[currentX] * caveHeight[y], caveNoise.calculateFBm(currentX, currentY)))
+                    world.setBlock(currentX, currentY, World.MAIN_LAYER, getBlockID(World.MAIN_LAYER, currentX, currentY, borderSizes, biomes[isTransition && currentNoise.select(0.5f, Tools.lerp(0, 1, biomeTransitions[transitionX] + currentNoise.calculateFBm(currentX, y))) ? nextBiomeID : biomeID], list));
             }
 
             currentHeight = 800;
             for (int y = 0; y <= currentHeight; y++) {
-                if (caveNoise.select(borderSizes[currentX] * 0.06f, caveNoise.calculateFractalNoise(currentX, y)))
-                    world.setBlock(currentX, y, World.MAIN_LAYER, getBlockID((byte) currentX, y, World.MAIN_LAYER, borderSizes, biomes[isTransition && currentNoise.select(0.5f, Tools.lerp(0, 1, biomeTransitions[transitionX] + currentNoise.calculateInterpolatedNoise(currentX, y))) ? nextBiomeID : biomeID], list));
+                if (caveNoise.select(borderSizes[currentX] * 0.06f, caveNoise.calculateFBm(currentX, y)))
+                    world.setBlock(currentX, y, World.MAIN_LAYER, getBlockID((byte) currentX, y, World.MAIN_LAYER, borderSizes, biomes[isTransition && currentNoise.select(0.5f, Tools.lerp(0, 1, biomeTransitions[transitionX] + currentNoise.calculateFBm(currentX, y))) ? nextBiomeID : biomeID], list));
             }
 
         }
@@ -132,8 +133,8 @@ public class WorldGenerator {
     // TODO REFACTOR THE MOST FREQUENT ARRAY ELEMENT TO ALSO CONSIDER THE BLOCK ID AT THE POSITION
 
     private void checkWorldTile(World world, int x, int y) {
-        byte[] neighborIDs = new byte[4];
-        byte air = 0, current = world.getBlock(x, y, World.MAIN_LAYER);
+        short[] neighborIDs = new short[4];
+        short air = 0, current = world.getBlock(x, y, World.MAIN_LAYER);
         for (int i = 0; i < neighborIDs.length; i++) {
             tempPosition.set(x, y).add(neighbors[i]);
             neighborIDs[i] = world.getBlock((int) tempPosition.x, (int) tempPosition.y, World.MAIN_LAYER);
@@ -148,7 +149,7 @@ public class WorldGenerator {
         for (Layer layer : biome.getLayerList().getLayers()) if (layer.isMaxY(worldLayer, x, y)) maxLayer = layer;
         byte blockID = maxLayer != null ? maxLayer.blockID : 0;
         if (blockID != 0) for (Shift shift : shiftList.getShifts())
-            if (Tools.contains(blockID, shift.blockFilter) && shift.getNoise().select(shift.threshold, borderSizes[x] * shift.getNoise().calculateFractalNoise(x, y)))
+            if (Tools.contains(blockID, shift.blockFilter) && shift.getNoise().select(shift.threshold, borderSizes[x] * shift.getNoise().calculateFBm(x, y)))
                 blockID = shift.blockID;
         return blockID;
     }

@@ -4,7 +4,7 @@ import de.undefinedhuman.projectcreate.engine.config.Config;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.types.FilePathSetting;
-import de.undefinedhuman.projectcreate.engine.settings.types.SliderSetting;
+import de.undefinedhuman.projectcreate.engine.settings.types.slider.SliderSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.BooleanSetting;
 import de.undefinedhuman.projectcreate.engine.utils.Stage;
 import de.undefinedhuman.projectcreate.engine.utils.Version;

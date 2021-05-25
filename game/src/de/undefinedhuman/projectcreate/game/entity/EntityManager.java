@@ -24,6 +24,8 @@ public class EntityManager extends Manager {
 
     private static volatile EntityManager instance;
 
+    private int maxEntityID = 0;
+
     private Vector2i chunkSize = new Vector2i();
     private Chunk[][] chunks;
     private HashMap<Integer, Entity> entities = new HashMap<>();
@@ -71,6 +73,8 @@ public class EntityManager extends Manager {
 
     public void addEntity(int worldID, Entity entity) {
         if(entity == null) return;
+        if(worldID > maxEntityID)
+            maxEntityID = worldID+1;
         this.entities.put(worldID, entity);
         entity.updateChunkPosition();
         for (System system : systems) system.init(entity);
@@ -136,6 +140,10 @@ public class EntityManager extends Manager {
         chunks = new Chunk[0][0];
         entitiesToRemove.clear();
         entities.clear();
+    }
+
+    public int getMaxEntityID() {
+        return maxEntityID;
     }
 
     public static EntityManager getInstance() {

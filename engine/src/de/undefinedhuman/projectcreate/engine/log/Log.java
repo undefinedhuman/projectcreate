@@ -88,11 +88,16 @@ public class Log extends Manager implements ApplicationLogger, Serializable {
         this.logEvents.add(logEvent);
     }
 
-    public static void showErrorDialog(Level level, String message, boolean exit) {
-        error(message);
-        JOptionPane.showMessageDialog(null, message, level.getPrefix(), JOptionPane.ERROR_MESSAGE);
-        if(!exit)
+    public static void showErrorDialog(String message, boolean crash) {
+        if(!crash) error(message);
+        JOptionPane.showMessageDialog(null, message, Level.ERROR.getPrefix(), JOptionPane.ERROR_MESSAGE);
+        if(!crash)
             return;
+        crash(message);
+    }
+
+    public static void crash(String message) {
+        Log.getInstance().createMessage(System.out, Level.CRASH, message);
         Log.getInstance().save();
         Gdx.app.exit();
         System.exit(0);

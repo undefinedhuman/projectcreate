@@ -2,12 +2,12 @@ package de.undefinedhuman.projectcreate.game.item;
 
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
+import de.undefinedhuman.projectcreate.core.items.Item;
+import de.undefinedhuman.projectcreate.core.items.ItemType;
 import de.undefinedhuman.projectcreate.engine.file.FileReader;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
-import de.undefinedhuman.projectcreate.core.items.Item;
-import de.undefinedhuman.projectcreate.core.items.ItemType;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.resources.ResourceManager;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
@@ -80,17 +80,20 @@ public class ItemManager extends Manager {
         return items;
     }
 
-    public void useItem(int id) {
-        if(!InventoryManager.getInstance().canUseItem()) return;
+    public void useItem(short id) {
+        if(!InventoryManager.getInstance().canUseItem())
+            return;
         Item item = ItemManager.instance.getItem(id);
-        if (item == null) return;
-        boolean mouseLeft = Gdx.input.isButtonPressed(0), mouseRight = Gdx.input.isButtonPressed(1);
+        boolean isLeftMouseButtonClicked = Gdx.input.isButtonPressed(0), isRightMouseButtonClicked = Gdx.input.isButtonPressed(1);
+        /*if (item == null || (!isLeftMouseButtonClicked && !isRightMouseButtonClicked))
+            return;*/
+        //item.useItem(isLeftMouseButtonClicked, isRightMouseButtonClicked);
         switch (item.type) {
             case BLOCK:
-                if (mouseLeft || mouseRight) WorldManager.getInstance().placeBlock(mouseLeft ? World.MAIN_LAYER : World.BACK_LAYER);
+                if (isLeftMouseButtonClicked || isRightMouseButtonClicked) WorldManager.getInstance().placeBlock(isLeftMouseButtonClicked ? World.MAIN_LAYER : World.BACK_LAYER);
                 break;
             case PICKAXE:
-                if (mouseLeft || mouseRight) WorldManager.getInstance().destroyBlock(mouseLeft ? World.MAIN_LAYER : World.BACK_LAYER);
+                if (isLeftMouseButtonClicked || isRightMouseButtonClicked) WorldManager.getInstance().destroyBlock(isLeftMouseButtonClicked ? World.MAIN_LAYER : World.BACK_LAYER);
                 break;
         }
     }

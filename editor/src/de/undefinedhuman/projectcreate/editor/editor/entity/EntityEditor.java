@@ -3,7 +3,7 @@ package de.undefinedhuman.projectcreate.editor.editor.entity;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.core.ecs.ComponentTypes;
+import de.undefinedhuman.projectcreate.core.ecs.ComponentType;
 import de.undefinedhuman.projectcreate.editor.editor.ThreePanelEditor;
 import de.undefinedhuman.projectcreate.engine.ecs.ComponentBlueprint;
 import de.undefinedhuman.projectcreate.engine.ecs.EntityType;
@@ -21,13 +21,11 @@ import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
 
 public class EntityEditor extends ThreePanelEditor {
 
-    private JComboBox<String> componentComboBox;
+    private JComboBox<ComponentType> componentComboBox;
 
     private DefaultListModel<String> componentList;
     private JList<String> listPanel;
@@ -42,7 +40,7 @@ public class EntityEditor extends ThreePanelEditor {
         super(container);
         components = new HashMap<>();
 
-        componentComboBox = new JComboBox<>(ComponentTypes.keySet().toArray(new String[0]));
+        componentComboBox = new JComboBox<>(ComponentType.values());
         componentComboBox.setSelectedItem(null);
         componentComboBox.setBounds(20, 25, 150, 25);
 
@@ -76,7 +74,7 @@ public class EntityEditor extends ThreePanelEditor {
             String componentName = String.valueOf(componentComboBox.getSelectedItem());
             if(componentList.contains(componentName))
                 return;
-            ComponentBlueprint blueprint = ComponentTypes.createNewInstance(componentName);
+            ComponentBlueprint blueprint = ComponentType.createNewInstance(ComponentType.valueOf(componentName.toUpperCase(Locale.ROOT)));
             if(blueprint == null)
                 return;
             componentList.addElement(componentName);
@@ -146,17 +144,17 @@ public class EntityEditor extends ThreePanelEditor {
             for(Setting<?> setting : baseSettings.getSettings())
                 setting.loadSetting(reader.parent(), settingsObject);
 
-            for(String componentName : ComponentTypes.keySet()) {
-                if(!settingsObject.containsKey(componentName))
+            for(ComponentType componentType : ComponentType.values()) {
+                String componentBlueprintName = componentType.name().toUpperCase();
+                if(!settingsObject.containsKey(componentBlueprintName))
                     continue;
-                Object componentObject = settingsObject.get(componentName);
+                Object componentObject = settingsObject.get(componentBlueprintName);
                 if(!(componentObject instanceof SettingsObject))
                     continue;
-                ComponentBlueprint blueprint = ComponentTypes.loadComponentBlueprint(componentName, reader.parent(), (SettingsObject) settingsObject.get(componentName));
-                if(blueprint == null)
-                    continue;
-                componentList.addElement(componentName);
-                components.put(componentName, blueprint);
+                ComponentBlueprint blueprint = ComponentType.createNewInstance(componentType);
+                blueprint.load(reader.parent(), (SettingsObject) settingsObject.get(componentBlueprintName));
+                componentList.addElement(componentBlueprintName);
+                components.put(componentBlueprintName, blueprint);
             }
 
             chooseWindow.setVisible(false);

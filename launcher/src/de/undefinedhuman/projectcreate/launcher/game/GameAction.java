@@ -2,7 +2,6 @@ package de.undefinedhuman.projectcreate.launcher.game;
 
 import com.badlogic.gdx.Files;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
-import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.utils.Version;
 import de.undefinedhuman.projectcreate.launcher.Launcher;
@@ -47,7 +46,7 @@ public interface GameAction {
     static GameAction downloadAction() {
         return version -> {
             while(!InstallationUtils.hasSufficientSpace(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.getInstance().gameInstallationPath.getValue(), version)) {
-                Log.showErrorDialog(Level.ERROR, "Installation directory does not have enough available space.\nPlease choose another directory.", false);
+                Log.showErrorDialog("Installation directory does not have enough available space.\nPlease choose another directory.", false);
                 LauncherConfig.getInstance().gameInstallationPath.setValue(InstallationUtils.chooseInstallationDirectory(Launcher.DEFAULT_INSTALLATION_DIRECTORY));
             }
             String downloadURL = Launcher.DOWNLOAD_GAME_URL + version + DownloadUtils.DOWNLOAD_FILE_EXTENSION;

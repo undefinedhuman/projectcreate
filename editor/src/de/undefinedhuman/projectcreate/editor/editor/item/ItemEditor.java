@@ -37,8 +37,8 @@ public class ItemEditor extends ThreePanelEditor {
             Tools.removeSettings(leftPanel, rightPanel);
             ItemType type = ItemType.valueOf(itemComboBox.getSelectedItem().toString());
             currentItem = type.createInstance();
-            Tools.addSettings(leftPanel, currentItem.getSettings().subList(0, currentItem.getDefaultQuantityOfSettings()).stream());
-            Tools.addSettings(rightPanel, currentItem.getSettings().subList(currentItem.getDefaultQuantityOfSettings(), currentItem.getSettings().size()).stream());
+            Tools.addSettings(leftPanel, currentItem.getSettings().subList(0, currentItem.getItemSettingsAmount()).stream());
+            Tools.addSettings(rightPanel, currentItem.getSettings().subList(currentItem.getItemSettingsAmount(), currentItem.getSettings().size()).stream());
         });
 
         middlePanel.add(itemComboBox);
@@ -91,8 +91,8 @@ public class ItemEditor extends ThreePanelEditor {
             currentItem = type.createInstance();
             for(Setting<?> setting : currentItem.getSettingsList().getSettings())
                 setting.loadSetting(reader.parent(), settingsObject);
-            Tools.addSettings(leftPanel, currentItem.getSettings().subList(0, currentItem.getDefaultQuantityOfSettings()).stream());
-            Tools.addSettings(rightPanel, currentItem.getSettings().subList(currentItem.getDefaultQuantityOfSettings(), currentItem.getSettings().size()).stream());
+            Tools.addSettings(leftPanel, currentItem.getSettings().subList(0, currentItem.getItemSettingsAmount()).stream());
+            Tools.addSettings(rightPanel, currentItem.getSettings().subList(currentItem.getItemSettingsAmount(), currentItem.getSettings().size()).stream());
             loadWindow.setVisible(false);
             reader.close();
         });

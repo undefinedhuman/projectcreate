@@ -16,7 +16,7 @@ public class CollisionManager {
     }
 
     // TODO Refactor through
-    public static boolean collide(byte id) {
+    public static boolean collide(short id) {
         return ((Block) ItemManager.getInstance().getItem(id)).blockType.getValue() == BlockType.Block;
     }
 

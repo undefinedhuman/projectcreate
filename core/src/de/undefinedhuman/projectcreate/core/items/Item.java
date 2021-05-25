@@ -41,7 +41,7 @@ public class Item {
     public RecipeType recipeType;
     protected SettingsList settings = new SettingsList();
 
-    private int defaultQuantityOfSettings = 0;
+    private int itemSettingsAmount = 0;
 
     public Item() {
         addSettings(id, name, desc, itemTexture, iconTexture, previewTexture, recipeQuantity, recipeItems, useIconAsHandTexture, maxAmount, canShake, rarity);
@@ -51,15 +51,15 @@ public class Item {
 
     private void addSettings(Setting<?>... settings) {
         this.settings.addSettings(settings);
-        defaultQuantityOfSettings = settings.length;
+        itemSettingsAmount = settings.length;
     }
 
     public void init() { }
 
     public void delete() {}
 
-    public int getDefaultQuantityOfSettings() {
-        return defaultQuantityOfSettings;
+    public int getItemSettingsAmount() {
+        return itemSettingsAmount;
     }
 
     public SettingsList getSettingsList() {
@@ -73,5 +73,7 @@ public class Item {
     public Stream<Setting<?>> getSettingsStream() {
         return settings.getSettings().stream();
     }
+
+    public void useItem(boolean leftClick, boolean rightClick) {}
 
 }

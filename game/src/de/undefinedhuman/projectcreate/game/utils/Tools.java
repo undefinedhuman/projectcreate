@@ -22,7 +22,6 @@ import de.undefinedhuman.projectcreate.game.gui.Gui;
 import de.undefinedhuman.projectcreate.game.gui.texture.GuiTemplate;
 import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.projectcreate.game.inventory.player.Selector;
-import de.undefinedhuman.projectcreate.game.world.Noise;
 import de.undefinedhuman.projectcreate.game.world.World;
 import de.undefinedhuman.projectcreate.game.world.layer.LayerTransition;
 
@@ -40,7 +39,7 @@ public class Tools extends de.undefinedhuman.projectcreate.engine.utils.Tools {
 
     public static Random random = new Random();
 
-    private static Noise noise = new Noise(2, 1.7f, 0.4f);
+    // private static Noise noise = new Noise(2, 1.7f, 0.4f);
 
     public static Vector2 getScreenPos(OrthographicCamera cam, Vector2 position) {
         return getScreenPos(cam, position.x, position.y);
@@ -96,7 +95,7 @@ public class Tools extends de.undefinedhuman.projectcreate.engine.utils.Tools {
     }
 
     public static float lerp(float a, float b, float f) {
-        return a * (1 - f) + (b * f);
+        return a + f * (b - a);
     }
 
     public static void drawLine(SpriteBatch batch, Color col, float w, float x, float y, float x2, float y2) {
@@ -251,9 +250,9 @@ public class Tools extends de.undefinedhuman.projectcreate.engine.utils.Tools {
         return true;
     }
 
-    public static byte getMostFrequentArrayElement(byte[] array) {
+    public static short getMostFrequentArrayElement(short[] array) {
         Arrays.sort(array);
-        byte maxID = array[0], currentID = array[0], maxAmount = 1, currentAmount = 1;
+        short maxID = array[0], currentID = array[0], maxAmount = 1, currentAmount = 1;
         for (int i = 1; i < array.length; i++) {
             if (currentID == array[i]) currentAmount++;
             else {
@@ -279,7 +278,7 @@ public class Tools extends de.undefinedhuman.projectcreate.engine.utils.Tools {
                 return y < (maxY + random.nextInt(3) - 1);
             case CAVE:
                 int tempY = maxY - y;
-                return noise.select(0.5f, noise.gradient(x, tempY, 100));
+                return tempY < y;
             case LINEAR:
                 return y < maxY;
 

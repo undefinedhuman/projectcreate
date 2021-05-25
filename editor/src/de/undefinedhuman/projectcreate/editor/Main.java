@@ -53,6 +53,4 @@ public class Main extends Game {
         EventQueue.invokeLater(Window::getInstance);
     }
 
-
-
 }

@@ -7,12 +7,18 @@ import de.undefinedhuman.projectcreate.engine.network.NetworkSerialization;
 
 public class Transform implements NetworkSerialization {
 
-    protected Vector2 position = new Vector2(), size = new Vector2();
+    protected Vector2 position = new Vector2();
+    protected Vector2 size = new Vector2();
 
     public Transform() {}
 
     public Transform(Vector2 size) {
         this.size.set(size);
+    }
+
+    public Transform(Transform transform) {
+        this.position.set(transform.position);
+        this.size.set(transform.size);
     }
 
     public Vector2 getPosition() {
@@ -32,6 +38,9 @@ public class Transform implements NetworkSerialization {
     public void setSize(Vector2 size) {
         this.size = size;
     }
+    public void setSize(float width, float height) {
+        this.size.set(width, height);
+    }
     public Vector2 getCenter() {
         return new Vector2().mulAdd(size, 0.5f);
     }
@@ -49,6 +58,20 @@ public class Transform implements NetworkSerialization {
     @Override
     public void receive(LineSplitter splitter) {
         position = splitter.getNextVector2();
+    }
+
+    @Override
+    public String toString() {
+        return "(X: " + position.x + ", Y: " + position.y + "), (WIDTH: " + size.x + ", HEIGHT: " + size.y + ")";
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    public Transform copy() {
+        return new Transform(this);
     }
 
 }

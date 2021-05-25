@@ -21,11 +21,11 @@ public abstract class ComponentBlueprint {
         this.type = type;
     }
 
+    public abstract Component createInstance(HashMap<Class<? extends Component>, ComponentParam> params);
+
     public Class<? extends Component> getType() {
         return type;
     }
-
-    public abstract Component createInstance(HashMap<Class<? extends Component>, ComponentParam> params);
 
     public void load(FileHandle parentDir, SettingsObject settingsObject) {
         for(Setting<?> setting : this.settings.getSettings())

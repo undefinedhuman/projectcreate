@@ -5,11 +5,13 @@ import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.settings.interfaces.Getter;
+import de.undefinedhuman.projectcreate.engine.settings.listener.ValueListener;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 public class Setting<T> {
 
@@ -21,6 +23,8 @@ public class Setting<T> {
     protected Getter<T> getter;
 
     public JTextField valueField;
+
+    private ArrayList<ValueListener<T>> valueListeners = new ArrayList<>();
 
     public Setting(String key, Object defaultValue, Getter<T> getter) {
         this.key = key;
@@ -35,7 +39,10 @@ public class Setting<T> {
 
     public String getKey() { return key; }
     public T getValue() { return getter.get(value); }
-    public void setValue(Object value) { this.value = value; }
+    public void setValue(Object value) {
+        this.value = value;
+        valueListeners.forEach(valueListener -> valueListener.notify(getValue()));
+    }
 
     public int getTotalHeight() {
         return contentHeight + Variables.BORDER_HEIGHT;
@@ -105,6 +112,11 @@ public class Setting<T> {
     }
 
     protected void delete() { value = null; }
+
+     public void addValueListener(ValueListener<T> listener) {
+        if(!valueListeners.contains(listener))
+            valueListeners.add(listener);
+     }
 
     @Override
     public String toString() {
