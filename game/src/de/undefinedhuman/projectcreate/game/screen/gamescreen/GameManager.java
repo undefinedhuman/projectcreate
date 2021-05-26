@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.engine.utils.ManagerList;
 import de.undefinedhuman.projectcreate.game.background.BackgroundManager;
 import de.undefinedhuman.projectcreate.game.camera.CameraManager;
+import de.undefinedhuman.projectcreate.game.crafting.CraftingInventory;
 import de.undefinedhuman.projectcreate.game.entity.Entity;
 import de.undefinedhuman.projectcreate.game.entity.EntityManager;
 import de.undefinedhuman.projectcreate.game.entity.ecs.blueprint.BlueprintManager;
@@ -35,7 +36,7 @@ public class GameManager {
         BackgroundManager.getInstance().init();
         loadManager();
 
-        // GuiManager.getInstance().addGui(CraftingInventory.getInstance());
+        GuiManager.getInstance().addGui(CraftingInventory.getInstance());
     }
 
     public void resize(int width, int height) {

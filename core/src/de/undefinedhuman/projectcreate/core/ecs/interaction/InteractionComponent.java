@@ -17,10 +17,6 @@ public class InteractionComponent extends Component {
         return range;
     }
 
-    public void setRange(int range) {
-        this.range = range;
-    }
-
     public int getInputKey() {
         return inputKey;
     }

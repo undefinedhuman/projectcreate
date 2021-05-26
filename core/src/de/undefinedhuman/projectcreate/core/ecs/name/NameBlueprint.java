@@ -22,7 +22,4 @@ public class NameBlueprint extends ComponentBlueprint {
         return new NameComponent(name.getValue());
     }
 
-    @Override
-    public void delete() {}
-
 }

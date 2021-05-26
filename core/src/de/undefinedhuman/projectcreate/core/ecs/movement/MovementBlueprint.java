@@ -25,7 +25,4 @@ public class MovementBlueprint extends ComponentBlueprint {
         return new MovementComponent(speed.getValue(), jumpSpeed.getValue(), gravity.getValue(), jumpAnimationTransition.getValue());
     }
 
-    @Override
-    public void delete() {}
-
 }

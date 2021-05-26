@@ -48,5 +48,4 @@ public class CollisionComponent extends Component {
     public Vector4 getBounds(Vector2 position) {
         return new Vector4(position.x + offset.x, position.y + offset.y, position.x + offset.x + size.x, position.y + offset.y + size.y);
     }
-
 }

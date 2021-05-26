@@ -2,7 +2,6 @@ package de.undefinedhuman.projectcreate.core.ecs.name;
 
 import de.undefinedhuman.projectcreate.engine.ecs.Component;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
-import de.undefinedhuman.projectcreate.engine.file.LineWriter;
 
 public class NameComponent extends Component {
 
@@ -24,8 +23,5 @@ public class NameComponent extends Component {
     public void receive(LineSplitter splitter) {
         this.name = splitter.getNextString();
     }
-
-    @Override
-    public void send(LineWriter writer) {}
 
 }

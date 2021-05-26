@@ -1,6 +1,6 @@
 package de.undefinedhuman.projectcreate.launcher.ui;
 
-import de.undefinedhuman.projectcreate.engine.resources.ResourceManager;
+import de.undefinedhuman.projectcreate.engine.resources.RescourceUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +17,7 @@ public class OverviewPanel extends JPanel {
     }
 
     public void initLabel() {
-        JLabel label = new JLabel(new ImageIcon(ResourceManager.loadImage("logo/288x96.png")));
+        JLabel label = new JLabel(new ImageIcon(RescourceUtils.loadImage("logo/288x96.png")));
         label.setSize(new Dimension(288, 96));
         add(label);
     }

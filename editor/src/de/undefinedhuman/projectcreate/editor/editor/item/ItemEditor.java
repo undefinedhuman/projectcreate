@@ -6,7 +6,7 @@ import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.core.items.ItemType;
 import de.undefinedhuman.projectcreate.editor.editor.ThreePanelEditor;
 import de.undefinedhuman.projectcreate.engine.file.*;
-import de.undefinedhuman.projectcreate.engine.resources.ResourceManager;
+import de.undefinedhuman.projectcreate.engine.resources.RescourceUtils;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectAdapter;
@@ -49,7 +49,7 @@ public class ItemEditor extends ThreePanelEditor {
     @Override
     public void load() {
 
-        FileHandle[] itemDirs = ResourceManager.loadDir(Paths.ITEM_PATH).list();
+        FileHandle[] itemDirs = RescourceUtils.loadDir(Paths.ITEM_PATH).list();
         ArrayList<String> ids = new ArrayList<>();
 
         for (FileHandle itemDir : itemDirs) {

@@ -51,4 +51,8 @@ public class Block extends Item {
         blockTextureAtlas.dispose();
     }
 
+    @Override
+    public void onClick(int buttonIndex) {
+
+    }
 }

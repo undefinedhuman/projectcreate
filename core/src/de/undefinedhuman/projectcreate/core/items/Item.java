@@ -15,7 +15,7 @@ import de.undefinedhuman.projectcreate.engine.settings.types.primitive.StringSet
 import java.util.ArrayList;
 import java.util.stream.Stream;
 
-public class Item {
+public class Item implements ItemUsage {
 
     public ByteSetting
             id = new ByteSetting("ID", (byte) 0);
@@ -76,4 +76,6 @@ public class Item {
 
     public void useItem(boolean leftClick, boolean rightClick) {}
 
+    @Override
+    public void onClick(int buttonIndex) {}
 }

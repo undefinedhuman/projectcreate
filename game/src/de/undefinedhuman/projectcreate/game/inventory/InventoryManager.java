@@ -17,7 +17,7 @@ import de.undefinedhuman.projectcreate.game.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.projectcreate.game.gui.transforms.offset.PixelOffset;
 import de.undefinedhuman.projectcreate.game.inventory.player.*;
 import de.undefinedhuman.projectcreate.game.item.ItemManager;
-import de.undefinedhuman.projectcreate.game.item.listener.ItemChangeListener;
+import de.undefinedhuman.projectcreate.game.inventory.listener.ItemChangeListener;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 
 import java.util.Collection;
@@ -70,7 +70,8 @@ public class InventoryManager extends Manager {
 
     public void addGuiToSlot(Gui gui) {
         if (gui == null) return;
-        if (!SidePanel.getInstance().isVisible()) SidePanel.getInstance().setVisible(true);
+        if (!SidePanel.getInstance().isVisible())
+            SidePanel.getInstance().setVisible(true);
         maxSlot = Tools.clamp(maxSlot + 1, 0, 3);
         if (slots[maxSlot] != null) removeGui(maxSlot);
         this.slots[maxSlot] = gui;
@@ -191,7 +192,8 @@ public class InventoryManager extends Manager {
     }
 
     public void openGui(Gui gui) {
-        if (gui.isVisible()) removeGuiFromSlot(gui);
+        if (gui.isVisible())
+            removeGuiFromSlot(gui);
         else addGuiToSlot(gui);
     }
 
@@ -210,7 +212,6 @@ public class InventoryManager extends Manager {
     public void handleClick(int id) {
 
         switch (id) {
-
             case 0:
                 openGui(PlayerInventory.getInstance());
                 break;

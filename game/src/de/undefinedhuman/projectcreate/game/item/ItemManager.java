@@ -9,7 +9,7 @@ import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.log.Log;
-import de.undefinedhuman.projectcreate.engine.resources.ResourceManager;
+import de.undefinedhuman.projectcreate.engine.resources.RescourceUtils;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectAdapter;
@@ -42,7 +42,7 @@ public class ItemManager extends Manager {
 
     public boolean loadItems(int... ids) {
         Arrays.stream(ids)
-                .filter(id -> !hasItem(id) && ResourceManager.existItem(id))
+                .filter(id -> !hasItem(id) && RescourceUtils.existItem(id))
                 .forEach(id -> items.put(id, loadItem(id)));
         Object[] loadedItems = Arrays.stream(ids)
                 .filter(id -> items.containsKey(id) && items.get(id) != null)
@@ -86,15 +86,14 @@ public class ItemManager extends Manager {
             return;
         Item item = ItemManager.instance.getItem(id);
         boolean isLeftMouseButtonClicked = Gdx.input.isButtonPressed(0), isRightMouseButtonClicked = Gdx.input.isButtonPressed(1);
-        /*if (item == null || (!isLeftMouseButtonClicked && !isRightMouseButtonClicked))
-            return;*/
-        //item.useItem(isLeftMouseButtonClicked, isRightMouseButtonClicked);
         switch (item.type) {
             case BLOCK:
-                if (isLeftMouseButtonClicked || isRightMouseButtonClicked) WorldManager.getInstance().placeBlock(isLeftMouseButtonClicked ? World.MAIN_LAYER : World.BACK_LAYER);
+                if (isLeftMouseButtonClicked || isRightMouseButtonClicked)
+                    WorldManager.getInstance().placeBlock(isLeftMouseButtonClicked ? World.MAIN_LAYER : World.BACK_LAYER);
                 break;
             case PICKAXE:
-                if (isLeftMouseButtonClicked || isRightMouseButtonClicked) WorldManager.getInstance().destroyBlock(isLeftMouseButtonClicked ? World.MAIN_LAYER : World.BACK_LAYER);
+                if (isLeftMouseButtonClicked || isRightMouseButtonClicked)
+                    WorldManager.getInstance().destroyBlock(isLeftMouseButtonClicked ? World.MAIN_LAYER : World.BACK_LAYER);
                 break;
         }
     }

@@ -7,6 +7,11 @@ import de.undefinedhuman.projectcreate.core.items.ItemType;
 import de.undefinedhuman.projectcreate.engine.resources.font.Font;
 import de.undefinedhuman.projectcreate.game.gui.Gui;
 import de.undefinedhuman.projectcreate.game.gui.texture.GuiTemplate;
+import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.CenterConstraint;
+import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.PixelConstraint;
+import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.RelativeConstraint;
+import de.undefinedhuman.projectcreate.game.gui.transforms.offset.CenterOffset;
+import de.undefinedhuman.projectcreate.game.gui.transforms.offset.PixelOffset;
 import de.undefinedhuman.projectcreate.game.inventory.InvTarget;
 import de.undefinedhuman.projectcreate.game.inventory.slot.InvSlot;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
@@ -16,7 +21,7 @@ public class EquipScreen extends Gui implements InvTarget {
     private static volatile EquipScreen instance;
 
     private EquipSlot[] slots = new EquipSlot[4];
-    private Vector2[] offset = new Vector2[] {new Vector2(0, 100), new Vector2(0, 68), new Vector2(-26, 40), new Vector2(0, -4)};
+    private Vector2[] offset = new Vector2[] {new Vector2(0, 67), new Vector2(0, 35), new Vector2(-26, 7), new Vector2(0, -37)};
     private String[] texture = new String[] {"gui/preview/equip/Helmet-Preview.png", "gui/preview/equip/Chestplate-Preview.png", "gui/preview/equip/Arms-Preview.png", "gui/preview/equip/Boots-Preview.png"};
     private ItemType[] type = new ItemType[] { ItemType.HELMET, ItemType.ARMOR, ItemType.ARMOR, ItemType.ARMOR };
 
@@ -25,19 +30,19 @@ public class EquipScreen extends Gui implements InvTarget {
         setSize(Tools.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 5), Tools.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 10));
         setTitle("Character", Font.Title, Color.WHITE);
 
-        /*addChild(new Gui("gui/preview/equip/Human-Preview.png").set(new CenterConstraint(), new CenterConstraint(), new PixelConstraint(64), new PixelConstraint(128)).setOffset(new CenterOffset(), new PixelOffset(48)));
+        addChild(new Gui("gui/preview/equip/Human-Preview.png").set(new CenterConstraint(), new CenterConstraint(), new PixelConstraint(64), new PixelConstraint(128)).setOffset(new CenterOffset(), new PixelOffset(-48)));
 
         for (int i = 0; i < slots.length; i++) {
-            slots[i] = new EquipSlot(texture[i], type[i]) {
+            slots[i] = new EquipSlot(new CenterConstraint(), new CenterConstraint(), type[i], texture[i]) {
                 @Override
-                public void equip() { EquipManager.instance.equipItemNetwork(GameManager.instance.player, this.getItem().getID(), true); }
+                public void equip() {}
 
                 @Override
-                public void unequip() { EquipManager.instance.unEquipItemNetwork(GameManager.instance.player, this.getItem().getID(), true); }
+                public void unEquip() {}
             };
-            slots[i].setPosition(new CenterConstraint(), new CenterConstraint()).setOffset(new PixelOffset(offset[i].x), new PixelOffset(offset[i].y));
+            slots[i].setPosition(new RelativeConstraint(0.5f, (int) offset[i].x), new RelativeConstraint(0.5f, (int) offset[i].y)).setOffset(new CenterOffset(), new CenterOffset());
         }
-        addChild(slots);*/
+        addChild(slots);
         setVisible(false);
     }
 

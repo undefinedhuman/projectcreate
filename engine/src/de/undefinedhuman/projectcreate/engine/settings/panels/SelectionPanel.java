@@ -7,7 +7,7 @@ import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.log.Log;
-import de.undefinedhuman.projectcreate.engine.resources.ResourceManager;
+import de.undefinedhuman.projectcreate.engine.resources.RescourceUtils;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectAdapter;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 
@@ -26,7 +26,7 @@ public class SelectionPanel<T extends PanelObject> extends Panel<T> {
 
     @Override
     protected void createPanelObjectNameComponent(JPanel panel, int width) {
-        FileHandle[] itemDirs = ResourceManager.loadDir(Paths.ITEM_PATH).list();
+        FileHandle[] itemDirs = RescourceUtils.loadDir(Paths.ITEM_PATH).list();
         ArrayList<String> ids = new ArrayList<>();
 
         for (FileHandle itemDir : itemDirs) {

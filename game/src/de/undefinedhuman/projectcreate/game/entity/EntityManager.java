@@ -24,6 +24,8 @@ public class EntityManager extends Manager {
 
     private static volatile EntityManager instance;
 
+    public RenderSystem renderSystem;
+
     private int maxEntityID = 0;
 
     private Vector2i chunkSize = new Vector2i();
@@ -32,7 +34,6 @@ public class EntityManager extends Manager {
     private ArrayList<Integer> entitiesToRemove = new ArrayList<>();
     private ArrayList<System> systems = new ArrayList<>();
 
-    public RenderSystem renderSystem;
 
     private EntityManager() {
         addSystems(new AngleSystem(), new AnimationSystem(), new ArmSystem(), new InteractionSystem(), new EquipSystem(), new MovementSystem(), renderSystem = new RenderSystem());
@@ -127,6 +128,10 @@ public class EntityManager extends Manager {
         return entitiesInRange;
     }
 
+    public int getMaxEntityID() {
+        return maxEntityID;
+    }
+
     public void delete() {
         systems.clear();
         clearEntities();
@@ -140,10 +145,6 @@ public class EntityManager extends Manager {
         chunks = new Chunk[0][0];
         entitiesToRemove.clear();
         entities.clear();
-    }
-
-    public int getMaxEntityID() {
-        return maxEntityID;
     }
 
     public static EntityManager getInstance() {

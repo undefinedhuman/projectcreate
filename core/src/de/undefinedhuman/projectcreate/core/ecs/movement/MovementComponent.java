@@ -32,10 +32,6 @@ public class MovementComponent extends Component {
     public float getJumpTans() {
         return jumpTans;
     }
-
-    public void setCanJump(boolean canJump) {
-        this.canJump = canJump;
-    }
     
     public boolean jump() {
         if (!this.canJump) return false;

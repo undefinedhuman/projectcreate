@@ -8,7 +8,7 @@ import de.undefinedhuman.projectcreate.editor.editor.ThreePanelEditor;
 import de.undefinedhuman.projectcreate.engine.ecs.ComponentBlueprint;
 import de.undefinedhuman.projectcreate.engine.ecs.EntityType;
 import de.undefinedhuman.projectcreate.engine.file.*;
-import de.undefinedhuman.projectcreate.engine.resources.ResourceManager;
+import de.undefinedhuman.projectcreate.engine.resources.RescourceUtils;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
@@ -104,7 +104,7 @@ public class EntityEditor extends ThreePanelEditor {
     @Override
     public void load() {
 
-        FileHandle[] entityDirs = ResourceManager.loadDir(Paths.ENTITY_PATH).list();
+        FileHandle[] entityDirs = RescourceUtils.loadDir(Paths.ENTITY_PATH).list();
         ArrayList<String> ids = new ArrayList<>();
 
         for (FileHandle entityDir : entityDirs) {

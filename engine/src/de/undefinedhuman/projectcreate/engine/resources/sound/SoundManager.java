@@ -1,6 +1,7 @@
-package de.undefinedhuman.projectcreate.engine.resources;
+package de.undefinedhuman.projectcreate.engine.resources.sound;
 
 import com.badlogic.gdx.audio.Sound;
+import de.undefinedhuman.projectcreate.engine.resources.RescourceUtils;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
 
 import java.util.HashMap;
@@ -19,7 +20,7 @@ public class SoundManager extends Manager {
     public void init() {}
 
     public void addSound(String... names) {
-        for (String s : names) if (!hasSound(s)) sounds.put(s, ResourceManager.loadSound(s));
+        for (String s : names) if (!hasSound(s)) sounds.put(s, RescourceUtils.loadSound(s));
     }
 
     public boolean hasSound(String name) {

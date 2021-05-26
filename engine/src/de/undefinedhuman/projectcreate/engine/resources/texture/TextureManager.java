@@ -3,7 +3,7 @@ package de.undefinedhuman.projectcreate.engine.resources.texture;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import de.undefinedhuman.projectcreate.engine.log.Log;
-import de.undefinedhuman.projectcreate.engine.resources.ResourceManager;
+import de.undefinedhuman.projectcreate.engine.resources.RescourceUtils;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 
@@ -53,7 +53,7 @@ public class TextureManager extends Manager {
                 .forEach(TextureValue::add);
         return Arrays.stream(names)
                 .filter(name -> !hasTexture(name))
-                .peek(name -> textures.put(name, new TextureValue(ResourceManager.loadTexture(name))));
+                .peek(name -> textures.put(name, new TextureValue(RescourceUtils.loadTexture(name))));
     }
 
     public boolean hasTexture(String name) {

@@ -2,16 +2,18 @@ package de.undefinedhuman.projectcreate.engine.ecs;
 
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.LineWriter;
-import de.undefinedhuman.projectcreate.engine.network.NetworkSerialization;
+import de.undefinedhuman.projectcreate.engine.network.NetworkComponent;
 
-public abstract class Component implements NetworkSerialization {
+public abstract class Component implements NetworkComponent {
 
     public Component() {}
 
     public void init() {}
     public void delete() {}
 
-    public void receive(LineSplitter splitter) {}
+    @Override
     public void send(LineWriter writer) {}
 
+    @Override
+    public void receive(LineSplitter splitter) {}
 }

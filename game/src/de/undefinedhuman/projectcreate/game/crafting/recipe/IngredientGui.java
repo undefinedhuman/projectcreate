@@ -16,7 +16,7 @@ import de.undefinedhuman.projectcreate.game.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.projectcreate.game.gui.transforms.offset.RelativeOffset;
 import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
 import de.undefinedhuman.projectcreate.game.item.ItemManager;
-import de.undefinedhuman.projectcreate.game.item.listener.ItemChangeListener;
+import de.undefinedhuman.projectcreate.game.inventory.listener.ItemChangeListener;
 
 public class IngredientGui extends Gui implements Poolable {
 
@@ -25,7 +25,7 @@ public class IngredientGui extends Gui implements Poolable {
     private Gui icon;
     private Text name, amount;
     private ItemChangeListener listener;
-    private int currentItemID = -1, currentAmount = 0;
+    private int ingredientID = -1, amountNeededToCraft = 0, amountInInventory = 0;
 
     public IngredientGui() {
         super();
@@ -56,7 +56,13 @@ public class IngredientGui extends Gui implements Poolable {
                         .set(new PixelConstraint(Variables.SLOT_SIZE + Variables.SLOT_SPACE), new PixelConstraint(0), new RelativeConstraint(1f, -(Variables.SLOT_SIZE + Variables.SLOT_SPACE)), new PixelConstraint(Variables.SLOT_SIZE))
         );
 
-        listener = amount -> updateAmountText(currentItemID, currentAmount);
+        listener = amount -> updateAmountText(ingredientID, amountInInventory = amountInInventory-amount, amountNeededToCraft);
+        /*listener = new ItemChangeListener(currentItemID, InventoryManager.getInstance()) {
+            @Override
+            public void notify(int amount) {
+                updateAmountText(ingredientID, amountInInventory = amountInInventory-amount, amountNeededToCraft)
+            }
+        };*/
     }
 
     @Override
@@ -67,28 +73,27 @@ public class IngredientGui extends Gui implements Poolable {
     @Override
     public void delete() {
         super.delete();
-        InventoryManager.getInstance().removeListener(currentItemID, listener);
+        InventoryManager.getInstance().removeListener(ingredientID, listener);
     }
 
     public IngredientGui update(RecipeItem item) {
-        InventoryManager.getInstance().removeListener(currentItemID, listener);
-        currentItemID = Integer.parseInt(item.getKey());
-        currentAmount = item.quantity.getValue();
-        Item currentItem = ItemManager.getInstance().getItem(currentItemID);
+        InventoryManager.getInstance().removeListener(ingredientID, listener);
+        ingredientID = Integer.parseInt(item.getKey());
+        amountNeededToCraft = item.quantity.getValue();
+        Item currentItem = ItemManager.getInstance().getItem(ingredientID);
         this.icon.setTexture(currentItem.iconTexture.getValue());
         this.name
                 .setText(currentItem.name.getValue())
                 .setColor(currentItem.rarity.getValue().getColor());
-        updateAmountText(currentItemID, currentAmount);
-        InventoryManager.getInstance().addListener(currentItemID, listener);
+        updateAmountText(ingredientID, amountInInventory = InventoryManager.getInstance().amountOf(ingredientID), amountNeededToCraft);
+        InventoryManager.getInstance().addListener(ingredientID, listener);
         return this;
     }
 
-    private void updateAmountText(int id, int amount) {
-        int totalItemsInInventory = InventoryManager.getInstance().amountOf(id);
+    private void updateAmountText(int id, int amountInInventory, int amountToCraft) {
         this.amount
-                .setText(totalItemsInInventory + "/" + amount)
-                .setColor(totalItemsInInventory >= amount ? Colors.LIGHT_GREEN : Colors.RED);
+                .setText(amountInInventory + "/" + amountToCraft)
+                .setColor(amountInInventory >= amountToCraft ? Colors.LIGHT_GREEN : Colors.RED);
     }
 
 }
