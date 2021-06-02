@@ -8,7 +8,6 @@ import java.awt.*;
 import java.awt.dnd.DragSource;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Arrays;
 import java.util.Objects;
 
 public class DragAdapter extends MouseAdapter {
@@ -139,54 +138,6 @@ public class DragAdapter extends MouseAdapter {
         parent.add(add, index);
         parent.revalidate();
         parent.repaint();
-    }
-
-}
-
-class Test {
-
-    public JComponent makeUI() {
-        Box box = Box.createVerticalBox();
-        DragAdapter dh = new DragAdapter();
-        box.addMouseListener(dh);
-        box.addMouseMotionListener(dh);
-
-        int idx = 0;
-        for (JComponent c : Arrays.asList(
-                new JLabel("<html>111<br>11<br>11"),
-                new JButton("2"), new JCheckBox("3"), new JTextField(5))) {
-            box.add(createToolbarButton(idx++, c));
-        }
-        JPanel p = new JPanel(new BorderLayout());
-        p.add(box, BorderLayout.NORTH);
-        return p;
-    }
-
-    private static JComponent createToolbarButton(int i, JComponent c) {
-        JLabel l = new JLabel(String.format(" %04d ", i));
-        l.setOpaque(true);
-        l.setBackground(Color.RED);
-        JPanel p = new JPanel(new BorderLayout());
-        p.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createEmptyBorder(5, 5, 5, 5),
-                BorderFactory.createLineBorder(Color.BLUE, 2)));
-        p.add(l, BorderLayout.WEST);
-        p.add(c);
-        p.setOpaque(false);
-        return p;
-    }
-
-    public static void main(String... args) {
-        EventQueue.invokeLater(Test::createAndShowGUI);
-    }
-
-    public static void createAndShowGUI() {
-        JFrame f = new JFrame();
-        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        f.getContentPane().add(new Test().makeUI());
-        f.setSize(320, 240);
-        f.setLocationRelativeTo(null);
-        f.setVisible(true);
     }
 
 }
