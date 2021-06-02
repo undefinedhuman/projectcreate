@@ -96,7 +96,7 @@ public abstract class Panel<T extends PanelObject> extends Setting<String> {
             T panelObject = createNewInstance();
             if(panelObject == null)
                 return;
-            panelObjects.put(key, (T) panelObject.load(parentDir, (SettingsObject) panelObjectSettings).setKey(key));
+            panelObjects.put(key, (T) panelObject.setKey(key).load(parentDir, (SettingsObject) panelObjectSettings));
         }
     }
 
@@ -139,16 +139,16 @@ public abstract class Panel<T extends PanelObject> extends Setting<String> {
         addPanelObject(name, createNewInstance());
     }
 
-    protected void addPanelObject(String name, T object) {
-        if(object == null)
+    protected void addPanelObject(String name, T panelObject) {
+        if(panelObject == null)
             return;
         if(objectList.contains(name)) {
             Log.error(this.key + " with name " + name + " already exist!");
             return;
         }
-        object.setKey(name);
-        panelObjects.put(object.getKey(), object);
-        objectList.addElement(object.getKey());
+        panelObject.setKey(key);
+        panelObjects.put(panelObject.getKey(), panelObject);
+        objectList.addElement(panelObject.getKey());
     }
 
     private void removePanelObject(String name) {

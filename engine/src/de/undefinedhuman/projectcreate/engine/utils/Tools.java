@@ -62,6 +62,10 @@ public class Tools {
         return Arrays.stream(messages).map(Object::toString).collect(Collectors.joining(", "));
     }
 
+    public static void addSettings(JComponent panel, Setting<?>... settings) {
+        addSettings(panel, 0, 0, Variables.OFFSET, Variables.CONTENT_WIDTH + Variables.BORDER_WIDTH, Stream.of(settings));
+    }
+
     public static void addSettings(JComponent panel, Stream<Setting<?>> settings) {
         addSettings(panel, 0, 0, Variables.OFFSET, Variables.CONTENT_WIDTH + Variables.BORDER_WIDTH, settings);
     }

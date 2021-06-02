@@ -2,6 +2,7 @@ package de.undefinedhuman.projectcreate.engine.utils.math;
 
 import com.badlogic.gdx.math.Vector2;
 
+import java.awt.*;
 import java.util.Objects;
 
 public class Vector2i {
@@ -18,6 +19,10 @@ public class Vector2i {
 
     public Vector2i(float x, float y) {
         set(x, y);
+    }
+
+    public Vector2i(Point point) {
+        set(point.x, point.y);
     }
 
     public Vector2i(Vector2 vector) {

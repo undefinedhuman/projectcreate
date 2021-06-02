@@ -6,8 +6,8 @@ import de.undefinedhuman.projectcreate.core.noise.generator.OpenSimplex2S;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 
 public enum NoiseType {
-    OpenSimplex2S(OpenSimplex2S.class),
-    OpenSimplex2F(OpenSimplex2F.class);
+    OPEN_SIMPLEX_2_SMOOTH(OpenSimplex2S.class),
+    OPEN_SIMPLEX_2_FAST(OpenSimplex2F.class);
 
     private Class<? extends NoiseGenerator> noiseGenerator;
 

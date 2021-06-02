@@ -113,51 +113,6 @@ public class SliderSetting extends Setting<Float> {
             return new SliderSetting(key, relativeWidth, isLabelVisible, bounds, defaultValue, tickSpeed, scale, numberOfDecimals);
         }
 
-        /*public Builder setBounds(int min, int max) {
-            this.bounds.set(min, max);
-            return this;
-        }
-
-        public Builder setBounds(Vector2i bounds) {
-            this.bounds = bounds;
-            return this;
-        }
-
-        public Builder setMin(int min) {
-            this.bounds.x = min;
-            return this;
-        }
-
-        public Builder setMax(int max) {
-            this.bounds.y = max;
-            return this;
-        }
-
-        public Builder setDefaultValue(int defaultValue) {
-            this.defaultValue = defaultValue;
-            return this;
-        }
-
-        public Builder setTickSpeed(int tickSpeed) {
-            this.tickSpeed = tickSpeed;
-            return this;
-        }
-
-        public Builder setScale(float scale) {
-            this.scale = scale;
-            return this;
-        }
-
-        public Builder setNumberOfDecimals(int numberOfDecimals) {
-            this.numberOfDecimals = numberOfDecimals;
-            return this;
-        }
-
-        public Builder setLabelVisible(boolean labelVisible) {
-            isLabelVisible = labelVisible;
-            return this;
-        }*/
-
         private static List<ValidationRule<Builder>> VALIDATION_RULES = Arrays.asList(
                 new ValidationRule<>(
                         builder -> builder.bounds.x <= builder.bounds.y,

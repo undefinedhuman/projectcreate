@@ -18,6 +18,7 @@ public class Window {
     private LwjglApplicationConfiguration createLWJGLConfig() {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = Variables.NAME;
+        config.allowSoftwareMode = true;
         config.foregroundFPS = -1;
         config.backgroundFPS = 60;
         config.vSyncEnabled = false;

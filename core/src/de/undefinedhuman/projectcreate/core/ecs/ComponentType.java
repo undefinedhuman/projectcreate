@@ -35,14 +35,14 @@ public enum ComponentType {
     HEALTH(HealthBlueprint::new),
     MANA(ManaBlueprint::new);
 
-    private Supplier<ComponentBlueprint> componentBlueprintFunction;
+    private Supplier<ComponentBlueprint> componentBlueprint;
 
     ComponentType(Supplier<ComponentBlueprint> componentBlueprintFunction) {
-        this.componentBlueprintFunction = componentBlueprintFunction;
+        this.componentBlueprint = componentBlueprintFunction;
     }
 
     public static ComponentBlueprint createNewInstance(ComponentType type) {
-        return type.componentBlueprintFunction.get();
+        return type.componentBlueprint.get();
     }
 
 }

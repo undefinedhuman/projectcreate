@@ -48,7 +48,7 @@ public class Setting<T> {
         return contentHeight + Variables.BORDER_HEIGHT;
     }
 
-    public int getContentHeight() {
+    protected int getContentHeight() {
         return contentHeight;
     }
 
@@ -113,9 +113,10 @@ public class Setting<T> {
 
     protected void delete() { value = null; }
 
-     public void addValueListener(ValueListener<T> listener) {
+     public Setting<T> addValueListener(ValueListener<T> listener) {
         if(!valueListeners.contains(listener))
             valueListeners.add(listener);
+        return this;
      }
 
     @Override

@@ -1,5 +1,8 @@
 package de.undefinedhuman.projectcreate.editor.editor.world;
 
+import de.undefinedhuman.projectcreate.core.noise.functions.FractalFunction;
+import de.undefinedhuman.projectcreate.core.noise.functions.GradientFunction;
+import de.undefinedhuman.projectcreate.core.noise.functions.NoisePanel;
 import de.undefinedhuman.projectcreate.editor.editor.Editor;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.LongSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.slider.SliderSetting;
@@ -10,7 +13,6 @@ import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Random;
-import java.util.stream.Stream;
 
 public class WorldEditor extends Editor {
 
@@ -86,9 +88,15 @@ public class WorldEditor extends Editor {
                 .build();
         gain.addValueListener(value -> updatePreview());
 
+
+
         updatePreview();
 
-        Tools.addSettings(settingsPanel, Stream.of(seed, frequency, octaves, lacunarity, gain, amplitudeFactor));
+        NoisePanel panel = new NoisePanel("Noise", FractalFunction.class, GradientFunction.class);
+
+        Tools.addSettings(settingsPanel, panel);
+
+        // Tools.addSettings(settingsPanel, Stream.of(seed, frequency, octaves, lacunarity, gain, amplitudeFactor));
 
         previewPanel.add(previewChunkGeneration);
     }
