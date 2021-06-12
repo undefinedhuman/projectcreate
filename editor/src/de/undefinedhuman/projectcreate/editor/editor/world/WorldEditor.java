@@ -1,113 +1,74 @@
 package de.undefinedhuman.projectcreate.editor.editor.world;
 
-import de.undefinedhuman.projectcreate.core.noise.functions.FractalFunction;
-import de.undefinedhuman.projectcreate.core.noise.functions.GradientFunction;
+import de.undefinedhuman.projectcreate.core.noise.functions.types.ConstantFunction;
+import de.undefinedhuman.projectcreate.core.noise.functions.types.GradientFunction;
 import de.undefinedhuman.projectcreate.core.noise.functions.NoisePanel;
+import de.undefinedhuman.projectcreate.core.noise.functions.types.ScaleFunction;
+import de.undefinedhuman.projectcreate.core.noise.functions.fractal.FractalFunction;
+import de.undefinedhuman.projectcreate.core.noise.functions.types.SelectFunction;
 import de.undefinedhuman.projectcreate.editor.editor.Editor;
-import de.undefinedhuman.projectcreate.engine.settings.types.primitive.LongSetting;
-import de.undefinedhuman.projectcreate.engine.settings.types.slider.SliderSetting;
-import de.undefinedhuman.projectcreate.engine.settings.types.slider.SliderSettingDirector;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Random;
 
 public class WorldEditor extends Editor {
 
-    private static final int CHUNK_HEIGHT = 400;
+    private static final int PREVIEW_PANEL_HEIGHT = 400 + Variables.TITLE_LABEL_HEIGHT;
+    private static final int BASE_OFFSET_X = 20;
+    private static final int BASE_OFFSET_Y = 15;
+    private static final int SETTINGS_PANEL_WIDTH = 400;
+
     private JPanel previewPanel, settingsPanel;
     private JLabel previewChunkGeneration;
-
-    private LongSetting seed;
-    private SliderSetting frequency, octaves, lacunarity, amplitudeFactor, gain;
 
     private Preview preview;
     private Thread previewGenerator;
 
-    public WorldEditor(Container container) {
-        super(container);
+    public WorldEditor(Container container, int width, int height) {
+        super(container, width, height);
+        int previewPanelWidth = width - BASE_OFFSET_X*2 - SETTINGS_PANEL_WIDTH - Variables.BORDER_WIDTH;
         addPanel(
                 container,
-                createScrollPane(previewPanel = createJPanel(1880, CHUNK_HEIGHT + 40), "Preview:", 20, 15, 1880, CHUNK_HEIGHT + Variables.BORDER_HEIGHT + 40, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER),
-                createScrollPane(settingsPanel = createJPanel(1880, CHUNK_HEIGHT + 40), "Settings:", 20, 15 + CHUNK_HEIGHT + Variables.BORDER_HEIGHT + 40, 1880, 990 - CHUNK_HEIGHT - 40 - Variables.BORDER_HEIGHT, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
+                createScrollPane(
+                        settingsPanel = createJPanel(SETTINGS_PANEL_WIDTH, height - BASE_OFFSET_Y*2 - Variables.TITLE_LABEL_HEIGHT - Variables.OFFSET),
+                        "Settings:",
+                        BASE_OFFSET_X,
+                        BASE_OFFSET_Y,
+                        SETTINGS_PANEL_WIDTH + Variables.BORDER_WIDTH,
+                        height - BASE_OFFSET_Y*2,
+                        ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER),
+                createScrollPane(
+                        previewPanel = createJPanel(previewPanelWidth, PREVIEW_PANEL_HEIGHT),
+                        "Preview:",
+                        BASE_OFFSET_X + SETTINGS_PANEL_WIDTH + Variables.BORDER_WIDTH + Variables.OFFSET,
+                        BASE_OFFSET_Y,
+                        previewPanelWidth + Variables.BORDER_WIDTH,
+                        PREVIEW_PANEL_HEIGHT,
+                        ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
+                        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
         );
         previewChunkGeneration = new JLabel();
-        previewChunkGeneration.setBounds(20, 15, 1880 - Variables.BORDER_WIDTH - 40, CHUNK_HEIGHT);
-        preview = new Preview(previewChunkGeneration);
-
-        seed = new LongSetting("Seed", Math.abs(new Random().nextLong()), 0L, Long.MAX_VALUE-1) {
+        previewChunkGeneration.setBounds(0, 0, previewPanel.getWidth(), previewPanel.getHeight());
+        NoisePanel panel = new NoisePanel("Noise", settingsPanel.getHeight(), ConstantFunction.class, FractalFunction.class, GradientFunction.class, ScaleFunction.class, SelectFunction.class) {
             @Override
-            public void setValue(Object value) {
-                super.setValue(value);
+            public void updateValues() {
                 updatePreview();
             }
         };
-        seed.addValueListener(value -> updatePreview());
 
-        frequency = SliderSetting.newInstance("Frequency")
-                .with(builder -> {
-                    builder.bounds.set(10, 1500);
-                    builder.defaultValue = 1000;
-                    builder.tickSpeed = 5;
-                    builder.scale = 100000;
-                    builder.numberOfDecimals = 4;
-                })
-                .build();
-        frequency.addValueListener(value -> updatePreview());
-
-        octaves = SliderSettingDirector.createIntegerSlider(SliderSetting.newInstance("Octaves"))
-                .with(builder -> {
-                    builder.bounds.set(1, 10);
-                    builder.defaultValue = 3;
-                })
-                .build();
-        octaves.addValueListener(value -> updatePreview());
-
-        lacunarity = SliderSettingDirector.createFloatSlider(SliderSetting.newInstance("Lacunarity"))
-                .with(builder -> {
-                    builder.bounds.set(0, 400);
-                    builder.defaultValue = 200;
-                })
-                .build();
-        lacunarity.addValueListener(value -> updatePreview());
-
-        amplitudeFactor = SliderSettingDirector.createFloatSlider(SliderSetting.newInstance("Amplitude Factor"))
-                .with(builder -> {
-                    builder.bounds.set(0, 100);
-                    builder.tickSpeed = 1;
-                })
-                .build();
-        amplitudeFactor.addValueListener(value -> updatePreview());
-
-        gain = SliderSettingDirector.createFloatSlider(SliderSetting.newInstance("Gain"))
-                .with(builder -> {
-                    builder.defaultValue = 50;
-                })
-                .build();
-        gain.addValueListener(value -> updatePreview());
-
-
+        preview = new Preview(previewChunkGeneration, panel);
 
         updatePreview();
 
-        NoisePanel panel = new NoisePanel("Noise", FractalFunction.class, GradientFunction.class);
-
         Tools.addSettings(settingsPanel, panel);
-
-        // Tools.addSettings(settingsPanel, Stream.of(seed, frequency, octaves, lacunarity, gain, amplitudeFactor));
 
         previewPanel.add(previewChunkGeneration);
     }
 
     private void updatePreview() {
-        preview.setSeed(seed.getValue());
-        preview.setFrequency(frequency.getValue());
-        preview.setOctaves(octaves.getValue());
-        preview.setLacunarity(lacunarity.getValue());
-        preview.setGain(gain.getValue());
-        preview.setAmplitudeFactor(amplitudeFactor.getValue());
         if (previewGenerator != null && previewGenerator.isAlive()) {
             previewGenerator.interrupt();
             previewGenerator.stop();

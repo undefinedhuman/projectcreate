@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -30,7 +31,7 @@ public class TextureOffsetSetting extends Vector2ArraySetting {
     }
 
     @Override
-    protected void addValueMenuComponents(JPanel panel, int width) {
+    protected void createValueMenuComponents(JPanel panel, int width) {
         textureLabel = new JLabel(new ImageIcon(texture));
         textureLabel.setSize(25, 25);
         textureLabel.addMouseListener(new MouseAdapter() {
@@ -50,19 +51,19 @@ public class TextureOffsetSetting extends Vector2ArraySetting {
                 try { texture = ImageIO.read(textureFile);
                 } catch (IOException e) { return; }
                 setValue(calculateVectors(texture));
-                setValueInMenu(getValue());
+                updateMenu(getValue());
             }
 
         });
         panel.add(textureLabel);
-        valueField = createTextField(
+        valueField = Tools.createTextField(
                 Tools.convertArrayToString(getValue()),
-                new Vector2(Variables.DEFAULT_CONTENT_HEIGHT + Variables.OFFSET, 0),
-                new Vector2(
+                new Vector2i(Variables.DEFAULT_CONTENT_HEIGHT + Variables.OFFSET, 0),
+                new Vector2i(
                         width - Variables.DEFAULT_CONTENT_HEIGHT - Variables.OFFSET,
                         Variables.DEFAULT_CONTENT_HEIGHT
                 ),
-                null);
+                s -> {});
         valueField.setEditable(false);
         panel.add(valueField);
     }

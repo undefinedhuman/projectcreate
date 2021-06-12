@@ -12,14 +12,18 @@ import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectAdapter;
+import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector4;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -28,7 +32,7 @@ public class Tools {
     public static void loadSettings(FileReader reader, SettingsList settings) {
         SettingsObject object = new SettingsObjectAdapter(reader);
         for(Setting<?> setting : settings.getSettings())
-            setting.loadSetting(reader.parent(), object);
+            setting.load(reader.parent(), object);
     }
 
     public static void saveSettings(FileWriter writer, SettingsList settings) {
@@ -73,7 +77,7 @@ public class Tools {
     public static void addSettings(JComponent panel, int x, int y, int offset, int width, Stream<Setting<?>> settings) {
         int currentHeight = 0;
         for(Setting<?> setting : settings.collect(Collectors.toList())) {
-            setting.addMenuComponents(panel, new Vector2(x, y + currentHeight), width);
+            setting.createMenuComponents(panel, new Vector2i(x, y + currentHeight), width);
             currentHeight += setting.getTotalHeight() + offset;
         }
         panel.setPreferredSize(new Dimension(width, currentHeight));
@@ -90,6 +94,20 @@ public class Tools {
     public static void updatePanel(JComponent panel) {
         panel.revalidate();
         panel.repaint();
+    }
+
+    public static JTextField createTextField(String value, Vector2i position, Vector2i size, Consumer<String> keyReleaseEvent) {
+        JTextField textField = new JTextField(value);
+        textField.setBounds(position.x, position.y, size.x, size.y);
+        textField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if(textField.getText() == null || textField.getText().equalsIgnoreCase(""))
+                    return;
+                keyReleaseEvent.accept(textField.getText());
+            }
+        });
+        return textField;
     }
 
     public static void drawLine(SpriteBatch batch, Vector2 point1, Vector2 point2, int lineWidth, Color color) {
@@ -180,6 +198,12 @@ public class Tools {
     public static Long isLong(String text) {
         try {
             return Long.parseLong(text);
+        } catch (NumberFormatException ex) { return null; }
+    }
+
+    public static Double isDouble(String text) {
+        try {
+            return Double.parseDouble(text);
         } catch (NumberFormatException ex) { return null; }
     }
 

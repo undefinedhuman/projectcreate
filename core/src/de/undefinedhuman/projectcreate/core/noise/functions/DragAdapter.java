@@ -82,14 +82,6 @@ public class DragAdapter extends MouseAdapter {
         swapComponentLocation(parent, gap, tempComponent, parent.getParent().getBounds().contains(event.getPoint()) ? parent.getComponentCount() : index);
     }
 
-    private boolean swapTargetIndex(JComponent parent, Component remove, Component add, Component component, Point point, int index) {
-        int tgt = getTargetIndex(component.getBounds(), point, index);
-        if(tgt < 0)
-            return false;
-        swapComponentLocation(parent, remove, add, tgt);
-        return true;
-    }
-
     private void startDragging(JComponent parent, Point mousePosition) {
         Component clickedComponent = parent.getComponentAt(mousePosition);
         index = parent.getComponentZOrder(clickedComponent);
@@ -138,6 +130,14 @@ public class DragAdapter extends MouseAdapter {
         parent.add(add, index);
         parent.revalidate();
         parent.repaint();
+    }
+
+    private boolean swapTargetIndex(JComponent parent, Component remove, Component add, Component component, Point point, int index) {
+        int tgt = getTargetIndex(component.getBounds(), point, index);
+        if(tgt < 0)
+            return false;
+        swapComponentLocation(parent, remove, add, tgt);
+        return true;
     }
 
 }

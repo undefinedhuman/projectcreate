@@ -2,24 +2,23 @@ package de.undefinedhuman.projectcreate.engine.settings.types;
 
 import com.badlogic.gdx.Files;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
-import de.undefinedhuman.projectcreate.engine.settings.Setting;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public abstract class FilePathSetting extends Setting<FsFile> {
+public abstract class FilePathSetting extends TextFieldSetting<FsFile> {
 
     private FsFile defaultFile;
 
     public FilePathSetting(String key, FsFile defaultFile) {
-        super(key, defaultFile.file().getAbsolutePath(), value -> new FsFile(String.valueOf(value), Files.FileType.Absolute));
+        super(key, defaultFile, value -> new FsFile(value, Files.FileType.Absolute), value -> value.file().getAbsolutePath());
         this.defaultFile = defaultFile;
     }
 
     @Override
-    protected void addValueMenuComponents(JPanel panel, int width) {
-        super.addValueMenuComponents(panel, width);
+    protected void createValueMenuComponents(JPanel panel, int width) {
+        super.createValueMenuComponents(panel, width);
         valueField.setEditable(false);
         valueField.addMouseListener(new MouseAdapter() {
             @Override
@@ -29,6 +28,6 @@ public abstract class FilePathSetting extends Setting<FsFile> {
         });
     }
 
-    public abstract String chooseFilePath(FsFile defaultFile);
+    public abstract FsFile chooseFilePath(FsFile defaultFile);
 
 }

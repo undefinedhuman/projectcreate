@@ -33,7 +33,7 @@ public class Item implements ItemUsage {
             useIconAsHandTexture = new BooleanSetting("UseIconInHand", false),
             canShake = new BooleanSetting("Shake", true);
     public SelectionSetting<Rarity>
-            rarity = new SelectionSetting<>("Rarity", Rarity.values(), value -> Rarity.valueOf(String.valueOf(value)));
+            rarity = new SelectionSetting<>("Rarity", Rarity.values(), value -> Rarity.valueOf(String.valueOf(value)), Enum::name);
 
     public SelectionPanel<RecipeItem> recipeItems = new SelectionPanel<>("Recipe Item", new RecipeItem());
 

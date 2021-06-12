@@ -12,7 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 
-public class NoisePanel extends Setting<String> {
+public abstract class NoisePanel extends Setting<String> {
 
     private static final int BUTTON_WIDTH = 75;
 
@@ -21,11 +21,11 @@ public class NoisePanel extends Setting<String> {
     private HashMap<JPanel, BaseFunction> guiPanels = new HashMap<>();
     private HashMap<String, Class<? extends BaseFunction>> noiseFunctions = new HashMap<>();
 
-    public NoisePanel(String key, Class<? extends BaseFunction>... functions) {
-        super(key, "", String::valueOf);
-        setContentHeight(400);
+    public NoisePanel(String key, int height, Class<? extends BaseFunction>... functions) {
+        super(key, "");
         for(Class<? extends BaseFunction> function : functions)
             noiseFunctions.put(function.getSimpleName(), function);
+        setContentHeight(height);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class NoisePanel extends Setting<String> {
     }
 
     @Override
-    protected void addValueMenuComponents(JPanel panel, int width) {
+    protected void createValueMenuComponents(JPanel panel, int width) {
 
         JButton addButton = new JButton("Add");
         addButton.setBounds(width - BUTTON_WIDTH, 0, BUTTON_WIDTH, Variables.DEFAULT_CONTENT_HEIGHT);
@@ -44,10 +44,12 @@ public class NoisePanel extends Setting<String> {
             if(function == null)
                 return;
             addPanel(function, width - Variables.BORDER_WIDTH*2 - Variables.OFFSET);
+            for(Setting<?> setting : function.getSettings())
+                setting.addValueListener(value -> updateValues());
         });
         panel.add(addButton);
 
-        selection = new JComboBox<>(noiseFunctions.keySet().toArray(new String[0]));
+        selection = new JComboBox<>(noiseFunctions.keySet().stream().sorted().map(String::valueOf).toArray(value -> new String[noiseFunctions.size()]));
         selection.setBounds(0, 0, width - BUTTON_WIDTH - Variables.OFFSET, Variables.DEFAULT_CONTENT_HEIGHT);
         panel.add(selection);
 
@@ -62,8 +64,9 @@ public class NoisePanel extends Setting<String> {
 
         JScrollPane scrollPane = new JScrollPane(mainPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setLocation(0, Variables.DEFAULT_CONTENT_HEIGHT + Variables.OFFSET);
-        scrollPane.setSize(new Dimension(width, 400 - Variables.DEFAULT_CONTENT_HEIGHT - Variables.OFFSET));
+        scrollPane.setSize(new Dimension(width, getContentHeight() - Variables.DEFAULT_CONTENT_HEIGHT - Variables.OFFSET));
         scrollPane.getVerticalScrollBar().setUnitIncrement(8);
+        scrollPane.setBorder(null);
         panel.add(scrollPane);
     }
 
@@ -91,6 +94,21 @@ public class NoisePanel extends Setting<String> {
         writer.writeString("}");
     }
 
+    @Override
+    protected void saveValue(FileWriter writer) {}
+
+    @Override
+    protected void updateMenu(String value) {}
+
+    public double calculateValue(int x, int y) {
+        double value = 0;
+        if(box == null)
+            return 0;
+        for(int i = 0; i < box.getComponentCount(); i++)
+            value = guiPanels.get((JPanel) box.getComponent(i)).calculateValue(x, y, value);
+        return value;
+    }
+
     private void addPanel(BaseFunction function, int width) {
         JPanel panel = function.createPanel(width - Variables.BORDER_WIDTH*2 - Variables.OFFSET);
         guiPanels.put(panel, function);
@@ -108,5 +126,7 @@ public class NoisePanel extends Setting<String> {
         }
         return function;
     }
+
+    public abstract void updateValues();
 
 }

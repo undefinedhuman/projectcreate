@@ -4,7 +4,6 @@ import com.badlogic.gdx.Files;
 import de.undefinedhuman.projectcreate.engine.file.FileError;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
-import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.settings.types.FilePathSetting;
 import de.undefinedhuman.projectcreate.engine.utils.Stage;
@@ -27,24 +26,24 @@ public class InstallationUtils {
             installationPath.setValue(chooseInstallationDirectory(defaultInstallationDirectory));
     }
 
-    public static String chooseInstallationDirectory(FsFile defaultInstallationDirectory) {
+    public static FsFile chooseInstallationDirectory(FsFile defaultInstallationDirectory) {
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Choose a installation directory...");
         defaultInstallationDirectory.mkdirs();
         ArrayList<String> errorMessages = FileError.checkFileForErrors(defaultInstallationDirectory, FileError.NON_EXISTENT, FileError.NO_DIRECTORY, FileError.NOT_WRITEABLE);
         if(!errorMessages.isEmpty())
-            Log.showErrorDialog(Level.ERROR, "An error occurred while creating the default installation directory! \nPlease choose another writable installation directory!", false);
+            Log.showErrorDialog("An error occurred while creating the default installation directory! \nPlease choose another writable installation directory!", false);
         else chooser.setCurrentDirectory(defaultInstallationDirectory.file());
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
         if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION)
-            Log.showErrorDialog(Level.CRASH, "Please choose a writable installation directory!\nPlease restart!", true);
+            Log.showErrorDialog("Please choose a writable installation directory!\nPlease restart!", true);
         FsFile selectedFile = new FsFile(chooser.getSelectedFile().getAbsolutePath(), Files.FileType.Absolute);
         if(!selectedFile.file().equals(defaultInstallationDirectory.file()) && defaultInstallationDirectory.delete())
             Log.info("Deleted default installation directory!");
         if(FileError.checkFileForErrors("checking installation directory", selectedFile, FileError.NULL, FileError.NON_EXISTENT, FileError.NO_DIRECTORY, FileError.NOT_WRITEABLE))
-            Log.showErrorDialog(Level.CRASH, "Please choose a writable installation directory!\nPlease restart!", true);
-        return selectedFile.file().getAbsolutePath();
+            Log.showErrorDialog("Please choose a writable installation directory!\nPlease restart!", true);
+        return selectedFile;
     }
 
     public static List<Version> fetchAvailableVersions(String url, Stage excludedStages) {
@@ -93,7 +92,7 @@ public class InstallationUtils {
         projectDotDirectory.mkdirs();
         ArrayList<String> errorMessages = FileError.checkFileForErrors(projectDotDirectory, FileError.NON_EXISTENT, FileError.NO_DIRECTORY, FileError.NOT_WRITEABLE);
         if(!errorMessages.isEmpty())
-            Log.showErrorDialog(Level.CRASH, "An error occurred while creating the root directory of the project. \nPlease contact the author.\n" + errorMessages, true);
+            Log.showErrorDialog("An error occurred while creating the root directory of the project. \nPlease contact the author.\n" + errorMessages, true);
     }
 
 }

@@ -1,13 +1,27 @@
-package de.undefinedhuman.projectcreate.core.noise.functions;
+package de.undefinedhuman.projectcreate.core.noise.functions.fractal;
 
+import de.undefinedhuman.projectcreate.core.noise.functions.BaseFunction;
+import de.undefinedhuman.projectcreate.core.noise.functions.NoiseType;
+import de.undefinedhuman.projectcreate.core.noise.generator.NoiseGenerator;
 import de.undefinedhuman.projectcreate.engine.settings.types.SelectionSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.slider.SliderSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.slider.SliderSettingDirector;
 
 public class FractalFunction extends BaseFunction {
 
+    private NoiseGenerator noiseGenerator = NoiseType.values()[0].newInstance(1337);
+    private float fractalBounding = 0;
+
+    public SelectionSetting<NoiseType>
+            noiseType = (SelectionSetting<NoiseType>) new SelectionSetting<>("Noise Type", NoiseType.values(), value -> NoiseType.valueOf(String.valueOf(value)), Enum::name)
+            .addValueListener(value -> {
+                noiseGenerator = value.newInstance(1337);
+                if(noiseGenerator == null)
+                    NoiseType.OPEN_SIMPLEX_2_SMOOTH.newInstance(1337);
+            });
+
     public SelectionSetting<FractalType>
-            fractalType = new SelectionSetting<>("Fractal Type", FractalType.values(), value -> FractalType.valueOf(String.valueOf(value)));
+            fractalType = new SelectionSetting<>("Fractal Type", FractalType.values(), value -> FractalType.valueOf(String.valueOf(value)), Enum::name);
 
     public SliderSetting
             frequency = SliderSetting.newInstance("Frequency")
@@ -19,12 +33,13 @@ public class FractalFunction extends BaseFunction {
                         builder.numberOfDecimals = 4;
                     })
                     .build(),
-            octaves = SliderSettingDirector.createIntegerSlider(SliderSetting.newInstance("Octaves"))
+            octaves = (SliderSetting) SliderSettingDirector.createIntegerSlider(SliderSetting.newInstance("Octaves"))
                     .with(builder -> {
                         builder.bounds.set(1, 10);
                         builder.defaultValue = 3;
                     })
-                    .build(),
+                    .build()
+                    .addValueListener(value -> fractalBounding = calculateFractalBounding()),
             lacunarity = SliderSettingDirector.createFloatSlider(SliderSetting.newInstance("Lacunarity"))
                     .with(builder -> {
                         builder.bounds.set(0, 400);
@@ -37,37 +52,32 @@ public class FractalFunction extends BaseFunction {
                         builder.tickSpeed = 1;
                     })
                     .build(),
-            gain = SliderSettingDirector.createFloatSlider(SliderSetting.newInstance("Gain"))
-                    .with(builder -> {
-                        builder.defaultValue = 50;
-                    })
-                    .build();
+            gain = (SliderSetting) SliderSettingDirector.createFloatSlider(SliderSetting.newInstance("Gain"))
+                    .with(builder -> builder.defaultValue = 50)
+                    .build()
+                    .addValueListener(value -> fractalBounding = calculateFractalBounding());
 
     public FractalFunction() {
         super("Fractal");
-        settings.addSettings(fractalType, frequency, octaves, lacunarity, amplitudeFactor, gain);
+        settings.addSettings(noiseType, fractalType, frequency, octaves, lacunarity, gain, amplitudeFactor);
     }
 
     @Override
     public double calculateValue(double x, double y, double value) {
         float fractalValue = 0;
-        switch (fractalType.getValue()) {
-            default:
-            case FBM:
-                float amplitude = calculateFractalBounding();
-                x *= frequency.getValue();
-                y *= frequency.getValue();
-                for(int i = 0; i < octaves.getValue(); i++) {
-                    double noise = 0.0; // noiseGenerator.noise2(x, y);
-                    fractalValue += noise * amplitude;
-                    amplitude *= lerp(1f, (noise + 1) * 0.5f, amplitudeFactor.getValue());
+        float amplitude = fractalBounding;
+        x *= frequency.getValue();
+        y *= frequency.getValue();
+        for(int i = 0; i < octaves.getValue(); i++) {
+            double noise = noiseGenerator.noise2(x, y);
+            fractalValue += noise * amplitude;
+            amplitude *= lerp(1f, (noise + 1) * 0.5f, amplitudeFactor.getValue());
 
-                    x *= lacunarity.getValue();
-                    y *= lacunarity.getValue();
-                    amplitude *= gain.getValue();
-                }
-                return value + fractalValue;
+            x *= lacunarity.getValue();
+            y *= lacunarity.getValue();
+            amplitude *= gain.getValue();
         }
+        return value + fractalValue;
     }
 
     private float calculateFractalBounding() {

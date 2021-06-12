@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.engine.settings.types.slider;
 
 import de.undefinedhuman.projectcreate.engine.log.Log;
-import de.undefinedhuman.projectcreate.engine.settings.Setting;
+import de.undefinedhuman.projectcreate.engine.settings.types.BaseSetting;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 import de.undefinedhuman.projectcreate.engine.validation.ValidationRule;
@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class SliderSetting extends Setting<Float> {
+public class SliderSetting extends BaseSetting<Float> {
 
     private final float sliderWidth;
     private final boolean isLabelVisible;
@@ -25,7 +25,7 @@ public class SliderSetting extends Setting<Float> {
     private JLabel progressLabel;
 
     private SliderSetting(String key, float sliderWidth, boolean isLabelVisible, Vector2i bounds, int defaultValue, int tickSpeed, float scale, int numberOfDecimals) {
-        super(key, defaultValue / scale, value -> Float.parseFloat(String.valueOf(value)));
+        super(key, defaultValue / scale, Float::parseFloat, Object::toString);
         this.sliderWidth = sliderWidth;
         this.isLabelVisible = isLabelVisible;
         this.bounds.set(bounds);
@@ -41,7 +41,7 @@ public class SliderSetting extends Setting<Float> {
     }
 
     @Override
-    protected void addValueMenuComponents(JPanel panel, int width) {
+    protected void createValueMenuComponents(JPanel panel, int width) {
         slider = createSliderUI(width, getContentHeight(), sliderWidth, bounds, getValue(), scale, tickSpeed, e -> setValue(convertToPreciseFloatingPointValue(slider.getValue(), scale, numberOfDecimals)));
         panel.add(slider);
         if(isLabelVisible) {
@@ -51,10 +51,10 @@ public class SliderSetting extends Setting<Float> {
         }
     }
 
-    private double convertToPreciseFloatingPointValue(int value, float scale, int numberOfDecimals) {
+    private float convertToPreciseFloatingPointValue(int value, float scale, int numberOfDecimals) {
         double precision = Math.pow(10, numberOfDecimals);
         double floatValue = value / scale;
-        return Math.floor(floatValue * precision) / precision;
+        return (float) (Math.floor(floatValue * precision) / precision);
     }
 
     private JSlider createSliderUI(int contentWidth, int contentHeight, float sliderWidth, Vector2i bounds, float currentValue, float scale, int tickSpeed, ChangeListener onChange) {
@@ -73,7 +73,7 @@ public class SliderSetting extends Setting<Float> {
     }
 
     @Override
-    protected void setValueInMenu(Object value) {
+    protected void updateMenu(Float value) {
         if(slider == null)
             return;
         Float parsedValue = Tools.isFloat(value.toString());

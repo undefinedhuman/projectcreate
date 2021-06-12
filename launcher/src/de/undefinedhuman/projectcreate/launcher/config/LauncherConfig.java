@@ -19,7 +19,7 @@ public class LauncherConfig extends Config {
     public FilePathSetting
             gameInstallationPath = new FilePathSetting("Game installation path", Launcher.DEFAULT_INSTALLATION_DIRECTORY) {
                 @Override
-                public String chooseFilePath(FsFile defaultFile) {
+                public FsFile chooseFilePath(FsFile defaultFile) {
                     return InstallationUtils.chooseInstallationDirectory(defaultFile);
                 }
             };

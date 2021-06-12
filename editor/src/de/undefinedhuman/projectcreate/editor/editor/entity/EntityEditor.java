@@ -37,8 +37,8 @@ public class EntityEditor extends ThreePanelEditor {
 
     private SettingsList baseSettings = new SettingsList();
 
-    public EntityEditor(Container container) {
-        super(container);
+    public EntityEditor(Container container, int width, int height) {
+        super(container, width, height);
         components = new HashMap<>();
 
         componentComboBox = new JComboBox<>(ComponentType.values());
@@ -49,7 +49,7 @@ public class EntityEditor extends ThreePanelEditor {
                 new IntSetting("ID", 0),
                 new StringSetting("Name", "Temp Name"),
                 new Vector2Setting("Size", new Vector2(0, 0)),
-                new SelectionSetting<>("Type", EntityType.values(), value -> EntityType.valueOf(String.valueOf(value))));
+                new SelectionSetting<>("Type", EntityType.values(), value -> EntityType.valueOf(String.valueOf(value)), Enum::name));
         Tools.addSettings(leftPanel, baseSettings.getSettings().stream());
 
         componentList = new DefaultListModel<>();
@@ -143,7 +143,7 @@ public class EntityEditor extends ThreePanelEditor {
             SettingsObject settingsObject = new SettingsObjectAdapter(reader);
 
             for(Setting<?> setting : baseSettings.getSettings())
-                setting.loadSetting(reader.parent(), settingsObject);
+                setting.load(reader.parent(), settingsObject);
 
             for(ComponentType componentType : ComponentType.values()) {
                 String componentBlueprintName = componentType.name().toUpperCase();

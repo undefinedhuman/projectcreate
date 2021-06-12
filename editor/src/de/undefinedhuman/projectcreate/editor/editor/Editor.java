@@ -7,7 +7,7 @@ import java.awt.*;
 
 public abstract class Editor {
 
-    public Editor(Container container) {
+    public Editor(Container container, int width, int height) {
         Variables.IS_EDITOR = true;
     }
 
@@ -18,13 +18,14 @@ public abstract class Editor {
 
     protected JPanel createJPanel(int width, int height) {
         JPanel panel = new JPanel(null, true);
-        panel.setSize(new Dimension(width - Variables.BORDER_WIDTH, height - Variables.BORDER_HEIGHT));
+        panel.setSize(new Dimension(width - Variables.BORDER_WIDTH, height - Variables.TITLE_LABEL_HEIGHT));
         return panel;
     }
 
     protected JScrollPane createScrollPane(JPanel content, String title, int x, int y, int width, int height, int vsbPolicy, int hsbPolicy) {
         JScrollPane scrollPane = new JScrollPane(content, vsbPolicy, hsbPolicy);
         scrollPane.setBounds(x, y, width, height);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(8);
         scrollPane.setBorder(BorderFactory.createTitledBorder(title));
         return scrollPane;
     }

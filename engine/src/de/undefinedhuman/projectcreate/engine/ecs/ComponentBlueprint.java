@@ -29,7 +29,7 @@ public abstract class ComponentBlueprint {
 
     public void load(FileHandle parentDir, SettingsObject settingsObject) {
         for(Setting<?> setting : this.settings.getSettings())
-            setting.loadSetting(parentDir, settingsObject);
+            setting.load(parentDir, settingsObject);
     }
 
     public void save(FileWriter writer) {

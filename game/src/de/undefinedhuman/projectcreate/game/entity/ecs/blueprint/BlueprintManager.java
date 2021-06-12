@@ -83,7 +83,7 @@ public class BlueprintManager extends Manager {
         SettingsObject object = new SettingsObjectAdapter(reader);
 
         for(Setting<?> setting : blueprint.settings.getSettings())
-            setting.loadSetting(reader.parent(), object);
+            setting.load(reader.parent(), object);
 
         for(ComponentType type : ComponentType.values()) {
             if(!object.containsKey(type.name()))

@@ -19,6 +19,10 @@ import java.awt.event.WindowEvent;
 
 public class Window extends JFrame {
 
+    private static final int WINDOW_WIDTH = 1920;
+    private static final int WINDOW_HEIGHT = 1080;
+    public static final int MENU_HEIGHT = 60;
+
     private static Window instance;
     public Editor editor;
 
@@ -53,7 +57,7 @@ public class Window extends JFrame {
         Log.getInstance().init();
         Log.getInstance().load();
         setResizable(false);
-        setSize(1920, 1080);
+        setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         container = getContentPane();
         container.setBackground(Variables.BACKGROUND_COLOR);
         addMenu();
@@ -108,7 +112,7 @@ public class Window extends JFrame {
         container.removeAll();
         container.add(errorMessage);
         container.setLayout(null);
-        editor = type.newInstance(container);
+        editor = type.newInstance(container, WINDOW_WIDTH, WINDOW_HEIGHT - MENU_HEIGHT);
         if(editor == null)
             Log.showErrorDialog("Error while creating editor class instance!", true);
         revalidate();

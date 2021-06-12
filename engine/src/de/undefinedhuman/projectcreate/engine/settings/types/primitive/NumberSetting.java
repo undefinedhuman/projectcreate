@@ -1,25 +1,25 @@
 package de.undefinedhuman.projectcreate.engine.settings.types.primitive;
 
 import de.undefinedhuman.projectcreate.engine.log.Log;
-import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.interfaces.Parser;
+import de.undefinedhuman.projectcreate.engine.settings.types.TextFieldSetting;
 
-public abstract class NumberSetting<T extends Number & Comparable<T>> extends Setting<T> {
+public abstract class NumberSetting<T extends Number & Comparable<T>> extends TextFieldSetting<T> {
 
     public NumberSetting(String key, T defaultValue, Parser<T> parse) {
         super(key, defaultValue, value -> {
-            T parsedValue = parse.get(String.valueOf(value));
-            if(parsedValue == null) {
+            T parsedValue = parse.parse(String.valueOf(value));
+            if (parsedValue == null) {
                 Log.error("Error while parsing: " + value);
                 return defaultValue;
             }
             return parsedValue;
-        });
+        }, String::valueOf);
     }
 
     public NumberSetting(String key, T defaultValue, Parser<T> parse, T min, T max) {
         super(key, defaultValue, value -> {
-            T parsedValue = parse.get(String.valueOf(value));
+            T parsedValue = parse.parse(String.valueOf(value));
             if(parsedValue == null) {
                 Log.error("Error while parsing: " + value);
                 return defaultValue;
@@ -29,8 +29,8 @@ public abstract class NumberSetting<T extends Number & Comparable<T>> extends Se
                 return defaultValue;
             }
             return parsedValue;
-        });
-        setMenuTitle(key + ": Range [" + min + ", " + max + "]");
+        }, String::valueOf);
+        setMenuTitle(key + ", Range [" + min + ", " + max + "]");
     }
 
 }

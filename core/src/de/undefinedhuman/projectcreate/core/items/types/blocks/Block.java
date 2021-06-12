@@ -19,9 +19,9 @@ public class Block extends Item {
             hasStates = new BooleanSetting("HasStates", true),
             needBack = new BooleanSetting("Need Back", false);
     public SelectionSetting<BlockType>
-            blockType = new SelectionSetting<>("Block Type", BlockType.values(), value -> BlockType.valueOf(String.valueOf(value)));
+            blockType = new SelectionSetting<>("Block Type", BlockType.values(), value -> BlockType.valueOf(String.valueOf(value)), Enum::name);
     public SelectionSetting<PlacementLayer>
-            placementLayer = new SelectionSetting<>("Placement Layer", PlacementLayer.values(), value -> PlacementLayer.valueOf(String.valueOf(value)));
+            placementLayer = new SelectionSetting<>("Placement Layer", PlacementLayer.values(), value -> PlacementLayer.valueOf(String.valueOf(value)), Enum::name);
     public IntSetting
             durability = new IntSetting("Durability", 0),
             dropID = new IntSetting("DropID", 0);

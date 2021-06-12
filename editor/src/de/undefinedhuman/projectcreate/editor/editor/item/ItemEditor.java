@@ -28,8 +28,8 @@ public class ItemEditor extends ThreePanelEditor {
     public JComboBox<String> itemSelection;
     public JButton loadButton;
 
-    public ItemEditor(Container container) {
-        super(container);
+    public ItemEditor(Container container, int width, int height) {
+        super(container, width, height);
         itemComboBox = new JComboBox<>(ItemType.values());
         itemComboBox.setBounds(20, 25, 150, 25);
         itemComboBox.setSelectedIndex(0);
@@ -91,7 +91,7 @@ public class ItemEditor extends ThreePanelEditor {
             Tools.removeSettings(leftPanel, rightPanel);
             currentItem = type.createInstance();
             for(Setting<?> setting : currentItem.getSettingsList().getSettings())
-                setting.loadSetting(reader.parent(), settingsObject);
+                setting.load(reader.parent(), settingsObject);
             Tools.addSettings(leftPanel, currentItem.getSettings().subList(0, currentItem.getItemSettingsAmount()).stream());
             Tools.addSettings(rightPanel, currentItem.getSettings().subList(currentItem.getItemSettingsAmount(), currentItem.getSettings().size()).stream());
             loadWindow.setVisible(false);

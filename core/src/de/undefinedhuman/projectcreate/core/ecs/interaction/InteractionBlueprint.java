@@ -4,7 +4,7 @@ import com.badlogic.gdx.Input;
 import de.undefinedhuman.projectcreate.engine.ecs.Component;
 import de.undefinedhuman.projectcreate.engine.ecs.ComponentBlueprint;
 import de.undefinedhuman.projectcreate.engine.ecs.ComponentParam;
-import de.undefinedhuman.projectcreate.engine.settings.Setting;
+import de.undefinedhuman.projectcreate.engine.settings.types.TextFieldSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.IntSetting;
 
 import java.util.HashMap;
@@ -14,8 +14,8 @@ public class InteractionBlueprint extends ComponentBlueprint {
     public IntSetting
             range = new IntSetting("Range", 0);
 
-    public Setting<Integer>
-            inputKey = new Setting<>("Input Key", "F", value -> Input.Keys.valueOf(String.valueOf(value)));
+    public TextFieldSetting<Integer>
+            inputKey = new TextFieldSetting<>("Input Key", Input.Keys.F, Input.Keys::valueOf, Input.Keys::toString);
 
     public InteractionBlueprint() {
         super(InteractionComponent.class);

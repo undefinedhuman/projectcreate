@@ -67,7 +67,7 @@ public class FileReader {
         return builder.toString();
     }
 
-    public LineSplitter getRemainingRawData() { return new LineSplitter(splitter.getRemainingRawData(), base, separator); }
+    public LineSplitter getRemainingRawData() { return new LineSplitter(splitter.getRawData(), base, separator); }
 
     public boolean isEndOfLine() {
         return !splitter.hasMoreValues();

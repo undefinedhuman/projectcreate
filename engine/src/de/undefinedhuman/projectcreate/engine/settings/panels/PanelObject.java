@@ -23,7 +23,7 @@ public class PanelObject {
 
     public PanelObject load(FileHandle parentDir, SettingsObject settingsObject) {
         for(Setting<?> setting : settings.getSettings())
-            setting.loadSetting(parentDir, settingsObject);
+            setting.load(parentDir, settingsObject);
         return this;
     }
 

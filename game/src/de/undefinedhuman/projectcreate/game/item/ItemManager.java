@@ -115,7 +115,7 @@ public class ItemManager extends Manager {
         ItemType type = ItemType.valueOf(typeName);
         Item item = type.createInstance();
         for(Setting<?> setting : item.getSettingsList().getSettings())
-            setting.loadSetting(reader.parent(), settingsObject);
+            setting.load(reader.parent(), settingsObject);
         item.init();
         reader.close();
         return item;

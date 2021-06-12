@@ -18,10 +18,10 @@ public enum EditorType {
         this.editorClass = editorClass;
     }
 
-    public Editor newInstance(Container container) {
+    public Editor newInstance(Container container, int width, int height) {
         Editor editor = null;
         try {
-            editor = editorClass.getConstructor(Container.class).newInstance(container);
+            editor = editorClass.getConstructor(Container.class, int.class, int.class).newInstance(container, width, height);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
         }

@@ -1,36 +1,29 @@
 package de.undefinedhuman.projectcreate.engine.settings;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
-import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
-import de.undefinedhuman.projectcreate.engine.settings.interfaces.Getter;
 import de.undefinedhuman.projectcreate.engine.settings.listener.ValueListener;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 
 import javax.swing.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
-public class Setting<T> {
+public abstract class Setting<T> {
+
+    private static final int TITLE_LABEL_HEIGHT = 25;
 
     protected String key;
     private String menuTitle;
-    protected Object value;
+    protected T value;
     private int contentHeight = Variables.DEFAULT_CONTENT_HEIGHT;
-
-    protected Getter<T> getter;
-
-    public JTextField valueField;
 
     private ArrayList<ValueListener<T>> valueListeners = new ArrayList<>();
 
-    public Setting(String key, Object defaultValue, Getter<T> getter) {
+    public Setting(String key, T defaultValue) {
         this.key = key;
         this.value = defaultValue;
-        this.getter = getter;
-        setMenuTitle(key + ":");
+        setMenuTitle(key);
     }
 
     public void setMenuTitle(String menuTitle) {
@@ -38,89 +31,80 @@ public class Setting<T> {
     }
 
     public String getKey() { return key; }
-    public T getValue() { return getter.get(value); }
-    public void setValue(Object value) {
+    public T getValue() { return value; }
+    public void setValue(T value) {
         this.value = value;
         valueListeners.forEach(valueListener -> valueListener.notify(getValue()));
-    }
-
-    public int getTotalHeight() {
-        return contentHeight + Variables.BORDER_HEIGHT;
-    }
-
-    protected int getContentHeight() {
-        return contentHeight;
     }
 
     protected void setContentHeight(int contentHeight) {
         this.contentHeight = contentHeight;
     }
 
-    public void loadSetting(FileHandle parentDir, SettingsObject settingsObject) {
+    protected int getContentHeight() {
+        return contentHeight;
+    }
+
+    public int getTotalHeight() {
+        return contentHeight + TITLE_LABEL_HEIGHT;
+    }
+
+    public void load(FileHandle parentDir, SettingsObject settingsObject) {
         if(!settingsObject.containsKey(key))
             return;
         loadValue(parentDir, settingsObject.get(key));
-        setValueInMenu(value);
+        updateMenu(getValue());
     }
+
+    protected abstract void loadValue(FileHandle parentDir, Object value);
 
     public void save(FileWriter writer) {
         writer.writeString(key);
-        writer.writeString(value.toString());
+        saveValue(writer);
     }
 
-    protected void loadValue(FileHandle parentDir, Object value) {
-        if(!(value instanceof LineSplitter))
-            return;
-        setValue(((LineSplitter) value).getNextString());
-    }
+    protected abstract void saveValue(FileWriter writer);
 
-    public void addMenuComponents(JComponent container, Vector2 position, int containerWidth) {
-        int contentWidth = containerWidth - Variables.BORDER_WIDTH;
+    public JPanel createMenuComponents(Vector2i position, int containerWidth) {
+
+        JPanel container = new JPanel(null);
+        container.setSize(containerWidth, getContentHeight());
+
+        JLabel titleLabel = new JLabel(menuTitle);
+        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        titleLabel.setBounds(position.x, position.y, containerWidth, TITLE_LABEL_HEIGHT);
+        titleLabel.setBackground(Variables.BACKGROUND_COLOR.darker());
+        titleLabel.setOpaque(true);
+        container.add(titleLabel);
+
         JPanel contentPanel = new JPanel(null);
-        contentPanel.setSize(contentWidth, contentHeight);
+        contentPanel.setSize(containerWidth, contentHeight);
+        createValueMenuComponents(contentPanel, contentPanel.getWidth());
 
-        addValueMenuComponents(contentPanel, contentWidth);
+        JScrollPane valueMenuComponentContainer = new JScrollPane(contentPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        valueMenuComponentContainer.setBorder(null);
+        valueMenuComponentContainer.setBounds(position.x, position.y + TITLE_LABEL_HEIGHT, containerWidth, contentHeight);
+        container.add(valueMenuComponentContainer);
 
-        JScrollPane settingsContainer = new JScrollPane(contentPanel);
-        settingsContainer.setBounds((int) position.x, (int) position.y, containerWidth, contentHeight + Variables.BORDER_HEIGHT);
-        settingsContainer.setBorder(BorderFactory.createTitledBorder(menuTitle));
-        container.add(settingsContainer);
+        return container;
+
     }
 
-    protected void addValueMenuComponents(JPanel panel, int width) {
-        valueField = createTextField(value, new Vector2(0, 0), new Vector2(width, contentHeight), new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                if(valueField.getText() == null || valueField.getText().equalsIgnoreCase(""))
-                    return;
-                setValue(valueField.getText());
-            }
-        });
-        panel.add(valueField);
-    }
-
-    protected JTextField createTextField(Object value, Vector2 position, Vector2 size, KeyAdapter adapter) {
-        JTextField textField = new JTextField(String.valueOf(value));
-        textField.setBounds((int) position.x, (int) position.y, (int) size.x, (int) size.y);
-        textField.addKeyListener(adapter);
-        return textField;
-    }
-
-    protected void setValueInMenu(Object value) {
-        if(valueField != null)
-            valueField.setText(value.toString());
+    public Setting<T> addValueListener(ValueListener<T> listener) {
+        if(!valueListeners.contains(listener))
+            valueListeners.add(listener);
+        return this;
     }
 
     protected void delete() { value = null; }
 
-     public Setting<T> addValueListener(ValueListener<T> listener) {
-        if(!valueListeners.contains(listener))
-            valueListeners.add(listener);
-        return this;
-     }
-
     @Override
     public String toString() {
-        return "[" + key + ", " + value + "]";
+        return "[" + key + ", " + getValue().toString() + "]";
     }
+
+    protected abstract void createValueMenuComponents(JPanel panel, int width);
+
+    protected abstract void updateMenu(T value);
+
 }

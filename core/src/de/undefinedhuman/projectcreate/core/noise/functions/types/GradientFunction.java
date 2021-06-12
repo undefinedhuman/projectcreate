@@ -1,5 +1,6 @@
-package de.undefinedhuman.projectcreate.core.noise.functions;
+package de.undefinedhuman.projectcreate.core.noise.functions.types;
 
+import de.undefinedhuman.projectcreate.core.noise.functions.BaseFunction;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.IntSetting;
 
 public class GradientFunction extends BaseFunction {

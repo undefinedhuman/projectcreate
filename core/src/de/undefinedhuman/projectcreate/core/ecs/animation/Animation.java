@@ -14,7 +14,7 @@ public class Animation extends PanelObject {
     public FloatSetting
             frameTime = new FloatSetting("Frame Time", 0f);
     public SelectionSetting<PlayMode>
-            playMode = new SelectionSetting<>("Play Mode", PlayMode.values(), value -> PlayMode.valueOf(String.valueOf(value)));
+            playMode = new SelectionSetting<>("Play Mode", PlayMode.values(), value -> PlayMode.valueOf(String.valueOf(value)), Enum::name);
 
     public Animation() {
         settings.addSettings(bounds, frameTime, playMode);

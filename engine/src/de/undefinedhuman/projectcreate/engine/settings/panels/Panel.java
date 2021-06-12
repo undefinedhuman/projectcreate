@@ -28,7 +28,7 @@ public abstract class Panel<T extends PanelObject> extends Setting<String> {
     private JPanel objectPanel;
 
     public Panel(String key, T panelObject) {
-        super(key, "", String::valueOf);
+        super(key, "");
         this.panelObject = panelObject;
         setContentHeight(INPUT_HEIGHT + BUTTON_HEIGHT + OBJECT_PANEL_HEIGHT + BUTTON_HEIGHT + Variables.OFFSET*4 + getPanelObjectContentHeight());
     }
@@ -41,7 +41,7 @@ public abstract class Panel<T extends PanelObject> extends Setting<String> {
     }
 
     @Override
-    protected void addValueMenuComponents(JPanel panel, int width) {
+    protected void createValueMenuComponents(JPanel panel, int width) {
         objectList = new DefaultListModel<>();
         for(String key : panelObjects.keySet())
             objectList.addElement(key);
@@ -83,6 +83,9 @@ public abstract class Panel<T extends PanelObject> extends Setting<String> {
         panel.add(objectPanel);
     }
 
+    @Override
+    protected void updateMenu(String value) {}
+
     @SuppressWarnings("unchecked")
     @Override
     protected void loadValue(FileHandle parentDir, Object value) {
@@ -107,6 +110,9 @@ public abstract class Panel<T extends PanelObject> extends Setting<String> {
             object.save(writer);
         writer.writeString("}");
     }
+
+    @Override
+    protected void saveValue(FileWriter writer) {}
 
     private int getPanelObjectContentHeight() {
         int height = 0;

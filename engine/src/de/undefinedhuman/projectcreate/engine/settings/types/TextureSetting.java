@@ -29,14 +29,14 @@ public class TextureSetting extends Setting<String> {
     private BufferedImage texture;
     private JLabel textureLabel;
 
-    public TextureSetting(String key, Object defaultValue) {
-        super(key, defaultValue, String::valueOf);
-        loadTexture(Variables.DEFAULT_TEXTURE);
+    public TextureSetting(String key, String defaultValue) {
+        super(key, defaultValue);
+        loadTexture(defaultValue);
         setContentHeight(PREVIEW_TEXTURE_LABEL_SIZE);
     }
 
     @Override
-    protected void addValueMenuComponents(JPanel panel, int width) {
+    protected void createValueMenuComponents(JPanel panel, int width) {
         textureLabel = new JLabel();
         textureLabel.setHorizontalAlignment(JLabel.CENTER);
         textureLabel.setBounds(0, 0, width, PREVIEW_TEXTURE_LABEL_SIZE);
@@ -60,8 +60,8 @@ public class TextureSetting extends Setting<String> {
     }
 
     @Override
-    public void save(FileWriter writer) {
-        writer.writeString(key).writeString(value.toString());
+    protected void saveValue(FileWriter writer) {
+        writer.writeString(getValue());
         FsFile file = new FsFile(writer.parent(), getValue(),  Files.FileType.Local);
         try { ImageIO.write(texture, "png", file.file());
         } catch (IOException ex) { Log.showErrorDialog("Can not save texture (" + this + "): \n" + ex.getMessage(), true); }
@@ -83,7 +83,7 @@ public class TextureSetting extends Setting<String> {
     }
 
     @Override
-    protected void setValueInMenu(Object value) {
+    protected void updateMenu(String value) {
         setTextureIcon();
     }
 
