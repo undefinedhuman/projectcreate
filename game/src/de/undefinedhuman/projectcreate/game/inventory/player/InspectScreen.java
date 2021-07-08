@@ -9,7 +9,7 @@ import de.undefinedhuman.projectcreate.game.gui.texture.GuiTemplate;
 import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.CenterConstraint;
 import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.RelativeConstraint;
-import de.undefinedhuman.projectcreate.game.item.ItemManager;
+import de.undefinedhuman.projectcreate.core.items.ItemManager;
 
 public class InspectScreen extends Gui {
 

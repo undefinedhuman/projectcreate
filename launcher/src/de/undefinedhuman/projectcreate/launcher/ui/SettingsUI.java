@@ -31,9 +31,9 @@ public class SettingsUI extends JFrame {
 
         JButton cancelButton = new JButton("Cancel");
         cancelButton.setBounds(
-                WINDOW_WIDTH - Variables.OFFSET - Variables.CONTENT_WIDTH/4,
+                WINDOW_WIDTH - Variables.OFFSET - Variables.DEFAULT_CONTENT_WIDTH /4,
                 WINDOW_HEIGHT - Variables.OFFSET - Variables.DEFAULT_CONTENT_HEIGHT,
-                Variables.CONTENT_WIDTH/4,
+                Variables.DEFAULT_CONTENT_WIDTH /4,
                 Variables.DEFAULT_CONTENT_HEIGHT);
         cancelButton.addActionListener(e -> {
             close();
@@ -42,9 +42,9 @@ public class SettingsUI extends JFrame {
 
         JButton saveButton = new JButton("Save");
         saveButton.setBounds(
-                WINDOW_WIDTH - Variables.OFFSET*2 - Variables.CONTENT_WIDTH/4*2,
+                WINDOW_WIDTH - Variables.OFFSET*2 - Variables.DEFAULT_CONTENT_WIDTH /4*2,
                 WINDOW_HEIGHT - Variables.OFFSET - Variables.DEFAULT_CONTENT_HEIGHT,
-                Variables.CONTENT_WIDTH/4,
+                Variables.DEFAULT_CONTENT_WIDTH /4,
                 Variables.DEFAULT_CONTENT_HEIGHT);
         saveButton.addActionListener(e -> {
             onSave.actionPerformed(e);
@@ -52,7 +52,7 @@ public class SettingsUI extends JFrame {
         });
         settingsPanel.add(saveButton);
 
-        Tools.addSettings(settingsPanel, 32, 32, 5, WINDOW_WIDTH - 64, Arrays.stream(settings));
+        Tools.createSettingsPanel(settingsPanel, 32, 32, 5, WINDOW_WIDTH - 64, Arrays.stream(settings));
         setVisible(true);
     }
 

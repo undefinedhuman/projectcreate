@@ -8,7 +8,7 @@ import de.undefinedhuman.projectcreate.editor.editor.ThreePanelEditor;
 import de.undefinedhuman.projectcreate.engine.ecs.ComponentBlueprint;
 import de.undefinedhuman.projectcreate.engine.ecs.EntityType;
 import de.undefinedhuman.projectcreate.engine.file.*;
-import de.undefinedhuman.projectcreate.engine.resources.RescourceUtils;
+import de.undefinedhuman.projectcreate.engine.resources.RessourceUtils;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
@@ -50,7 +50,7 @@ public class EntityEditor extends ThreePanelEditor {
                 new StringSetting("Name", "Temp Name"),
                 new Vector2Setting("Size", new Vector2(0, 0)),
                 new SelectionSetting<>("Type", EntityType.values(), value -> EntityType.valueOf(String.valueOf(value)), Enum::name));
-        Tools.addSettings(leftPanel, baseSettings.getSettings().stream());
+        // Tools.createSettingsPanel(leftPanel, baseSettings.getSettings().stream());
 
         componentList = new DefaultListModel<>();
 
@@ -60,7 +60,7 @@ public class EntityEditor extends ThreePanelEditor {
             selectedComponent = listPanel.getSelectedValue() != null ? listPanel.getSelectedValue() : null;
             if(selectedComponent != null) {
                 Tools.removeSettings(rightPanel);
-                Tools.addSettings(rightPanel, components.get(selectedComponent).getSettingsStream());
+                // Tools.createSettingsPanel(rightPanel, components.get(selectedComponent).getSettingsStream());
             }
         });
 
@@ -104,7 +104,7 @@ public class EntityEditor extends ThreePanelEditor {
     @Override
     public void load() {
 
-        FileHandle[] entityDirs = RescourceUtils.loadDir(Paths.ENTITY_PATH).list();
+        FileHandle[] entityDirs = RessourceUtils.loadDir(Paths.ENTITY_PATH).list();
         ArrayList<String> ids = new ArrayList<>();
 
         for (FileHandle entityDir : entityDirs) {
@@ -167,6 +167,11 @@ public class EntityEditor extends ThreePanelEditor {
         label.add(button);
 
         chooseWindow.setVisible(true);
+
+    }
+
+    @Override
+    public void createMenuButtonsPanel(JPanel menuButtonPanel) {
 
     }
 

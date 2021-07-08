@@ -1,4 +1,4 @@
-package de.undefinedhuman.projectcreate.core.items.types.tools;
+package de.undefinedhuman.projectcreate.core.items.tools;
 
 import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.core.crafting.RecipeType;

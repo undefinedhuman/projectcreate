@@ -22,7 +22,7 @@ import de.undefinedhuman.projectcreate.game.equip.EquipManager;
 import de.undefinedhuman.projectcreate.game.gui.GuiManager;
 import de.undefinedhuman.projectcreate.game.gui.texture.GuiTextureManager;
 import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
-import de.undefinedhuman.projectcreate.game.item.ItemManager;
+import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.game.network.ClientManager;
 import de.undefinedhuman.projectcreate.game.screen.TestScreen;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameScreen;

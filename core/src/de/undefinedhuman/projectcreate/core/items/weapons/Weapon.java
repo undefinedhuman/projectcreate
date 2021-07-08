@@ -1,4 +1,4 @@
-package de.undefinedhuman.projectcreate.core.items.types.weapons;
+package de.undefinedhuman.projectcreate.core.items.weapons;
 
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.core.items.Item;

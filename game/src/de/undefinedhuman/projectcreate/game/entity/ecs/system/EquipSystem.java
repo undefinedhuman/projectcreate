@@ -11,7 +11,7 @@ import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.core.items.ItemType;
 import de.undefinedhuman.projectcreate.game.entity.Entity;
 import de.undefinedhuman.projectcreate.game.entity.ecs.System;
-import de.undefinedhuman.projectcreate.game.item.ItemManager;
+import de.undefinedhuman.projectcreate.core.items.ItemManager;
 
 public class EquipSystem extends System {
 

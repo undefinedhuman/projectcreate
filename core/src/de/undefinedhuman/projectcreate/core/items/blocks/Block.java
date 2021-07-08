@@ -1,15 +1,14 @@
-package de.undefinedhuman.projectcreate.core.items.types.blocks;
+package de.undefinedhuman.projectcreate.core.items.blocks;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import de.undefinedhuman.projectcreate.core.crafting.RecipeType;
 import de.undefinedhuman.projectcreate.core.items.Item;
-import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.settings.types.SelectionSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.BooleanSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.IntSetting;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 public class Block extends Item {
 
@@ -37,8 +36,8 @@ public class Block extends Item {
 
     @Override
     public void init() {
-        if(!hasStates.getValue()) return;
-        blockTextureAtlas = new TextureAtlas(Gdx.files.internal(Paths.ITEM_PATH + "Block.atlas"), Gdx.files.internal(Paths.ITEM_PATH + id.getValue() + "/"));
+        if(!hasStates.getValue() || Variables.IS_EDITOR)
+            return;
         blockTextures = new AtlasRegion[16];
         for(int i = 0; i < blockTextures.length; i++) blockTextures[i] = blockTextureAtlas.findRegion("" + i);
     }

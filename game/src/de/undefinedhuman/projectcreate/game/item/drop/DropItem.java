@@ -10,7 +10,7 @@ import de.undefinedhuman.projectcreate.game.collision.CollisionManager;
 import de.undefinedhuman.projectcreate.game.entity.Entity;
 import de.undefinedhuman.projectcreate.game.entity.EntityManager;
 import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
-import de.undefinedhuman.projectcreate.game.item.ItemManager;
+import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 import de.undefinedhuman.projectcreate.game.world.World;
 

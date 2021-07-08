@@ -10,7 +10,7 @@ import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.PixelCons
 import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.RelativeConstraint;
 import de.undefinedhuman.projectcreate.game.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.projectcreate.game.gui.transforms.offset.RelativeOffset;
-import de.undefinedhuman.projectcreate.game.item.ItemManager;
+import de.undefinedhuman.projectcreate.core.items.ItemManager;
 
 public class InvItem extends Gui {
 

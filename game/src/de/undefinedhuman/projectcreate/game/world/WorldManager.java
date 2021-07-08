@@ -1,9 +1,9 @@
 package de.undefinedhuman.projectcreate.game.world;
 
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.core.items.types.blocks.Block;
-import de.undefinedhuman.projectcreate.core.items.types.blocks.PlacementLayer;
-import de.undefinedhuman.projectcreate.core.items.types.tools.Pickaxe;
+import de.undefinedhuman.projectcreate.core.items.blocks.Block;
+import de.undefinedhuman.projectcreate.core.items.blocks.PlacementLayer;
+import de.undefinedhuman.projectcreate.core.items.tools.Pickaxe;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector4;
@@ -12,7 +12,7 @@ import de.undefinedhuman.projectcreate.game.collision.CollisionManager;
 import de.undefinedhuman.projectcreate.game.entity.Entity;
 import de.undefinedhuman.projectcreate.game.entity.EntityManager;
 import de.undefinedhuman.projectcreate.game.inventory.player.Selector;
-import de.undefinedhuman.projectcreate.game.item.ItemManager;
+import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.game.item.drop.DropItemManager;
 import de.undefinedhuman.projectcreate.game.network.ClientManager;
 import de.undefinedhuman.projectcreate.game.network.utils.PacketUtils;

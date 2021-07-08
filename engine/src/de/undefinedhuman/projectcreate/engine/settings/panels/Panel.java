@@ -41,7 +41,7 @@ public abstract class Panel<T extends PanelObject> extends Setting<String> {
     }
 
     @Override
-    protected void createValueMenuComponents(JPanel panel, int width) {
+    protected void createValueUI(JPanel panel, int width) {
         objectList = new DefaultListModel<>();
         for(String key : panelObjects.keySet())
             objectList.addElement(key);

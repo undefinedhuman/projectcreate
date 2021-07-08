@@ -1,4 +1,4 @@
-package de.undefinedhuman.projectcreate.core.items.types.weapons;
+package de.undefinedhuman.projectcreate.core.items.weapons;
 
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.IntSetting;
 

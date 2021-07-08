@@ -41,7 +41,7 @@ public class SliderSetting extends BaseSetting<Float> {
     }
 
     @Override
-    protected void createValueMenuComponents(JPanel panel, int width) {
+    protected void createValueUI(JPanel panel, int width) {
         slider = createSliderUI(width, getContentHeight(), sliderWidth, bounds, getValue(), scale, tickSpeed, e -> setValue(convertToPreciseFloatingPointValue(slider.getValue(), scale, numberOfDecimals)));
         panel.add(slider);
         if(isLabelVisible) {
@@ -81,7 +81,9 @@ public class SliderSetting extends BaseSetting<Float> {
             Log.error("Error while loading value of setting (float conversion error): " + value);
             return;
         }
-        slider.setValue(Tools.isInRange(parsedValue, bounds.x, bounds.y) ? (int) (parsedValue * scale) : (int) (bounds.x * scale));
+        if(Tools.isInteger(parsedValue.toString()) != null)
+            return;
+        slider.setValue(Tools.isInRange(parsedValue.intValue(), bounds.x, bounds.y) ? (int) (parsedValue * scale) : (int) (bounds.x * scale));
     }
 
     public static Builder newInstance(String key) {

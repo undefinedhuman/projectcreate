@@ -18,7 +18,7 @@ public class TextFieldSetting<T> extends BaseSetting<T> {
     }
 
     @Override
-    protected void createValueMenuComponents(JPanel panel, int width) {
+    protected void createValueUI(JPanel panel, int width) {
         panel.add(valueField = Tools.createTextField(serializer.serialize(getValue()), new Vector2i(0, 0), new Vector2i(width, getContentHeight()), s -> setValue(parser.parse(s))));
     }
 

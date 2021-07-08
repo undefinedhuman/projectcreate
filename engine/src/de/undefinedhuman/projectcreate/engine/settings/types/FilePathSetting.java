@@ -17,8 +17,8 @@ public abstract class FilePathSetting extends TextFieldSetting<FsFile> {
     }
 
     @Override
-    protected void createValueMenuComponents(JPanel panel, int width) {
-        super.createValueMenuComponents(panel, width);
+    protected void createValueUI(JPanel panel, int width) {
+        super.createValueUI(panel, width);
         valueField.setEditable(false);
         valueField.addMouseListener(new MouseAdapter() {
             @Override

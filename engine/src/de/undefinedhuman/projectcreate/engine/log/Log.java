@@ -9,9 +9,6 @@ import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.file.Serializable;
 import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessage;
-import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessageDecorators;
-import de.undefinedhuman.projectcreate.engine.log.decoratorold.BaseLogMessage;
-import de.undefinedhuman.projectcreate.engine.log.decoratorold.LogMessageDecorator;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
@@ -151,7 +148,7 @@ public class Log extends Manager implements ApplicationLogger, Serializable {
         console.println(fullMessage);
         console.flush();
         logMessages.add(fullMessage);
-        logEvents.forEach(logEvent -> logEvent.log(logLevel, fullMessage));
+        logEvents.forEach(logEvent -> logEvent.log(logLevel, fullMessage, logMessage.toString()));
     }
 
     private void checkLogs() {

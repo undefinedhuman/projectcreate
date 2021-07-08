@@ -96,6 +96,8 @@ project(":engine") {
         compile group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
         compile group: 'com.github.kerner1000', name: 'javapng', version: '2.1.2'
 
+        compile 'com.formdev:flatlaf:0.36'
+
         testImplementation("org.assertj:assertj-core:3.19.0")
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
         testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
@@ -111,6 +113,7 @@ project(":editor") {
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile 'com.formdev:flatlaf:0.36'
+        implementation 'com.formdev:flatlaf-intellij-themes:1.2'
     }
 }
 

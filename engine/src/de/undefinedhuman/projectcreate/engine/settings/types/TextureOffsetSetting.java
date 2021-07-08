@@ -31,7 +31,7 @@ public class TextureOffsetSetting extends Vector2ArraySetting {
     }
 
     @Override
-    protected void createValueMenuComponents(JPanel panel, int width) {
+    protected void createValueUI(JPanel panel, int width) {
         textureLabel = new JLabel(new ImageIcon(texture));
         textureLabel.setSize(25, 25);
         textureLabel.addMouseListener(new MouseAdapter() {

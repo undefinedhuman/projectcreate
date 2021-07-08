@@ -16,7 +16,7 @@ public class BooleanSetting extends BaseSetting<Boolean> {
     }
 
     @Override
-    protected void createValueMenuComponents(JPanel panel, int width) {
+    protected void createValueUI(JPanel panel, int width) {
         checkBox = new JCheckBox();
         checkBox.setSelected(getValue());
         checkBox.setSize(CHECK_BOX_SIZE, CHECK_BOX_SIZE);

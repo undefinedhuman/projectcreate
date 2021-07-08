@@ -9,7 +9,7 @@ import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.gl.HeadlessApplicationListener;
 import de.undefinedhuman.projectcreate.engine.log.Log;
-import de.undefinedhuman.projectcreate.engine.resources.RescourceUtils;
+import de.undefinedhuman.projectcreate.engine.resources.RessourceUtils;
 import de.undefinedhuman.projectcreate.engine.utils.ManagerList;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.launcher.config.LauncherConfig;
@@ -70,7 +70,7 @@ public class Launcher extends JFrame {
         tabbedPane.addTab("About", new JPanel());
         container.add(tabbedPane);
 
-        JLabel icon = new JLabel(new ImageIcon(RescourceUtils.loadImage("logo/288x96.png")));
+        JLabel icon = new JLabel(new ImageIcon(RessourceUtils.loadImage("logo/288x96.png")));
         icon.setBounds(WINDOW_WIDTH/4/2 - 144, 32, 288, 96);
         container.add(icon);
 

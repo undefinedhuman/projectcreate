@@ -13,14 +13,14 @@ import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteData;
 import de.undefinedhuman.projectcreate.core.ecs.stats.health.HealthComponent;
 import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.core.items.ItemType;
-import de.undefinedhuman.projectcreate.core.items.types.weapons.Sword;
+import de.undefinedhuman.projectcreate.core.items.weapons.Sword;
 import de.undefinedhuman.projectcreate.game.Main;
 import de.undefinedhuman.projectcreate.game.entity.Entity;
 import de.undefinedhuman.projectcreate.game.entity.EntityManager;
 import de.undefinedhuman.projectcreate.game.entity.ecs.System;
 import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
 import de.undefinedhuman.projectcreate.game.inventory.player.Selector;
-import de.undefinedhuman.projectcreate.game.item.ItemManager;
+import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 
 import java.util.ArrayList;

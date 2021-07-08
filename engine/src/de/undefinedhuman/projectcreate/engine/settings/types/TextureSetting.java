@@ -36,7 +36,7 @@ public class TextureSetting extends Setting<String> {
     }
 
     @Override
-    protected void createValueMenuComponents(JPanel panel, int width) {
+    protected void createValueUI(JPanel panel, int width) {
         textureLabel = new JLabel();
         textureLabel.setHorizontalAlignment(JLabel.CENTER);
         textureLabel.setBounds(0, 0, width, PREVIEW_TEXTURE_LABEL_SIZE);

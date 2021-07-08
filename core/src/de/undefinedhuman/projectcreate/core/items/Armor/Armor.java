@@ -1,4 +1,4 @@
-package de.undefinedhuman.projectcreate.core.items.types.Armor;
+package de.undefinedhuman.projectcreate.core.items.Armor;
 
 import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.core.crafting.RecipeType;

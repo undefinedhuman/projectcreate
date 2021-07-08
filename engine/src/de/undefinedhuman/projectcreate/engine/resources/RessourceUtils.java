@@ -13,7 +13,7 @@ import de.undefinedhuman.projectcreate.engine.log.Log;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
-public class RescourceUtils {
+public class RessourceUtils {
 
     public static Texture loadTexture(String path) {
         Texture texture = null;

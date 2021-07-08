@@ -1,9 +1,9 @@
 package de.undefinedhuman.projectcreate.core.enemy;
 
-import de.undefinedhuman.projectcreate.core.items.types.Armor.Armor;
-import de.undefinedhuman.projectcreate.core.items.types.Armor.Helmet;
-import de.undefinedhuman.projectcreate.core.items.types.weapons.Sword;
-import de.undefinedhuman.projectcreate.core.items.types.weapons.Weapon;
+import de.undefinedhuman.projectcreate.core.items.Armor.Armor;
+import de.undefinedhuman.projectcreate.core.items.Armor.Helmet;
+import de.undefinedhuman.projectcreate.core.items.weapons.Sword;
+import de.undefinedhuman.projectcreate.core.items.weapons.Weapon;
 
 public class WarriorFactory extends EnemyFactory {
     @Override

@@ -35,7 +35,7 @@ public abstract class NoisePanel extends Setting<String> {
     }
 
     @Override
-    protected void createValueMenuComponents(JPanel panel, int width) {
+    protected void createValueUI(JPanel panel, int width) {
 
         JButton addButton = new JButton("Add");
         addButton.setBounds(width - BUTTON_WIDTH, 0, BUTTON_WIDTH, Variables.DEFAULT_CONTENT_HEIGHT);
@@ -110,9 +110,22 @@ public abstract class NoisePanel extends Setting<String> {
     }
 
     private void addPanel(BaseFunction function, int width) {
-        JPanel panel = function.createPanel(width - Variables.BORDER_WIDTH*2 - Variables.OFFSET);
+        addPanel(function.createPanel(width, this::removePanel), function);
+    }
+
+    private void addPanel(JPanel panel, BaseFunction function) {
         guiPanels.put(panel, function);
         box.add(panel);
+        updateBox();
+    }
+
+    private void removePanel(JPanel panel) {
+        guiPanels.remove(panel);
+        box.remove(panel);
+        updateBox();
+    }
+
+    private void updateBox() {
         box.revalidate();
         box.repaint();
     }

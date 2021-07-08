@@ -1,23 +1,17 @@
-package de.undefinedhuman.projectcreate.game.item;
+package de.undefinedhuman.projectcreate.core.items;
 
 import com.badlogic.gdx.Files;
-import com.badlogic.gdx.Gdx;
-import de.undefinedhuman.projectcreate.core.items.Item;
-import de.undefinedhuman.projectcreate.core.items.ItemType;
 import de.undefinedhuman.projectcreate.engine.file.FileReader;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.log.Log;
-import de.undefinedhuman.projectcreate.engine.resources.RescourceUtils;
+import de.undefinedhuman.projectcreate.engine.resources.RessourceUtils;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectAdapter;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
-import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
-import de.undefinedhuman.projectcreate.game.utils.Tools;
-import de.undefinedhuman.projectcreate.game.world.World;
-import de.undefinedhuman.projectcreate.game.world.WorldManager;
+import de.undefinedhuman.projectcreate.engine.utils.Tools;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -34,26 +28,34 @@ public class ItemManager extends Manager {
         this.items = new HashMap<>();
     }
 
-    @Override
-    public void init() {
-        super.init();
-        loadItems(0, 1, 2);
+    public boolean loadItems(int... ids) {
+        int[] loadedItemIDs = Arrays.stream(ids)
+                .filter(id -> !hasItem(id) && RessourceUtils.existItem(id))
+                .peek(id -> {
+                    Item item = loadItem(id);
+                    if(item != null)
+                        addItem(id, item);
+                })
+                .filter(this::hasItem)
+                .toArray();
+        int[] failedItemIDs = Arrays.stream(ids).filter(id -> {
+            if(hasItem(id))
+                return false;
+            for (int loadedItemID : loadedItemIDs)
+                if (loadedItemID == id) return false;
+            return true;
+        }).toArray();
+        if(failedItemIDs.length > 0)
+            Log.error("Error while loading item" + Tools.appendSToString(failedItemIDs.length) + ": " + Arrays.toString(failedItemIDs));
+        if(loadedItemIDs.length > 0)
+            Log.debug("Item" + Tools.appendSToString(loadedItemIDs.length) + " loaded: " + Arrays.toString(loadedItemIDs));
+        return loadedItemIDs.length == ids.length;
     }
 
-    public boolean loadItems(int... ids) {
-        Arrays.stream(ids)
-                .filter(id -> !hasItem(id) && RescourceUtils.existItem(id))
-                .forEach(id -> items.put(id, loadItem(id)));
-        Object[] loadedItems = Arrays.stream(ids)
-                .filter(id -> items.containsKey(id) && items.get(id) != null)
-                .mapToObj(Integer::toString)
-                .toArray();
-        Log.debug(() -> {
-            if(loadedItems.length == 0)
-                return "";
-            return "Item" + Tools.appendSToString(loadedItems.length) + " loaded: " + Arrays.toString(loadedItems);
-        });
-        return loadedItems.length == ids.length;
+    public void addItem(int id, Item item) {
+        if(hasItem(id))
+            return;
+        items.put(id, item);
     }
 
     public boolean hasItem(int id) {
@@ -81,26 +83,10 @@ public class ItemManager extends Manager {
         return items;
     }
 
-    public void useItem(short id) {
-        if(!InventoryManager.getInstance().canUseItem())
-            return;
-        Item item = ItemManager.instance.getItem(id);
-        boolean isLeftMouseButtonClicked = Gdx.input.isButtonPressed(0), isRightMouseButtonClicked = Gdx.input.isButtonPressed(1);
-        switch (item.type) {
-            case BLOCK:
-                if (isLeftMouseButtonClicked || isRightMouseButtonClicked)
-                    WorldManager.getInstance().placeBlock(isLeftMouseButtonClicked ? World.MAIN_LAYER : World.BACK_LAYER);
-                break;
-            case PICKAXE:
-                if (isLeftMouseButtonClicked || isRightMouseButtonClicked)
-                    WorldManager.getInstance().destroyBlock(isLeftMouseButtonClicked ? World.MAIN_LAYER : World.BACK_LAYER);
-                break;
-        }
-    }
-
     @Override
     public void delete() {
-        for (Item item : items.values()) item.delete();
+        for (Item item : items.values())
+            item.delete();
         items.clear();
     }
 

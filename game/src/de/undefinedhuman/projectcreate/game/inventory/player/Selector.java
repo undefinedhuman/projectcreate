@@ -12,7 +12,7 @@ import de.undefinedhuman.projectcreate.game.gui.transforms.offset.PixelOffset;
 import de.undefinedhuman.projectcreate.game.inventory.InvItem;
 import de.undefinedhuman.projectcreate.game.inventory.Inventory;
 import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
-import de.undefinedhuman.projectcreate.game.item.ItemManager;
+import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 

@@ -7,7 +7,7 @@ import de.undefinedhuman.projectcreate.game.gui.Gui;
 import de.undefinedhuman.projectcreate.game.gui.texture.GuiTemplate;
 import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.projectcreate.game.inventory.slot.InvSlot;
-import de.undefinedhuman.projectcreate.game.item.ItemManager;
+import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 
 public class Inventory extends Gui implements InvTarget {

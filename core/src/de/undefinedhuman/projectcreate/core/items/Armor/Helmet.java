@@ -1,4 +1,4 @@
-package de.undefinedhuman.projectcreate.core.items.types.Armor;
+package de.undefinedhuman.projectcreate.core.items.Armor;
 
 public class Helmet extends Armor {
 

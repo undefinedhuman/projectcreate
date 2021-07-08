@@ -14,7 +14,7 @@ import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.CenterCon
 import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.RelativeConstraint;
 import de.undefinedhuman.projectcreate.game.gui.transforms.offset.CenterOffset;
-import de.undefinedhuman.projectcreate.game.item.ItemManager;
+import de.undefinedhuman.projectcreate.core.items.ItemManager;
 
 public class RecipeGui extends Gui implements Poolable {
 

@@ -1,13 +1,6 @@
 package de.undefinedhuman.projectcreate.editor.editor.world;
 
-import de.undefinedhuman.projectcreate.core.noise.functions.types.ConstantFunction;
-import de.undefinedhuman.projectcreate.core.noise.functions.types.GradientFunction;
-import de.undefinedhuman.projectcreate.core.noise.functions.NoisePanel;
-import de.undefinedhuman.projectcreate.core.noise.functions.types.ScaleFunction;
-import de.undefinedhuman.projectcreate.core.noise.functions.fractal.FractalFunction;
-import de.undefinedhuman.projectcreate.core.noise.functions.types.SelectFunction;
 import de.undefinedhuman.projectcreate.editor.editor.Editor;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
@@ -15,7 +8,7 @@ import java.awt.*;
 
 public class WorldEditor extends Editor {
 
-    private static final int PREVIEW_PANEL_HEIGHT = 400 + Variables.TITLE_LABEL_HEIGHT;
+    private static final int PREVIEW_PANEL_HEIGHT = 400 + Variables.BORDER_HEIGHT;
     private static final int BASE_OFFSET_X = 20;
     private static final int BASE_OFFSET_Y = 15;
     private static final int SETTINGS_PANEL_WIDTH = 400;
@@ -27,12 +20,12 @@ public class WorldEditor extends Editor {
     private Thread previewGenerator;
 
     public WorldEditor(Container container, int width, int height) {
-        super(container, width, height);
+        super();
         int previewPanelWidth = width - BASE_OFFSET_X*2 - SETTINGS_PANEL_WIDTH - Variables.BORDER_WIDTH;
-        addPanel(
+        /*addPanel(
                 container,
                 createScrollPane(
-                        settingsPanel = createJPanel(SETTINGS_PANEL_WIDTH, height - BASE_OFFSET_Y*2 - Variables.TITLE_LABEL_HEIGHT - Variables.OFFSET),
+                        settingsPanel = createJPanel(SETTINGS_PANEL_WIDTH, height - BASE_OFFSET_Y*2 - Variables.BORDER_HEIGHT - Variables.OFFSET),
                         "Settings:",
                         BASE_OFFSET_X,
                         BASE_OFFSET_Y,
@@ -63,9 +56,9 @@ public class WorldEditor extends Editor {
 
         updatePreview();
 
-        Tools.addSettings(settingsPanel, panel);
+        Tools.createSettingsPanel(settingsPanel, panel);
 
-        previewPanel.add(previewChunkGeneration);
+        previewPanel.add(previewChunkGeneration);*/
     }
 
     private void updatePreview() {
@@ -84,6 +77,11 @@ public class WorldEditor extends Editor {
 
     @Override
     public void load() {
+
+    }
+
+    @Override
+    public void createMenuButtonsPanel(JPanel menuButtonPanel) {
 
     }
 

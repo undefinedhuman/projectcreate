@@ -1,13 +1,13 @@
 package de.undefinedhuman.projectcreate.core.items;
 
-import de.undefinedhuman.projectcreate.core.items.types.Armor.Armor;
-import de.undefinedhuman.projectcreate.core.items.types.Armor.Helmet;
-import de.undefinedhuman.projectcreate.core.items.types.blocks.Block;
-import de.undefinedhuman.projectcreate.core.items.types.tools.Pickaxe;
-import de.undefinedhuman.projectcreate.core.items.types.tools.Tool;
-import de.undefinedhuman.projectcreate.core.items.types.weapons.Bow;
-import de.undefinedhuman.projectcreate.core.items.types.weapons.Sword;
-import de.undefinedhuman.projectcreate.core.items.types.weapons.Weapon;
+import de.undefinedhuman.projectcreate.core.items.Armor.Armor;
+import de.undefinedhuman.projectcreate.core.items.Armor.Helmet;
+import de.undefinedhuman.projectcreate.core.items.blocks.Block;
+import de.undefinedhuman.projectcreate.core.items.tools.Pickaxe;
+import de.undefinedhuman.projectcreate.core.items.tools.Tool;
+import de.undefinedhuman.projectcreate.core.items.weapons.Bow;
+import de.undefinedhuman.projectcreate.core.items.weapons.Sword;
+import de.undefinedhuman.projectcreate.core.items.weapons.Weapon;
 
 import java.util.function.Supplier;
 

@@ -7,7 +7,7 @@ import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.log.Log;
-import de.undefinedhuman.projectcreate.engine.resources.RescourceUtils;
+import de.undefinedhuman.projectcreate.engine.resources.RessourceUtils;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectAdapter;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 
@@ -26,7 +26,7 @@ public class SelectionPanel<T extends PanelObject> extends Panel<T> {
 
     @Override
     protected void createPanelObjectNameComponent(JPanel panel, int width) {
-        FileHandle[] itemDirs = RescourceUtils.loadDir(Paths.ITEM_PATH).list();
+        FileHandle[] itemDirs = RessourceUtils.loadDir(Paths.ITEM_PATH).list();
         ArrayList<String> ids = new ArrayList<>();
 
         for (FileHandle itemDir : itemDirs) {
@@ -57,7 +57,7 @@ public class SelectionPanel<T extends PanelObject> extends Panel<T> {
     public void selectObject(T object, JPanel objectPanel, int containerWidth) {
         selection.setSelectedItem(object.getKey());
         Tools.removeSettings(objectPanel);
-        Tools.addSettings(objectPanel, 0, 0, 0, containerWidth, object.getSettings().stream());
+        Tools.createSettingsPanel(0, containerWidth, object.getSettings().stream());
     }
 
 }

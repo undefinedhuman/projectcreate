@@ -4,9 +4,6 @@ import de.undefinedhuman.projectcreate.editor.editor.entity.EntityEditor;
 import de.undefinedhuman.projectcreate.editor.editor.item.ItemEditor;
 import de.undefinedhuman.projectcreate.editor.editor.world.WorldEditor;
 
-import java.awt.*;
-import java.lang.reflect.InvocationTargetException;
-
 public enum EditorType {
     ENTITY(EntityEditor.class),
     ITEM(ItemEditor.class),
@@ -18,11 +15,11 @@ public enum EditorType {
         this.editorClass = editorClass;
     }
 
-    public Editor newInstance(Container container, int width, int height) {
+    public Editor newInstance() {
         Editor editor = null;
         try {
-            editor = editorClass.getConstructor(Container.class, int.class, int.class).newInstance(container, width, height);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            editor = editorClass.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
         return editor;

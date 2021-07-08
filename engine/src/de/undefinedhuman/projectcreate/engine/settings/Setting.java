@@ -4,7 +4,6 @@ import com.badlogic.gdx.files.FileHandle;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.settings.listener.ValueListener;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
-import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -26,12 +25,16 @@ public abstract class Setting<T> {
         setMenuTitle(key);
     }
 
-    public void setMenuTitle(String menuTitle) {
+    protected void setMenuTitle(String menuTitle) {
         this.menuTitle = menuTitle;
     }
 
-    public String getKey() { return key; }
+    public String getMenuTitle() {
+        return menuTitle;
+    }
+
     public T getValue() { return value; }
+
     public void setValue(T value) {
         this.value = value;
         valueListeners.forEach(valueListener -> valueListener.notify(getValue()));
@@ -56,38 +59,16 @@ public abstract class Setting<T> {
         updateMenu(getValue());
     }
 
-    protected abstract void loadValue(FileHandle parentDir, Object value);
-
     public void save(FileWriter writer) {
         writer.writeString(key);
         saveValue(writer);
     }
 
-    protected abstract void saveValue(FileWriter writer);
-
-    public JPanel createMenuComponents(Vector2i position, int containerWidth) {
-
-        JPanel container = new JPanel(null);
-        container.setSize(containerWidth, getContentHeight());
-
-        JLabel titleLabel = new JLabel(menuTitle);
-        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        titleLabel.setBounds(position.x, position.y, containerWidth, TITLE_LABEL_HEIGHT);
-        titleLabel.setBackground(Variables.BACKGROUND_COLOR.darker());
-        titleLabel.setOpaque(true);
-        container.add(titleLabel);
-
+    public JPanel createSettingUI(int containerWidth) {
         JPanel contentPanel = new JPanel(null);
-        contentPanel.setSize(containerWidth, contentHeight);
-        createValueMenuComponents(contentPanel, contentPanel.getWidth());
-
-        JScrollPane valueMenuComponentContainer = new JScrollPane(contentPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        valueMenuComponentContainer.setBorder(null);
-        valueMenuComponentContainer.setBounds(position.x, position.y + TITLE_LABEL_HEIGHT, containerWidth, contentHeight);
-        container.add(valueMenuComponentContainer);
-
-        return container;
-
+        contentPanel.setSize(containerWidth, getContentHeight());
+        createValueUI(contentPanel, contentPanel.getWidth());
+        return contentPanel;
     }
 
     public Setting<T> addValueListener(ValueListener<T> listener) {
@@ -103,7 +84,11 @@ public abstract class Setting<T> {
         return "[" + key + ", " + getValue().toString() + "]";
     }
 
-    protected abstract void createValueMenuComponents(JPanel panel, int width);
+    protected abstract void loadValue(FileHandle parentDir, Object value);
+
+    protected abstract void saveValue(FileWriter writer);
+
+    protected abstract void createValueUI(JPanel panel, int width);
 
     protected abstract void updateMenu(T value);
 

@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.core.crafting.RecipeItem;
+import de.undefinedhuman.projectcreate.core.items.Item;
+import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
 import de.undefinedhuman.projectcreate.engine.utils.ds.MultiMap;
 import de.undefinedhuman.projectcreate.game.camera.CameraManager;
@@ -15,10 +17,11 @@ import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.CenterCon
 import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.RelativeConstraint;
 import de.undefinedhuman.projectcreate.game.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.projectcreate.game.gui.transforms.offset.PixelOffset;
-import de.undefinedhuman.projectcreate.game.inventory.player.*;
-import de.undefinedhuman.projectcreate.game.item.ItemManager;
 import de.undefinedhuman.projectcreate.game.inventory.listener.ItemChangeListener;
+import de.undefinedhuman.projectcreate.game.inventory.player.*;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
+import de.undefinedhuman.projectcreate.game.world.World;
+import de.undefinedhuman.projectcreate.game.world.WorldManager;
 
 import java.util.Collection;
 import java.util.Set;
@@ -230,6 +233,23 @@ public class InventoryManager extends Manager {
 
         }
 
+    }
+
+    public void useItem(short id) {
+        if(!InventoryManager.getInstance().canUseItem())
+            return;
+        Item item = ItemManager.getInstance().getItem(id);
+        boolean isLeftMouseButtonClicked = Gdx.input.isButtonPressed(0), isRightMouseButtonClicked = Gdx.input.isButtonPressed(1);
+        switch (item.type) {
+            case BLOCK:
+                if (isLeftMouseButtonClicked || isRightMouseButtonClicked)
+                    WorldManager.getInstance().placeBlock(isLeftMouseButtonClicked ? World.MAIN_LAYER : World.BACK_LAYER);
+                break;
+            case PICKAXE:
+                if (isLeftMouseButtonClicked || isRightMouseButtonClicked)
+                    WorldManager.getInstance().destroyBlock(isLeftMouseButtonClicked ? World.MAIN_LAYER : World.BACK_LAYER);
+                break;
+        }
     }
 
     public static InventoryManager getInstance() {

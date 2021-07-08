@@ -16,9 +16,10 @@ public class Variables {
     public static final String DEFAULT_TEXTURE = "Unknown.png";
 
     // Settings
-    public static final int BORDER_WIDTH = 10;
-    public static final int CONTENT_WIDTH = 390;
+    public static final int DEFAULT_CONTENT_WIDTH = 400;
     public static final int DEFAULT_CONTENT_HEIGHT = 25;
+    public static final int BORDER_WIDTH = 10;
+    public static final int BORDER_HEIGHT = 25;
     public static final int OFFSET = 5;
 
     // File System

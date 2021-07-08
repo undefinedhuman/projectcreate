@@ -1,6 +1,6 @@
 package de.undefinedhuman.projectcreate.updater.ui;
 
-import de.undefinedhuman.projectcreate.engine.resources.RescourceUtils;
+import de.undefinedhuman.projectcreate.engine.resources.RessourceUtils;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 
@@ -32,7 +32,7 @@ public class UpdaterUI extends JPanel {
     }
 
     private JLabel createLogoLabel() {
-        JLabel logo = new JLabel(new ImageIcon(RescourceUtils.loadImage("logo/" + UpdaterUI.LOGO_SIZE.x + "x" + UpdaterUI.LOGO_SIZE.y + ".png")));
+        JLabel logo = new JLabel(new ImageIcon(RessourceUtils.loadImage("logo/" + UpdaterUI.LOGO_SIZE.x + "x" + UpdaterUI.LOGO_SIZE.y + ".png")));
         logo.setBounds(0, 0, UpdaterUI.LOGO_SIZE.x, UpdaterUI.LOGO_SIZE.y);
         return logo;
     }

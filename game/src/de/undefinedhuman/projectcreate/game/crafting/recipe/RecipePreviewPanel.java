@@ -20,7 +20,7 @@ import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.RelativeC
 import de.undefinedhuman.projectcreate.game.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.projectcreate.game.gui.transforms.offset.RelativeOffset;
 import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
-import de.undefinedhuman.projectcreate.game.item.ItemManager;
+import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 
 public class RecipePreviewPanel extends Gui {

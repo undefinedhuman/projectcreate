@@ -16,7 +16,6 @@ import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector4;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
@@ -66,22 +65,25 @@ public class Tools {
         return Arrays.stream(messages).map(Object::toString).collect(Collectors.joining(", "));
     }
 
-    public static void addSettings(JComponent panel, Setting<?>... settings) {
-        addSettings(panel, 0, 0, Variables.OFFSET, Variables.CONTENT_WIDTH + Variables.BORDER_WIDTH, Stream.of(settings));
+    public static JPanel createSettingsPanel(Setting<?>... settings) {
+        return createSettingsPanel(Variables.DEFAULT_CONTENT_WIDTH + Variables.BORDER_WIDTH, Variables.OFFSET, Stream.of(settings));
     }
 
-    public static void addSettings(JComponent panel, Stream<Setting<?>> settings) {
-        addSettings(panel, 0, 0, Variables.OFFSET, Variables.CONTENT_WIDTH + Variables.BORDER_WIDTH, settings);
+    public static JPanel createSettingsPanel(Stream<Setting<?>> settings) {
+        return createSettingsPanel(Variables.DEFAULT_CONTENT_WIDTH + Variables.BORDER_WIDTH, Variables.OFFSET, settings);
     }
 
-    public static void addSettings(JComponent panel, int x, int y, int offset, int width, Stream<Setting<?>> settings) {
+    public static JPanel createSettingsPanel(int width, int offset, Stream<Setting<?>> settings) {
+        JPanel panel = new JPanel();
         int currentHeight = 0;
         for(Setting<?> setting : settings.collect(Collectors.toList())) {
-            setting.createMenuComponents(panel, new Vector2i(x, y + currentHeight), width);
+            JPanel settingsContainer = setting.createSettingUI(width);
+            settingsContainer.setLocation(0, currentHeight);
+            panel.add(settingsContainer);
             currentHeight += setting.getTotalHeight() + offset;
         }
-        panel.setPreferredSize(new Dimension(width, currentHeight));
-        updatePanel(panel);
+        panel.setSize(width, currentHeight - offset);
+        return panel;
     }
 
     public static void removeSettings(JComponent... panels) {
@@ -127,13 +129,6 @@ public class Tools {
 
     public static int clamp(int val, int min, int max) {
         return Math.max(min, Math.min(max, val));
-    }
-
-    public static boolean isInRange(Object val, int min, int max) {
-        if(isInteger(val.toString()) == null)
-            return false;
-        int value = Integer.parseInt(val.toString());
-        return value >= min && value <= max;
     }
 
     public static boolean isInRange(int val, int min, int max) {

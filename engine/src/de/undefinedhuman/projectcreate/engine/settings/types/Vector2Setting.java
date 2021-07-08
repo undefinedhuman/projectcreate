@@ -33,7 +33,7 @@ public class Vector2Setting extends Setting<Vector2> {
     }
 
     @Override
-    protected void createValueMenuComponents(JPanel panel, int width) {
+    protected void createValueUI(JPanel panel, int width) {
         int textFieldWidth = (int) (width/2f - Variables.OFFSET/2f);
         panel.add(xTextField = Tools.createTextField(String.valueOf(getValue().x), new Vector2i(0, 0), new Vector2i(textFieldWidth, Variables.DEFAULT_CONTENT_HEIGHT), s -> setValue(new Vector2(Float.parseFloat(s), getValue().y))));
         panel.add(yTextField = Tools.createTextField(String.valueOf(getValue().x), new Vector2i(width/2f + Variables.OFFSET/2f, 0), new Vector2i(textFieldWidth, Variables.DEFAULT_CONTENT_HEIGHT), s -> setValue(new Vector2(getValue().x, Float.parseFloat(s)))));

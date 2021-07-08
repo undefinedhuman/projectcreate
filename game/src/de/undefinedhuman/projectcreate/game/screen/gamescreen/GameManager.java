@@ -10,7 +10,7 @@ import de.undefinedhuman.projectcreate.game.entity.EntityManager;
 import de.undefinedhuman.projectcreate.game.entity.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.game.gui.GuiManager;
 import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
-import de.undefinedhuman.projectcreate.game.item.ItemManager;
+import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.game.item.drop.DropItemManager;
 import de.undefinedhuman.projectcreate.game.projectiles.Projectile;
 import de.undefinedhuman.projectcreate.game.world.World;

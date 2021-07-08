@@ -25,7 +25,7 @@ public class SelectionSetting<T> extends BaseSetting<T> {
     }
 
     @Override
-    protected void createValueMenuComponents(JPanel panel, int width) {
+    protected void createValueUI(JPanel panel, int width) {
         selection = new JComboBox<>(values);
         selection.setSize(width, Variables.DEFAULT_CONTENT_HEIGHT);
         if(hasValue(serializer.serialize(getValue())))
