@@ -2,7 +2,7 @@ package de.undefinedhuman.projectcreate.engine.settings.types;
 
 import de.undefinedhuman.projectcreate.engine.settings.interfaces.Parser;
 import de.undefinedhuman.projectcreate.engine.settings.interfaces.Serializer;
-import de.undefinedhuman.projectcreate.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
 
 import javax.swing.*;
 
@@ -25,9 +25,8 @@ public class SelectionSetting<T> extends BaseSetting<T> {
     }
 
     @Override
-    protected void createValueUI(JPanel panel, int width) {
+    public void createSettingUI(Accordion accordion) {
         selection = new JComboBox<>(values);
-        selection.setSize(width, Variables.DEFAULT_CONTENT_HEIGHT);
         if(hasValue(serializer.serialize(getValue())))
             selection.setSelectedItem(getValue());
         selection.addActionListener(e -> {
@@ -35,7 +34,7 @@ public class SelectionSetting<T> extends BaseSetting<T> {
                 return;
             setValue(parser.parse(selection.getSelectedItem().toString()));
         });
-        panel.add(selection);
+        accordion.addInlinePanel(key, selection);
     }
 
     @Override

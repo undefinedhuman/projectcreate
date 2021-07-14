@@ -3,9 +3,9 @@ package de.undefinedhuman.projectcreate.engine.settings.types;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
+import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
-import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -31,7 +31,9 @@ public class TextureOffsetSetting extends Vector2ArraySetting {
     }
 
     @Override
-    protected void createValueUI(JPanel panel, int width) {
+    public void createSettingUI(Accordion accordion) {
+        int width = 400;
+        JPanel panel = new JPanel(null);
         textureLabel = new JLabel(new ImageIcon(texture));
         textureLabel.setSize(25, 25);
         textureLabel.addMouseListener(new MouseAdapter() {
@@ -58,14 +60,10 @@ public class TextureOffsetSetting extends Vector2ArraySetting {
         panel.add(textureLabel);
         valueField = Tools.createTextField(
                 Tools.convertArrayToString(getValue()),
-                new Vector2i(Variables.DEFAULT_CONTENT_HEIGHT + Variables.OFFSET, 0),
-                new Vector2i(
-                        width - Variables.DEFAULT_CONTENT_HEIGHT - Variables.OFFSET,
-                        Variables.DEFAULT_CONTENT_HEIGHT
-                ),
                 s -> {});
         valueField.setEditable(false);
         panel.add(valueField);
+        accordion.addCollapsiblePanel(key, panel);
     }
 
     private Vector2[] calculateVectors(BufferedImage currentImage) {

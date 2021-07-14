@@ -3,14 +3,12 @@ package de.undefinedhuman.projectcreate.engine.settings;
 import com.badlogic.gdx.files.FileHandle;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.settings.listener.ValueListener;
+import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
-import javax.swing.*;
 import java.util.ArrayList;
 
 public abstract class Setting<T> {
-
-    private static final int TITLE_LABEL_HEIGHT = 25;
 
     protected String key;
     private String menuTitle;
@@ -49,7 +47,7 @@ public abstract class Setting<T> {
     }
 
     public int getTotalHeight() {
-        return contentHeight + TITLE_LABEL_HEIGHT;
+        return contentHeight;
     }
 
     public void load(FileHandle parentDir, SettingsObject settingsObject) {
@@ -62,13 +60,6 @@ public abstract class Setting<T> {
     public void save(FileWriter writer) {
         writer.writeString(key);
         saveValue(writer);
-    }
-
-    public JPanel createSettingUI(int containerWidth) {
-        JPanel contentPanel = new JPanel(null);
-        contentPanel.setSize(containerWidth, getContentHeight());
-        createValueUI(contentPanel, contentPanel.getWidth());
-        return contentPanel;
     }
 
     public Setting<T> addValueListener(ValueListener<T> listener) {
@@ -88,7 +79,7 @@ public abstract class Setting<T> {
 
     protected abstract void saveValue(FileWriter writer);
 
-    protected abstract void createValueUI(JPanel panel, int width);
+    public abstract void createSettingUI(Accordion accordion);
 
     protected abstract void updateMenu(T value);
 

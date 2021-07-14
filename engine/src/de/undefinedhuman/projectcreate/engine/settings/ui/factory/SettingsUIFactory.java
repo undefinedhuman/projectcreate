@@ -1,12 +1,9 @@
 package de.undefinedhuman.projectcreate.engine.settings.ui.factory;
 
-import de.undefinedhuman.projectcreate.engine.settings.Setting;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
@@ -18,19 +15,6 @@ public class SettingsUIFactory {
         titleLabel.setBackground(color);
         titleLabel.setOpaque(true);
         return titleLabel;
-    }
-
-    public static JPanel createSettingsPanel(List<Setting<?>> settings, int width, int offset) {
-        JPanel panel = new JPanel(null);
-        int currentHeight = 0;
-        for(Setting<?> setting : settings) {
-            JPanel settingsContainer = setting.createSettingUI(width);
-            settingsContainer.setLocation(0, currentHeight);
-            panel.add(settingsContainer);
-            currentHeight += setting.getTotalHeight() + offset;
-        }
-        panel.setSize(width, currentHeight - offset);
-        return panel;
     }
 
     public static JLabel createVisibilityToggle(Color color, Consumer<Boolean> isVisible) {

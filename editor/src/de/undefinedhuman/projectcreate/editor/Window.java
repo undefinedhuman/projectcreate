@@ -131,6 +131,7 @@ public class Window extends JFrame {
             }
             EDITOR_INSTANCES.add(editor);
             editorTabMenu.addTab(name, editor);
+            editor.init();
         }
     }
 

@@ -2,6 +2,7 @@ package de.undefinedhuman.projectcreate.engine.settings.types.slider;
 
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.settings.types.BaseSetting;
+import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 import de.undefinedhuman.projectcreate.engine.validation.ValidationRule;
@@ -41,14 +42,16 @@ public class SliderSetting extends BaseSetting<Float> {
     }
 
     @Override
-    protected void createValueUI(JPanel panel, int width) {
-        slider = createSliderUI(width, getContentHeight(), sliderWidth, bounds, getValue(), scale, tickSpeed, e -> setValue(convertToPreciseFloatingPointValue(slider.getValue(), scale, numberOfDecimals)));
+    public void createSettingUI(Accordion accordion) {
+        JPanel panel = new JPanel(null);
+        slider = createSliderUI(400, getContentHeight(), sliderWidth, bounds, getValue(), scale, tickSpeed, e -> setValue(convertToPreciseFloatingPointValue(slider.getValue(), scale, numberOfDecimals)));
         panel.add(slider);
         if(isLabelVisible) {
-            progressLabel = createSliderLabelUI(width, getContentHeight(), sliderWidth);
+            progressLabel = createSliderLabelUI(400, getContentHeight(), sliderWidth);
             addValueListener(value -> progressLabel.setText(String.valueOf(value)));
             panel.add(progressLabel);
         }
+        accordion.addCollapsiblePanel(key, panel);
     }
 
     private float convertToPreciseFloatingPointValue(int value, float scale, int numberOfDecimals) {

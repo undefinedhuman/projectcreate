@@ -6,6 +6,7 @@ import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
 import de.undefinedhuman.projectcreate.engine.settings.panels.PanelObject;
+import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
@@ -35,22 +36,24 @@ public abstract class NoisePanel extends Setting<String> {
     }
 
     @Override
-    protected void createValueUI(JPanel panel, int width) {
+    public void createSettingUI(Accordion accordion) {
+
+        JPanel panel = new JPanel(null);
 
         JButton addButton = new JButton("Add");
-        addButton.setBounds(width - BUTTON_WIDTH, 0, BUTTON_WIDTH, Variables.DEFAULT_CONTENT_HEIGHT);
+        addButton.setBounds(400 - BUTTON_WIDTH, 0, BUTTON_WIDTH, Variables.DEFAULT_CONTENT_HEIGHT);
         addButton.addActionListener(e -> {
             BaseFunction function = newInstance((String) selection.getSelectedItem());
             if(function == null)
                 return;
-            addPanel(function, width - Variables.BORDER_WIDTH*2 - Variables.OFFSET);
+            addPanel(function, 400 - Variables.BORDER_WIDTH*2 - Variables.OFFSET);
             for(Setting<?> setting : function.getSettings())
                 setting.addValueListener(value -> updateValues());
         });
         panel.add(addButton);
 
         selection = new JComboBox<>(noiseFunctions.keySet().stream().sorted().map(String::valueOf).toArray(value -> new String[noiseFunctions.size()]));
-        selection.setBounds(0, 0, width - BUTTON_WIDTH - Variables.OFFSET, Variables.DEFAULT_CONTENT_HEIGHT);
+        selection.setBounds(0, 0, 400 - BUTTON_WIDTH - Variables.OFFSET, Variables.DEFAULT_CONTENT_HEIGHT);
         panel.add(selection);
 
         box = Box.createVerticalBox();
@@ -64,10 +67,11 @@ public abstract class NoisePanel extends Setting<String> {
 
         JScrollPane scrollPane = new JScrollPane(mainPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setLocation(0, Variables.DEFAULT_CONTENT_HEIGHT + Variables.OFFSET);
-        scrollPane.setSize(new Dimension(width, getContentHeight() - Variables.DEFAULT_CONTENT_HEIGHT - Variables.OFFSET));
+        scrollPane.setSize(new Dimension(400, getContentHeight() - Variables.DEFAULT_CONTENT_HEIGHT - Variables.OFFSET));
         scrollPane.getVerticalScrollBar().setUnitIncrement(8);
         scrollPane.setBorder(null);
         panel.add(scrollPane);
+        accordion.addCollapsiblePanel(key, panel);
     }
 
     @Override

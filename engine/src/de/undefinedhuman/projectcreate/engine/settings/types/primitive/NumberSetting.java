@@ -10,7 +10,7 @@ public abstract class NumberSetting<T extends Number & Comparable<T>> extends Te
         super(key, defaultValue, value -> {
             T parsedValue = parse.parse(String.valueOf(value));
             if (parsedValue == null) {
-                Log.error("Error while parsing: " + value);
+                Log.error("Error while parsing: \"" + value + "\"");
                 return defaultValue;
             }
             return parsedValue;
@@ -21,7 +21,7 @@ public abstract class NumberSetting<T extends Number & Comparable<T>> extends Te
         super(key, defaultValue, value -> {
             T parsedValue = parse.parse(String.valueOf(value));
             if(parsedValue == null) {
-                Log.error("Error while parsing: " + value);
+                Log.error("Error while parsing: \"" + value + "\"");
                 return defaultValue;
             }
             if(parsedValue.compareTo(min) < 0 || parsedValue.compareTo(max) > 0) {

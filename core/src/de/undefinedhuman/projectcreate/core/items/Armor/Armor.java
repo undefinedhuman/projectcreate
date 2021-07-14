@@ -2,6 +2,7 @@ package de.undefinedhuman.projectcreate.core.items.Armor;
 
 import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.core.crafting.RecipeType;
+import de.undefinedhuman.projectcreate.engine.settings.SettingsGroup;
 import de.undefinedhuman.projectcreate.engine.settings.types.StringArraySetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.FloatSetting;
 
@@ -14,8 +15,9 @@ public class Armor extends Item {
 
     public Armor() {
         super();
-        settings.addSettings(armor, inVisibleSprites);
         this.recipeType = RecipeType.ARMOR;
+        addSettings(armor, inVisibleSprites);
+        addSettingsGroup(new SettingsGroup("Armor", armor, inVisibleSprites));
     }
 
 }

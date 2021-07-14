@@ -2,6 +2,7 @@ package de.undefinedhuman.projectcreate.engine.settings.types.primitive;
 
 import de.undefinedhuman.projectcreate.engine.file.FileUtils;
 import de.undefinedhuman.projectcreate.engine.settings.types.BaseSetting;
+import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
@@ -16,12 +17,12 @@ public class BooleanSetting extends BaseSetting<Boolean> {
     }
 
     @Override
-    protected void createValueUI(JPanel panel, int width) {
+    public void createSettingUI(Accordion accordion) {
         checkBox = new JCheckBox();
         checkBox.setSelected(getValue());
         checkBox.setSize(CHECK_BOX_SIZE, CHECK_BOX_SIZE);
         checkBox.addActionListener(e -> setValue(checkBox.isSelected()));
-        panel.add(checkBox);
+        accordion.addInlinePanel(key, checkBox);
     }
 
     @Override

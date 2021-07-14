@@ -12,7 +12,6 @@ import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectAdapter;
-import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector4;
 
 import javax.swing.*;
@@ -24,7 +23,6 @@ import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Tools {
 
@@ -65,27 +63,6 @@ public class Tools {
         return Arrays.stream(messages).map(Object::toString).collect(Collectors.joining(", "));
     }
 
-    public static JPanel createSettingsPanel(Setting<?>... settings) {
-        return createSettingsPanel(Variables.DEFAULT_CONTENT_WIDTH + Variables.BORDER_WIDTH, Variables.OFFSET, Stream.of(settings));
-    }
-
-    public static JPanel createSettingsPanel(Stream<Setting<?>> settings) {
-        return createSettingsPanel(Variables.DEFAULT_CONTENT_WIDTH + Variables.BORDER_WIDTH, Variables.OFFSET, settings);
-    }
-
-    public static JPanel createSettingsPanel(int width, int offset, Stream<Setting<?>> settings) {
-        JPanel panel = new JPanel();
-        int currentHeight = 0;
-        for(Setting<?> setting : settings.collect(Collectors.toList())) {
-            JPanel settingsContainer = setting.createSettingUI(width);
-            settingsContainer.setLocation(0, currentHeight);
-            panel.add(settingsContainer);
-            currentHeight += setting.getTotalHeight() + offset;
-        }
-        panel.setSize(width, currentHeight - offset);
-        return panel;
-    }
-
     public static void removeSettings(JComponent... panels) {
         for(JComponent panel : panels) {
             panel.removeAll();
@@ -98,9 +75,8 @@ public class Tools {
         panel.repaint();
     }
 
-    public static JTextField createTextField(String value, Vector2i position, Vector2i size, Consumer<String> keyReleaseEvent) {
+    public static JTextField createTextField(String value, Consumer<String> keyReleaseEvent) {
         JTextField textField = new JTextField(value);
-        textField.setBounds(position.x, position.y, size.x, size.y);
         textField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {

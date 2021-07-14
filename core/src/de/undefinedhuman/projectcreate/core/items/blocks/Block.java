@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import de.undefinedhuman.projectcreate.core.crafting.RecipeType;
 import de.undefinedhuman.projectcreate.core.items.Item;
+import de.undefinedhuman.projectcreate.engine.settings.SettingsGroup;
 import de.undefinedhuman.projectcreate.engine.settings.types.SelectionSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.BooleanSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.IntSetting;
@@ -30,8 +31,9 @@ public class Block extends Item {
 
     public Block() {
         super();
-        settings.addSettings(blockType, durability, dropID, hasStates, hasCollision, isFull, placementLayer, needBack);
         this.recipeType = RecipeType.BLOCK;
+        addSettings(blockType, durability, dropID, hasStates, hasCollision, isFull, placementLayer, needBack);
+        addSettingsGroup(new SettingsGroup("Block", blockType, durability, dropID, hasStates, hasCollision, isFull, placementLayer, needBack));
     }
 
     @Override

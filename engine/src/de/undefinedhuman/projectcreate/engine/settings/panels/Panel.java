@@ -5,10 +5,12 @@ import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
+import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.HashMap;
@@ -41,7 +43,10 @@ public abstract class Panel<T extends PanelObject> extends Setting<String> {
     }
 
     @Override
-    protected void createValueUI(JPanel panel, int width) {
+    public void createSettingUI(Accordion accordion) {
+        JPanel panel = new JPanel(null);
+        panel.setPreferredSize(new Dimension(0, INPUT_HEIGHT + BUTTON_HEIGHT + OBJECT_PANEL_HEIGHT + BUTTON_HEIGHT + Variables.OFFSET*4 + getPanelObjectContentHeight()));
+        int width = 400;
         objectList = new DefaultListModel<>();
         for(String key : panelObjects.keySet())
             objectList.addElement(key);
@@ -81,6 +86,7 @@ public abstract class Panel<T extends PanelObject> extends Setting<String> {
         panel.add(objectSelectionPanel);
         createUtilityButtons(panel, INPUT_HEIGHT + BUTTON_HEIGHT + OBJECT_PANEL_HEIGHT + Variables.OFFSET*3, width);
         panel.add(objectPanel);
+        accordion.addCollapsiblePanel(key, panel);
     }
 
     @Override

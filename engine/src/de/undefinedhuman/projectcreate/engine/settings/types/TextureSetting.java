@@ -10,6 +10,7 @@ import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
+import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.imageio.ImageIO;
@@ -36,10 +37,21 @@ public class TextureSetting extends Setting<String> {
     }
 
     @Override
-    protected void createValueUI(JPanel panel, int width) {
+    protected void saveValue(FileWriter writer) {
+        writer.writeString(getValue());
+        FsFile file = new FsFile(writer.parent(), getValue(),  Files.FileType.Local);
+        try { ImageIO.write(texture, "png", file.file());
+        } catch (IOException ex) { Log.showErrorDialog("Can not save texture (" + this + "): \n" + ex.getMessage(), true); }
+    }
+
+    @Override
+    public void createSettingUI(Accordion accordion) {
         textureLabel = new JLabel();
+        textureLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, getContentHeight()));
+        textureLabel.setPreferredSize(new Dimension(Integer.MIN_VALUE, getContentHeight()));
+        textureLabel.setMinimumSize(new Dimension(Integer.MIN_VALUE, getContentHeight()));
+        textureLabel.setLayout(new BorderLayout());
         textureLabel.setHorizontalAlignment(JLabel.CENTER);
-        textureLabel.setBounds(0, 0, width, PREVIEW_TEXTURE_LABEL_SIZE);
         setTextureIcon();
         textureLabel.addMouseListener(new MouseAdapter() {
             @Override
@@ -56,15 +68,7 @@ public class TextureSetting extends Setting<String> {
                 setTexture(textureFile.getPath(), Files.FileType.Internal);
             }
         });
-        panel.add(textureLabel);
-    }
-
-    @Override
-    protected void saveValue(FileWriter writer) {
-        writer.writeString(getValue());
-        FsFile file = new FsFile(writer.parent(), getValue(),  Files.FileType.Local);
-        try { ImageIO.write(texture, "png", file.file());
-        } catch (IOException ex) { Log.showErrorDialog("Can not save texture (" + this + "): \n" + ex.getMessage(), true); }
+        accordion.addCollapsiblePanel(key, textureLabel);
     }
 
     @Override
@@ -115,7 +119,7 @@ public class TextureSetting extends Setting<String> {
     private void setTextureIcon() {
         if(textureLabel == null)
             return;
-        float scaleFactor = (float) textureLabel.getHeight() / texture.getHeight();
+        float scaleFactor = (float) PREVIEW_TEXTURE_LABEL_SIZE / texture.getHeight();
         textureLabel.setIcon(new ImageIcon(texture.getScaledInstance((int) (texture.getWidth() * scaleFactor), (int) (texture.getHeight() * scaleFactor), Image.SCALE_SMOOTH)));
     }
 

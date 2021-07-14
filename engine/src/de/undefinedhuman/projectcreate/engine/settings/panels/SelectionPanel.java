@@ -57,7 +57,7 @@ public class SelectionPanel<T extends PanelObject> extends Panel<T> {
     public void selectObject(T object, JPanel objectPanel, int containerWidth) {
         selection.setSelectedItem(object.getKey());
         Tools.removeSettings(objectPanel);
-        Tools.createSettingsPanel(0, containerWidth, object.getSettings().stream());
+        // Tools.createSettingsPanel(0, containerWidth, object.getSettings().stream());
     }
 
 }

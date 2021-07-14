@@ -5,9 +5,9 @@ import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
+import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
+import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
-import de.undefinedhuman.projectcreate.engine.utils.Variables;
-import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 
 import javax.swing.*;
 
@@ -25,18 +25,19 @@ public class Vector2Setting extends Setting<Vector2> {
     }
 
     @Override
+    public void createSettingUI(Accordion accordion) {
+        JPanel panel = new JPanel(new RelativeLayout(RelativeLayout.X_AXIS).setFill(true));
+        panel.add(xTextField = Tools.createTextField(String.valueOf(getValue().x), s -> setValue(new Vector2(Float.parseFloat(s), getValue().y))));
+        panel.add(yTextField = Tools.createTextField(String.valueOf(getValue().x), s -> setValue(new Vector2(getValue().x, Float.parseFloat(s)))));
+        accordion.addInlinePanel(key, panel);
+    }
+
+    @Override
     protected void loadValue(FileHandle parentDir, Object value) {
         if(!(value instanceof LineSplitter))
             return;
         LineSplitter splitter = (LineSplitter) value;
         setValue(splitter.getNextVector2());
-    }
-
-    @Override
-    protected void createValueUI(JPanel panel, int width) {
-        int textFieldWidth = (int) (width/2f - Variables.OFFSET/2f);
-        panel.add(xTextField = Tools.createTextField(String.valueOf(getValue().x), new Vector2i(0, 0), new Vector2i(textFieldWidth, Variables.DEFAULT_CONTENT_HEIGHT), s -> setValue(new Vector2(Float.parseFloat(s), getValue().y))));
-        panel.add(yTextField = Tools.createTextField(String.valueOf(getValue().x), new Vector2i(width/2f + Variables.OFFSET/2f, 0), new Vector2i(textFieldWidth, Variables.DEFAULT_CONTENT_HEIGHT), s -> setValue(new Vector2(getValue().x, Float.parseFloat(s)))));
     }
 
     @Override

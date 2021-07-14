@@ -1,5 +1,6 @@
 package de.undefinedhuman.projectcreate.core.items.tools;
 
+import de.undefinedhuman.projectcreate.engine.settings.SettingsGroup;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.FloatSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.IntSetting;
 
@@ -13,7 +14,8 @@ public class Pickaxe extends Tool {
 
     public Pickaxe() {
         super();
-        settings.addSettings(speed, strength, range);
+        addSettings(speed, strength, range);
+        addSettingsGroup(new SettingsGroup("Pickaxe", speed, strength, range));
     }
 
 }

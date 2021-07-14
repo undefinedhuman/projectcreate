@@ -176,6 +176,11 @@ public class EntityEditor extends ThreePanelEditor {
     }
 
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public void save() {
         FsFile entityDir = new FsFile(Paths.ENTITY_PATH, baseSettings.getSettings().get(0).getValue() + Variables.FILE_SEPARATOR, Files.FileType.Local);
         if(entityDir.exists())

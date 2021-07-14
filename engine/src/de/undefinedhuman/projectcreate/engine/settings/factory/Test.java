@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.engine.settings.factory;
 
 import com.formdev.flatlaf.FlatDarculaLaf;
-import de.undefinedhuman.projectcreate.engine.settings.ui.Accordion;
+import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
@@ -19,12 +19,12 @@ public class Test extends JFrame {
 
         JPanel canvas = new JPanel(null);
         canvas.setSize(new Dimension(1280, 720));
-        accordion = new Accordion("Settings", 400, 600, Variables.BACKGROUND_COLOR.darker());
+        accordion = new Accordion("Settings", Variables.BACKGROUND_COLOR.darker());
         accordion.setLocation(440, 60);
-        accordion.addPanel("Float", createSettingsPanel(400));
-        accordion.addPanel("Int", createSettingsPanel(400));
-        accordion.addPanel("Int", createSettingsPanel(400));
-        accordion.addPanel("Int", createSettingsPanel(400));
+        accordion.addCollapsiblePanel("Float", createSettingsPanel(400));
+        accordion.addCollapsiblePanel("Int", createSettingsPanel(400));
+        accordion.addCollapsiblePanel("Int", createSettingsPanel(400));
+        accordion.addCollapsiblePanel("Int", createSettingsPanel(400));
         canvas.add(accordion);
         setContentPane(canvas);
         setVisible(true);

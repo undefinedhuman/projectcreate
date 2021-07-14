@@ -71,6 +71,11 @@ public class WorldEditor extends Editor {
     }
 
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public void save() {
 
     }

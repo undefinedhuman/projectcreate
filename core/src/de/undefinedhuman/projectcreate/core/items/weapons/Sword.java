@@ -1,5 +1,6 @@
 package de.undefinedhuman.projectcreate.core.items.weapons;
 
+import de.undefinedhuman.projectcreate.engine.settings.SettingsGroup;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.FloatSetting;
 
 public class Sword extends Weapon {
@@ -10,7 +11,8 @@ public class Sword extends Weapon {
 
     public Sword() {
         super();
-        settings.addSettings(damage, speed);
+        addSettings(damage, speed);
+        addSettingsGroup(new SettingsGroup("Sword", damage, speed));
     }
 
 }

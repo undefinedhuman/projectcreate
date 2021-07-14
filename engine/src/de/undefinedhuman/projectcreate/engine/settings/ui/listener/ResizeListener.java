@@ -1,4 +1,4 @@
-package de.undefinedhuman.projectcreate.editor.editor.ui.listener;
+package de.undefinedhuman.projectcreate.engine.settings.ui.listener;
 
 import java.awt.*;
 import java.awt.event.ComponentEvent;

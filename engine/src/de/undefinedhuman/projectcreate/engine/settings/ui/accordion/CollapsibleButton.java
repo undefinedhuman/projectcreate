@@ -1,4 +1,4 @@
-package de.undefinedhuman.projectcreate.engine.settings.ui;
+package de.undefinedhuman.projectcreate.engine.settings.ui.accordion;
 
 import de.undefinedhuman.projectcreate.engine.settings.ui.event.BooleanChangeListener;
 

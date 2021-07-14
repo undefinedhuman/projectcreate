@@ -3,25 +3,24 @@ package de.undefinedhuman.projectcreate.core.items;
 import de.undefinedhuman.projectcreate.core.crafting.RecipeItem;
 import de.undefinedhuman.projectcreate.core.crafting.RecipeType;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
+import de.undefinedhuman.projectcreate.engine.settings.SettingsGroup;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.panels.SelectionPanel;
 import de.undefinedhuman.projectcreate.engine.settings.types.SelectionSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.TextureSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.BooleanSetting;
-import de.undefinedhuman.projectcreate.engine.settings.types.primitive.ByteSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.IntSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.StringSetting;
 
 import java.util.ArrayList;
-import java.util.stream.Stream;
+import java.util.Arrays;
 
 public class Item implements ItemUsage {
 
-    public ByteSetting
-            id = new ByteSetting("ID", (byte) 0);
     public IntSetting
-            maxAmount = new IntSetting("MaxAmount", 999),
-            recipeQuantity = new IntSetting("Recipe Quantity", 1);
+            id = new IntSetting("ID", 0),
+            maxAmount = new IntSetting("MaxAmount", 999, 1, 999),
+            recipeQuantity = new IntSetting("Recipe Quantity", 1, 0, Integer.MAX_VALUE);
     public StringSetting
             name = new StringSetting("Name", "Unknown"),
             desc = new StringSetting("Description", "Unknown");
@@ -39,42 +38,54 @@ public class Item implements ItemUsage {
 
     public ItemType type;
     public RecipeType recipeType;
-    protected SettingsList settings = new SettingsList();
-
-    private int itemSettingsAmount = 0;
+    protected SettingsList allSettings = new SettingsList();
+    protected SettingsGroup generalSettings = new SettingsGroup("General"), textureSettings = new SettingsGroup("Texture"), recipeSettings = new SettingsGroup("Recipe");
+    private ArrayList<SettingsGroup> settingsGroups = new ArrayList<>();
 
     public Item() {
         addSettings(id, name, desc, itemTexture, iconTexture, previewTexture, recipeQuantity, recipeItems, useIconAsHandTexture, maxAmount, canShake, rarity);
         this.type = ItemType.ITEM;
         this.recipeType = RecipeType.BLOCK;
-    }
-
-    private void addSettings(Setting<?>... settings) {
-        this.settings.addSettings(settings);
-        itemSettingsAmount = settings.length;
+        generalSettings.addSettings(id, name, desc, rarity, maxAmount, useIconAsHandTexture, canShake);
+        textureSettings.addSettings(itemTexture, iconTexture, previewTexture);
+        recipeSettings.addSettings(recipeQuantity, recipeItems);
     }
 
     public void init() { }
 
     public void delete() {}
 
-    public int getItemSettingsAmount() {
-        return itemSettingsAmount;
+    protected void addSettings(Setting<?>... settings) {
+        this.allSettings.addSettings(settings);
+    }
+
+    protected void addSettingsGroup(SettingsGroup... groups) {
+        this.settingsGroups.addAll(Arrays.asList(groups));
     }
 
     public SettingsList getSettingsList() {
-        return settings;
+        return allSettings;
     }
 
     public ArrayList<Setting<?>> getSettings() {
-        return settings.getSettings();
+        return allSettings.getSettings();
     }
 
-    public Stream<Setting<?>> getSettingsStream() {
-        return settings.getSettings().stream();
+    public ArrayList<SettingsGroup> getSettingsGroups() {
+        return settingsGroups;
     }
 
-    public void useItem(boolean leftClick, boolean rightClick) {}
+    public SettingsGroup getGeneralSettings() {
+        return generalSettings;
+    }
+
+    public SettingsGroup getTextureSettings() {
+        return textureSettings;
+    }
+
+    public SettingsGroup getRecipeSettings() {
+        return recipeSettings;
+    }
 
     @Override
     public void onClick(int buttonIndex) {}

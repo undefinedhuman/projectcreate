@@ -1,5 +1,7 @@
 package de.undefinedhuman.projectcreate.core.items.weapons;
 
+import de.undefinedhuman.projectcreate.core.items.ItemType;
+import de.undefinedhuman.projectcreate.engine.settings.SettingsGroup;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.IntSetting;
 
 public class Bow extends Weapon {
@@ -10,7 +12,9 @@ public class Bow extends Weapon {
 
     public Bow() {
         super();
-        settings.addSettings(range, strength);
+        type = ItemType.BOW;
+        addSettings(range, strength);
+        addSettingsGroup(new SettingsGroup("Bow", range, strength));
     }
 
 }

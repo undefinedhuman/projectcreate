@@ -1,11 +1,17 @@
 package de.undefinedhuman.projectcreate.engine.settings.ui.utils;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class SettingsUtils {
 
     public static JComponent setLocation(int x, int y, JComponent component) {
         component.setLocation(x, y);
+        return component;
+    }
+
+    public static JComponent setPreferredSize(int width, int height, JComponent component) {
+        component.setPreferredSize(new Dimension(width, height));
         return component;
     }
 

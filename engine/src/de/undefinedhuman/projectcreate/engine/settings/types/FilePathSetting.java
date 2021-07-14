@@ -2,8 +2,8 @@ package de.undefinedhuman.projectcreate.engine.settings.types;
 
 import com.badlogic.gdx.Files;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
+import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
 
-import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -17,8 +17,8 @@ public abstract class FilePathSetting extends TextFieldSetting<FsFile> {
     }
 
     @Override
-    protected void createValueUI(JPanel panel, int width) {
-        super.createValueUI(panel, width);
+    public void createSettingUI(Accordion accordion) {
+        super.createSettingUI(accordion);
         valueField.setEditable(false);
         valueField.addMouseListener(new MouseAdapter() {
             @Override
