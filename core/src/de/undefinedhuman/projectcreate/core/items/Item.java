@@ -14,6 +14,7 @@ import de.undefinedhuman.projectcreate.engine.settings.types.primitive.StringSet
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Item implements ItemUsage {
 
@@ -46,7 +47,7 @@ public class Item implements ItemUsage {
         addSettings(id, name, desc, itemTexture, iconTexture, previewTexture, recipeQuantity, recipeItems, useIconAsHandTexture, maxAmount, canShake, rarity);
         this.type = ItemType.ITEM;
         this.recipeType = RecipeType.BLOCK;
-        generalSettings.addSettings(id, name, desc, rarity, maxAmount, useIconAsHandTexture, canShake);
+        generalSettings.addSettings(name, desc, rarity, maxAmount, useIconAsHandTexture, canShake);
         textureSettings.addSettings(itemTexture, iconTexture, previewTexture);
         recipeSettings.addSettings(recipeQuantity, recipeItems);
     }
@@ -67,11 +68,11 @@ public class Item implements ItemUsage {
         return allSettings;
     }
 
-    public ArrayList<Setting<?>> getSettings() {
+    public List<Setting<?>> getSettings() {
         return allSettings.getSettings();
     }
 
-    public ArrayList<SettingsGroup> getSettingsGroups() {
+    public List<SettingsGroup> getSettingsGroups() {
         return settingsGroups;
     }
 

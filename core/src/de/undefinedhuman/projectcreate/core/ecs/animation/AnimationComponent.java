@@ -1,12 +1,10 @@
 package de.undefinedhuman.projectcreate.core.ecs.animation;
 
-import de.undefinedhuman.projectcreate.engine.ecs.Component;
-import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
-import de.undefinedhuman.projectcreate.engine.file.LineWriter;
+import com.badlogic.ashley.core.Component;
 
 import java.util.HashMap;
 
-public class AnimationComponent extends Component {
+public class AnimationComponent implements Component {
 
     // TODO Refactor so animation time can't go in infinity
 
@@ -19,15 +17,6 @@ public class AnimationComponent extends Component {
         this.animations = animations;
         this.currentAnimation = defaultAnimation;
     }
-
-    @Override
-    public void init() {}
-
-    @Override
-    public void receive(LineSplitter splitter) {}
-
-    @Override
-    public void send(LineWriter writer) {}
 
     public void setAnimation(String animationName) {
         if (currentAnimation.equalsIgnoreCase(animationName)) return;

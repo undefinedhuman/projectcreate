@@ -94,4 +94,8 @@ public class RessourceUtils {
         return loadFile(Paths.ITEM_PATH, id + "/settings.item").exists();
     }
 
+    public static boolean existBlueprint(int id) {
+        return loadFile(Paths.ENTITY_PATH, id + "/settings.entity").exists();
+    }
+
 }

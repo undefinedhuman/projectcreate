@@ -1,11 +1,10 @@
 package de.undefinedhuman.projectcreate.game.entity.ecs.system;
 
-import de.undefinedhuman.projectcreate.core.ecs.mouse.AngleComponent;
+import de.undefinedhuman.projectcreate.core.ecs.angle.AngleComponent;
 import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteComponent;
 import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteData;
 import de.undefinedhuman.projectcreate.game.camera.CameraManager;
-import de.undefinedhuman.projectcreate.game.entity.Entity;
-import de.undefinedhuman.projectcreate.game.entity.ecs.System;
+import de.undefinedhuman.projectcreate.engine.ecs.system.System;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 
 public class AngleSystem extends System {

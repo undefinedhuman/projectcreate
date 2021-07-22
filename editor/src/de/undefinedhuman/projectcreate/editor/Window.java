@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglAWTCanvas;
 import com.formdev.flatlaf.FlatDarculaLaf;
 import de.undefinedhuman.projectcreate.editor.editor.Editor;
-import de.undefinedhuman.projectcreate.editor.editor.item.ItemEditor;
+import de.undefinedhuman.projectcreate.editor.editor.EditorType;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
@@ -28,7 +28,6 @@ public class Window extends JFrame {
 
     private static Window instance;
 
-    private static Class<?>[] EDITOR_CLASSES = new Class[] { ItemEditor.class };
     private static final ArrayList<Editor> EDITOR_INSTANCES = new ArrayList<>();
     private static final int WINDOW_WIDTH = 1280;
     private static final int WINDOW_HEIGHT = 720;
@@ -65,7 +64,7 @@ public class Window extends JFrame {
         JTabbedPane editorMenu = new JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
         editorMenu.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT - MENU_HEIGHT));
         editorMenu.setFont(editorMenu.getFont().deriveFont(Font.BOLD));
-        createEditorMenuTabs(editorMenu, EDITOR_CLASSES);
+        createEditorMenuTabs(editorMenu);
         editorMenu.addChangeListener(e -> createEditorMenuButtons(editorMenu.getSelectedIndex(), menuButtons));
 
         JPanel menuPanel = new JPanel(new BorderLayout());
@@ -119,29 +118,18 @@ public class Window extends JFrame {
         menuButtonPanel.repaint();
     }
 
-    private void createEditorMenuTabs(JTabbedPane editorTabMenu, Class<?>... editorClasses) {
-        for(Class<?> editorClass : editorClasses) {
-            if(editorClass.isInstance(Editor.class))
-                continue;
-            String name = editorClass.getSimpleName().split("Editor")[0];
-            Editor editor = createNewEditorInstance((Class<? extends Editor>) editorClass);
+    private void createEditorMenuTabs(JTabbedPane editorTabMenu) {
+        for(EditorType type : EditorType.values()) {
+            String name = type.name().charAt(0) + type.name().substring(1);
+            Editor editor = type.newInstance();
             if(editor == null) {
-                Log.showErrorDialog("Error while creating editor class instance!", false);
+                Log.showErrorDialog("Error while creating " + name + " editor class instance!", false);
                 continue;
             }
             EDITOR_INSTANCES.add(editor);
             editorTabMenu.addTab(name, editor);
             editor.init();
         }
-    }
-
-    private Editor createNewEditorInstance(Class<? extends Editor> editor) {
-        try {
-            return editor.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public void updateErrorTime(float delta) {

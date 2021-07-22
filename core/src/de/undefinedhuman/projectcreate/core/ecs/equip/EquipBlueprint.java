@@ -1,14 +1,11 @@
 package de.undefinedhuman.projectcreate.core.ecs.equip;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.engine.ecs.Component;
-import de.undefinedhuman.projectcreate.engine.ecs.ComponentBlueprint;
-import de.undefinedhuman.projectcreate.engine.ecs.ComponentParam;
+import de.undefinedhuman.projectcreate.engine.ecs.component.ComponentBlueprint;
 import de.undefinedhuman.projectcreate.engine.settings.types.StringArraySetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.TextureOffsetSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.StringSetting;
-
-import java.util.HashMap;
 
 public class EquipBlueprint extends ComponentBlueprint {
 
@@ -25,17 +22,13 @@ public class EquipBlueprint extends ComponentBlueprint {
             itemOffsets = new TextureOffsetSetting("Item Offsets", new Vector2[0], true);
 
     public EquipBlueprint() {
-        super(EquipComponent.class);
         settings.addSettings(itemLayer, armLayer, hitboxLayer, invisibleLayers, itemOffsets, itemPositions);
 
     }
 
     @Override
-    public Component createInstance(HashMap<Class<? extends Component>, ComponentParam> params) {
+    public Component createInstance() {
         return new EquipComponent(invisibleLayers.getValue(), itemOffsets.getValue(), itemPositions.getValue());
     }
-
-    @Override
-    public void delete() {}
 
 }

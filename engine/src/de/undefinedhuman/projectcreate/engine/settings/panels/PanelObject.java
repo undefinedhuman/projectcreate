@@ -7,7 +7,7 @@ import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class PanelObject {
 
@@ -27,7 +27,7 @@ public class PanelObject {
         return this;
     }
 
-    public ArrayList<Setting<?>> getSettings() {
+    public List<Setting<?>> getSettings() {
         return settings.getSettings();
     }
 

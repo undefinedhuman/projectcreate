@@ -1,196 +1,101 @@
 package de.undefinedhuman.projectcreate.editor.editor.entity;
 
 import com.badlogic.gdx.Files;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.core.ecs.ComponentType;
-import de.undefinedhuman.projectcreate.editor.editor.ThreePanelEditor;
-import de.undefinedhuman.projectcreate.engine.ecs.ComponentBlueprint;
-import de.undefinedhuman.projectcreate.engine.ecs.EntityType;
-import de.undefinedhuman.projectcreate.engine.file.*;
-import de.undefinedhuman.projectcreate.engine.resources.RessourceUtils;
-import de.undefinedhuman.projectcreate.engine.settings.Setting;
-import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
-import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
-import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectAdapter;
-import de.undefinedhuman.projectcreate.engine.settings.types.SelectionSetting;
-import de.undefinedhuman.projectcreate.engine.settings.types.Vector2Setting;
-import de.undefinedhuman.projectcreate.engine.settings.types.primitive.IntSetting;
-import de.undefinedhuman.projectcreate.engine.settings.types.primitive.StringSetting;
+import de.undefinedhuman.projectcreate.core.ecs.name.NameBlueprint;
+import de.undefinedhuman.projectcreate.core.items.ItemManager;
+import de.undefinedhuman.projectcreate.editor.Window;
+import de.undefinedhuman.projectcreate.editor.editor.Editor;
+import de.undefinedhuman.projectcreate.editor.editor.entity.ui.EntitySelectionPanel;
+import de.undefinedhuman.projectcreate.editor.editor.entity.ui.EntitySettingsPanel;
+import de.undefinedhuman.projectcreate.editor.editor.utils.Utils;
+import de.undefinedhuman.projectcreate.engine.ecs.blueprint.Blueprint;
+import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
+import de.undefinedhuman.projectcreate.engine.file.FileUtils;
+import de.undefinedhuman.projectcreate.engine.file.FsFile;
+import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.Arrays;
 
-public class EntityEditor extends ThreePanelEditor {
+public class EntityEditor extends Editor {
 
-    private JComboBox<ComponentType> componentComboBox;
+    private EntitySelectionPanel entitySelectionPanel;
+    private EntitySettingsPanel entitySettingsPanel;
 
-    private DefaultListModel<String> componentList;
-    private JList<String> listPanel;
+    public EntityEditor() {
+        super();
 
-    private String selectedComponent;
+        BlueprintManager.getInstance().loadBlueprints(
+                Arrays.stream(new FsFile(Paths.ENTITY_PATH, Files.FileType.Internal).list(File::isDirectory))
+                        .filter(fileHandle -> Tools.isInteger(fileHandle.name()) != null)
+                        .mapToInt(fileHandle -> Integer.parseInt(fileHandle.name())).toArray()
+        );
 
-    private HashMap<String, ComponentBlueprint> components;
-
-    private SettingsList baseSettings = new SettingsList();
-
-    public EntityEditor(Container container, int width, int height) {
-        super(container, width, height);
-        components = new HashMap<>();
-
-        componentComboBox = new JComboBox<>(ComponentType.values());
-        componentComboBox.setSelectedItem(null);
-        componentComboBox.setBounds(20, 25, 150, 25);
-
-        baseSettings.addSettings(
-                new IntSetting("ID", 0),
-                new StringSetting("Name", "Temp Name"),
-                new Vector2Setting("Size", new Vector2(0, 0)),
-                new SelectionSetting<>("Type", EntityType.values(), value -> EntityType.valueOf(String.valueOf(value)), Enum::name));
-        // Tools.createSettingsPanel(leftPanel, baseSettings.getSettings().stream());
-
-        componentList = new DefaultListModel<>();
-
-        listPanel = new JList<>(componentList);
-        listPanel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        listPanel.addListSelectionListener(e -> {
-            selectedComponent = listPanel.getSelectedValue() != null ? listPanel.getSelectedValue() : null;
-            if(selectedComponent != null) {
-                Tools.removeSettings(rightPanel);
-                // Tools.createSettingsPanel(rightPanel, components.get(selectedComponent).getSettingsStream());
+        add(entitySelectionPanel = new EntitySelectionPanel() {
+            @Override
+            public void select(Integer id) {
+                entitySettingsPanel.updateBlueprintID(id);
             }
-        });
+        }, 0.15f);
 
-        JScrollPane listScroller = new JScrollPane(listPanel);
-        listScroller.setBounds(20, 125, 150, 450);
-
-        JButton addComponent = new JButton("Add");
-        addComponent.setBounds(20, 55, 150, 25);
-        addComponent.addActionListener(e -> {
-            if(componentComboBox.getSelectedItem() == null) return;
-            Tools.removeSettings(rightPanel);
-            String componentName = String.valueOf(componentComboBox.getSelectedItem());
-            if(componentList.contains(componentName))
-                return;
-            ComponentBlueprint blueprint = ComponentType.createNewInstance(ComponentType.valueOf(componentName.toUpperCase(Locale.ROOT)));
-            if(blueprint == null)
-                return;
-            componentList.addElement(componentName);
-            components.put(componentName, blueprint);
-        });
-
-        JButton removeComponent = new JButton("Remove");
-        removeComponent.setBounds(20, 85, 150, 25);
-        removeComponent.addActionListener(e -> {
-            if(listPanel.getSelectedValue() == null)
-                return;
-            String componentName = String.valueOf(componentComboBox.getSelectedItem());
-            Tools.removeSettings(rightPanel);
-            components.remove(componentName);
-            if(componentList.contains(componentName))
-                componentList.removeElement(componentName);
-        });
-
-        middlePanel.add(componentComboBox);
-        middlePanel.add(addComponent);
-        middlePanel.add(removeComponent);
-        middlePanel.add(listScroller);
-
-    }
-
-    @Override
-    public void load() {
-
-        FileHandle[] entityDirs = RessourceUtils.loadDir(Paths.ENTITY_PATH).list();
-        ArrayList<String> ids = new ArrayList<>();
-
-        for (FileHandle entityDir : entityDirs) {
-            if (!entityDir.isDirectory()) continue;
-            FsFile entityFile = new FsFile(Paths.ENTITY_PATH, entityDir.name() + "/settings.entity", Files.FileType.Internal);
-            if(entityFile.length() == 0) continue;
-            FileReader reader = entityFile.getFileReader(true);
-            SettingsObject settings = new SettingsObjectAdapter(reader);
-            ids.add(entityDir.name() + "-" + ((LineSplitter) settings.get("Name")).getNextString());
-            reader.close();
-        }
-
-        Collections.reverse(ids);
-
-        JFrame chooseWindow = new JFrame("Load entity");
-        chooseWindow.setSize(480,150);
-        chooseWindow.setLocationRelativeTo(null);
-        chooseWindow.setResizable(false);
-
-        JLabel label = new JLabel();
-        chooseWindow.add(label);
-
-        JButton button = new JButton("Load Entity");
-        button.setBounds(90, 70, 300, 25);
-
-        JComboBox<String> comboBox = new JComboBox<>(ids.toArray(new String[0]));
-        comboBox.setBounds(90, 35, 300, 25);
-
-        button.addActionListener(a -> {
-            if(comboBox.getSelectedItem() == null) return;
-            componentList.clear();
-            components.clear();
-            Tools.removeSettings(rightPanel);
-
-            FileReader reader = new FileReader(new FsFile(Paths.ENTITY_PATH, Integer.parseInt(((String) comboBox.getSelectedItem()).split("-")[0]) + "/settings.entity", Files.FileType.Internal), true);
-            SettingsObject settingsObject = new SettingsObjectAdapter(reader);
-
-            for(Setting<?> setting : baseSettings.getSettings())
-                setting.load(reader.parent(), settingsObject);
-
-            for(ComponentType componentType : ComponentType.values()) {
-                String componentBlueprintName = componentType.name().toUpperCase();
-                if(!settingsObject.containsKey(componentBlueprintName))
-                    continue;
-                Object componentObject = settingsObject.get(componentBlueprintName);
-                if(!(componentObject instanceof SettingsObject))
-                    continue;
-                ComponentBlueprint blueprint = ComponentType.createNewInstance(componentType);
-                blueprint.load(reader.parent(), (SettingsObject) settingsObject.get(componentBlueprintName));
-                componentList.addElement(componentBlueprintName);
-                components.put(componentBlueprintName, blueprint);
-            }
-
-            chooseWindow.setVisible(false);
-            reader.close();
-
-        });
-
-        label.add(comboBox);
-        label.add(button);
-
-        chooseWindow.setVisible(true);
-
-    }
-
-    @Override
-    public void createMenuButtonsPanel(JPanel menuButtonPanel) {
-
+        add(entitySettingsPanel = new EntitySettingsPanel(), 0.85f);
     }
 
     @Override
     public void init() {
-
+        entitySelectionPanel.init();
     }
 
     @Override
-    public void save() {
-        FsFile entityDir = new FsFile(Paths.ENTITY_PATH, baseSettings.getSettings().get(0).getValue() + Variables.FILE_SEPARATOR, Files.FileType.Local);
-        if(entityDir.exists())
-            FileUtils.deleteFile(entityDir);
+    public void createMenuButtonsPanel(JPanel menuButtonPanel) {
+        menuButtonPanel.setLayout(new GridLayout(1, 3, 5, 0));
+        menuButtonPanel.setMinimumSize(new Dimension(100, Window.MENU_HEIGHT));
+        menuButtonPanel.add(createUtilityButton("Save", e -> {
+            int selectedID = entitySelectionPanel.getSelectedID();
+            if(selectedID == -1)
+                return;
+            Utils.saveBlueprint(selectedID);
+        }));
+        menuButtonPanel.add(createUtilityButton("Reset", e -> {
+            int selectedID = entitySelectionPanel.getSelectedID();
+            if(selectedID == -1)
+                return;
+            BlueprintManager.getInstance().removeBlueprints(selectedID);
+            entitySettingsPanel.clear();
+            BlueprintManager.getInstance().loadBlueprints(selectedID);
+            entitySelectionPanel.select(selectedID);
 
-        FileWriter writer = new FsFile(entityDir, "settings.entity", Files.FileType.Local).getFileWriter(true);
-        Tools.saveSettings(writer, baseSettings);
-        for(ComponentBlueprint componentBlueprint : this.components.values())
-            componentBlueprint.save(writer);
-        writer.close();
+        }));
+        menuButtonPanel.add(createUtilityButton("Delete", e -> {
+            int selectedID = entitySelectionPanel.getSelectedID();
+            if(selectedID == -1)
+                return;
+            Blueprint selectedBlueprint = BlueprintManager.getInstance().getBlueprint(selectedID);
+            NameBlueprint nameBlueprint = (NameBlueprint) selectedBlueprint.getComponentBlueprint(NameBlueprint.class);
+            int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this blueprint?", "Delete Blueprint " + selectedID + " " + (nameBlueprint != null ? nameBlueprint.name.getValue() : ""), JOptionPane.YES_NO_OPTION);
+            if(result != 0)
+                return;
+            FsFile blueprintDir = new FsFile(Paths.ENTITY_PATH, selectedID + Variables.FILE_SEPARATOR, Files.FileType.Local);
+            if(blueprintDir.exists())
+                FileUtils.deleteFile(blueprintDir);
+            removeItemFromUI(selectedID);
+        }));
     }
 
+    private JButton createUtilityButton(String title, ActionListener actionListener) {
+        JButton button = new JButton(title);
+        button.addActionListener(actionListener);
+        return button;
+    }
+
+    private void removeItemFromUI(int id) {
+        ItemManager.getInstance().removeItems(id);
+        entitySelectionPanel.removeSelected();
+        entitySettingsPanel.clear();
+    }
 }

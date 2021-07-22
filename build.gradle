@@ -69,6 +69,7 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        compile "com.badlogicgames.ashley:ashley:1.7.3"
         compile group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
 
         testImplementation("org.assertj:assertj-core:3.19.0")
@@ -93,6 +94,7 @@ project(":engine") {
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+        compile "com.badlogicgames.ashley:ashley:1.7.3"
         compile group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
         compile group: 'com.github.kerner1000', name: 'javapng', version: '2.1.2'
 

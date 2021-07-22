@@ -1,9 +1,8 @@
 package de.undefinedhuman.projectcreate.core.ecs.name;
 
-import de.undefinedhuman.projectcreate.engine.ecs.Component;
-import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
+import com.badlogic.ashley.core.Component;
 
-public class NameComponent extends Component {
+public class NameComponent implements Component {
 
     private String name;
 
@@ -17,11 +16,6 @@ public class NameComponent extends Component {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public void receive(LineSplitter splitter) {
-        this.name = splitter.getNextString();
     }
 
 }

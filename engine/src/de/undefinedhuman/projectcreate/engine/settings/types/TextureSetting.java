@@ -29,6 +29,7 @@ public class TextureSetting extends Setting<String> {
 
     private BufferedImage texture;
     private JLabel textureLabel;
+    private float zoom = 1f;
 
     public TextureSetting(String key, String defaultValue) {
         super(key, defaultValue);
@@ -52,6 +53,15 @@ public class TextureSetting extends Setting<String> {
         textureLabel.setMinimumSize(new Dimension(Integer.MIN_VALUE, getContentHeight()));
         textureLabel.setLayout(new BorderLayout());
         textureLabel.setHorizontalAlignment(JLabel.CENTER);
+        textureLabel.addMouseWheelListener(e -> {
+            int notches = e.getWheelRotation();
+            float temp = zoom - (notches * 0.2f);
+            temp = Math.max(temp, 0.1f);
+            if (temp != zoom) {
+                zoom = temp;
+                setTextureIcon();
+            }
+        });
         setTextureIcon();
         textureLabel.addMouseListener(new MouseAdapter() {
             @Override
@@ -119,7 +129,7 @@ public class TextureSetting extends Setting<String> {
     private void setTextureIcon() {
         if(textureLabel == null)
             return;
-        float scaleFactor = (float) PREVIEW_TEXTURE_LABEL_SIZE / texture.getHeight();
+        float scaleFactor = (float) PREVIEW_TEXTURE_LABEL_SIZE / texture.getHeight() * zoom;
         textureLabel.setIcon(new ImageIcon(texture.getScaledInstance((int) (texture.getWidth() * scaleFactor), (int) (texture.getHeight() * scaleFactor), Image.SCALE_SMOOTH)));
     }
 

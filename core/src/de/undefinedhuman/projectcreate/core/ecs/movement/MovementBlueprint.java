@@ -1,11 +1,8 @@
 package de.undefinedhuman.projectcreate.core.ecs.movement;
 
-import de.undefinedhuman.projectcreate.engine.ecs.Component;
-import de.undefinedhuman.projectcreate.engine.ecs.ComponentBlueprint;
-import de.undefinedhuman.projectcreate.engine.ecs.ComponentParam;
+import com.badlogic.ashley.core.Component;
+import de.undefinedhuman.projectcreate.engine.ecs.component.ComponentBlueprint;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.FloatSetting;
-
-import java.util.HashMap;
 
 public class MovementBlueprint extends ComponentBlueprint {
 
@@ -16,13 +13,11 @@ public class MovementBlueprint extends ComponentBlueprint {
             jumpAnimationTransition = new FloatSetting("Jump Transition", 25f);
 
     public MovementBlueprint() {
-        super(MovementComponent.class);
-        settings.addSettings(speed, jumpSpeed, gravity);
+        settings.addSettings(speed, jumpSpeed, gravity, jumpAnimationTransition);
     }
 
     @Override
-    public Component createInstance(HashMap<Class<? extends Component>, ComponentParam> params) {
+    public Component createInstance() {
         return new MovementComponent(speed.getValue(), jumpSpeed.getValue(), gravity.getValue(), jumpAnimationTransition.getValue());
     }
-
 }

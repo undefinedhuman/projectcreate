@@ -1,8 +1,8 @@
 package de.undefinedhuman.projectcreate.core.ecs.interaction;
 
-import de.undefinedhuman.projectcreate.engine.ecs.Component;
+import com.badlogic.ashley.core.Component;
 
-public class InteractionComponent extends Component {
+public class InteractionComponent implements Component {
 
     public boolean pressed = false;
 

@@ -1,13 +1,13 @@
 package de.undefinedhuman.projectcreate.core.ecs.sprite;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import de.undefinedhuman.projectcreate.engine.ecs.Component;
-import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
-import de.undefinedhuman.projectcreate.engine.file.LineWriter;
 
 import java.util.*;
 
-public class SpriteComponent extends Component {
+public class SpriteComponent implements Component {
+
+    // TODO ADD INIT AND DELTE FUNCTIONALITY (SORTING) TOO RENDER SYSTEM
 
     private HashMap<String, SpriteData> spriteData;
     private SortedMap<Integer, ArrayList<SpriteData>> orderedSpriteData = new TreeMap<>();
@@ -21,7 +21,7 @@ public class SpriteComponent extends Component {
         }
     }
 
-    @Override
+    /*@Override
     public void init() {
         for(SpriteData data : spriteData.values()) {
             int renderLevel = data.getRenderLevel();
@@ -32,7 +32,7 @@ public class SpriteComponent extends Component {
                 orderedSpriteData.put(renderLevel, spriteData);
             }
         }
-    }
+    }*/
 
     public Collection<SpriteData> getSpriteData() {
         return spriteData.values();
@@ -48,17 +48,12 @@ public class SpriteComponent extends Component {
         }
     }
 
-    @Override
+    /*@Override
     public void delete() {
         orderedSpriteData.clear();
-        for(SpriteData data : spriteData.values()) data.delete();
+        for(SpriteData data : spriteData.values())
+            data.delete();
         spriteData.clear();
-    }
-
-    @Override
-    public void receive(LineSplitter splitter) {}
-
-    @Override
-    public void send(LineWriter writer) {}
+    }*/
 
 }

@@ -2,9 +2,7 @@ package de.undefinedhuman.projectcreate.game.enemy;
 
 import de.undefinedhuman.projectcreate.core.ecs.equip.EquipComponent;
 import de.undefinedhuman.projectcreate.core.enemy.EnemyFactory;
-import de.undefinedhuman.projectcreate.game.entity.Entity;
-import de.undefinedhuman.projectcreate.game.entity.EntityManager;
-import de.undefinedhuman.projectcreate.game.entity.ecs.blueprint.BlueprintManager;
+import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 
 public class EnemySpawner {
 

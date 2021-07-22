@@ -6,8 +6,7 @@ import de.undefinedhuman.projectcreate.core.ecs.collision.CollisionComponent;
 import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteComponent;
 import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteData;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
-import de.undefinedhuman.projectcreate.game.entity.Entity;
-import de.undefinedhuman.projectcreate.game.entity.ecs.System;
+import de.undefinedhuman.projectcreate.engine.ecs.system.System;
 
 public class RenderSystem extends System {
 

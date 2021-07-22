@@ -2,6 +2,7 @@ package de.undefinedhuman.projectcreate.engine.settings;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class SettingsList {
 
@@ -17,7 +18,7 @@ public class SettingsList {
         settings.clear();
     }
 
-    public ArrayList<Setting<?>> getSettings() {
+    public List<Setting<?>> getSettings() {
         return settings;
     }
 

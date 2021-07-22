@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.editor.editor.item.ui;
 
 import de.undefinedhuman.projectcreate.core.items.Item;
-import de.undefinedhuman.projectcreate.engine.settings.Setting;
+import de.undefinedhuman.projectcreate.editor.editor.utils.Utils;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsGroup;
 import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
 import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
@@ -23,24 +23,11 @@ public class ItemSettingsPanel extends JPanel {
 
     public void updateItem(Item item) {
         clear();
-        addSettingsGroupToAccordion(item.getGeneralSettings(), generalSettings);
-        addSettingsGroupToAccordion(item.getTextureSettings(), textureSettings);
-        addSettingsGroupToAccordion(item.getRecipeSettings(), generalSettings);
+        Utils.addSettingsGroupToAccordion(item.getGeneralSettings(), generalSettings);
+        Utils.addSettingsGroupToAccordion(item.getTextureSettings(), textureSettings);
+        Utils.addSettingsGroupToAccordion(item.getRecipeSettings(), generalSettings);
         for(SettingsGroup settingsGroup : item.getSettingsGroups())
-            addSettingsGroupToAccordion(settingsGroup, typeSettings);
-    }
-
-    private void addSettingsGroupToAccordion(SettingsGroup settingsGroup, Accordion accordion) {
-        Accordion settingsAccordion = new Accordion(Variables.BACKGROUND_COLOR.darker()) {
-            @Override
-            public void update() {
-                super.update();
-                accordion.update();
-            }
-        };
-        for(Setting<?> setting : settingsGroup.getSettings())
-            setting.createSettingUI(settingsAccordion);
-        accordion.addCollapsiblePanel(settingsGroup.getTitle(), settingsAccordion);
+            Utils.addSettingsGroupToAccordion(settingsGroup, typeSettings);
     }
 
     public void clear() {

@@ -1,13 +1,10 @@
 package de.undefinedhuman.projectcreate.game.entity.chunk;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import de.undefinedhuman.projectcreate.engine.ecs.EntityType;
 import de.undefinedhuman.projectcreate.core.ecs.collision.CollisionComponent;
 import de.undefinedhuman.projectcreate.engine.utils.ds.MultiMap;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector4;
 import de.undefinedhuman.projectcreate.game.collision.CollisionManager;
-import de.undefinedhuman.projectcreate.game.entity.Entity;
-import de.undefinedhuman.projectcreate.game.entity.EntityManager;
 
 import java.util.ArrayList;
 import java.util.Collection;

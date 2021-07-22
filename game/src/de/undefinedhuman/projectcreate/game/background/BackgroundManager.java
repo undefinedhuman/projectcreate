@@ -13,7 +13,6 @@ import de.undefinedhuman.projectcreate.game.background.birds.BirdLayer;
 import de.undefinedhuman.projectcreate.game.background.clouds.CloudLayer;
 import de.undefinedhuman.projectcreate.game.background.layers.BackgroundLayer;
 import de.undefinedhuman.projectcreate.game.background.layers.ForegroundLayer;
-import de.undefinedhuman.projectcreate.game.entity.Entity;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 

@@ -2,15 +2,14 @@ package de.undefinedhuman.projectcreate.game.entity.ecs.system;
 
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.core.ecs.animation.AnimationComponent;
-import de.undefinedhuman.projectcreate.core.ecs.arm.ShoulderComponent;
+import de.undefinedhuman.projectcreate.core.ecs.shoulder.ShoulderComponent;
 import de.undefinedhuman.projectcreate.core.ecs.equip.EquipComponent;
-import de.undefinedhuman.projectcreate.core.ecs.mouse.AngleComponent;
+import de.undefinedhuman.projectcreate.core.ecs.angle.AngleComponent;
 import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteComponent;
 import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteData;
 import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.core.items.ItemType;
-import de.undefinedhuman.projectcreate.game.entity.Entity;
-import de.undefinedhuman.projectcreate.game.entity.ecs.System;
+import de.undefinedhuman.projectcreate.engine.ecs.system.System;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
 
 public class EquipSystem extends System {

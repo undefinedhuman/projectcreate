@@ -3,8 +3,7 @@ package de.undefinedhuman.projectcreate.game.entity.ecs.system;
 import de.undefinedhuman.projectcreate.core.ecs.animation.AnimationComponent;
 import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteComponent;
 import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteData;
-import de.undefinedhuman.projectcreate.game.entity.Entity;
-import de.undefinedhuman.projectcreate.game.entity.ecs.System;
+import de.undefinedhuman.projectcreate.engine.ecs.system.System;
 
 public class AnimationSystem extends System {
 

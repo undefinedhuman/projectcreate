@@ -6,8 +6,7 @@ import de.undefinedhuman.projectcreate.core.ecs.animation.AnimationComponent;
 import de.undefinedhuman.projectcreate.core.ecs.collision.CollisionComponent;
 import de.undefinedhuman.projectcreate.core.ecs.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
-import de.undefinedhuman.projectcreate.game.entity.Entity;
-import de.undefinedhuman.projectcreate.game.entity.ecs.System;
+import de.undefinedhuman.projectcreate.engine.ecs.system.System;
 import de.undefinedhuman.projectcreate.game.screen.CollisionUtils;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 

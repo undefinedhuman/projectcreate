@@ -1,11 +1,12 @@
 package de.undefinedhuman.projectcreate.core.ecs.movement;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.engine.ecs.Component;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.LineWriter;
+import de.undefinedhuman.projectcreate.engine.network.NetworkComponent;
 
-public class MovementComponent extends Component {
+public class MovementComponent implements Component, NetworkComponent {
 
     public Vector2 velocity = new Vector2();
     public boolean canJump = false;

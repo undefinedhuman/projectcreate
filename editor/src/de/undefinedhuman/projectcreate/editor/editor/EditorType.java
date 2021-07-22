@@ -2,12 +2,11 @@ package de.undefinedhuman.projectcreate.editor.editor;
 
 import de.undefinedhuman.projectcreate.editor.editor.entity.EntityEditor;
 import de.undefinedhuman.projectcreate.editor.editor.item.ItemEditor;
-import de.undefinedhuman.projectcreate.editor.editor.world.WorldEditor;
 
 public enum EditorType {
     ENTITY(EntityEditor.class),
-    ITEM(ItemEditor.class),
-    WORLD(WorldEditor.class);
+    ITEM(ItemEditor.class);
+    // WORLD(WorldEditor.class);
 
     private Class<? extends Editor> editorClass;
 

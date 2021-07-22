@@ -1,13 +1,14 @@
 package de.undefinedhuman.projectcreate.core.ecs.equip;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.core.items.Item;
-import de.undefinedhuman.projectcreate.engine.ecs.Component;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.LineWriter;
+import de.undefinedhuman.projectcreate.engine.network.NetworkComponent;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 
-public class EquipComponent extends Component {
+public class EquipComponent implements Component, NetworkComponent {
 
     public int[] itemIDs = new int[5];
     private Vector2[] itemOffsets, itemPositions;

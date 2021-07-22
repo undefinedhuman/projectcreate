@@ -1,48 +1,57 @@
 package de.undefinedhuman.projectcreate.core.ecs;
 
+import de.undefinedhuman.projectcreate.core.ecs.angle.AngleBlueprint;
 import de.undefinedhuman.projectcreate.core.ecs.animation.AnimationBlueprint;
-import de.undefinedhuman.projectcreate.core.ecs.arm.RightArmBlueprint;
-import de.undefinedhuman.projectcreate.core.ecs.arm.ShoulderBlueprint;
 import de.undefinedhuman.projectcreate.core.ecs.collision.CollisionBlueprint;
 import de.undefinedhuman.projectcreate.core.ecs.combat.CombatBlueprint;
 import de.undefinedhuman.projectcreate.core.ecs.equip.EquipBlueprint;
+import de.undefinedhuman.projectcreate.core.ecs.food.FoodBlueprint;
+import de.undefinedhuman.projectcreate.core.ecs.health.HealthBlueprint;
 import de.undefinedhuman.projectcreate.core.ecs.interaction.InteractionBlueprint;
-import de.undefinedhuman.projectcreate.core.ecs.mouse.AngleBlueprint;
+import de.undefinedhuman.projectcreate.core.ecs.mana.ManaBlueprint;
 import de.undefinedhuman.projectcreate.core.ecs.movement.MovementBlueprint;
 import de.undefinedhuman.projectcreate.core.ecs.name.NameBlueprint;
+import de.undefinedhuman.projectcreate.core.ecs.rightarm.RightarmBlueprint;
+import de.undefinedhuman.projectcreate.core.ecs.shoulder.ShoulderBlueprint;
 import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteBlueprint;
-import de.undefinedhuman.projectcreate.core.ecs.stats.food.FoodBlueprint;
-import de.undefinedhuman.projectcreate.core.ecs.stats.health.HealthBlueprint;
-import de.undefinedhuman.projectcreate.core.ecs.stats.mana.ManaBlueprint;
-import de.undefinedhuman.projectcreate.engine.ecs.ComponentBlueprint;
+import de.undefinedhuman.projectcreate.engine.ecs.component.ComponentBlueprint;
 
-import java.util.function.Supplier;
+import java.util.HashMap;
 
-public enum ComponentType {
+public class ComponentType {
 
-    ANGLE(AngleBlueprint::new),
-    ANIMATION(AnimationBlueprint::new),
-    SHOULDER(ShoulderBlueprint::new),
-    RIGHTARM(RightArmBlueprint::new),
-    COLLISION(CollisionBlueprint::new),
-    COMBAT(CombatBlueprint::new),
-    EQUIP(EquipBlueprint::new),
-    INTERACTION(InteractionBlueprint::new),
-    MOVEMENT(MovementBlueprint::new),
-    NAME(NameBlueprint::new),
-    SPRITE(SpriteBlueprint::new),
-    FOOD(FoodBlueprint::new),
-    HEALTH(HealthBlueprint::new),
-    MANA(ManaBlueprint::new);
+    private static HashMap<String, Class<? extends ComponentBlueprint>> COMPONENT_BLUEPRINT_CLASSES = new HashMap<>();
 
-    private Supplier<ComponentBlueprint> componentBlueprint;
-
-    ComponentType(Supplier<ComponentBlueprint> componentBlueprintFunction) {
-        this.componentBlueprint = componentBlueprintFunction;
+    static {
+        registerComponentType(
+                AngleBlueprint.class,
+                AnimationBlueprint.class,
+                CollisionBlueprint.class,
+                CombatBlueprint.class,
+                EquipBlueprint.class,
+                FoodBlueprint.class,
+                HealthBlueprint.class,
+                InteractionBlueprint.class,
+                ManaBlueprint.class,
+                MovementBlueprint.class,
+                NameBlueprint.class,
+                RightarmBlueprint.class,
+                ShoulderBlueprint.class,
+                SpriteBlueprint.class
+        );
     }
 
-    public static ComponentBlueprint createNewInstance(ComponentType type) {
-        return type.componentBlueprint.get();
+    public static void registerComponentType(Class<? extends ComponentBlueprint>... blueprintClasses) {
+        for(Class<? extends ComponentBlueprint> blueprintClass : blueprintClasses)
+            COMPONENT_BLUEPRINT_CLASSES.put(blueprintClass.getSimpleName().split("Blueprint")[0].toUpperCase(), blueprintClass);
+    }
+
+    public static String[] getComponentTypes() {
+        return COMPONENT_BLUEPRINT_CLASSES.keySet().toArray(new String[0]);
+    }
+
+    public static Class<? extends ComponentBlueprint> getComponentClass(String name) {
+        return COMPONENT_BLUEPRINT_CLASSES.getOrDefault(name, null);
     }
 
 }

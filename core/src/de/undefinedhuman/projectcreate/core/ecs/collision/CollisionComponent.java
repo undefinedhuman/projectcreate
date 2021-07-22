@@ -1,13 +1,13 @@
 package de.undefinedhuman.projectcreate.core.ecs.collision;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.projectcreate.engine.collision.Hitbox;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector4;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector4i;
-import de.undefinedhuman.projectcreate.engine.collision.Hitbox;
-import de.undefinedhuman.projectcreate.engine.ecs.Component;
-import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
-public class CollisionComponent extends Component {
+public class CollisionComponent implements Component {
 
     public boolean onSlope = false;
 

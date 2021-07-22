@@ -1,8 +1,5 @@
 package de.undefinedhuman.projectcreate.game.network.utils;
 
-import de.undefinedhuman.projectcreate.engine.ecs.Component;
-import de.undefinedhuman.projectcreate.game.entity.Entity;
-import de.undefinedhuman.projectcreate.game.entity.EntityManager;
 import de.undefinedhuman.projectcreate.game.equip.EquipManager;
 import de.undefinedhuman.projectcreate.game.network.packets.entity.ComponentPacket;
 import de.undefinedhuman.projectcreate.game.network.packets.inventory.EquipPacket;

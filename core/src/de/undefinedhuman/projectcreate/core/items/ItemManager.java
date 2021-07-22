@@ -33,8 +33,7 @@ public class ItemManager extends Manager {
                 .filter(id -> !hasItem(id) && RessourceUtils.existItem(id))
                 .peek(id -> {
                     Item item = loadItem(id);
-                    if(item != null)
-                        addItem(id, item);
+                    addItem(id, item);
                 })
                 .filter(this::hasItem)
                 .toArray();
@@ -46,9 +45,9 @@ public class ItemManager extends Manager {
             return true;
         }).toArray();
         if(failedItemIDs.length > 0)
-            Log.error("Error while loading item" + Tools.appendSToString(failedItemIDs.length) + ": " + Arrays.toString(failedItemIDs));
+            Log.error("Error while loading item" + Tools.appendSToString(failedItemIDs.length) + ": " + Arrays.toString(Arrays.stream(failedItemIDs).sorted().toArray()));
         if(loadedItemIDs.length > 0)
-            Log.debug("Item" + Tools.appendSToString(loadedItemIDs.length) + " loaded: " + Arrays.toString(loadedItemIDs));
+            Log.debug("Item" + Tools.appendSToString(loadedItemIDs.length) + " loaded: " + Arrays.toString(Arrays.stream(loadedItemIDs).sorted().toArray()));
         return loadedItemIDs.length == ids.length;
     }
 
@@ -93,12 +92,14 @@ public class ItemManager extends Manager {
     private Item loadItem(int id) {
         FileReader reader = new FsFile(Paths.ITEM_PATH, id + "/settings.item", Files.FileType.Internal).getFileReader(true);
         SettingsObject settingsObject = new SettingsObjectAdapter(reader);
+        ItemType type;
         if(!settingsObject.containsKey("Type"))
-            return null;
-        String typeName = ((LineSplitter) settingsObject.get("Type")).getNextString();
-        if(typeName == null || typeName.equals(""))
-            return null;
-        ItemType type = ItemType.valueOf(typeName);
+            type = ItemType.ITEM;
+        else {
+            String typeName = ((LineSplitter) settingsObject.get("Type")).getNextString();
+            if(typeName == null || typeName.equals("")) type = ItemType.ITEM;
+            else type = ItemType.valueOf(typeName);
+        }
         Item item = type.createInstance();
         for(Setting<?> setting : item.getSettingsList().getSettings())
             setting.load(reader.parent(), settingsObject);
