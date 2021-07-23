@@ -1,6 +1,7 @@
 package de.undefinedhuman.projectcreate.editor.editor.item;
 
 import com.badlogic.gdx.Files;
+import com.badlogic.gdx.files.FileHandle;
 import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.editor.Window;
@@ -19,6 +20,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 
 public class ItemEditor extends Editor {
 
@@ -53,33 +55,36 @@ public class ItemEditor extends Editor {
     public void createMenuButtonsPanel(JPanel menuButtonPanel) {
         menuButtonPanel.setLayout(new GridLayout(1, 3, 5, 0));
         menuButtonPanel.setMinimumSize(new Dimension(100, Window.MENU_HEIGHT));
-        menuButtonPanel.add(createUtilityButton("Save", e -> {
-            Integer selectedID = itemSelectionPanel.getSelectedID();
-            if(selectedID == null)
-                return;
-            Utils.saveItem(selectedID);
-        }));
+        menuButtonPanel.add(createUtilityButton("Save", e -> itemSelectionPanel.getSelectedItems().forEach(Utils::saveItem)));
         menuButtonPanel.add(createUtilityButton("Reset", e -> {
-            Integer selectedID = itemSelectionPanel.getSelectedID();
-            if(selectedID == null)
+            List<Integer> selectedIDs = itemSelectionPanel.getSelectedItems();
+            if(selectedIDs.size() == 0)
                 return;
-            ItemManager.getInstance().removeItems(selectedID);
             itemSettingsPanel.clear();
-            ItemManager.getInstance().loadItems(selectedID);
-            itemSelectionPanel.select(selectedID);
-
+            itemSelectionPanel.getSelectedItems().forEach(id -> {
+                ItemManager.getInstance().removeItems(id);
+                ItemManager.getInstance().loadItems(id);
+            });
+            itemSelectionPanel.select(itemSelectionPanel.getSelectedIndex());
         }));
         menuButtonPanel.add(createUtilityButton("Delete", e -> {
-            Integer selectedID = itemSelectionPanel.getSelectedID();
-            if(selectedID == null)
+            List<Integer> removedIDs = itemSelectionPanel.getSelectedItems();
+            if(removedIDs.size() == 0)
                 return;
-            Item selectedItem = ItemManager.getInstance().getItem(selectedID);
-            int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this item?", "Delete Item " + selectedID + " " + selectedItem.name.getValue(), JOptionPane.YES_NO_OPTION);
+            String removeItemIDsMessage = Arrays.toString(removedIDs.stream().map(id -> {
+                Item selectedItem = ItemManager.getInstance().getItem(id);
+                if(selectedItem == null || selectedItem.name == null)
+                    return id.toString();
+                return id + (!selectedItem.name.getValue().equalsIgnoreCase("") ? " " + selectedItem.name.getValue() : "");
+            }).toArray(String[]::new));
+            int result = JOptionPane.showConfirmDialog(null, "Delete Item" + Tools.appendSToString(removedIDs.size()) + " " + removeItemIDsMessage, "Are you sure you want to delete " + (removedIDs.size() > 1 ? "those" : "this") +  " item" + Tools.appendSToString(removedIDs.size()) + "?",  JOptionPane.YES_NO_OPTION);
             if(result != 0)
                 return;
-            FsFile itemDir = new FsFile(Paths.ITEM_PATH, selectedID + Variables.FILE_SEPARATOR, Files.FileType.Local);
-            if(itemDir.exists()) FileUtils.deleteFile(itemDir);
-            removeItemFromUI(selectedID);
+            FileUtils.deleteFile(removedIDs.stream().map(id -> new FsFile(Paths.ITEM_PATH, id + Variables.FILE_SEPARATOR, Files.FileType.Local)).filter(FileHandle::exists).toArray(FsFile[]::new));
+
+            ItemManager.getInstance().removeItems(removedIDs.stream().mapToInt(value -> value).toArray());
+            itemSettingsPanel.clear();
+            itemSelectionPanel.removeSelected();
         }));
     }
 
@@ -87,12 +92,6 @@ public class ItemEditor extends Editor {
         JButton button = new JButton(title);
         button.addActionListener(actionListener);
         return button;
-    }
-
-    private void removeItemFromUI(int id) {
-        ItemManager.getInstance().removeItems(id);
-        itemSelectionPanel.removeSelected();
-        itemSettingsPanel.clear();
     }
 
 }

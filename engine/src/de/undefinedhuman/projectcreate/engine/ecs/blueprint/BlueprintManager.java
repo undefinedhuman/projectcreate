@@ -38,7 +38,7 @@ public class BlueprintManager extends Manager {
 
     public boolean loadBlueprints(int... ids) {
         int[] loadedBlueprintIDs = Arrays.stream(ids)
-                .filter(id -> !hasBlueprint(id) && RessourceUtils.existItem(id))
+                .filter(id -> !hasBlueprint(id) && RessourceUtils.existBlueprint(id))
                 .peek(id -> addBlueprint(id, loadBlueprint(id)))
                 .filter(this::hasBlueprint)
                 .toArray();

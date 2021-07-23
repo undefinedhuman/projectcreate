@@ -1,8 +1,8 @@
 package de.undefinedhuman.projectcreate.editor.editor.entity;
 
 import com.badlogic.gdx.Files;
+import com.badlogic.gdx.files.FileHandle;
 import de.undefinedhuman.projectcreate.core.ecs.name.NameBlueprint;
-import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.editor.Window;
 import de.undefinedhuman.projectcreate.editor.editor.Editor;
 import de.undefinedhuman.projectcreate.editor.editor.entity.ui.EntitySelectionPanel;
@@ -21,6 +21,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 
 public class EntityEditor extends Editor {
 
@@ -55,35 +56,35 @@ public class EntityEditor extends Editor {
     public void createMenuButtonsPanel(JPanel menuButtonPanel) {
         menuButtonPanel.setLayout(new GridLayout(1, 3, 5, 0));
         menuButtonPanel.setMinimumSize(new Dimension(100, Window.MENU_HEIGHT));
-        menuButtonPanel.add(createUtilityButton("Save", e -> {
-            int selectedID = entitySelectionPanel.getSelectedID();
-            if(selectedID == -1)
-                return;
-            Utils.saveBlueprint(selectedID);
-        }));
+        menuButtonPanel.add(createUtilityButton("Save", e -> entitySelectionPanel.getSelectedItems().forEach(Utils::saveBlueprint)));
         menuButtonPanel.add(createUtilityButton("Reset", e -> {
-            int selectedID = entitySelectionPanel.getSelectedID();
-            if(selectedID == -1)
+            List<Integer> selectedIDs = entitySelectionPanel.getSelectedItems();
+            if(selectedIDs.size() == 0)
                 return;
-            BlueprintManager.getInstance().removeBlueprints(selectedID);
             entitySettingsPanel.clear();
-            BlueprintManager.getInstance().loadBlueprints(selectedID);
-            entitySelectionPanel.select(selectedID);
-
+            entitySelectionPanel.getSelectedItems().forEach(id -> {
+                BlueprintManager.getInstance().removeBlueprints(id);
+                BlueprintManager.getInstance().loadBlueprints(id);
+            });
+            entitySelectionPanel.select(entitySelectionPanel.getSelectedIndex());
         }));
         menuButtonPanel.add(createUtilityButton("Delete", e -> {
-            int selectedID = entitySelectionPanel.getSelectedID();
-            if(selectedID == -1)
+            List<Integer> removedIDs = entitySelectionPanel.getSelectedItems();
+            if(removedIDs.size() == 0)
                 return;
-            Blueprint selectedBlueprint = BlueprintManager.getInstance().getBlueprint(selectedID);
-            NameBlueprint nameBlueprint = (NameBlueprint) selectedBlueprint.getComponentBlueprint(NameBlueprint.class);
-            int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this blueprint?", "Delete Blueprint " + selectedID + " " + (nameBlueprint != null ? nameBlueprint.name.getValue() : ""), JOptionPane.YES_NO_OPTION);
+            String removeBlueprintIDsMessage = Arrays.toString(removedIDs.stream().map(id -> {
+                Blueprint selectedBlueprint = BlueprintManager.getInstance().getBlueprint(id);
+                NameBlueprint nameBlueprint = (NameBlueprint) selectedBlueprint.getComponentBlueprint(NameBlueprint.class);
+                return id + (nameBlueprint != null ? " " + nameBlueprint.name.getValue() : "");
+            }).toArray(String[]::new));
+            int result = JOptionPane.showConfirmDialog(null, "Delete Blueprint" + Tools.appendSToString(removedIDs.size()) + " " + removeBlueprintIDsMessage, "Are you sure you want to delete " + (removedIDs.size() > 1 ? "those" : "this") +  " blueprint" + Tools.appendSToString(removedIDs.size()) + "?", JOptionPane.YES_NO_OPTION);
             if(result != 0)
                 return;
-            FsFile blueprintDir = new FsFile(Paths.ENTITY_PATH, selectedID + Variables.FILE_SEPARATOR, Files.FileType.Local);
-            if(blueprintDir.exists())
-                FileUtils.deleteFile(blueprintDir);
-            removeItemFromUI(selectedID);
+            FileUtils.deleteFile(removedIDs.stream().map(id -> new FsFile(Paths.ENTITY_PATH, id + Variables.FILE_SEPARATOR, Files.FileType.Local)).filter(FileHandle::exists).toArray(FsFile[]::new));
+
+            BlueprintManager.getInstance().removeBlueprints(removedIDs.stream().mapToInt(value -> value).toArray());
+            entitySettingsPanel.clear();
+            entitySelectionPanel.removeSelected();
         }));
     }
 
@@ -93,9 +94,4 @@ public class EntityEditor extends Editor {
         return button;
     }
 
-    private void removeItemFromUI(int id) {
-        ItemManager.getInstance().removeItems(id);
-        entitySelectionPanel.removeSelected();
-        entitySettingsPanel.clear();
-    }
 }

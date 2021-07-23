@@ -9,7 +9,9 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -22,6 +24,10 @@ public abstract class SelectionPanel<T> extends JPanel {
     private Function<Key<String, T[]>, T[]>[] filters;
 
     public SelectionPanel(String title, Function<Key<String, T[]>, T[]>... filters) {
+        this(title, 0.5f, filters);
+    }
+
+    public SelectionPanel(String title, float creationPanelHeight, Function<Key<String, T[]>, T[]>... filters) {
         super(null);
         this.filters = filters;
         setLayout(new RelativeLayout(RelativeLayout.Y_AXIS, 0).setFill(true));
@@ -29,8 +35,8 @@ public abstract class SelectionPanel<T> extends JPanel {
         add(filter = createFilter(), 0.35f);
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setViewportView(itemList = createList(currentData = getListData()));
-        add(scrollPane, 8.65f);
-        add(createCreationPanel(), 0.5f);
+        add(scrollPane, 9.15f - creationPanelHeight);
+        add(createCreationPanel(), creationPanelHeight);
     }
 
     public void init() {
@@ -78,7 +84,7 @@ public abstract class SelectionPanel<T> extends JPanel {
         for(T date : data)
             listModel.addElement(date);
         JList<T> list = new JList<>(listModel);
-        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         list.addComponentListener(new ResizeListener(0, 5, () -> {
             if(list.getComponentCount() <= 0)
                 return "";
@@ -125,19 +131,24 @@ public abstract class SelectionPanel<T> extends JPanel {
         updateList(filter != null ? filter.getText() : "", currentData);
     }
 
-    public T getSelectedID() {
-        if(itemList.getSelectedValue() == null)
-            return null;
-        return itemList.getSelectedValue();
+    public int getSelectedIndex() {
+        return itemList.getSelectedIndex();
     }
 
-    public void removeSelected() {
-        int selectedIndex = itemList.getSelectedIndex();
-        if(selectedIndex == -1)
-            return;
-        listModel.remove(selectedIndex);
-        itemList.setSelectedIndex(selectedIndex >= listModel.size() ? 0 : selectedIndex);
-        select(itemList.getSelectedValue());
+    public List<T> getSelectedItems() {
+        return Arrays.stream(itemList.getSelectedIndices()).mapToObj(value -> listModel.getElementAt(value)).collect(Collectors.toList());
+    }
+
+    public List<T> removeSelected() {
+        int[] selectedIndices = itemList.getSelectedIndices();
+        List<T> removedElements = new ArrayList<>();
+        for(int i = selectedIndices.length-1; i >=0; i--)
+            removedElements.add(listModel.remove(selectedIndices[i]));
+        if(selectedIndices.length != 0) {
+            itemList.setSelectedIndex(selectedIndices[selectedIndices.length-1] >= listModel.size() ? 0 : selectedIndices[selectedIndices.length-1]);
+            select(itemList.getSelectedValue());
+        }
+        return removedElements;
     }
 
     public abstract JPanel createCreationPanel();

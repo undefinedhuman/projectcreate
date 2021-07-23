@@ -17,13 +17,14 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 public abstract class ComponentSelection extends SelectionPanel<ComponentBlueprint> {
 
     private JComboBox<String> componentSelection;
 
     public ComponentSelection() {
-        super("Components");
+        super("Components", 2f);
     }
 
     @Override
@@ -48,11 +49,11 @@ public abstract class ComponentSelection extends SelectionPanel<ComponentBluepri
 
     public void remove() {
         Blueprint blueprint = BlueprintManager.getInstance().getBlueprint(getSelectedBlueprintID());
-        ComponentBlueprint selectedComponent = getSelectedID();
-        if(blueprint == null || selectedComponent == null)
+        if(blueprint == null)
             return;
-        blueprint.removeComponentBlueprint(selectedComponent.getClass());
-        removeSelected();
+        List<ComponentBlueprint> removedComponents = removeSelected();
+        for(ComponentBlueprint removedComponent : removedComponents)
+            blueprint.removeComponentBlueprint(removedComponent.getClass());
     }
 
     @Override
