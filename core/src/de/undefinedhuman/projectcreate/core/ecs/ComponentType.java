@@ -43,7 +43,7 @@ public class ComponentType {
 
     public static void registerComponentType(Class<? extends ComponentBlueprint>... blueprintClasses) {
         for(Class<? extends ComponentBlueprint> blueprintClass : blueprintClasses)
-            COMPONENT_BLUEPRINT_CLASSES.put(blueprintClass.getSimpleName().split("Blueprint")[0].toUpperCase(), blueprintClass);
+            COMPONENT_BLUEPRINT_CLASSES.put(getComponentBlueprintName(blueprintClass), blueprintClass);
     }
 
     public static String[] getComponentTypes() {
@@ -52,6 +52,10 @@ public class ComponentType {
 
     public static Class<? extends ComponentBlueprint> getComponentClass(String name) {
         return COMPONENT_BLUEPRINT_CLASSES.getOrDefault(name, null);
+    }
+
+    public static String getComponentBlueprintName(Class<? extends ComponentBlueprint> componentBlueprintClass) {
+        return componentBlueprintClass.getSimpleName().split("Blueprint")[0].toUpperCase();
     }
 
 }

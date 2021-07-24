@@ -4,7 +4,6 @@ import com.badlogic.gdx.Files;
 import com.badlogic.gdx.files.FileHandle;
 import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
-import de.undefinedhuman.projectcreate.editor.Window;
 import de.undefinedhuman.projectcreate.editor.editor.Editor;
 import de.undefinedhuman.projectcreate.editor.editor.item.ui.ItemSelectionPanel;
 import de.undefinedhuman.projectcreate.editor.editor.item.ui.ItemSettingsPanel;
@@ -39,7 +38,7 @@ public class ItemEditor extends Editor {
         add(itemSelectionPanel = new ItemSelectionPanel() {
             @Override
             public void select(Integer id) {
-                itemSettingsPanel.updateItem(ItemManager.getInstance().getItem(id));
+                itemSettingsPanel.updateItem(id);
             }
         }, 0.15f);
 
@@ -53,9 +52,9 @@ public class ItemEditor extends Editor {
 
     @Override
     public void createMenuButtonsPanel(JPanel menuButtonPanel) {
-        menuButtonPanel.setLayout(new GridLayout(1, 3, 5, 0));
-        menuButtonPanel.setMinimumSize(new Dimension(100, Window.MENU_HEIGHT));
-        menuButtonPanel.add(createUtilityButton("Save", e -> itemSelectionPanel.getSelectedItems().forEach(Utils::saveItem)));
+        menuButtonPanel.setLayout(new GridLayout(1, 4, 5, 0));
+        menuButtonPanel.add(createUtilityButton("Save", e -> Utils.saveItem(itemSelectionPanel.getSelectedItems().stream().mapToInt(id -> id).toArray())));
+        menuButtonPanel.add(createUtilityButton("Save All", e -> Utils.saveItem(ItemManager.getInstance().getItems().keySet().stream().mapToInt(id -> id).toArray())));
         menuButtonPanel.add(createUtilityButton("Reset", e -> {
             List<Integer> selectedIDs = itemSelectionPanel.getSelectedItems();
             if(selectedIDs.size() == 0)

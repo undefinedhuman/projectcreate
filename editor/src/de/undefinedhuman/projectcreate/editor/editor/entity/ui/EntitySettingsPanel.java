@@ -28,9 +28,9 @@ public class EntitySettingsPanel extends JPanel {
                 clear();
                 Utils.addSettingsGroupToAccordion(componentBlueprint, componentSettings);
             }
-        }, 0.25f);
+        }, 0.2f);
         add(componentSettings = new Accordion(Variables.BACKGROUND_COLOR), 0.5f);
-        add(Box.createGlue(), 0.25f);
+        add(Box.createGlue(), 0.3f);
     }
 
     public void updateBlueprintID(int id) {
@@ -39,6 +39,7 @@ public class EntitySettingsPanel extends JPanel {
         this.blueprintID = id;
         clear();
         componentSelection.updateData();
+        componentSelection.init();
     }
 
     public void clear() {

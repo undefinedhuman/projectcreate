@@ -34,5 +34,4 @@ public abstract class ComponentBlueprint {
     public void delete() {
         settings.delete();
     }
-
 }

@@ -43,11 +43,11 @@ public abstract class ItemSelectionPanel extends SelectionPanel<Integer> {
     }
 
     @Override
-    public JPanel createCreationPanel() {
+    public void createMenuPanels(JPanel parentPanel) {
         JPanel panel = new JPanel(new RelativeLayout(RelativeLayout.X_AXIS).setFill(true).setFillGap(10));
         panel.add(itemSelection = createItemTypeSelection(), 0.65f);
         panel.add(createNewButton(), 0.35f);
-        return panel;
+        parentPanel.add(panel, 0.5f);
     }
 
     private JComboBox<ItemType> createItemTypeSelection() {

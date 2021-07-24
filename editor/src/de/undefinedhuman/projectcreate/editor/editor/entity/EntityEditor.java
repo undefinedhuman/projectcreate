@@ -3,7 +3,6 @@ package de.undefinedhuman.projectcreate.editor.editor.entity;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.files.FileHandle;
 import de.undefinedhuman.projectcreate.core.ecs.name.NameBlueprint;
-import de.undefinedhuman.projectcreate.editor.Window;
 import de.undefinedhuman.projectcreate.editor.editor.Editor;
 import de.undefinedhuman.projectcreate.editor.editor.entity.ui.EntitySelectionPanel;
 import de.undefinedhuman.projectcreate.editor.editor.entity.ui.EntitySettingsPanel;
@@ -55,8 +54,8 @@ public class EntityEditor extends Editor {
     @Override
     public void createMenuButtonsPanel(JPanel menuButtonPanel) {
         menuButtonPanel.setLayout(new GridLayout(1, 3, 5, 0));
-        menuButtonPanel.setMinimumSize(new Dimension(100, Window.MENU_HEIGHT));
-        menuButtonPanel.add(createUtilityButton("Save", e -> entitySelectionPanel.getSelectedItems().forEach(Utils::saveBlueprint)));
+        menuButtonPanel.add(createUtilityButton("Save", e -> Utils.saveBlueprints(entitySelectionPanel.getSelectedItems().stream().mapToInt(id -> id).toArray())));
+        menuButtonPanel.add(createUtilityButton("Save All", e -> Utils.saveBlueprints(BlueprintManager.getInstance().getBlueprintIDs().stream().mapToInt(id -> id).toArray())));
         menuButtonPanel.add(createUtilityButton("Reset", e -> {
             List<Integer> selectedIDs = entitySelectionPanel.getSelectedItems();
             if(selectedIDs.size() == 0)

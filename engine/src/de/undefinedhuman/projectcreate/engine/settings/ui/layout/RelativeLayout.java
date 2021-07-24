@@ -161,8 +161,9 @@ public class RelativeLayout implements LayoutManager2, java.io.Serializable {
      *
      * @param        gap the gap between components
      */
-    public void setGap(int gap) {
+    public RelativeLayout setGap(int gap) {
         this.gap = Math.max(gap, 0);
+        return this;
     }
 
     /**

@@ -12,31 +12,33 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public abstract class SelectionPanel<T> extends JPanel {
 
-    private T[] currentData;
+    protected T[] currentData;
     private DefaultListModel<T> listModel;
-    private JList<T> itemList;
+    protected JList<T> itemList;
     private JTextField filter;
     private Function<Key<String, T[]>, T[]>[] filters;
 
     public SelectionPanel(String title, Function<Key<String, T[]>, T[]>... filters) {
-        this(title, 0.5f, filters);
+        this(title, 8.65f, filters);
     }
 
-    public SelectionPanel(String title, float creationPanelHeight, Function<Key<String, T[]>, T[]>... filters) {
+    public SelectionPanel(String title, float itemListHeight, Function<Key<String, T[]>, T[]>... filters) {
         super(null);
         this.filters = filters;
         setLayout(new RelativeLayout(RelativeLayout.Y_AXIS, 0).setFill(true));
         add(createTitleLabel(title), 0.5f);
         add(filter = createFilter(), 0.35f);
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setViewportView(itemList = createList(currentData = getListData()));
-        add(scrollPane, 9.15f - creationPanelHeight);
-        add(createCreationPanel(), creationPanelHeight);
+        scrollPane.setViewportView(itemList = createList(currentData = getListData(), this::select, this::getTitle));
+        listModel = (DefaultListModel<T>) itemList.getModel();
+        add(scrollPane, itemListHeight);
+        createMenuPanels(this);
     }
 
     public void init() {
@@ -79,8 +81,8 @@ public abstract class SelectionPanel<T> extends JPanel {
         return filter;
     }
 
-    private JList<T> createList(T[] data) {
-        listModel = new DefaultListModel<>();
+    protected static <T> JList<T> createList(T[] data, Consumer<T> select, Function<T, String> title) {
+        DefaultListModel<T> listModel = new DefaultListModel<>();
         for(T date : data)
             listModel.addElement(date);
         JList<T> list = new JList<>(listModel);
@@ -94,15 +96,14 @@ public abstract class SelectionPanel<T> extends JPanel {
             T selectedID = list.getSelectedValue();
             if(selectedID == null)
                 return;
-            select(selectedID);
+            select.accept(selectedID);
         });
         list.setCellRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                T id = (T) value;
-                if(c instanceof JLabel)
-                    ((JLabel) c).setText(getTitle(id));
+                if(c instanceof JLabel && value != null)
+                    ((JLabel) c).setText(title.apply((T) value));
                 c.setBackground(index % 2 == 0 ? c.getBackground() : c.getBackground().darker());
                 return c;
             }
@@ -142,16 +143,16 @@ public abstract class SelectionPanel<T> extends JPanel {
     public List<T> removeSelected() {
         int[] selectedIndices = itemList.getSelectedIndices();
         List<T> removedElements = new ArrayList<>();
-        for(int i = selectedIndices.length-1; i >=0; i--)
+        for(int i = selectedIndices.length-1; i >= 0; i--)
             removedElements.add(listModel.remove(selectedIndices[i]));
         if(selectedIndices.length != 0) {
-            itemList.setSelectedIndex(selectedIndices[selectedIndices.length-1] >= listModel.size() ? 0 : selectedIndices[selectedIndices.length-1]);
+            itemList.setSelectedIndex(selectedIndices[selectedIndices.length-1] >= listModel.size() ? 0 : selectedIndices[selectedIndices.length-1]-1);
             select(itemList.getSelectedValue());
         }
         return removedElements;
     }
 
-    public abstract JPanel createCreationPanel();
+    public abstract void createMenuPanels(JPanel parentPanel);
 
     public abstract void add();
 

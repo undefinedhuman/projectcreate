@@ -33,14 +33,14 @@ public abstract class EntitySelectionPanel extends SelectionPanel<Integer> {
         int newID = Utils.findSmallestMissing(ids, 0, ids.length-1);
         Blueprint blueprint = new Blueprint();
         BlueprintManager.getInstance().addBlueprint(newID, blueprint);
-        Utils.saveBlueprint(newID);
+        Utils.saveBlueprints(newID);
     }
 
     @Override
-    public JPanel createCreationPanel() {
+    public void createMenuPanels(JPanel parentPanel) {
         JPanel panel = new JPanel(new RelativeLayout(RelativeLayout.X_AXIS).setFill(true).setFillGap(10));
         panel.add(createNewButton(), 1f);
-        return panel;
+        parentPanel.add(panel, 0.5f);
     }
 
     private JButton createNewButton() {
