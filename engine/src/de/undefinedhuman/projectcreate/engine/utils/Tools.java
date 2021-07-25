@@ -15,6 +15,7 @@ import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectAdapter;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector4;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
@@ -63,20 +64,9 @@ public class Tools {
         return Arrays.stream(messages).map(Object::toString).collect(Collectors.joining(", "));
     }
 
-    public static void removeSettings(JComponent... panels) {
-        for(JComponent panel : panels) {
-            panel.removeAll();
-            updatePanel(panel);
-        }
-    }
-
-    public static void updatePanel(JComponent panel) {
-        panel.revalidate();
-        panel.repaint();
-    }
-
     public static JTextField createTextField(String value, Consumer<String> keyReleaseEvent) {
         JTextField textField = new JTextField(value);
+        textField.setFont(textField.getFont().deriveFont(16f).deriveFont(Font.BOLD));
         textField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
@@ -95,7 +85,7 @@ public class Tools {
         sprite.setColor(color);
         sprite.setOrigin(0, 0);
         sprite.setPosition(point1.x, point1.y);
-        sprite.setRotation(vec.angle() - 90);
+        sprite.setRotation(vec.angleDeg() - 90);
         sprite.draw(batch);
     }
 

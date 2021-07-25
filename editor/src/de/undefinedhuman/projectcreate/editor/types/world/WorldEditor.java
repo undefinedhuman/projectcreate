@@ -1,6 +1,6 @@
-package de.undefinedhuman.projectcreate.editor.editor.world;
+package de.undefinedhuman.projectcreate.editor.types.world;
 
-import de.undefinedhuman.projectcreate.editor.editor.Editor;
+import de.undefinedhuman.projectcreate.editor.types.Editor;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
@@ -64,7 +64,6 @@ public class WorldEditor extends Editor {
     private void updatePreview() {
         if (previewGenerator != null && previewGenerator.isAlive()) {
             previewGenerator.interrupt();
-            previewGenerator.stop();
         }
         previewGenerator = new Thread(preview);
         previewGenerator.start();

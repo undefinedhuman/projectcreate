@@ -23,6 +23,8 @@ public abstract class Setting<T> {
         setMenuTitle(key);
     }
 
+    public void init() {}
+
     protected void setMenuTitle(String menuTitle) {
         this.menuTitle = menuTitle;
     }

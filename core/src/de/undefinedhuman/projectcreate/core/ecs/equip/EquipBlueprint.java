@@ -22,7 +22,7 @@ public class EquipBlueprint extends ComponentBlueprint {
             itemOffsets = new TextureOffsetSetting("Item Offsets", new Vector2[0], true);
 
     public EquipBlueprint() {
-        settings.addSettings(itemLayer, armLayer, hitboxLayer, invisibleLayers, itemOffsets, itemPositions);
+        addSettings(itemLayer, armLayer, hitboxLayer, invisibleLayers, itemOffsets, itemPositions);
 
     }
 

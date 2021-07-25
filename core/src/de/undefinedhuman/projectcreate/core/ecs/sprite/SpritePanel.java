@@ -9,8 +9,8 @@ import java.io.File;
 
 public class SpritePanel extends BatchPanel<SpriteLayer> {
 
-    public SpritePanel(String name, SpriteLayer panelObject) {
-        super(name, panelObject);
+    public SpritePanel(String name) {
+        super(name, SpriteLayer.class);
     }
 
     @Override
@@ -26,7 +26,7 @@ public class SpritePanel extends BatchPanel<SpriteLayer> {
         int renderLevel = 0;
         for (JsonValue layer : metaData.get("layers")) {
             String name = layer.getString("name");
-            if (panelObjects.containsKey(name))
+            if (value.containsKey(name))
                 continue;
             SpriteLayer spriteLayer = createNewInstance();
             spriteLayer.texture.setTexture(new FileHandle(file).parent().path() + "/layers/" + name + ".png", Files.FileType.Absolute);

@@ -3,7 +3,7 @@ package de.undefinedhuman.projectcreate.core.ecs.animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.settings.panels.PanelObject;
-import de.undefinedhuman.projectcreate.engine.settings.types.SelectionSetting;
+import de.undefinedhuman.projectcreate.engine.settings.types.selection.SelectionSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.Vector2Setting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.FloatSetting;
 
@@ -17,7 +17,7 @@ public class Animation extends PanelObject {
             playMode = new SelectionSetting<>("Play Mode", PlayMode.values(), value -> PlayMode.valueOf(String.valueOf(value)), Enum::name);
 
     public Animation() {
-        settings.addSettings(bounds, frameTime, playMode);
+        addSettings(bounds, frameTime, playMode);
     }
 
     public int getSize() {

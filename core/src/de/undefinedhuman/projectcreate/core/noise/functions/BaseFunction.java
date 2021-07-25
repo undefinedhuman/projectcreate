@@ -21,7 +21,7 @@ public abstract class BaseFunction extends PanelObject {
 
         remove.addActionListener(e -> removeFunction.accept(panel));
 
-        for(Setting<?> setting : settings.getSettings())
+        for(Setting<?> setting : settings)
             width += setting.getTotalHeight();
 
         JPanel contentPanel = new JPanel(null);

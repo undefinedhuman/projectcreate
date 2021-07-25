@@ -1,4 +1,4 @@
-package de.undefinedhuman.projectcreate.editor.editor.ui;
+package de.undefinedhuman.projectcreate.editor.types.ui;
 
 import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
 import de.undefinedhuman.projectcreate.engine.settings.ui.listener.ResizeListener;
@@ -98,6 +98,7 @@ public abstract class SelectionPanel<T> extends JPanel {
                 return;
             select.accept(selectedID);
         });
+        list.setFont(list.getFont().deriveFont(16f).deriveFont(Font.BOLD));
         list.setCellRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {

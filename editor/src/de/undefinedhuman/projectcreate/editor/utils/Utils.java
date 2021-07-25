@@ -1,4 +1,4 @@
-package de.undefinedhuman.projectcreate.editor.editor.utils;
+package de.undefinedhuman.projectcreate.editor.utils;
 
 import com.badlogic.gdx.Files;
 import de.undefinedhuman.projectcreate.core.items.Item;
@@ -13,12 +13,12 @@ import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsGroup;
+import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import java.util.Arrays;
-import java.util.Locale;
 
 public class Utils {
 
@@ -59,27 +59,26 @@ public class Utils {
             Log.error("Error while saving blueprint" + Tools.appendSToString(ids.length - savedBlueprints.length) + ": " + Arrays.toString(Arrays.stream(ids).filter(id -> Arrays.stream(savedBlueprints).noneMatch(value -> value == id)).toArray()));
     }
 
-    public static void addSettingsGroupToAccordion(SettingsGroup settingsGroup, Accordion accordion) {
-        Accordion settingsAccordion = new Accordion(Variables.BACKGROUND_COLOR.darker()) {
+    public static void addSettingsListToAccordion(SettingsGroup settingsGroup, Accordion accordion) {
+        addSettingsListToAccordion(settingsGroup.getTitle(), settingsGroup, accordion);
+    }
+
+    public static void addSettingsListToAccordion(String title, SettingsList settingsList, Accordion accordion) {
+        Accordion settingsAccordion = new Accordion(Variables.BACKGROUND_COLOR, false) {
             @Override
             public void update() {
                 super.update();
                 accordion.update();
             }
         };
-        for(Setting<?> setting : settingsGroup.getSettings())
+        for(Setting<?> setting : settingsList.getSettings())
             setting.createSettingUI(settingsAccordion);
-        accordion.addCollapsiblePanel(settingsGroup.getTitle(), settingsAccordion);
+        accordion.addCollapsiblePanel(title, settingsAccordion);
     }
 
-    public static void addSettingsGroupToAccordion(ComponentBlueprint componentBlueprint, Accordion accordion) {
-        for(Setting<?> setting : componentBlueprint.getSettings())
-            setting.createSettingUI(accordion);
-    }
-
-    public static String getComponentBlueprintName(ComponentBlueprint componentBlueprint) {
-        String name = componentBlueprint.getClass().getSimpleName().split("Blueprint")[0];
-        return name.substring(0, 1).toUpperCase(Locale.ROOT) + name.substring(1).toLowerCase();
+    public static void addComponentBlueprintsToAccordion(Accordion accordion, ComponentBlueprint... componentBlueprints) {
+        for(ComponentBlueprint componentBlueprint : componentBlueprints)
+            addSettingsListToAccordion(componentBlueprint.toString(), componentBlueprint, accordion);
     }
 
     public static int findSmallestMissing(Integer[] A, int left, int right) {

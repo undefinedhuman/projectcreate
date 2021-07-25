@@ -78,7 +78,7 @@ public class TextureSetting extends Setting<String> {
                 setTexture(textureFile.getPath(), Files.FileType.Internal);
             }
         });
-        accordion.addCollapsiblePanel(key, textureLabel);
+        accordion.addContentPanel(key, textureLabel);
     }
 
     @Override

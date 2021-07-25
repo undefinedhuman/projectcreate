@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import de.undefinedhuman.projectcreate.core.crafting.RecipeType;
 import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsGroup;
-import de.undefinedhuman.projectcreate.engine.settings.types.SelectionSetting;
+import de.undefinedhuman.projectcreate.engine.settings.types.selection.SelectionSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.BooleanSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.IntSetting;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;

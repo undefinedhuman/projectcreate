@@ -8,30 +8,45 @@ import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 
-import java.util.List;
+import java.util.Locale;
 
-public abstract class ComponentBlueprint {
+public abstract class ComponentBlueprint extends SettingsList implements Comparable<ComponentBlueprint> {
 
-    protected SettingsList settings = new SettingsList();
+    protected ComponentPriority priority = ComponentPriority.LOWEST;
 
     public abstract Component createInstance();
 
     public void load(FileHandle parentDir, SettingsObject settingsObject) {
-        for(Setting<?> setting : this.settings.getSettings())
+        for(Setting<?> setting : this.settings)
             setting.load(parentDir, settingsObject);
     }
 
     public void save(FileWriter writer) {
         writer.writeString("{:" + getClass().getName()).nextLine();
-        Tools.saveSettings(writer, settings);
+        Tools.saveSettings(writer, this);
         writer.writeString("}").nextLine();
     }
 
-    public List<Setting<?>> getSettings() {
-        return settings.getSettings();
+    public ComponentPriority getPriority() {
+        return priority;
     }
 
-    public void delete() {
-        settings.delete();
+    @Override
+    public int compareTo(ComponentBlueprint o) {
+        int priority = getPriority().compareTo(o.getPriority());
+        if(priority == 0)
+            priority = toString().toLowerCase().compareTo(o.toString().toLowerCase());
+        return priority;
     }
+
+    @Override
+    public String toString() {
+        return getName(getClass());
+    }
+
+    public static String getName(Class<? extends ComponentBlueprint> componentBlueprint) {
+        String name = componentBlueprint.getSimpleName().split("Blueprint")[0];
+        return name.substring(0, 1).toUpperCase(Locale.ROOT) + name.substring(1).toLowerCase();
+    }
+
 }

@@ -1,10 +1,12 @@
-package de.undefinedhuman.projectcreate.engine.settings.types;
+package de.undefinedhuman.projectcreate.engine.settings.types.selection;
 
 import de.undefinedhuman.projectcreate.engine.settings.interfaces.Parser;
 import de.undefinedhuman.projectcreate.engine.settings.interfaces.Serializer;
+import de.undefinedhuman.projectcreate.engine.settings.types.BaseSetting;
 import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class SelectionSetting<T> extends BaseSetting<T> {
 
@@ -27,6 +29,7 @@ public class SelectionSetting<T> extends BaseSetting<T> {
     @Override
     public void createSettingUI(Accordion accordion) {
         selection = new JComboBox<>(values);
+        selection.setFont(selection.getFont().deriveFont(16f).deriveFont(Font.BOLD));
         if(hasValue(serializer.serialize(getValue())))
             selection.setSelectedItem(getValue());
         selection.addActionListener(e -> {

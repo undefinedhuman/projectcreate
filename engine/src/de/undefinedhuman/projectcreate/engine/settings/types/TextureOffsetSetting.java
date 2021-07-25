@@ -4,6 +4,7 @@ import com.badlogic.gdx.Files;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
+import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
@@ -32,10 +33,9 @@ public class TextureOffsetSetting extends Vector2ArraySetting {
 
     @Override
     public void createSettingUI(Accordion accordion) {
-        int width = 400;
-        JPanel panel = new JPanel(null);
+        JPanel panel = new JPanel(new RelativeLayout(RelativeLayout.X_AXIS).setFill(true));
         textureLabel = new JLabel(new ImageIcon(texture));
-        textureLabel.setSize(25, 25);
+        textureLabel.setPreferredSize(new Dimension(25, 25));
         textureLabel.addMouseListener(new MouseAdapter() {
 
             @Override
@@ -57,12 +57,12 @@ public class TextureOffsetSetting extends Vector2ArraySetting {
             }
 
         });
-        panel.add(textureLabel);
+        panel.add(textureLabel, 0.1f);
         valueField = Tools.createTextField(
                 Tools.convertArrayToString(getValue()),
                 s -> {});
         valueField.setEditable(false);
-        panel.add(valueField);
+        panel.add(valueField, 0.9f);
         accordion.addCollapsiblePanel(key, panel);
     }
 

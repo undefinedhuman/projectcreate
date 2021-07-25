@@ -3,7 +3,7 @@ package de.undefinedhuman.projectcreate.core.noise.functions.fractal;
 import de.undefinedhuman.projectcreate.core.noise.functions.BaseFunction;
 import de.undefinedhuman.projectcreate.core.noise.functions.NoiseType;
 import de.undefinedhuman.projectcreate.core.noise.generator.NoiseGenerator;
-import de.undefinedhuman.projectcreate.engine.settings.types.SelectionSetting;
+import de.undefinedhuman.projectcreate.engine.settings.types.selection.SelectionSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.slider.SliderSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.slider.SliderSettingDirector;
 
@@ -59,7 +59,7 @@ public class FractalFunction extends BaseFunction {
 
     public FractalFunction() {
         super("Fractal");
-        settings.addSettings(noiseType, fractalType, frequency, octaves, lacunarity, gain, amplitudeFactor);
+        addSettings(noiseType, fractalType, frequency, octaves, lacunarity, gain, amplitudeFactor);
     }
 
     @Override

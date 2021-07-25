@@ -17,7 +17,7 @@ public class RightarmBlueprint extends ComponentBlueprint {
             shoulderPosition = new Vector2Setting("Shoulder Position", new Vector2());
 
     public RightarmBlueprint() {
-        settings.addSettings(textureName, selectedTexture, turnedOffset, origin, shoulderPosition);
+        addSettings(textureName, selectedTexture, turnedOffset, origin, shoulderPosition);
     }
 
     @Override

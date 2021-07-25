@@ -10,7 +10,7 @@ public class GradientFunction extends BaseFunction {
 
     public GradientFunction() {
         super("Gradient");
-        settings.addSettings(height);
+        addSettings(height);
     }
 
     @Override

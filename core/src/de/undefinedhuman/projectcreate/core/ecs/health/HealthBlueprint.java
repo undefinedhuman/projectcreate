@@ -3,6 +3,7 @@ package de.undefinedhuman.projectcreate.core.ecs.health;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.ecs.component.ComponentBlueprint;
+import de.undefinedhuman.projectcreate.engine.ecs.component.ComponentPriority;
 import de.undefinedhuman.projectcreate.engine.settings.types.Vector2Setting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.IntSetting;
 
@@ -15,7 +16,8 @@ public class HealthBlueprint extends ComponentBlueprint {
             profileImageOffset = new Vector2Setting("Profile Offset", new Vector2());
 
     public HealthBlueprint() {
-        settings.addSettings(maxHealth, profileImageOffset);
+        addSettings(maxHealth, profileImageOffset);
+        priority = ComponentPriority.MEDIUM;
     }
 
     @Override

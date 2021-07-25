@@ -27,6 +27,8 @@ public class SettingsUtils {
 
     public static void repaint(JComponent... components) {
         for(JComponent component : components) {
+            if(component == null)
+                continue;
             component.revalidate();
             component.repaint();
         }

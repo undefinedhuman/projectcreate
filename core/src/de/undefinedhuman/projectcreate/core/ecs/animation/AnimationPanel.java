@@ -9,8 +9,8 @@ import java.io.File;
 
 public class AnimationPanel extends BatchPanel<Animation> {
 
-    public AnimationPanel(String name, Animation panelObject) {
-        super(name, panelObject);
+    public AnimationPanel(String name) {
+        super(name, Animation.class);
     }
 
     @Override
@@ -25,7 +25,7 @@ public class AnimationPanel extends BatchPanel<Animation> {
 
         for (JsonValue frameTag : metaData.get("frameTags")) {
             String name = frameTag.getString("name");
-            if (panelObjects.containsKey(name))
+            if (value.containsKey(name))
                 continue;
             Animation animation = createNewInstance();
             animation.bounds.setValue(new Vector2(frameTag.getInt("from"), frameTag.getInt("to")));

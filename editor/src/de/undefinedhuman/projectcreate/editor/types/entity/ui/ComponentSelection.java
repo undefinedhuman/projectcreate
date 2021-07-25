@@ -1,8 +1,7 @@
-package de.undefinedhuman.projectcreate.editor.editor.entity.ui;
+package de.undefinedhuman.projectcreate.editor.types.entity.ui;
 
 import de.undefinedhuman.projectcreate.core.ecs.ComponentType;
-import de.undefinedhuman.projectcreate.editor.editor.ui.SelectionPanel;
-import de.undefinedhuman.projectcreate.editor.editor.utils.Utils;
+import de.undefinedhuman.projectcreate.editor.types.ui.SelectionPanel;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.Blueprint;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.ecs.component.ComponentBlueprint;
@@ -14,7 +13,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -99,7 +97,7 @@ public abstract class ComponentSelection extends SelectionPanel<ComponentBluepri
         Blueprint blueprint = BlueprintManager.getInstance().getBlueprint(getSelectedBlueprintID());
         if(blueprint == null)
             return new ComponentBlueprint[0];
-        return blueprint.getComponentBlueprints().values().stream().sorted(Comparator.comparing(Utils::getComponentBlueprintName)).toArray(ComponentBlueprint[]::new);
+        return blueprint.getComponentBlueprints().values().stream().sorted().toArray(ComponentBlueprint[]::new);
     }
 
     @Override
@@ -107,14 +105,14 @@ public abstract class ComponentSelection extends SelectionPanel<ComponentBluepri
         super.updateData();
         int selectedIndex = componentSelection.getSelectedIndex();
         componentListModel.removeAllElements();
-        List<String> currentComponents = Arrays.stream(currentData).map(componentBlueprint -> ComponentType.getComponentBlueprintName(componentBlueprint.getClass())).collect(Collectors.toList());
-        Arrays.stream(ComponentType.getComponentTypes()).filter(name -> !currentComponents.contains(name)).forEach(componentListModel::addElement);
+        List<String> currentComponents = Arrays.stream(currentData).map(ComponentBlueprint::toString).collect(Collectors.toList());
+        Arrays.stream(ComponentType.getComponentTypes()).filter(name -> !currentComponents.contains(name)).sorted().forEach(componentListModel::addElement);
         componentSelection.setSelectedIndex(selectedIndex >= componentListModel.size() ? 0 : selectedIndex);
     }
 
     @Override
     public String getTitle(ComponentBlueprint componentBlueprint) {
-        return componentBlueprint.getClass().getSimpleName().split("Blueprint")[0];
+        return componentBlueprint.toString();
     }
 
     public abstract int getSelectedBlueprintID();

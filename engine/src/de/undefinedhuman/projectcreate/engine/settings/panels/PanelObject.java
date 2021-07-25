@@ -7,28 +7,20 @@ import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 
-import java.util.List;
+public class PanelObject extends SettingsList implements Comparable<PanelObject> {
 
-public class PanelObject {
-
-    public String key;
-
-    protected SettingsList settings = new SettingsList();
+    private String key;
 
     public void save(FileWriter writer) {
-        writer.writeString("{:" + getKey()).nextLine();
-        Tools.saveSettings(writer, settings);
+        writer.writeString("{:" + key).nextLine();
+        Tools.saveSettings(writer, this);
         writer.writeString("}").nextLine();
     }
 
     public PanelObject load(FileHandle parentDir, SettingsObject settingsObject) {
-        for(Setting<?> setting : settings.getSettings())
+        for(Setting<?> setting : settings)
             setting.load(parentDir, settingsObject);
         return this;
-    }
-
-    public List<Setting<?>> getSettings() {
-        return settings.getSettings();
     }
 
     public PanelObject setKey(String key) {
@@ -40,8 +32,8 @@ public class PanelObject {
         return key;
     }
 
-    public void delete() {
-        settings.delete();
+    @Override
+    public int compareTo(PanelObject o) {
+        return getKey().compareTo(o.getKey());
     }
-
 }

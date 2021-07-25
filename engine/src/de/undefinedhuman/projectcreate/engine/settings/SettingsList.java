@@ -6,7 +6,7 @@ import java.util.List;
 
 public class SettingsList {
 
-    private ArrayList<Setting<?>> settings = new ArrayList<>();
+    protected ArrayList<Setting<?>> settings = new ArrayList<>();
 
     public void addSettings(Setting<?>... settings) {
         this.settings.addAll(Arrays.asList(settings));
@@ -20,6 +20,10 @@ public class SettingsList {
 
     public List<Setting<?>> getSettings() {
         return settings;
+    }
+
+    public boolean isEmpty() {
+        return settings.size() == 0;
     }
 
 }

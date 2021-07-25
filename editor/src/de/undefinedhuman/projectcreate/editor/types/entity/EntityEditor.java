@@ -1,12 +1,12 @@
-package de.undefinedhuman.projectcreate.editor.editor.entity;
+package de.undefinedhuman.projectcreate.editor.types.entity;
 
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.files.FileHandle;
 import de.undefinedhuman.projectcreate.core.ecs.name.NameBlueprint;
-import de.undefinedhuman.projectcreate.editor.editor.Editor;
-import de.undefinedhuman.projectcreate.editor.editor.entity.ui.EntitySelectionPanel;
-import de.undefinedhuman.projectcreate.editor.editor.entity.ui.EntitySettingsPanel;
-import de.undefinedhuman.projectcreate.editor.editor.utils.Utils;
+import de.undefinedhuman.projectcreate.editor.types.Editor;
+import de.undefinedhuman.projectcreate.editor.types.entity.ui.EntitySelectionPanel;
+import de.undefinedhuman.projectcreate.editor.types.entity.ui.EntitySettingsPanel;
+import de.undefinedhuman.projectcreate.editor.utils.Utils;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.Blueprint;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.file.FileUtils;

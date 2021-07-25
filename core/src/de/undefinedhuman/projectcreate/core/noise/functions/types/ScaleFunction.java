@@ -11,7 +11,7 @@ public class ScaleFunction extends BaseFunction {
 
     public ScaleFunction() {
         super("Scale Function");
-        settings.addSettings(scaleSetting, offsetSetting);
+        addSettings(scaleSetting, offsetSetting);
     }
 
     @Override

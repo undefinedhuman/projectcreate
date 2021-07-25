@@ -12,7 +12,7 @@ public class ShoulderBlueprint extends ComponentBlueprint {
             shoulderOffsets = new TextureOffsetSetting("Shoulder Offsets", new Vector2[0], true);
 
     public ShoulderBlueprint() {
-        settings.addSettings(shoulderPositions, shoulderOffsets);
+        addSettings(shoulderPositions, shoulderOffsets);
     }
 
     @Override

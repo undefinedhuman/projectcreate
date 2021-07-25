@@ -3,6 +3,7 @@ package de.undefinedhuman.projectcreate.core.ecs.interaction;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.Input;
 import de.undefinedhuman.projectcreate.engine.ecs.component.ComponentBlueprint;
+import de.undefinedhuman.projectcreate.engine.ecs.component.ComponentPriority;
 import de.undefinedhuman.projectcreate.engine.settings.types.TextFieldSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.IntSetting;
 
@@ -15,7 +16,8 @@ public class InteractionBlueprint extends ComponentBlueprint {
             inputKey = new TextFieldSetting<>("Input Key", Input.Keys.F, Input.Keys::valueOf, Input.Keys::toString);
 
     public InteractionBlueprint() {
-        settings.addSettings(range, inputKey);
+        addSettings(range, inputKey);
+        priority = ComponentPriority.MEDIUM;
     }
 
     @Override

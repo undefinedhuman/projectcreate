@@ -6,7 +6,7 @@ import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsGroup;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.panels.SelectionPanel;
-import de.undefinedhuman.projectcreate.engine.settings.types.SelectionSetting;
+import de.undefinedhuman.projectcreate.engine.settings.types.selection.SelectionSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.TextureSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.BooleanSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.IntSetting;
@@ -35,7 +35,7 @@ public class Item implements ItemUsage {
     public SelectionSetting<Rarity>
             rarity = new SelectionSetting<>("Rarity", Rarity.values(), value -> Rarity.valueOf(String.valueOf(value)), Enum::name);
 
-    public SelectionPanel<RecipeItem> recipeItems = new SelectionPanel<>("Recipe Item", new RecipeItem());
+    public SelectionPanel<RecipeItem> recipeItems = new SelectionPanel<>("Recipe Item", RecipeItem.class);
 
     public ItemType type;
     public RecipeType recipeType;

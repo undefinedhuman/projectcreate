@@ -8,10 +8,14 @@ import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.resources.RessourceUtils;
+import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectAdapter;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
 
 import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -20,12 +24,12 @@ public class SelectionPanel<T extends PanelObject> extends Panel<T> {
 
     private JComboBox<String> selection;
 
-    public SelectionPanel(String name, T panelObject) {
-        super(name, panelObject);
+    public SelectionPanel(String name, Class<T> panelObjectClass) {
+        super(name, panelObjectClass);
     }
 
     @Override
-    protected void createPanelObjectNameComponent(JPanel panel, int width) {
+    protected void createPanelObjectNameComponent(JPanel panel) {
         FileHandle[] itemDirs = RessourceUtils.loadDir(Paths.ITEM_PATH).list();
         ArrayList<String> ids = new ArrayList<>();
 
@@ -40,7 +44,20 @@ public class SelectionPanel<T extends PanelObject> extends Panel<T> {
         Arrays.sort(idArray, Comparator.comparing(c -> Integer.valueOf(c.split("-")[0])));
 
         selection = new JComboBox<>(idArray);
-        selection.setBounds(0, 0, width, Panel.INPUT_HEIGHT);
+        selection.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+
+            }
+
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {}
+
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {}
+        });
+        selection.setFont(selection.getFont().deriveFont(16f).deriveFont(Font.BOLD));
+        selection.setPreferredSize(new Dimension(0, Panel.INPUT_HEIGHT));
         panel.add(selection);
     }
 
@@ -54,10 +71,10 @@ public class SelectionPanel<T extends PanelObject> extends Panel<T> {
     }
 
     @Override
-    public void selectObject(T object, JPanel objectPanel, int containerWidth) {
+    public void selectObject(T object, Accordion panel) {
         selection.setSelectedItem(object.getKey());
-        Tools.removeSettings(objectPanel);
-        // Tools.createSettingsPanel(0, containerWidth, object.getSettings().stream());
+        for(Setting<?> setting : object.getSettings())
+            setting.createSettingUI(panel);
     }
 
 }

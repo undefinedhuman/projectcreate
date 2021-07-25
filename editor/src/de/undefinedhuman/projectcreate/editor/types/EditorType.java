@@ -1,7 +1,7 @@
-package de.undefinedhuman.projectcreate.editor.editor;
+package de.undefinedhuman.projectcreate.editor.types;
 
-import de.undefinedhuman.projectcreate.editor.editor.entity.EntityEditor;
-import de.undefinedhuman.projectcreate.editor.editor.item.ItemEditor;
+import de.undefinedhuman.projectcreate.editor.types.entity.EntityEditor;
+import de.undefinedhuman.projectcreate.editor.types.item.ItemEditor;
 
 public enum EditorType {
     ENTITY(EntityEditor.class),

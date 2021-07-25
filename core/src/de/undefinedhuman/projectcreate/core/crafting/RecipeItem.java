@@ -9,17 +9,7 @@ public class RecipeItem extends PanelObject {
             quantity = new IntSetting("Item Quantity", 1);
 
     public RecipeItem() {
-        settings.addSettings(quantity);
-    }
-
-    @Override
-    public PanelObject setKey(String key) {
-        return super.setKey(key.split("-")[0]);
-    }
-
-    @Override
-    public String getKey() {
-        return key.split("-")[0];
+        addSettings(quantity);
     }
 
     public int getID() {

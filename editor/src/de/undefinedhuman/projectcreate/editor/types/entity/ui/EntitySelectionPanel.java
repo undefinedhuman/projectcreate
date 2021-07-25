@@ -1,8 +1,8 @@
-package de.undefinedhuman.projectcreate.editor.editor.entity.ui;
+package de.undefinedhuman.projectcreate.editor.types.entity.ui;
 
 import de.undefinedhuman.projectcreate.core.ecs.name.NameBlueprint;
-import de.undefinedhuman.projectcreate.editor.editor.ui.SelectionPanel;
-import de.undefinedhuman.projectcreate.editor.editor.utils.Utils;
+import de.undefinedhuman.projectcreate.editor.types.ui.SelectionPanel;
+import de.undefinedhuman.projectcreate.editor.utils.Utils;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.Blueprint;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
@@ -45,7 +45,6 @@ public abstract class EntitySelectionPanel extends SelectionPanel<Integer> {
 
     private JButton createNewButton() {
         JButton button = new JButton("CREATE");
-        button.setFont(button.getFont().deriveFont(Font.BOLD));
         button.addComponentListener(new ResizeListener(15, 0, button::getText));
         button.setFont(button.getFont().deriveFont(25f).deriveFont(Font.BOLD));
         button.addActionListener(e -> {

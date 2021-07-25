@@ -12,7 +12,7 @@ public class SelectFunction extends BaseFunction {
 
     public SelectFunction() {
         super("SelectFunction");
-        settings.addSettings(low, upper, threshold);
+        addSettings(low, upper, threshold);
     }
 
     @Override

@@ -1,13 +1,13 @@
-package de.undefinedhuman.projectcreate.editor.editor.item;
+package de.undefinedhuman.projectcreate.editor.types.item;
 
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.files.FileHandle;
 import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
-import de.undefinedhuman.projectcreate.editor.editor.Editor;
-import de.undefinedhuman.projectcreate.editor.editor.item.ui.ItemSelectionPanel;
-import de.undefinedhuman.projectcreate.editor.editor.item.ui.ItemSettingsPanel;
-import de.undefinedhuman.projectcreate.editor.editor.utils.Utils;
+import de.undefinedhuman.projectcreate.editor.types.Editor;
+import de.undefinedhuman.projectcreate.editor.types.item.ui.ItemSelectionPanel;
+import de.undefinedhuman.projectcreate.editor.types.item.ui.ItemSettingsPanel;
+import de.undefinedhuman.projectcreate.editor.utils.Utils;
 import de.undefinedhuman.projectcreate.engine.file.FileUtils;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;

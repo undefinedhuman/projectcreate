@@ -9,7 +9,7 @@ public class ConstantFunction extends BaseFunction {
 
     public ConstantFunction() {
         super("Constant");
-        settings.addSettings(value);
+        addSettings(value);
     }
 
     @Override

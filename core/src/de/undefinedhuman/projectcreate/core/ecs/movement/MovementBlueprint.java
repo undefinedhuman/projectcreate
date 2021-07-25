@@ -2,6 +2,7 @@ package de.undefinedhuman.projectcreate.core.ecs.movement;
 
 import com.badlogic.ashley.core.Component;
 import de.undefinedhuman.projectcreate.engine.ecs.component.ComponentBlueprint;
+import de.undefinedhuman.projectcreate.engine.ecs.component.ComponentPriority;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.FloatSetting;
 
 public class MovementBlueprint extends ComponentBlueprint {
@@ -13,7 +14,8 @@ public class MovementBlueprint extends ComponentBlueprint {
             jumpAnimationTransition = new FloatSetting("Jump Transition", 25f);
 
     public MovementBlueprint() {
-        settings.addSettings(speed, jumpSpeed, gravity, jumpAnimationTransition);
+        addSettings(speed, jumpSpeed, gravity, jumpAnimationTransition);
+        priority = ComponentPriority.HIGH;
     }
 
     @Override

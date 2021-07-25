@@ -1,10 +1,10 @@
-package de.undefinedhuman.projectcreate.editor.editor.item.ui;
+package de.undefinedhuman.projectcreate.editor.types.item.ui;
 
 import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.core.items.ItemType;
-import de.undefinedhuman.projectcreate.editor.editor.ui.SelectionPanel;
-import de.undefinedhuman.projectcreate.editor.editor.utils.Utils;
+import de.undefinedhuman.projectcreate.editor.types.ui.SelectionPanel;
+import de.undefinedhuman.projectcreate.editor.utils.Utils;
 import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
 import de.undefinedhuman.projectcreate.engine.settings.ui.listener.ResizeListener;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;

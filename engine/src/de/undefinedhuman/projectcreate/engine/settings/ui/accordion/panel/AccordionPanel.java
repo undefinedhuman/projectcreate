@@ -9,6 +9,4 @@ public abstract class AccordionPanel extends JPanel {
         super(layout);
     }
 
-    public abstract int getTotalHeight();
-
 }

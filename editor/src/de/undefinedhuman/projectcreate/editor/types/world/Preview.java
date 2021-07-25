@@ -1,4 +1,4 @@
-package de.undefinedhuman.projectcreate.editor.editor.world;
+package de.undefinedhuman.projectcreate.editor.types.world;
 
 import de.undefinedhuman.projectcreate.core.noise.functions.NoisePanel;
 import de.undefinedhuman.projectcreate.engine.log.Log;

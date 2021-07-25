@@ -14,7 +14,7 @@ public class SpriteLayer extends PanelObject {
             frameCount = new IntSetting("Frame Count", 1);
 
     public SpriteLayer() {
-        settings.addSettings(texture, renderLevel, frameCount);
+        addSettings(texture, renderLevel, frameCount);
     }
 
 }

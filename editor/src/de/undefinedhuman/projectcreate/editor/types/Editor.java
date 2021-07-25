@@ -1,4 +1,4 @@
-package de.undefinedhuman.projectcreate.editor.editor;
+package de.undefinedhuman.projectcreate.editor.types;
 
 import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
