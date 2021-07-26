@@ -1,15 +1,17 @@
 package de.undefinedhuman.projectcreate.game.equip;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.core.ecs.equip.EquipComponent;
 import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteComponent;
 import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteData;
-import de.undefinedhuman.projectcreate.core.items.Item;
-import de.undefinedhuman.projectcreate.core.items.ItemType;
 import de.undefinedhuman.projectcreate.core.items.Armor.Armor;
+import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
+import de.undefinedhuman.projectcreate.core.items.ItemType;
 import de.undefinedhuman.projectcreate.game.network.ClientManager;
 import de.undefinedhuman.projectcreate.game.network.utils.PacketUtils;
+import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 
 public class EquipManager {
@@ -20,7 +22,7 @@ public class EquipManager {
 
     public void equipItemNetwork(Entity entity, int id, boolean armor) {
         equipItem(entity, id, armor);
-        if (entity.mainPlayer)
+        if (entity == GameManager.instance.player)
             ClientManager.getInstance().sendTCP(PacketUtils.createEquipPacket(entity, armor ? getItemIndex(ItemManager.getInstance().getItem(id).type) : 0, id, true, armor));
     }
 
@@ -54,7 +56,7 @@ public class EquipManager {
 
     public void unEquipItemNetwork(Entity entity, int id, boolean armor) {
         unEquipItem(entity, id, armor);
-        if (entity.mainPlayer)
+        if (entity == GameManager.instance.player)
             ClientManager.getInstance().sendTCP(PacketUtils.createEquipPacket(entity, armor ? getItemIndex(ItemManager.getInstance().getItem(id).type) : 0, id, false, armor));
     }
 

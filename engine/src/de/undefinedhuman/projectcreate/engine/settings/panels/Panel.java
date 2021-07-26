@@ -7,11 +7,11 @@ import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
 import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
 import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
+import de.undefinedhuman.projectcreate.engine.settings.ui.ui.SettingsUI;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.util.HashMap;
 
 public abstract class Panel<T extends PanelObject> extends Setting<HashMap<String, T>> {
@@ -126,7 +126,8 @@ public abstract class Panel<T extends PanelObject> extends Setting<HashMap<Strin
     protected abstract void selectObject(T object, Accordion panel);
 
     protected void createMenuButtons(JPanel panel) {
-        panel.add(createButton("Add",
+        panel.add(SettingsUI.createButton("Add",
+                BUTTON_HEIGHT,
                 e -> {
                     String name = getSelectedObjectName();
                     if(name.equalsIgnoreCase(""))
@@ -134,11 +135,11 @@ public abstract class Panel<T extends PanelObject> extends Setting<HashMap<Strin
                     addPanelObject(name);
                 }
         ), 0.5f);
-        panel.add(createButton("Remove", e -> removePanelObject(getSelectedObjectName())), 0.5f);
+        panel.add(SettingsUI.createButton("Remove", BUTTON_HEIGHT, e -> removePanelObject(getSelectedObjectName())), 0.5f);
     }
 
     protected void createUtilityButtons(JPanel panel, float remainingWidth) {
-        panel.add(createButton("Clear All", e -> removeAllPanelObjects()), remainingWidth);
+        panel.add(SettingsUI.createButton("Clear All", BUTTON_HEIGHT, e -> removeAllPanelObjects()), remainingWidth);
     }
 
     protected void addPanelObject(String name) {
@@ -178,14 +179,6 @@ public abstract class Panel<T extends PanelObject> extends Setting<HashMap<Strin
         try { instance = panelObjectClass.newInstance();
         } catch (InstantiationException | IllegalAccessException ex) { Log.error("Can not create Panel Object instance!", ex); }
         return instance;
-    }
-
-    protected JButton createButton(String text, ActionListener listener) {
-        JButton button = new JButton(text);
-        button.setFont(button.getFont().deriveFont(16f).deriveFont(Font.BOLD));
-        button.setPreferredSize(new Dimension(0, BUTTON_HEIGHT));
-        button.addActionListener(listener);
-        return button;
     }
 
     @Override

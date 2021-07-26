@@ -1,24 +1,13 @@
 package de.undefinedhuman.projectcreate.game.network.utils;
 
-import de.undefinedhuman.projectcreate.game.equip.EquipManager;
+import com.badlogic.ashley.core.Entity;
 import de.undefinedhuman.projectcreate.game.network.packets.entity.ComponentPacket;
 import de.undefinedhuman.projectcreate.game.network.packets.inventory.EquipPacket;
 import de.undefinedhuman.projectcreate.game.network.packets.world.BlockPacket;
-import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.game.world.World;
 import de.undefinedhuman.projectcreate.game.world.WorldManager;
 
 public class PacketUtils {
-
-    public static ComponentPacket createComponentPacket(Entity entity, Class<? extends Component>... types) {
-
-        ComponentPacket packet = new ComponentPacket();
-        packet.worldID = GameManager.instance.player.getWorldID();
-        packet.worldName = World.instance.name;
-        // packet.data = entity.send(types);
-        return packet;
-
-    }
 
     public static BlockPacket createBlockPacket(int x, int y, byte worldLayer, byte blockID) {
 
@@ -53,12 +42,6 @@ public class PacketUtils {
     }
 
     public static void handleEquipComponent(EquipPacket packet) {
-
-        Entity entity = EntityManager.getInstance().getEntity(packet.entityID);
-        if (entity != null) {
-            if (packet.equip) EquipManager.getInstance().equipItem(entity, packet.equipedItemID, packet.armor);
-            else EquipManager.getInstance().unEquipItem(entity, packet.equipedItemID, packet.armor);
-        }
 
     }
 

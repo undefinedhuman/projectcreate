@@ -1,4 +1,4 @@
-package de.undefinedhuman.projectcreate.core.noise.functions;
+package de.undefinedhuman.projectcreate.engine.settings.ui.listener;
 
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
@@ -132,7 +132,7 @@ public class DragAdapter extends MouseAdapter {
         parent.repaint();
     }
 
-    private boolean swapTargetIndex(JComponent parent, Component remove, Component add, Component component, Point point, int index) {
+    protected boolean swapTargetIndex(JComponent parent, Component remove, Component add, Component component, Point point, int index) {
         int tgt = getTargetIndex(component.getBounds(), point, index);
         if(tgt < 0)
             return false;

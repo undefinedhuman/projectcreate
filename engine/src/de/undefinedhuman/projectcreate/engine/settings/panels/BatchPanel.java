@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.JsonReader;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.log.Log;
+import de.undefinedhuman.projectcreate.engine.settings.ui.ui.SettingsUI;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -22,7 +23,7 @@ public abstract class BatchPanel<T extends PanelObject> extends StringPanel<T> {
 
     @Override
     protected void createUtilityButtons(JPanel panel, float remainingWidth) {
-        panel.add(createButton("Load Layers", e -> {
+        panel.add(SettingsUI.createButton("Load Layers", BUTTON_HEIGHT, e -> {
             JFileChooser chooser = new JFileChooser();
             chooser.setCurrentDirectory(new FsFile(Paths.EDITOR_PATH, Files.FileType.Internal).file());
             chooser.setFileFilter(new FileNameExtensionFilter("Sprite Layer Data", "json"));

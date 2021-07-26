@@ -37,7 +37,6 @@ public class Window extends JFrame {
     public JLabel errorMessage;
 
     private float errorTime = 0;
-    private Container container;
     private boolean hasError = false;
 
     private Window() {
@@ -54,6 +53,7 @@ public class Window extends JFrame {
 
         setMinimumSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
 
+        Container container;
         setContentPane(container = new JPanel(new BorderLayout()));
         container.setMinimumSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
         container.setPreferredSize(new Dimension(1980, 1080));
@@ -65,7 +65,9 @@ public class Window extends JFrame {
         editorMenu.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT - MENU_HEIGHT));
         editorMenu.setFont(editorMenu.getFont().deriveFont(Font.BOLD));
         createEditorMenuTabs(editorMenu);
-        editorMenu.addChangeListener(e -> createEditorMenuButtons(editorMenu.getSelectedIndex(), menuButtons));
+        editorMenu.addChangeListener(e -> {
+            createEditorMenuButtons(editorMenu.getSelectedIndex(), menuButtons);
+        });
 
         JPanel menuPanel = new JPanel(new BorderLayout());
         menuPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, MENU_HEIGHT));

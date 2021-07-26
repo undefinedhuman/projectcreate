@@ -1,17 +1,15 @@
 package de.undefinedhuman.projectcreate.editor.types.entity.ui;
 
 import de.undefinedhuman.projectcreate.core.ecs.ComponentType;
-import de.undefinedhuman.projectcreate.editor.types.ui.SelectionPanel;
+import de.undefinedhuman.projectcreate.editor.ui.SelectionPanel;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.Blueprint;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.ecs.component.ComponentBlueprint;
 import de.undefinedhuman.projectcreate.engine.resources.RessourceUtils;
 import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
-import de.undefinedhuman.projectcreate.engine.settings.ui.listener.ResizeListener;
+import de.undefinedhuman.projectcreate.engine.settings.ui.ui.SettingsUI;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -68,26 +66,18 @@ public abstract class ComponentSelection extends SelectionPanel<ComponentBluepri
         componentListModel = (DefaultListModel<String>) componentSelection.getModel();
 
         JPanel buttonPanel = new JPanel(new RelativeLayout(RelativeLayout.Y_AXIS, 5).setFill(true));
-        buttonPanel.add(createButton("REMOVE", e -> {
+        buttonPanel.add(SettingsUI.createButton("REMOVE", 0, e -> {
             remove();
             updateData();
         }), 0.5f);
-        buttonPanel.add(createButton("ADD", e -> {
+        buttonPanel.add(SettingsUI.createButton("ADD", 0, e -> {
             add();
             updateData();
         }), 0.5f);
 
-        parentPanel.add(buttonPanel, 1f);
-        parentPanel.add(scrollPane, 4f);
-    }
-
-    private JButton createButton(String title, ActionListener actionListener) {
-        JButton button = new JButton(title);
-        button.setFont(button.getFont().deriveFont(Font.BOLD));
-        button.addComponentListener(new ResizeListener(10, 0, button::getText));
-        button.setFont(button.getFont().deriveFont(25f).deriveFont(Font.BOLD));
-        button.addActionListener(actionListener);
-        return button;
+        parentPanel.add(buttonPanel, 0.8f);
+        parentPanel.add(scrollPane, 4.2f
+        );
     }
 
     @Override

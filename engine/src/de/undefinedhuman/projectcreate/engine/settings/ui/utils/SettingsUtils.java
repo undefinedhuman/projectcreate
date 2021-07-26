@@ -1,5 +1,7 @@
 package de.undefinedhuman.projectcreate.engine.settings.ui.utils;
 
+import de.undefinedhuman.projectcreate.engine.settings.ui.listener.DragAdapter;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -12,6 +14,13 @@ public class SettingsUtils {
 
     public static JComponent setPreferredSize(int width, int height, JComponent component) {
         component.setPreferredSize(new Dimension(width, height));
+        return component;
+    }
+
+    public static JComponent setDragListener(DragAdapter dragAdapter, JComponent component) {
+        component.addMouseListener(dragAdapter);
+        component.addMouseMotionListener(dragAdapter);
+        component.setAutoscrolls(true);
         return component;
     }
 

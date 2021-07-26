@@ -12,10 +12,7 @@ public abstract class Editor extends JPanel {
         Variables.IS_EDITOR = true;
     }
 
-    public abstract void init();
-
-    public void save() {}
-    public void load() {}
+    public void init() {}
 
     public abstract void createMenuButtonsPanel(JPanel menuButtonPanel);
 

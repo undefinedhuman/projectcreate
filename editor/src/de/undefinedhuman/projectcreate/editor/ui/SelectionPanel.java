@@ -1,4 +1,4 @@
-package de.undefinedhuman.projectcreate.editor.types.ui;
+package de.undefinedhuman.projectcreate.editor.ui;
 
 import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
 import de.undefinedhuman.projectcreate.engine.settings.ui.listener.ResizeListener;
@@ -25,15 +25,15 @@ public abstract class SelectionPanel<T> extends JPanel {
     private Function<Key<String, T[]>, T[]>[] filters;
 
     public SelectionPanel(String title, Function<Key<String, T[]>, T[]>... filters) {
-        this(title, 8.65f, filters);
+        this(title, 8.8f, filters);
     }
 
     public SelectionPanel(String title, float itemListHeight, Function<Key<String, T[]>, T[]>... filters) {
         super(null);
         this.filters = filters;
         setLayout(new RelativeLayout(RelativeLayout.Y_AXIS, 0).setFill(true));
-        add(createTitleLabel(title), 0.5f);
-        add(filter = createFilter(), 0.35f);
+        add(createTitleLabel(title), 0.4f);
+        add(filter = createFilter(), 0.3f);
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setViewportView(itemList = createList(currentData = getListData(), this::select, this::getTitle));
         listModel = (DefaultListModel<T>) itemList.getModel();
@@ -57,6 +57,7 @@ public abstract class SelectionPanel<T> extends JPanel {
 
     private JTextField createFilter() {
         JTextField filter = new JTextField();
+        filter.setFont(filter.getFont().deriveFont(16f).deriveFont(Font.BOLD));
         filter.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {

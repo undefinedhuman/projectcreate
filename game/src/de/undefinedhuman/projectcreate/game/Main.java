@@ -117,7 +117,6 @@ public class Main extends Game {
     }
 
     private void initScreens() {
-        EntityManager.getInstance();
 
         TestScreen.instance = new TestScreen();
         GameScreen.instance = new GameScreen();

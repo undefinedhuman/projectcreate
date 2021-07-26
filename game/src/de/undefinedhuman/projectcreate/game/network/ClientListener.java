@@ -1,9 +1,10 @@
 package de.undefinedhuman.projectcreate.game.network;
 
+import com.badlogic.ashley.core.Entity;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
+import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.game.network.packets.LoginPacket;
 import de.undefinedhuman.projectcreate.game.network.packets.ServerClosedPacket;
 import de.undefinedhuman.projectcreate.game.network.packets.entity.AddEntityPacket;
@@ -47,11 +48,10 @@ public class ClientListener extends Listener {
 
             AddPlayerPacket packet = (AddPlayerPacket) o;
             Entity player = BlueprintManager.getInstance().getBlueprint(0).createInstance();
-            player.mainPlayer = true;
             // player.receive(packet.playerInfo);
-            player.setWorldID(packet.worldID);
+            player.flags = packet.worldID;
             GameManager.instance.player = player;
-            EntityManager.getInstance().addEntity(packet.worldID, player);
+            GameManager.instance.getEngine().addEntity(player);
 
             ClientManager.getInstance().connected = true;
 
@@ -66,14 +66,16 @@ public class ClientListener extends Listener {
                 AddEntityPacket packet = (AddEntityPacket) o;
                 Entity entity = BlueprintManager.getInstance().getBlueprint(packet.blueprintID).createInstance();
                 // entity.receive(packet.entityInfo);
-                entity.setWorldID(packet.worldID);
-                EntityManager.getInstance().addEntity(packet.worldID, entity);
+                entity.flags = packet.worldID;
+                GameManager.instance.getEngine().addEntity(entity);
 
             }
 
             if (o instanceof RemoveEntityPacket) {
                 RemoveEntityPacket packet = (RemoveEntityPacket) o;
-                EntityManager.getInstance().removeEntity(packet.worldID);
+                for(Entity entity : GameManager.instance.getEngine().getEntities())
+                    if(entity.flags == packet.worldID)
+                        GameManager.instance.getEngine().removeEntity(entity);
             }
 
             if (o instanceof ServerClosedPacket) {
@@ -88,7 +90,7 @@ public class ClientListener extends Listener {
 
                 WorldPacket packet = (WorldPacket) o;
                 World.instance = new World(packet.worldName, 50, packet.width, packet.height, 0);
-                EntityManager.getInstance().init();
+                //EntityManager.getInstance().init();
 //                LoadingScreen.instance.worldLoaded = true;
 
             }

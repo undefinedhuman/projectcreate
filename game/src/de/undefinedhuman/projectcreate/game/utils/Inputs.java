@@ -1,5 +1,6 @@
 package de.undefinedhuman.projectcreate.game.utils;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -9,7 +10,6 @@ import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
 import de.undefinedhuman.projectcreate.game.inventory.player.Selector;
 import de.undefinedhuman.projectcreate.game.network.ClientManager;
 import de.undefinedhuman.projectcreate.game.network.packets.player.JumpPacket;
-import de.undefinedhuman.projectcreate.game.network.utils.PacketUtils;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 
 public class Inputs extends Manager implements InputProcessor {
@@ -26,17 +26,17 @@ public class Inputs extends Manager implements InputProcessor {
         switch (keycode) {
 
             case Input.Keys.A:
-                ((MovementComponent) player.getComponent(MovementComponent.class)).move(true, false);
-                ClientManager.getInstance().sendTCP(PacketUtils.createComponentPacket(player, MovementComponent.class));
+                player.getComponent(MovementComponent.class).move(true, false);
+                //ClientManager.getInstance().sendTCP(PacketUtils.createComponentPacket(player, MovementComponent.class));
                 break;
             case Input.Keys.D:
-                ((MovementComponent) player.getComponent(MovementComponent.class)).move(false, true);
-                ClientManager.getInstance().sendTCP(PacketUtils.createComponentPacket(player, MovementComponent.class));
+                player.getComponent(MovementComponent.class).move(false, true);
+                //ClientManager.getInstance().sendTCP(PacketUtils.createComponentPacket(player, MovementComponent.class));
                 break;
             case Input.Keys.SPACE:
-                if (((MovementComponent) player.getComponent(MovementComponent.class)).jump()) {
+                if (player.getComponent(MovementComponent.class).jump()) {
                     JumpPacket packet = new JumpPacket();
-                    packet.id = player.getWorldID();
+                    packet.id = player.flags;
                     ClientManager.getInstance().sendTCP(packet);
                 }
                 break;
@@ -89,13 +89,13 @@ public class Inputs extends Manager implements InputProcessor {
 
             case Input.Keys.A:
                 boolean moveRight = Gdx.input.isKeyPressed(Input.Keys.D);
-                ((MovementComponent) player.getComponent(MovementComponent.class)).move(false, moveRight);
-                ClientManager.getInstance().sendTCP(PacketUtils.createComponentPacket(player, MovementComponent.class));
+                player.getComponent(MovementComponent.class).move(false, moveRight);
+                //ClientManager.getInstance().sendTCP(PacketUtils.createComponentPacket(player, MovementComponent.class));
                 break;
             case Input.Keys.D:
                 boolean moveLeft = Gdx.input.isKeyPressed(Input.Keys.A);
-                ((MovementComponent) player.getComponent(MovementComponent.class)).move(moveLeft, false);
-                ClientManager.getInstance().sendTCP(PacketUtils.createComponentPacket(player, MovementComponent.class));
+                player.getComponent(MovementComponent.class).move(moveLeft, false);
+                //ClientManager.getInstance().sendTCP(PacketUtils.createComponentPacket(player, MovementComponent.class));
                 break;
 
         }

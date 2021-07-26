@@ -5,12 +5,10 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.engine.base.GameObject;
+import de.undefinedhuman.projectcreate.engine.base.Transform;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
 
 public class SpriteData {
-
-    public GameObject entity;
 
     private Sprite sprite;
     private float alpha = 1;
@@ -24,11 +22,6 @@ public class SpriteData {
         this.sprite = new Sprite();
         this.renderLevel = renderLevel;
         setTexture(textureName, frameCount);
-    }
-
-    public void init(GameObject entity, Vector2 size) {
-        this.entity = entity;
-        sprite.setSize(size.x, size.y);
     }
 
     public void setTexture(String textureName) {
@@ -79,10 +72,10 @@ public class SpriteData {
         return renderLevel;
     }
 
-    public void render(SpriteBatch batch, int renderOffset) {
+    public void render(SpriteBatch batch, Transform transform, int renderOffset) {
         if(!isVisible) return;
         sprite.setFlip(!turned, false);
-        sprite.setPosition(entity.getX() + positionOffset.x + renderOffset, entity.getY() + positionOffset.y);
+        sprite.setBounds(transform.getX() + positionOffset.x + renderOffset, transform.getY() + positionOffset.y, transform.getWidth(), transform.getHeight());
         sprite.draw(batch, alpha);
     }
 

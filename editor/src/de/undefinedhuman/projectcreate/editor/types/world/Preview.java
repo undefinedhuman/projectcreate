@@ -1,30 +1,28 @@
 package de.undefinedhuman.projectcreate.editor.types.world;
 
 import de.undefinedhuman.projectcreate.core.noise.functions.NoisePanel;
-import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Preview implements Runnable {
+public class Preview extends JLabel implements Runnable {
 
-    private JLabel previewTextureLabel;
-    private BufferedImage noiseImage;
     private NoisePanel noisePanel;
 
-    public Preview(JLabel previewTextureLabel, NoisePanel noisePanel) {
-        this.previewTextureLabel = previewTextureLabel;
-        this.noiseImage = new BufferedImage(previewTextureLabel.getWidth(), previewTextureLabel.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        previewTextureLabel.setIcon(new ImageIcon(noiseImage));
+    public Preview(NoisePanel noisePanel) {
         this.noisePanel = noisePanel;
     }
 
     @Override
     public void run() {
+        if(getWidth() == 0 || getHeight() == 0)
+            return;
 
-        long currentMillis = System.currentTimeMillis();
+        BufferedImage noiseImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+        if(!Thread.interrupted())
+            setIcon(new ImageIcon(noiseImage));
 
         for(int x = 0; x < noiseImage.getWidth(); x++)
             for(int y = 0; y < noiseImage.getHeight(); y++) {
@@ -32,10 +30,8 @@ public class Preview implements Runnable {
                 noiseImage.setRGB(x, y, new Color((int) (noiseValue * 255), (int) (noiseValue * 255), (int) (noiseValue * 255)).getRGB());
             }
 
-        Log.info(System.currentTimeMillis() - currentMillis);
-
-        previewTextureLabel.revalidate();
-        previewTextureLabel.repaint();
+        revalidate();
+        repaint();
     }
 
 }

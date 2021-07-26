@@ -26,7 +26,10 @@ public class EquipComponent implements Component, NetworkComponent {
     }
 
     public Vector2 getCurrentOffset(int index) {
-        return itemOffsets[index];
+        if(!Tools.isInRange(index, 0, itemOffsets.length-1))
+            return new Vector2();
+        Vector2 vector = itemOffsets[index];
+        return new Vector2(vector);
     }
 
     public String[] getInvisibleSprites() { return invisibleSprites; }

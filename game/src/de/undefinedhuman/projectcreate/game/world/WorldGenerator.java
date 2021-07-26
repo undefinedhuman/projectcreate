@@ -133,8 +133,8 @@ public class WorldGenerator {
     // TODO REFACTOR THE MOST FREQUENT ARRAY ELEMENT TO ALSO CONSIDER THE BLOCK ID AT THE POSITION
 
     private void checkWorldTile(World world, int x, int y) {
-        short[] neighborIDs = new short[4];
-        short air = 0, current = world.getBlock(x, y, World.MAIN_LAYER);
+        int[] neighborIDs = new int[4];
+        int air = 0, current = world.getBlock(x, y, World.MAIN_LAYER);
         for (int i = 0; i < neighborIDs.length; i++) {
             tempPosition.set(x, y).add(neighbors[i]);
             neighborIDs[i] = world.getBlock((int) tempPosition.x, (int) tempPosition.y, World.MAIN_LAYER);

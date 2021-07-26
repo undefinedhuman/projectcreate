@@ -1,5 +1,6 @@
 package de.undefinedhuman.projectcreate.game.projectiles;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -21,7 +22,7 @@ public class Projectile {
         rotation = velocity.angle() - 45;
         texture = TextureManager.getInstance().getTexture("Arrow.png");
 
-        this.ownerWorldID = owner.getWorldID();
+        this.ownerWorldID = 0;
         this.position = new Vector2(position);
         this.position.sub((int) (texture.getRegionWidth() / 2f), (int) (texture.getRegionHeight() / 2f));
 

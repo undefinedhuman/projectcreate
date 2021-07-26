@@ -3,19 +3,10 @@ package de.undefinedhuman.projectcreate.game.network;
 import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Listener;
-import de.undefinedhuman.projectcreate.core.ecs.equip.EquipComponent;
-import de.undefinedhuman.projectcreate.core.ecs.angle.AngleComponent;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
-import de.undefinedhuman.projectcreate.game.camera.CameraManager;
-import de.undefinedhuman.projectcreate.game.inventory.InvItem;
-import de.undefinedhuman.projectcreate.game.inventory.player.Selector;
 import de.undefinedhuman.projectcreate.game.network.packets.PacketManager;
-import de.undefinedhuman.projectcreate.game.network.packets.entity.ComponentPacket;
-import de.undefinedhuman.projectcreate.game.network.utils.PacketUtils;
-import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.game.utils.Timer;
-import de.undefinedhuman.projectcreate.game.utils.Tools;
 
 import java.io.IOException;
 
@@ -42,17 +33,17 @@ public class ClientManager extends Manager {
         });
 
         playerUpdateTimer60 = new Timer(0.015f, true, () -> {
-            Entity player = GameManager.instance.player;
+            /*Entity player = GameManager.instance.player;
             ((AngleComponent) player.getComponent(AngleComponent.class)).mousePos = Tools.getMouseCoordsInWorldSpace(CameraManager.gameCamera);
             ComponentPacket packet = PacketUtils.createComponentPacket(player, AngleComponent.class);
-            ClientManager.getInstance().sendUDP(packet);
+            ClientManager.getInstance().sendUDP(packet);*/
         });
 
         playerUpdateTimer10 = new Timer(0.1f, true, () -> {
-            Entity player = GameManager.instance.player;
+            /*Entity player = GameManager.instance.player;
             InvItem item = Selector.getInstance().getSelectedInvItem();
             ComponentPacket packet = PacketUtils.createComponentPacket(player, EquipComponent.class);
-            ClientManager.getInstance().sendUDP(packet);
+            ClientManager.getInstance().sendUDP(packet);*/
         });
 
     }

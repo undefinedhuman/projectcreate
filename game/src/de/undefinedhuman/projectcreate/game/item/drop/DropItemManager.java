@@ -18,7 +18,7 @@ public class DropItemManager {
 
     }
 
-    public void addDropItem(short itemID, int amount, Vector2 position) {
+    public void addDropItem(int itemID, int amount, Vector2 position) {
         this.dropItems.add(new DropItem(itemID, amount, position));
     }
 

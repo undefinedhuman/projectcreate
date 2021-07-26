@@ -1,5 +1,6 @@
 package de.undefinedhuman.projectcreate.game.screen;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL30;
@@ -7,8 +8,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import de.undefinedhuman.projectcreate.game.Main;
+import de.undefinedhuman.projectcreate.core.ecs.transform.TransformComponent;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
+import de.undefinedhuman.projectcreate.game.Main;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameScreen;
 import de.undefinedhuman.projectcreate.game.world.WorldGenerator;
@@ -32,24 +34,22 @@ public class TestScreen implements Screen {
 
         WorldGenerator.instance = new WorldGenerator();
         WorldGenerator.instance.generateTestWorld("Main", WorldSetting.DEV, BiomeSetting.DEV);
-        EntityManager.getInstance().init();
 
         Entity player = BlueprintManager.getInstance().getBlueprint(0).createInstance();
-        player.mainPlayer = true;
-        player.setPosition(160, 800);
-        player.setWorldID(0);
+        player.getComponent(TransformComponent.class).setPosition(160, 800);
+        player.flags = 0;
         GameManager.instance.player = player;
-        EntityManager.getInstance().addEntity(0, player);
+        GameManager.instance.getEngine().addEntity(player);
 
         Entity furnace = BlueprintManager.getInstance().getBlueprint(1).createInstance();
-        furnace.setPosition(3100, 800);
-        furnace.setWorldID(1);
-        EntityManager.getInstance().addEntity(1, furnace);
+        furnace.getComponent(TransformComponent.class).setPosition(3100, 800);
+        furnace.flags = 1;
+        GameManager.instance.getEngine().addEntity(furnace);
 
         Entity furnace2 = BlueprintManager.getInstance().getBlueprint(1).createInstance();
-        furnace2.setPosition(100, 800);
-        furnace2.setWorldID(2);
-        EntityManager.getInstance().addEntity(2, furnace2);
+        furnace2.getComponent(TransformComponent.class).setPosition(100, 800);
+        furnace2.flags = 2;
+        GameManager.instance.getEngine().addEntity(furnace2);
 
         Main.instance.setScreen(GameScreen.instance);
 

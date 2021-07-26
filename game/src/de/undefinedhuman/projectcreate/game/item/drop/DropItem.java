@@ -1,13 +1,16 @@
 package de.undefinedhuman.projectcreate.game.item.drop;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.projectcreate.core.ecs.Mappers;
+import de.undefinedhuman.projectcreate.core.ecs.transform.TransformComponent;
+import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.game.collision.CollisionManager;
 import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
-import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 import de.undefinedhuman.projectcreate.game.world.World;
 
@@ -52,7 +55,9 @@ public class DropItem {
 
         } else {
 
-            float dist = Math.abs(getCenter().dst(target.getCenterPosition()));
+            TransformComponent transformComponent = Mappers.TRANSFORM.get(target);
+
+            float dist = Math.abs(getCenter().dst(transformComponent.getCenterPosition()));
 
             if (dist < 100) {
 
@@ -64,7 +69,7 @@ public class DropItem {
 
                 } else {
 
-                    difference.set(new Vector2(getCenter()).sub(target.getCenterPosition()));
+                    difference.set(new Vector2(getCenter()).sub(transformComponent.getCenterPosition()));
                     offset.set(difference.x >= 0 ? 60 : -60, difference.y >= 0 ? 60 : -60);
                     velocity.set(velocity.x - (1 / (difference.x + offset.x)) * 300 * 300 * delta, velocity.y - (1 / (difference.y + offset.y)) * 200 * 300 * delta);
                     velocity.scl(1 - delta);
@@ -83,8 +88,8 @@ public class DropItem {
     // TODO Refactor also make target choosing server sided
 
     private Entity getNewTarget() {
-        for (Entity player : EntityManager.getInstance().getEntityByType(EntityType.Player))
-            if (Math.abs(player.getCenterPosition().dst(getCenter())) < 80) return player;
+        /*for (Entity player : EntityManager.getInstance().getEntityByType(EntityType.Player))
+            if (Math.abs(player.getCenterPosition().dst(getCenter())) < 80) return player;*/
         return null;
     }
 

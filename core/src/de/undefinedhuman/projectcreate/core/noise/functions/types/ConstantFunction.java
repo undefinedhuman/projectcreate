@@ -1,11 +1,11 @@
 package de.undefinedhuman.projectcreate.core.noise.functions.types;
 
 import de.undefinedhuman.projectcreate.core.noise.functions.BaseFunction;
-import de.undefinedhuman.projectcreate.engine.settings.types.primitive.IntSetting;
+import de.undefinedhuman.projectcreate.engine.settings.types.primitive.FloatSetting;
 
 public class ConstantFunction extends BaseFunction {
 
-    public IntSetting value = new IntSetting("Value", 0);
+    public FloatSetting value = new FloatSetting("Value", 0f);
 
     public ConstantFunction() {
         super("Constant");

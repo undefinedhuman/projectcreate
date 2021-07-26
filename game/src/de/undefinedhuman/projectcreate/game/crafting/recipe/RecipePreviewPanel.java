@@ -81,7 +81,7 @@ public class RecipePreviewPanel extends Gui {
                 )
                 .addListener((ClickListener) () -> {
                     Item item = ItemManager.getInstance().getItem(currentItemID);
-                    InventoryManager.getInstance().craftItem(currentItemID, item.recipeQuantity.getValue(), item.recipeItems.values());
+                    InventoryManager.getInstance().craftItem(currentItemID, item.recipeQuantity.getValue(), item.recipeItems.getValue().values());
                 })
                 .set(new RelativeConstraint(0.975f), new RelativeConstraint(0.025f), new PixelConstraint(50), new PixelConstraint(Variables.SLOT_SIZE))
                 .setOffsetX(new RelativeOffset(-1f));
@@ -101,7 +101,7 @@ public class RecipePreviewPanel extends Gui {
         ingredients.clear();
         Item currentItem = ItemManager.getInstance().getItem(itemID);
         itemPreview.setTexture(currentItem.previewTexture.getValue());
-        for(RecipeItem item : currentItem.recipeItems.values())
+        for(RecipeItem item : currentItem.recipeItems.getValue().values())
                 ingredients.addContent().update(item);
         name
                 .setText(currentItem.name.getValue())

@@ -5,72 +5,65 @@ import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
-import de.undefinedhuman.projectcreate.engine.settings.panels.PanelObject;
 import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
+import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.panel.AccordionPanel;
+import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
+import de.undefinedhuman.projectcreate.engine.settings.ui.listener.DragAdapter;
+import de.undefinedhuman.projectcreate.engine.settings.ui.ui.SettingsUI;
+import de.undefinedhuman.projectcreate.engine.settings.ui.utils.SettingsUtils;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 
-public abstract class NoisePanel extends Setting<String> {
-
-    private static final int BUTTON_WIDTH = 75;
+public abstract class NoisePanel extends Setting<HashMap<String, Class<? extends BaseFunction>>> {
 
     private JComboBox<String> selection;
-    private Box box;
-    private HashMap<JPanel, BaseFunction> guiPanels = new HashMap<>();
-    private HashMap<String, Class<? extends BaseFunction>> noiseFunctions = new HashMap<>();
+    private Accordion functions;
+    private HashMap<AccordionPanel, BaseFunction> functionPanels = new HashMap<>();
 
-    public NoisePanel(String key, int height, Class<? extends BaseFunction>... functions) {
-        super(key, "");
-        for(Class<? extends BaseFunction> function : functions)
-            noiseFunctions.put(function.getSimpleName(), function);
-        setContentHeight(height);
+    @SafeVarargs
+    public NoisePanel(String key, Class<? extends BaseFunction>... functions) {
+        super(key, new HashMap<>());
+        Arrays.stream(functions).forEach(functionClass -> value.put(functionClass.getSimpleName().split("Function")[0], functionClass));
     }
 
     @Override
     protected void delete() {
-        super.delete();
-        guiPanels.clear();
+        value.clear();
+        functionPanels.clear();
     }
 
     @Override
     public void createSettingUI(Accordion accordion) {
+        JPanel panel = new JPanel(new RelativeLayout(RelativeLayout.Y_AXIS).setFill(true));
 
-        JPanel panel = new JPanel(null);
-
-        JButton addButton = new JButton("Add");
-        addButton.setBounds(400 - BUTTON_WIDTH, 0, BUTTON_WIDTH, Variables.DEFAULT_CONTENT_HEIGHT);
-        addButton.addActionListener(e -> {
-            BaseFunction function = newInstance((String) selection.getSelectedItem());
+        selection = new JComboBox<>(value.keySet().stream().sorted().toArray(String[]::new));
+        selection.setPreferredSize(new Dimension(0, Variables.DEFAULT_CONTENT_HEIGHT));
+        selection.setFont(selection.getFont().deriveFont(16f).deriveFont(Font.BOLD));
+        selection.addActionListener(e -> {
+            BaseFunction function = newInstance(value.get((String) selection.getSelectedItem()));
             if(function == null)
                 return;
-            addPanel(function, 400 - Variables.BORDER_WIDTH*2 - Variables.OFFSET);
-            for(Setting<?> setting : function.getSettings())
-                setting.addValueListener(value -> updateValues());
+            addPanel(function);
         });
-        panel.add(addButton);
-
-        selection = new JComboBox<>(noiseFunctions.keySet().stream().sorted().map(String::valueOf).toArray(value -> new String[noiseFunctions.size()]));
-        selection.setBounds(0, 0, 400 - BUTTON_WIDTH - Variables.OFFSET, Variables.DEFAULT_CONTENT_HEIGHT);
         panel.add(selection);
 
-        box = Box.createVerticalBox();
-        DragAdapter dragAdapter = new DragAdapter();
-        box.addMouseListener(dragAdapter);
-        box.addMouseMotionListener(dragAdapter);
-        box.setAutoscrolls(true);
+        functions = SettingsUI.createAccordion(accordion, "", Variables.BACKGROUND_COLOR.brighter(), false);
+        SettingsUtils.setDragListener(new DragAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent event) {
+                super.mouseReleased(event);
+                updateValues();
+            }
+        }, functions.getContentPanel());
+        panel.add(functions);
 
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.add(box, BorderLayout.NORTH);
-
-        JScrollPane scrollPane = new JScrollPane(mainPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setLocation(0, Variables.DEFAULT_CONTENT_HEIGHT + Variables.OFFSET);
-        scrollPane.setSize(new Dimension(400, getContentHeight() - Variables.DEFAULT_CONTENT_HEIGHT - Variables.OFFSET));
-        scrollPane.getVerticalScrollBar().setUnitIncrement(8);
-        scrollPane.setBorder(null);
-        panel.add(scrollPane);
         accordion.addCollapsiblePanel(key, panel);
     }
 
@@ -79,65 +72,65 @@ public abstract class NoisePanel extends Setting<String> {
         if(!(value instanceof SettingsObject)) return;
         SettingsObject settingsObject = (SettingsObject) value;
         HashMap<String, Object> settings = settingsObject.getSettings();
+        ArrayList<BaseFunction> baseFunctions = new ArrayList<>();
         for(String key : settings.keySet()) {
             Object panelObjectSettings = settings.get(key);
             if(!(panelObjectSettings instanceof SettingsObject))
                 continue;
-            BaseFunction baseFunction = newInstance(key);
+            BaseFunction baseFunction = newInstance(this.value.get(key));
             if(baseFunction == null)
                 return;
-            addPanel(baseFunction, box.getWidth() - Variables.BORDER_WIDTH*2 - Variables.OFFSET);
+            baseFunction.load(parentDir, (SettingsObject) panelObjectSettings);
+            baseFunctions.add(baseFunction);
         }
+        baseFunctions.stream().sorted(Comparator.comparing(o -> o.priority.getValue())).forEach(this::addPanel);
     }
 
     @Override
     public void save(FileWriter writer) {
         writer.writeString("{:" + key).nextLine();
-        for(PanelObject object : this.guiPanels.values())
-            object.save(writer);
+        for(int i = 0; i < functions.getComponentCount(); i++) {
+            BaseFunction function = functionPanels.get((AccordionPanel) functions.getContentPanel().getComponent(i));
+            function.priority.setValue(i);
+            function.save(writer);
+        }
         writer.writeString("}");
     }
 
-    @Override
-    protected void saveValue(FileWriter writer) {}
-
-    @Override
-    protected void updateMenu(String value) {}
-
     public double calculateValue(int x, int y) {
         double value = 0;
-        if(box == null)
+        if(functions == null)
             return 0;
-        for(int i = 0; i < box.getComponentCount(); i++)
-            value = guiPanels.get((JPanel) box.getComponent(i)).calculateValue(x, y, value);
+        for(int i = 0; i < functions.getContentPanel().getComponentCount(); i++)
+            value = functionPanels.get((AccordionPanel) functions.getContentPanel().getComponent(i)).calculateValue(x, y, value);
         return value;
     }
 
-    private void addPanel(BaseFunction function, int width) {
-        addPanel(function.createPanel(width, this::removePanel), function);
+    private void addPanel(BaseFunction function) {
+        for(Setting<?> setting : function.getSettings())
+            setting.addValueListener(value -> updateValues());
+        addPanel(function.createPanel(this::removePanel), function);
+        updateValues();
     }
 
-    private void addPanel(JPanel panel, BaseFunction function) {
-        guiPanels.put(panel, function);
-        box.add(panel);
-        updateBox();
+    private void addPanel(JPanel content, BaseFunction function) {
+        AccordionPanel accordionPanel = functions.addContentPanel(function.getKey(), content);
+        functionPanels.put(accordionPanel, function);
     }
 
-    private void removePanel(JPanel panel) {
-        guiPanels.remove(panel);
-        box.remove(panel);
-        updateBox();
+    private void removePanel(JPanel content) {
+        AccordionPanel accordionPanel = functions.removeContent(content);
+        if(accordionPanel == null)
+            return;
+        functionPanels.remove(accordionPanel);
+        updateValues();
     }
 
-    private void updateBox() {
-        box.revalidate();
-        box.repaint();
-    }
-
-    private BaseFunction newInstance(String name) {
+    private BaseFunction newInstance(Class<? extends BaseFunction> functionClass) {
         BaseFunction function = null;
+        if(functionClass == null) return null;
         try {
-            function = noiseFunctions.get(name).newInstance();
+            function = functionClass.newInstance();
         } catch (InstantiationException | IllegalAccessException ex) {
             Log.error("Error while creating base function instance!", ex);
         }
@@ -145,5 +138,11 @@ public abstract class NoisePanel extends Setting<String> {
     }
 
     public abstract void updateValues();
+
+    @Override
+    protected void saveValue(FileWriter writer) {}
+
+    @Override
+    protected void updateMenu(HashMap<String, Class<? extends BaseFunction>> value) {}
 
 }

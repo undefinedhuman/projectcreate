@@ -1,9 +1,10 @@
 package de.undefinedhuman.projectcreate.game.collision;
 
+import com.badlogic.ashley.core.Entity;
+import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.core.items.blocks.Block;
 import de.undefinedhuman.projectcreate.core.items.blocks.BlockType;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector4;
-import de.undefinedhuman.projectcreate.core.items.ItemManager;
 
 public class CollisionManager {
 
@@ -15,7 +16,7 @@ public class CollisionManager {
     }
 
     // TODO Refactor through
-    public static boolean collide(short id) {
+    public static boolean collide(int id) {
         return ((Block) ItemManager.getInstance().getItem(id)).blockType.getValue() == BlockType.Block;
     }
 

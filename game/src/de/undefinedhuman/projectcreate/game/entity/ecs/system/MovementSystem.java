@@ -1,61 +1,82 @@
 package de.undefinedhuman.projectcreate.game.entity.ecs.system;
 
+import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EntitySystem;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.animation.AnimationComponent;
 import de.undefinedhuman.projectcreate.core.ecs.collision.CollisionComponent;
 import de.undefinedhuman.projectcreate.core.ecs.movement.MovementComponent;
+import de.undefinedhuman.projectcreate.core.ecs.transform.TransformComponent;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
-import de.undefinedhuman.projectcreate.engine.ecs.system.System;
 import de.undefinedhuman.projectcreate.game.screen.CollisionUtils;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 
-public class MovementSystem extends System {
+public class MovementSystem extends EntitySystem {
+
+    private ImmutableArray<Entity> entities;
 
     private Vector2 currentPosition = new Vector2();
 
+     public MovementSystem() {
+         super(5);
+     }
+
     @Override
-    public void update(float delta, Entity entity) {
+    public void addedToEngine (Engine engine) {
+        entities = engine.getEntitiesFor(Family.all(TransformComponent.class, MovementComponent.class, CollisionComponent.class, AnimationComponent.class).get());
+    }
+
+    @Override
+    public void update(float delta) {
+        TransformComponent transformComponent;
         MovementComponent movementComponent;
         CollisionComponent collisionComponent;
         AnimationComponent animationComponent;
 
-        if ((movementComponent = (MovementComponent) entity.getComponent(MovementComponent.class)) == null
-                || (collisionComponent = (CollisionComponent) entity.getComponent(CollisionComponent.class)) == null
-                || (animationComponent = (AnimationComponent) entity.getComponent(AnimationComponent.class)) == null) return;
+        for(Entity entity : entities) {
+            transformComponent = Mappers.TRANSFORM.get(entity);
+            movementComponent = Mappers.MOVEMENT.get(entity);
+            collisionComponent = Mappers.COLLISION.get(entity);
+            animationComponent = Mappers.ANIMATION.get(entity);
 
-        movementComponent.velocity.x += ((movementComponent.getDirection() * movementComponent.getSpeed()) - movementComponent.velocity.x) * 0.1f;
-        if(movementComponent.getDirection() == 0 && Tools.isInRange(movementComponent.velocity.x, -5, 5)) movementComponent.velocity.x = 0;
-        movementComponent.velocity.y -= movementComponent.getGravity() * delta;
+            movementComponent.velocity.x += ((movementComponent.getDirection() * movementComponent.getSpeed()) - movementComponent.velocity.x) * 0.1f;
+            if(movementComponent.getDirection() == 0 && Tools.isInRange(movementComponent.velocity.x, -5, 5)) movementComponent.velocity.x = 0;
+            movementComponent.velocity.y -= movementComponent.getGravity() * delta;
 
-        animationComponent.setAnimationTimeMultiplier(movementComponent.velocity.x != 0 ? Math.abs(movementComponent.velocity.x) / movementComponent.getSpeed() : 1);
+            animationComponent.setAnimationTimeMultiplier(movementComponent.velocity.x != 0 ? Math.abs(movementComponent.velocity.x) / movementComponent.getSpeed() : 1);
 
-        currentPosition.set(entity.getPosition());
+            currentPosition.set(transformComponent.getPosition());
 
-        float velX = Tools.clamp(movementComponent.velocity.x * delta, -Variables.COLLISION_SIZE, Variables.COLLISION_SIZE);
-        float velY = Tools.clamp(movementComponent.velocity.y * delta, -Variables.COLLISION_SIZE, Variables.COLLISION_SIZE);
+            float velX = Tools.clamp(movementComponent.velocity.x * delta, -Variables.COLLISION_SIZE, Variables.COLLISION_SIZE);
+            float velY = Tools.clamp(movementComponent.velocity.y * delta, -Variables.COLLISION_SIZE, Variables.COLLISION_SIZE);
 
-        collisionComponent.update(currentPosition.add(velX, 0));
-        Vector3 response = CollisionUtils.calculateCollisionX(collisionComponent);
-        currentPosition.add(response.x, response.y);
+            collisionComponent.update(currentPosition.add(velX, 0));
+            Vector3 response = CollisionUtils.calculateCollisionX(collisionComponent);
+            currentPosition.add(response.x, response.y);
 
-        collisionComponent.update(currentPosition.add(0, velY));
-        response = CollisionUtils.calculateCollisionY(collisionComponent);
-        if(!response.isZero()) {
-            if(velY < 0 && collisionComponent.onSlope && movementComponent.canJump && movementComponent.velocity.x != 0 && (velX>0) == (response.x>0)) movementComponent.velocity.y = Math.max(Math.min(movementComponent.velocity.y, -50), -500f);
-            else movementComponent.velocity.y = 0;
-            if(response.y > 0) movementComponent.canJump = true;
+            collisionComponent.update(currentPosition.add(0, velY));
+            response = CollisionUtils.calculateCollisionY(collisionComponent);
+            if(!response.isZero()) {
+                if(velY < 0 && collisionComponent.onSlope && movementComponent.canJump && movementComponent.velocity.x != 0 && (velX>0) == (response.x>0)) movementComponent.velocity.y = Math.max(Math.min(movementComponent.velocity.y, -50), -500f);
+                else movementComponent.velocity.y = 0;
+                if(response.y > 0) movementComponent.canJump = true;
+            }
+            currentPosition.add(0, response.y);
+
+            collisionComponent.update(currentPosition);
+            currentPosition.add(0, CollisionUtils.calculateSlopeCollisionY(collisionComponent).y);
+            collisionComponent.update(currentPosition);
+            currentPosition.add(CollisionUtils.calculateSlopeCollisionX(collisionComponent).x, 0);
+
+            transformComponent.setPosition(currentPosition);
+
+            animate(animationComponent, movementComponent);
         }
-        currentPosition.add(0, response.y);
-
-        collisionComponent.update(currentPosition);
-        currentPosition.add(0, CollisionUtils.calculateSlopeCollisionY(collisionComponent).y);
-        collisionComponent.update(currentPosition);
-        currentPosition.add(CollisionUtils.calculateSlopeCollisionX(collisionComponent).x, 0);
-
-        entity.setPosition(currentPosition);
-
-        animate(animationComponent, movementComponent);
     }
 
     private void animate(AnimationComponent animationComponent, MovementComponent movementComponent) {

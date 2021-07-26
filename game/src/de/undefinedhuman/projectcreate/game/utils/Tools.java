@@ -1,5 +1,6 @@
 package de.undefinedhuman.projectcreate.game.utils;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.*;
@@ -21,6 +22,7 @@ import de.undefinedhuman.projectcreate.game.gui.Gui;
 import de.undefinedhuman.projectcreate.game.gui.texture.GuiTemplate;
 import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.projectcreate.game.inventory.player.Selector;
+import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.game.world.World;
 import de.undefinedhuman.projectcreate.game.world.layer.LayerTransition;
 
@@ -249,9 +251,9 @@ public class Tools extends de.undefinedhuman.projectcreate.engine.utils.Tools {
         return true;
     }
 
-    public static short getMostFrequentArrayElement(short[] array) {
+    public static int getMostFrequentArrayElement(int[] array) {
         Arrays.sort(array);
-        short maxID = array[0], currentID = array[0], maxAmount = 1, currentAmount = 1;
+        int maxID = array[0], currentID = array[0], maxAmount = 1, currentAmount = 1;
         for (int i = 1; i < array.length; i++) {
             if (currentID == array[i]) currentAmount++;
             else {
@@ -289,8 +291,8 @@ public class Tools extends de.undefinedhuman.projectcreate.engine.utils.Tools {
 
     public static boolean isItemSelected(Entity entity) {
         EquipComponent equipComponent;
-        if ((equipComponent = (EquipComponent) entity.getComponent(EquipComponent.class)) != null || entity.mainPlayer)
-            return (entity.mainPlayer ? Selector.getInstance().getSelectedInvItem() != null : equipComponent.itemIDs[0] != -1);
+        if ((equipComponent = (EquipComponent) entity.getComponent(EquipComponent.class)) != null || entity == GameManager.instance.player)
+            return (entity == GameManager.instance.player ? Selector.getInstance().getSelectedInvItem() != null : equipComponent.itemIDs[0] != -1);
         return false;
     }
 

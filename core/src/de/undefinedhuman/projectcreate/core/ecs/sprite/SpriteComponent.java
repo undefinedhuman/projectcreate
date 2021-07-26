@@ -2,6 +2,7 @@ package de.undefinedhuman.projectcreate.core.ecs.sprite;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import de.undefinedhuman.projectcreate.engine.base.Transform;
 
 import java.util.*;
 
@@ -41,11 +42,17 @@ public class SpriteComponent implements Component {
         return spriteData.get(key);
     }
 
-    public void render(SpriteBatch batch, int renderOffset) {
+    public void render(SpriteBatch batch, Transform transform, int renderOffset) {
         for(int renderLevel : orderedSpriteData.keySet()) {
             ArrayList<SpriteData> spriteData = orderedSpriteData.get(renderLevel);
-            for(SpriteData data : spriteData) data.render(batch, renderOffset);
+            for(SpriteData data : spriteData)
+                data.render(batch, transform, renderOffset);
         }
+    }
+
+    public void setFrameIndex(int animationIndex) {
+        for(SpriteData data : spriteData.values())
+            data.setFrameIndex(animationIndex);
     }
 
     /*@Override

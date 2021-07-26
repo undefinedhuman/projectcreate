@@ -1,16 +1,15 @@
 package de.undefinedhuman.projectcreate.game.world;
 
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.projectcreate.core.ecs.transform.TransformComponent;
+import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.core.items.blocks.Block;
 import de.undefinedhuman.projectcreate.core.items.blocks.PlacementLayer;
 import de.undefinedhuman.projectcreate.core.items.tools.Pickaxe;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
-import de.undefinedhuman.projectcreate.engine.utils.math.Vector4;
 import de.undefinedhuman.projectcreate.game.camera.CameraManager;
-import de.undefinedhuman.projectcreate.game.collision.CollisionManager;
 import de.undefinedhuman.projectcreate.game.inventory.player.Selector;
-import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.game.item.drop.DropItemManager;
 import de.undefinedhuman.projectcreate.game.network.ClientManager;
 import de.undefinedhuman.projectcreate.game.network.utils.PacketUtils;
@@ -69,16 +68,16 @@ public class WorldManager {
         Block block = (Block) ItemManager.getInstance().getItem(id);
         Vector2i blockPos = Tools.convertToBlockPos(Tools.getWorldPos(CameraManager.gameCamera, Mouse.getMouseCoords()));
 
-        if(id == 0 || !isInRange(blockPos, Tools.convertToBlockPos(GameManager.instance.player.getCenterPosition()), Variables.BLOCK_PLACEMENT_RANGE)) return;
+        if(id == 0 || !isInRange(blockPos, Tools.convertToBlockPos(GameManager.instance.player.getComponent(TransformComponent.class).getCenterPosition()), Variables.BLOCK_PLACEMENT_RANGE)) return;
         if(worldLayer == World.MAIN_LAYER) placeBlockInMainLayer(blockPos.x, blockPos.y, block);
         if(worldLayer == World.BACK_LAYER) placeBlockInBackLayer(blockPos.x, blockPos.y, block);
     }
 
     private void placeBlockInMainLayer(int x, int y, Block block) {
         if(World.instance.getBlock(x, y, World.MAIN_LAYER) != 0) return;
-        for (Entity entity : EntityManager.getInstance().getEntitiesWithCollision(new Vector4(x, y, x + Variables.BLOCK_SIZE, y + Variables.BLOCK_SIZE))) {
+        /*for (Entity entity : EntityManager.getInstance().getEntitiesWithCollision(new Vector4(x, y, x + Variables.BLOCK_SIZE, y + Variables.BLOCK_SIZE))) {
             if (!CollisionManager.blockCanBePlaced(entity, x, y)) return;
-        }
+        }*/
         if(World.instance.getBlock(x, y, World.BACK_LAYER) != 0 || (!block.needBack.getValue() && isBlockInRange(x, y, World.MAIN_LAYER))) placeBlock(x, y, World.MAIN_LAYER, block.id.getValue(), true);
     }
 
@@ -89,12 +88,12 @@ public class WorldManager {
         placeBlock(x, y, World.BACK_LAYER, block.id.getValue(), true);
     }
 
-    public void placeBlock(int x, int y, byte worldLayer, byte blockID, boolean send) {
+    public void placeBlock(int x, int y, byte worldLayer, int blockID, boolean send) {
         World.instance.setBlock(x, y, worldLayer, blockID);
         checkCells(x, y, worldLayer);
         canPlace = false;
         if(!send) return;
-        ClientManager.getInstance().sendTCP(PacketUtils.createBlockPacket(x, y, worldLayer, blockID));
+        //ClientManager.getInstance().sendTCP(PacketUtils.createBlockPacket(x, y, worldLayer, blockID));
         Selector.getInstance().getSelectedInvItem().removeItem();
     }
 
@@ -103,7 +102,7 @@ public class WorldManager {
         if (!canDestroy) return;
 
         Pickaxe pickaxe = (Pickaxe) Selector.getInstance().getSelectedItem();
-        Vector2i blockPos = Tools.convertToBlockPos(Tools.getWorldPos(CameraManager.gameCamera, Mouse.getMouseCoords())), playerCenter = Tools.convertToBlockPos(new Vector2().add(GameManager.instance.player.getPosition()).add(GameManager.instance.player.getCenter()));
+        Vector2i blockPos = Tools.convertToBlockPos(Tools.getWorldPos(CameraManager.gameCamera, Mouse.getMouseCoords())), playerCenter = Tools.convertToBlockPos(new Vector2().add(GameManager.instance.player.getComponent(TransformComponent.class).getPosition()).add(GameManager.instance.player.getComponent(TransformComponent.class).getCenter()));
         Block currentBlock = (Block) ItemManager.getInstance().getItem(World.instance.getBlock(blockPos.x, blockPos.y, World.MAIN_LAYER));
 
         if (currentBlock.id.getValue() == 0 || !isInRange(blockPos, playerCenter, pickaxe.range.getValue()) || currentBlock.durability.getValue() == -1)
@@ -188,7 +187,7 @@ public class WorldManager {
         return (block != null && block.id.getValue() != 0 && block.hasCollision.getValue()) ? value : 0;
     }
 
-    public boolean isTransparent(short blockID) {
+    public boolean isTransparent(int blockID) {
         return blockID == 0 || !((Block) ItemManager.getInstance().getItem(blockID)).isFull.getValue();
     }
 

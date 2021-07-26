@@ -3,12 +3,14 @@ package de.undefinedhuman.projectcreate.engine.settings.types.slider;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.settings.types.BaseSetting;
 import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
+import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 import de.undefinedhuman.projectcreate.engine.validation.ValidationRule;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
@@ -17,7 +19,7 @@ public class SliderSetting extends BaseSetting<Float> {
 
     private final float sliderWidth;
     private final boolean isLabelVisible;
-    private final Vector2i bounds = new Vector2i();
+    private final Vector2i range = new Vector2i();
     private final int tickSpeed;
     private final float scale;
     private final int numberOfDecimals;
@@ -25,15 +27,15 @@ public class SliderSetting extends BaseSetting<Float> {
     private JSlider slider;
     private JLabel progressLabel;
 
-    private SliderSetting(String key, float sliderWidth, boolean isLabelVisible, Vector2i bounds, int defaultValue, int tickSpeed, float scale, int numberOfDecimals) {
+    private SliderSetting(String key, float sliderWidth, boolean isLabelVisible, Vector2i range, int defaultValue, int tickSpeed, float scale, int numberOfDecimals) {
         super(key, defaultValue / scale, Float::parseFloat, Object::toString);
         this.sliderWidth = sliderWidth;
         this.isLabelVisible = isLabelVisible;
-        this.bounds.set(bounds);
+        this.range.set(range);
         this.tickSpeed = tickSpeed;
         this.scale = scale;
         this.numberOfDecimals = numberOfDecimals;
-        setMenuTitle(key + ": Range [" + bounds.x / scale + ", " + bounds.y / scale + "]");
+        setMenuTitle(key + ": Range [" + range.x / scale + ", " + range.y / scale + "]");
     }
 
     @Override
@@ -43,13 +45,13 @@ public class SliderSetting extends BaseSetting<Float> {
 
     @Override
     public void createSettingUI(Accordion accordion) {
-        JPanel panel = new JPanel(null);
-        slider = createSliderUI(400, getContentHeight(), sliderWidth, bounds, getValue(), scale, tickSpeed, e -> setValue(convertToPreciseFloatingPointValue(slider.getValue(), scale, numberOfDecimals)));
-        panel.add(slider);
+        JPanel panel = new JPanel(new RelativeLayout(RelativeLayout.X_AXIS).setFill(true));
+        slider = createSliderUI(getContentHeight(), range, getValue(), scale, tickSpeed, e -> setValue(convertToPreciseFloatingPointValue(slider.getValue(), scale, numberOfDecimals)));
+        panel.add(slider, sliderWidth);
         if(isLabelVisible) {
-            progressLabel = createSliderLabelUI(400, getContentHeight(), sliderWidth);
+            progressLabel = createSliderLabelUI(getContentHeight());
             addValueListener(value -> progressLabel.setText(String.valueOf(value)));
-            panel.add(progressLabel);
+            panel.add(progressLabel, 1f - sliderWidth);
         }
         accordion.addCollapsiblePanel(key, panel);
     }
@@ -60,17 +62,17 @@ public class SliderSetting extends BaseSetting<Float> {
         return (float) (Math.floor(floatValue * precision) / precision);
     }
 
-    private JSlider createSliderUI(int contentWidth, int contentHeight, float sliderWidth, Vector2i bounds, float currentValue, float scale, int tickSpeed, ChangeListener onChange) {
-        JSlider slider = new JSlider(bounds.x, bounds.y, (int) (currentValue * scale));
+    private JSlider createSliderUI(int contentHeight, Vector2i range, float currentValue, float scale, int tickSpeed, ChangeListener onChange) {
+        JSlider slider = new JSlider(range.x, range.y, (int) (currentValue * scale));
         slider.setMajorTickSpacing(tickSpeed);
-        slider.setBounds(0, 0, (int) (contentWidth*sliderWidth), contentHeight);
+        slider.setPreferredSize(new Dimension(0, contentHeight));
         slider.addChangeListener(onChange);
         return slider;
     }
 
-    private JLabel createSliderLabelUI(int contentWidth, int contentHeight, float sliderWidth) {
+    private JLabel createSliderLabelUI(int contentHeight) {
         JLabel progressLabel = new JLabel(String.valueOf(getValue()));
-        progressLabel.setBounds((int) (contentWidth*sliderWidth), 0, (int) (contentWidth*(1f-sliderWidth)), contentHeight);
+        progressLabel.setPreferredSize(new Dimension(0, contentHeight));
         progressLabel.setHorizontalAlignment(SwingConstants.CENTER);
         return progressLabel;
     }
@@ -86,7 +88,7 @@ public class SliderSetting extends BaseSetting<Float> {
         }
         if(Tools.isInteger(parsedValue.toString()) != null)
             return;
-        slider.setValue(Tools.isInRange(parsedValue.intValue(), bounds.x, bounds.y) ? (int) (parsedValue * scale) : (int) (bounds.x * scale));
+        slider.setValue(Tools.isInRange(parsedValue.intValue(), range.x, range.y) ? (int) (parsedValue * scale) : (int) (range.x * scale));
     }
 
     public static Builder newInstance(String key) {

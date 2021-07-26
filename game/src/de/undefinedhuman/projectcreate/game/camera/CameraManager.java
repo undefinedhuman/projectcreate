@@ -2,6 +2,7 @@ package de.undefinedhuman.projectcreate.game.camera;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
+import de.undefinedhuman.projectcreate.core.ecs.transform.TransformComponent;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector4i;
@@ -47,7 +48,8 @@ public class CameraManager extends Manager {
                 .div(Variables.CHUNK_SIZE)
                 .add(-1, -1, 1, 1)
                 .setY(Math.max(chunkBounds.y, 0))
-                .setW(Math.min(chunkBounds.w, EntityManager.getInstance().getChunkSize().y - 1));
+                .setW(chunkBounds.w);
+                //.setW(Math.min(chunkBounds.w, EntityManager.getInstance().getChunkSize().y - 1));
     }
 
     private void updateCameraPosition() {
@@ -55,7 +57,7 @@ public class CameraManager extends Manager {
         int cameraYBounds = (int) (gameCamera.viewportHeight * gameCamera.zoom * 0.5f);
         // If lerp gets added again, make sure, that if the player gets teleported to the other side of the world the camera sets with him, otherwise there will be some kind of laggy movement
         gameCamera.position
-                .set(new Vector3(GameManager.instance.player.getCenterPosition(), 0))
+                .set(new Vector3(GameManager.instance.player.getComponent(TransformComponent.class).getCenterPosition(), 0))
                 .y = Tools.clamp(gameCamera.position.y, cameraYBounds, World.instance.pixelSize.y - cameraYBounds);
         gameCamera.update();
     }

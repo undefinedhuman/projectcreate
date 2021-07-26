@@ -30,7 +30,7 @@ public class Selector extends Inventory {
     @Override
     public void update(float delta) {
         super.update(delta);
-        ItemManager.getInstance().useItem(getSelectedItemID());
+        //ItemManager.getInstance().useItem(getSelectedItemID());
         if (inventory[0][selected].getItem().getAmount() == -1)
             EquipManager.getInstance().unEquipItemNetwork(GameManager.instance.player, 0, false);
     }
