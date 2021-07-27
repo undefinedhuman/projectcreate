@@ -15,7 +15,7 @@ public class SpriteData {
     private Color color = Color.WHITE;
     private int renderLevel, currentFrameID;
     private Vector2 positionOffset = new Vector2();
-    private boolean isVisible = true, turned = true;
+    public boolean isVisible = true, turned = true;
     private TextureRegion[] textures;
 
     public SpriteData(String textureName, int frameCount, int renderLevel) {
@@ -73,9 +73,12 @@ public class SpriteData {
     }
 
     public void render(SpriteBatch batch, Transform transform, int renderOffset) {
-        if(!isVisible) return;
+        if(!isVisible)
+            return;
         sprite.setFlip(!turned, false);
-        sprite.setBounds(transform.getX() + positionOffset.x + renderOffset, transform.getY() + positionOffset.y, transform.getWidth(), transform.getHeight());
+        if(sprite.getWidth() == 0 || sprite.getHeight() == 0)
+            sprite.setSize(transform.getWidth(), transform.getHeight());
+        sprite.setPosition(transform.getX() + positionOffset.x + renderOffset, transform.getY() + positionOffset.y);
         sprite.draw(batch, alpha);
     }
 

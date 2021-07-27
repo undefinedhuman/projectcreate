@@ -33,20 +33,19 @@ public class GameManager {
         CameraManager.getInstance();
         manager = new ManagerList();
         engine = new Engine();
+        engine.addSystem(new AngleSystem());
+        engine.addSystem(new AnimationSystem());
+        engine.addSystem(new ArmSystem());
+        engine.addSystem(new InteractionSystem());
+        engine.addSystem(new EquipSystem(engine));
+        engine.addSystem(new MovementSystem());
+        engine.addSystem(new RenderSystem(engine));
     }
 
     public void init() {
         BackgroundManager.getInstance();
         BackgroundManager.getInstance().init();
         loadManager();
-
-        engine.addSystem(new AngleSystem());
-        engine.addSystem(new AnimationSystem());
-        engine.addSystem(new ArmSystem());
-        engine.addSystem(new InteractionSystem());
-        engine.addSystem(new EquipSystem());
-        engine.addSystem(new MovementSystem());
-        engine.addSystem(new RenderSystem(CameraManager.gameCamera));
 
         //GuiManager.getInstance().addGui(CraftingInventory.getInstance());
     }
@@ -82,13 +81,18 @@ public class GameManager {
 
     public void render() {
 
-        engine.update(Main.delta);
-
         batch.setProjectionMatrix(CameraManager.gameCamera.combined);
         batch.begin();
         BackgroundManager.getInstance().render(batch, CameraManager.gameCamera);
+        batch.end();
         // World.instance.renderBackLayer(gameBatch);
+        batch.setProjectionMatrix(CameraManager.gameCamera.combined);
+        batch.begin();
         DropItemManager.instance.render(batch);
+        batch.end();
+        engine.update(Main.delta);
+        batch.setProjectionMatrix(CameraManager.gameCamera.combined);
+        batch.begin();
         if (projectile != null) projectile.render(batch);
         World.instance.renderMainLayer(batch);
         batch.end();

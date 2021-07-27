@@ -31,7 +31,7 @@ public class SettingsUI {
     public static JButton createButton(String text, int preferredHeight, ActionListener listener) {
         JButton button = new JButton(text);
         button.setFont(button.getFont().deriveFont(16f).deriveFont(Font.BOLD));
-        button.setPreferredSize(new Dimension(0, preferredHeight));
+        if(preferredHeight != 0) button.setPreferredSize(new Dimension(0, preferredHeight));
         button.addActionListener(listener);
         return button;
     }

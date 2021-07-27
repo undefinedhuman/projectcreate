@@ -34,7 +34,6 @@ public class TextureSetting extends Setting<String> {
     public TextureSetting(String key, String defaultValue) {
         super(key, defaultValue);
         loadTexture(defaultValue);
-        setContentHeight(PREVIEW_TEXTURE_LABEL_SIZE);
     }
 
     @Override
@@ -48,9 +47,9 @@ public class TextureSetting extends Setting<String> {
     @Override
     public void createSettingUI(Accordion accordion) {
         textureLabel = new JLabel();
-        textureLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, getContentHeight()));
-        textureLabel.setPreferredSize(new Dimension(Integer.MIN_VALUE, getContentHeight()));
-        textureLabel.setMinimumSize(new Dimension(Integer.MIN_VALUE, getContentHeight()));
+        textureLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, PREVIEW_TEXTURE_LABEL_SIZE));
+        textureLabel.setPreferredSize(new Dimension(Integer.MIN_VALUE, PREVIEW_TEXTURE_LABEL_SIZE));
+        textureLabel.setMinimumSize(new Dimension(Integer.MIN_VALUE, PREVIEW_TEXTURE_LABEL_SIZE));
         textureLabel.setLayout(new BorderLayout());
         textureLabel.setHorizontalAlignment(JLabel.CENTER);
         textureLabel.addMouseWheelListener(e -> {

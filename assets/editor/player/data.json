@@ -149,7 +149,9 @@
    { "name": "Eyes", "opacity": 255, "blendMode": "normal" },
    { "name": "Hair", "opacity": 255, "blendMode": "normal" },
    { "name": "Front Arm", "opacity": 255, "blendMode": "normal" },
-   { "name": "Front Arm Selected", "opacity": 255, "blendMode": "normal" }
+   { "name": "Front Arm Selected", "opacity": 255, "blendMode": "normal" },
+   { "name": "Weapon Position", "opacity": 255, "blendMode": "normal", "color": "#fe5b59ff", "data": "IGNORE" },
+   { "name": "Shoulder Position", "opacity": 255, "blendMode": "normal", "color": "#fe5b59ff", "data": "IGNORE" }
   ]
  }
 }

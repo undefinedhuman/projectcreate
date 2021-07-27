@@ -28,7 +28,7 @@ public class Vector2Setting extends Setting<Vector2> {
     public void createSettingUI(Accordion accordion) {
         JPanel panel = new JPanel(new RelativeLayout(RelativeLayout.X_AXIS).setFill(true));
         panel.add(xTextField = Tools.createTextField(String.valueOf(getValue().x), s -> setValue(new Vector2(Float.parseFloat(s), getValue().y))), 0.5f);
-        panel.add(yTextField = Tools.createTextField(String.valueOf(getValue().x), s -> setValue(new Vector2(getValue().x, Float.parseFloat(s)))), 0.5f);
+        panel.add(yTextField = Tools.createTextField(String.valueOf(getValue().y), s -> setValue(new Vector2(getValue().x, Float.parseFloat(s)))), 0.5f);
         accordion.addInlinePanel(key, panel);
     }
 

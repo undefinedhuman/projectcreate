@@ -4,36 +4,37 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.engine.base.Transform;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
 
 public class SpriteComponent implements Component {
 
-    // TODO ADD INIT AND DELTE FUNCTIONALITY (SORTING) TOO RENDER SYSTEM
-
     private HashMap<String, SpriteData> spriteData;
-    private SortedMap<Integer, ArrayList<SpriteData>> orderedSpriteData = new TreeMap<>();
+    private SpriteData[] sortedSpriteData;
 
-    public SpriteComponent(HashMap<String, SpriteLayer> params) {
+    public SpriteComponent(HashMap<String, SpriteLayer> spriteLayers) {
         this.spriteData = new HashMap<>();
-        for (String name : params.keySet()) {
-            SpriteLayer layer = params.get(name);
-            SpriteData data = new SpriteData(layer.texture.getValue(), layer.frameCount.getValue(), layer.renderLevel.getValue());
-            spriteData.put(name, data);
-        }
+        spriteLayers.forEach((key, spriteLayer) -> spriteData.put(key, spriteLayer.createSpriteData()));
     }
 
-    /*@Override
     public void init() {
-        for(SpriteData data : spriteData.values()) {
-            int renderLevel = data.getRenderLevel();
-            if (orderedSpriteData.containsKey(renderLevel)) orderedSpriteData.get(renderLevel).add(data);
-            else {
-                ArrayList<SpriteData> spriteData = new ArrayList<>();
-                spriteData.add(data);
-                orderedSpriteData.put(renderLevel, spriteData);
-            }
-        }
-    }*/
+        sortedSpriteData = spriteData.values().stream().sorted(Comparator.comparingInt(SpriteData::getRenderLevel)).toArray(SpriteData[]::new);
+    }
+
+    public void render(SpriteBatch batch, Transform transform, int renderOffset) {
+        if(sortedSpriteData == null)
+            return;
+        Arrays.stream(sortedSpriteData).forEach(spriteData -> spriteData.render(batch, transform, renderOffset));
+    }
+
+    public void delete() {
+        sortedSpriteData = null;
+        for(SpriteData data : spriteData.values())
+            data.delete();
+        spriteData.clear();
+    }
 
     public Collection<SpriteData> getSpriteData() {
         return spriteData.values();
@@ -42,25 +43,9 @@ public class SpriteComponent implements Component {
         return spriteData.get(key);
     }
 
-    public void render(SpriteBatch batch, Transform transform, int renderOffset) {
-        for(int renderLevel : orderedSpriteData.keySet()) {
-            ArrayList<SpriteData> spriteData = orderedSpriteData.get(renderLevel);
-            for(SpriteData data : spriteData)
-                data.render(batch, transform, renderOffset);
-        }
-    }
-
     public void setFrameIndex(int animationIndex) {
         for(SpriteData data : spriteData.values())
             data.setFrameIndex(animationIndex);
     }
-
-    /*@Override
-    public void delete() {
-        orderedSpriteData.clear();
-        for(SpriteData data : spriteData.values())
-            data.delete();
-        spriteData.clear();
-    }*/
 
 }

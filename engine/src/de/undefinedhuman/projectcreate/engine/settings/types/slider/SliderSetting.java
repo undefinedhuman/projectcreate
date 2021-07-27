@@ -5,6 +5,7 @@ import de.undefinedhuman.projectcreate.engine.settings.types.BaseSetting;
 import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
 import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 import de.undefinedhuman.projectcreate.engine.validation.ValidationRule;
 
@@ -46,10 +47,10 @@ public class SliderSetting extends BaseSetting<Float> {
     @Override
     public void createSettingUI(Accordion accordion) {
         JPanel panel = new JPanel(new RelativeLayout(RelativeLayout.X_AXIS).setFill(true));
-        slider = createSliderUI(getContentHeight(), range, getValue(), scale, tickSpeed, e -> setValue(convertToPreciseFloatingPointValue(slider.getValue(), scale, numberOfDecimals)));
+        slider = createSliderUI(range, getValue(), scale, tickSpeed, e -> setValue(convertToPreciseFloatingPointValue(slider.getValue(), scale, numberOfDecimals)));
         panel.add(slider, sliderWidth);
         if(isLabelVisible) {
-            progressLabel = createSliderLabelUI(getContentHeight());
+            progressLabel = createSliderLabelUI();
             addValueListener(value -> progressLabel.setText(String.valueOf(value)));
             panel.add(progressLabel, 1f - sliderWidth);
         }
@@ -62,17 +63,17 @@ public class SliderSetting extends BaseSetting<Float> {
         return (float) (Math.floor(floatValue * precision) / precision);
     }
 
-    private JSlider createSliderUI(int contentHeight, Vector2i range, float currentValue, float scale, int tickSpeed, ChangeListener onChange) {
+    private JSlider createSliderUI(Vector2i range, float currentValue, float scale, int tickSpeed, ChangeListener onChange) {
         JSlider slider = new JSlider(range.x, range.y, (int) (currentValue * scale));
         slider.setMajorTickSpacing(tickSpeed);
-        slider.setPreferredSize(new Dimension(0, contentHeight));
+        slider.setPreferredSize(new Dimension(0, Variables.DEFAULT_CONTENT_HEIGHT));
         slider.addChangeListener(onChange);
         return slider;
     }
 
-    private JLabel createSliderLabelUI(int contentHeight) {
+    private JLabel createSliderLabelUI() {
         JLabel progressLabel = new JLabel(String.valueOf(getValue()));
-        progressLabel.setPreferredSize(new Dimension(0, contentHeight));
+        progressLabel.setPreferredSize(new Dimension(0, Variables.DEFAULT_CONTENT_HEIGHT));
         progressLabel.setHorizontalAlignment(SwingConstants.CENTER);
         return progressLabel;
     }

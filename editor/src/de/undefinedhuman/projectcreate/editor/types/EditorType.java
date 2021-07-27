@@ -5,9 +5,9 @@ import de.undefinedhuman.projectcreate.editor.types.item.ItemEditor;
 import de.undefinedhuman.projectcreate.editor.types.world.WorldEditor;
 
 public enum EditorType {
-    WORLD(WorldEditor.class),
     ENTITY(EntityEditor.class),
-    ITEM(ItemEditor.class);
+    ITEM(ItemEditor.class),
+    WORLD(WorldEditor.class);
 
     private Class<? extends Editor> editorClass;
 

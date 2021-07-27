@@ -26,7 +26,7 @@ public class SpritePanel extends BatchPanel<SpriteLayer> {
         int renderLevel = 0;
         for (JsonValue layer : metaData.get("layers")) {
             String name = layer.getString("name");
-            if (value.containsKey(name))
+            if (value.containsKey(name) || (layer.has("data") && layer.getString("data").equalsIgnoreCase("IGNORE")))
                 continue;
             SpriteLayer spriteLayer = createNewInstance();
             spriteLayer.texture.setTexture(new FileHandle(file).parent().path() + "/layers/" + name + ".png", Files.FileType.Absolute);

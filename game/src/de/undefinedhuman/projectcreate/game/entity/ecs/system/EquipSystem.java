@@ -17,22 +17,24 @@ import de.undefinedhuman.projectcreate.core.ecs.transform.TransformComponent;
 import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.core.items.ItemType;
+import de.undefinedhuman.projectcreate.engine.ecs.listener.EntityAdapter;
 
 public class EquipSystem extends EntitySystem {
 
     private ImmutableArray<Entity> entities;
 
-    public EquipSystem() {
+    public EquipSystem(Engine engine) {
         super(4);
+        engine.addEntityListener(new EntityAdapter() {
+            @Override
+            public void entityAdded(Entity entity) {
+                SpriteComponent spriteComponent = entity.getComponent(SpriteComponent.class);
+                EquipComponent equipComponent = entity.getComponent(EquipComponent.class);
+                if(spriteComponent != null && equipComponent != null)
+                    setVisible(spriteComponent, equipComponent.getInvisibleSprites());
+            }
+        });
     }
-
-    /*@Override
-    public void init(Entity entity) {
-        SpriteComponent spriteComponent;
-        EquipComponent equipComponent;
-        if ((spriteComponent = (SpriteComponent) entity.getComponent(SpriteComponent.class)) != null && (equipComponent = (EquipComponent) entity.getComponent(EquipComponent.class)) != null)
-            setVisible(spriteComponent, equipComponent.getInvisibleSprites());
-    }*/
 
     @Override
     public void addedToEngine(Engine engine) {
@@ -95,7 +97,8 @@ public class EquipSystem extends EntitySystem {
     }
 
     private void setVisible(SpriteComponent component, String... data) {
-        for (String s : data) component.getSpriteData(s).setVisible(false);
+        for (String s : data)
+            component.getSpriteData(s).setVisible(false);
     }
 
 }

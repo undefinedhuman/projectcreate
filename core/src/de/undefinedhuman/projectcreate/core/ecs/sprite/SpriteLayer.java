@@ -17,4 +17,8 @@ public class SpriteLayer extends PanelObject {
         addSettings(texture, renderLevel, frameCount);
     }
 
+    public SpriteData createSpriteData() {
+        return new SpriteData(texture.getValue(), frameCount.getValue(), renderLevel.getValue());
+    }
+
 }

@@ -18,8 +18,6 @@ public class Variables {
     // Settings
     public static final int DEFAULT_CONTENT_WIDTH = 400;
     public static final int DEFAULT_CONTENT_HEIGHT = 25;
-    public static final int BORDER_WIDTH = 10;
-    public static final int BORDER_HEIGHT = 25;
     public static final int OFFSET = 5;
 
     // File System
@@ -35,7 +33,7 @@ public class Variables {
     public static final String LOG_MESSAGE_FORMAT = "[%prefix% - %time%] %message%";
     public static final String LOG_DATE_FORMAT = "dd-MM-yyyy - HH-mm-ss";
 
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
 
     // World
     public static final int CHUNK_SIZE = 20;

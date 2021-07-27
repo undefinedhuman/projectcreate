@@ -11,12 +11,12 @@ import de.undefinedhuman.projectcreate.editor.utils.Utils;
 import de.undefinedhuman.projectcreate.engine.file.FileUtils;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
+import de.undefinedhuman.projectcreate.engine.settings.ui.ui.SettingsUI;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
@@ -53,9 +53,9 @@ public class ItemEditor extends Editor {
     @Override
     public void createMenuButtonsPanel(JPanel menuButtonPanel) {
         menuButtonPanel.setLayout(new GridLayout(1, 4, 5, 0));
-        menuButtonPanel.add(createUtilityButton("Save", e -> Utils.saveItem(itemSelectionPanel.getSelectedItems().stream().mapToInt(id -> id).toArray())));
-        menuButtonPanel.add(createUtilityButton("Save All", e -> Utils.saveItem(ItemManager.getInstance().getItems().keySet().stream().mapToInt(id -> id).toArray())));
-        menuButtonPanel.add(createUtilityButton("Reset", e -> {
+        menuButtonPanel.add(SettingsUI.createButton("Save", 0, e -> Utils.saveItem(itemSelectionPanel.getSelectedItems().stream().mapToInt(id -> id).toArray())));
+        menuButtonPanel.add(SettingsUI.createButton("Save All", 0, e -> Utils.saveItem(ItemManager.getInstance().getItems().keySet().stream().mapToInt(id -> id).toArray())));
+        menuButtonPanel.add(SettingsUI.createButton("Reset", 0, e -> {
             List<Integer> selectedIDs = itemSelectionPanel.getSelectedItems();
             if(selectedIDs.size() == 0)
                 return;
@@ -66,7 +66,7 @@ public class ItemEditor extends Editor {
             });
             itemSelectionPanel.select(itemSelectionPanel.getSelectedIndex());
         }));
-        menuButtonPanel.add(createUtilityButton("Delete", e -> {
+        menuButtonPanel.add(SettingsUI.createButton("Delete", 0, e -> {
             List<Integer> removedIDs = itemSelectionPanel.getSelectedItems();
             if(removedIDs.size() == 0)
                 return;
@@ -85,12 +85,6 @@ public class ItemEditor extends Editor {
             itemSettingsPanel.clear();
             itemSelectionPanel.removeSelected();
         }));
-    }
-
-    private JButton createUtilityButton(String title, ActionListener actionListener) {
-        JButton button = new JButton(title);
-        button.addActionListener(actionListener);
-        return button;
     }
 
 }

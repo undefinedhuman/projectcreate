@@ -10,32 +10,29 @@ import java.awt.*;
 
 public class SelectionSetting<T> extends BaseSetting<T> {
 
-    public JComboBox<String> selection;
-    private String[] values;
+    public JComboBox<T> selection;
+    private T[] values;
 
     public SelectionSetting(String key, T[] values, Parser<T> parser, Serializer<T> serializer) {
         super(key, values[0], parser, serializer);
-        this.values = new String[values.length];
-        for(int i = 0; i < values.length; i++)
-            this.values[i] = serializer.serialize(values[i]);
+        this.values = values;
     }
 
     @Override
     protected void delete() {
         super.delete();
-        values = new String[0];
     }
 
     @Override
     public void createSettingUI(Accordion accordion) {
         selection = new JComboBox<>(values);
         selection.setFont(selection.getFont().deriveFont(16f).deriveFont(Font.BOLD));
-        if(hasValue(serializer.serialize(getValue())))
+        if(hasValue(getValue()))
             selection.setSelectedItem(getValue());
         selection.addActionListener(e -> {
             if(selection.getSelectedItem() == null)
                 return;
-            setValue(parser.parse(selection.getSelectedItem().toString()));
+            setValue((T) selection.getSelectedItem());
         });
         accordion.addInlinePanel(key, selection);
     }
@@ -46,8 +43,8 @@ public class SelectionSetting<T> extends BaseSetting<T> {
             selection.setSelectedItem(serializer.serialize(value));
     }
 
-    private boolean hasValue(String value) {
-        for(String s : values)
+    private boolean hasValue(T value) {
+        for(T s : values)
             if(s.equals(value))
                 return true;
         return false;

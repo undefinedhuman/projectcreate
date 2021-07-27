@@ -66,13 +66,13 @@ public class ArmSystem extends EntitySystem {
             shoulderPosition.set((angleComponent.isTurned ? shoulderPosition.x : transformComponent.getWidth() - shoulderPosition.x), shoulderPosition.y);
 
             if (GameManager.instance.player == entity) {
-                float angle = new Vector2(mousePos).sub(shoulderPosition).sub(transformComponent.getPosition()).angle() + (angleComponent.isTurned ? 0 : 180);
+                float angle = new Vector2(mousePos).sub(shoulderPosition).sub(transformComponent.getPosition()).angleDeg() + (angleComponent.isTurned ? 0 : 180);
                 angle += angleComponent.isTurned ? 95 : -95;
 
                 if (Selector.getInstance().getSelectedInvItem() != null) {
                     Item item = ItemManager.getInstance().getItem(Selector.getInstance().getSelectedItemID());
                     boolean hasSword = (item.type == ItemType.SWORD);
-                    CombatComponent combatComponent = (CombatComponent) entity.getComponent(CombatComponent.class);
+                    CombatComponent combatComponent = entity.getComponent(CombatComponent.class);
                     calculateShake(rightArmComponent, item);
 
                     if (hasSword && combatComponent != null)

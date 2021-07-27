@@ -34,8 +34,11 @@ public class TextureOffsetSetting extends Vector2ArraySetting {
     @Override
     public void createSettingUI(Accordion accordion) {
         JPanel panel = new JPanel(new RelativeLayout(RelativeLayout.X_AXIS).setFill(true));
+        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Variables.DEFAULT_CONTENT_HEIGHT));
+        panel.setPreferredSize(new Dimension(Integer.MIN_VALUE, Variables.DEFAULT_CONTENT_HEIGHT));
+        panel.setMinimumSize(new Dimension(Integer.MIN_VALUE, Variables.DEFAULT_CONTENT_HEIGHT));
         textureLabel = new JLabel(new ImageIcon(texture));
-        textureLabel.setPreferredSize(new Dimension(25, 25));
+        textureLabel.setPreferredSize(new Dimension(Variables.DEFAULT_CONTENT_HEIGHT, Variables.DEFAULT_CONTENT_HEIGHT));
         textureLabel.addMouseListener(new MouseAdapter() {
 
             @Override
@@ -57,22 +60,20 @@ public class TextureOffsetSetting extends Vector2ArraySetting {
             }
 
         });
-        panel.add(textureLabel, 0.1f);
-        valueField = Tools.createTextField(
-                Tools.convertArrayToString(getValue()),
-                s -> {});
+        panel.add(textureLabel);
+        valueField = Tools.createTextField(serializer.serialize(getValue()), s -> setValue(parser.parse(s)));
+        valueField.setPreferredSize(new Dimension(0, Variables.DEFAULT_CONTENT_HEIGHT));
         valueField.setEditable(false);
         panel.add(valueField, 0.9f);
-        accordion.addCollapsiblePanel(key, panel);
+        accordion.addContentPanel(key, panel);
     }
 
     private Vector2[] calculateVectors(BufferedImage currentImage) {
-        BufferedImage image = Tools.scaleNearest(currentImage, 0.5f);
-        int size = image.getWidth() / Variables.PLAYER_TEXTURE_OFFSET;
+        int size = currentImage.getWidth() / Variables.PLAYER_TEXTURE_OFFSET;
         Vector2[] vectors = new Vector2[size];
 
-        for(int i = 0; i < size; i++) for(int x = 0; x < Variables.PLAYER_TEXTURE_OFFSET; x++) for(int y = 0; y < image.getHeight(); y++) {
-            if(new Color(image.getRGB(i * Variables.PLAYER_TEXTURE_OFFSET + x, image.getHeight() - 1 - y)).getRed() != 255) continue;
+        for(int i = 0; i < size; i++) for(int x = 0; x < Variables.PLAYER_TEXTURE_OFFSET; x++) for(int y = 0; y < currentImage.getHeight(); y++) {
+            if(new Color(currentImage.getRGB(i * Variables.PLAYER_TEXTURE_OFFSET + x, currentImage.getHeight() - 1 - y)).getRed() != 255) continue;
             vectors[i] = new Vector2(x * 2, y * 2);
             if(i != 0 && offset) vectors[i] = new Vector2(vectors[0].x - vectors[i].x, vectors[0].y - vectors[i].y);
             break;

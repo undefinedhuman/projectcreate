@@ -4,7 +4,6 @@ import com.badlogic.gdx.files.FileHandle;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.settings.listener.ValueListener;
 import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
-import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import java.util.ArrayList;
 
@@ -13,7 +12,6 @@ public abstract class Setting<T> {
     protected String key;
     private String menuTitle;
     protected T value;
-    private int contentHeight = Variables.DEFAULT_CONTENT_HEIGHT;
 
     private ArrayList<ValueListener<T>> valueListeners = new ArrayList<>();
 
@@ -38,18 +36,6 @@ public abstract class Setting<T> {
     public void setValue(T value) {
         this.value = value;
         valueListeners.forEach(valueListener -> valueListener.notify(getValue()));
-    }
-
-    protected void setContentHeight(int contentHeight) {
-        this.contentHeight = contentHeight;
-    }
-
-    protected int getContentHeight() {
-        return contentHeight;
-    }
-
-    public int getTotalHeight() {
-        return contentHeight;
     }
 
     public void load(FileHandle parentDir, SettingsObject settingsObject) {

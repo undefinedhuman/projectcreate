@@ -12,6 +12,7 @@ import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.file.FileUtils;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
+import de.undefinedhuman.projectcreate.engine.settings.ui.ui.SettingsUI;
 import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
@@ -54,9 +55,9 @@ public class EntityEditor extends Editor {
     @Override
     public void createMenuButtonsPanel(JPanel menuButtonPanel) {
         menuButtonPanel.setLayout(new GridLayout(1, 3, 5, 0));
-        menuButtonPanel.add(createUtilityButton("Save", e -> Utils.saveBlueprints(entitySelectionPanel.getSelectedItems().stream().mapToInt(id -> id).toArray())));
-        menuButtonPanel.add(createUtilityButton("Save All", e -> Utils.saveBlueprints(BlueprintManager.getInstance().getBlueprintIDs().stream().mapToInt(id -> id).toArray())));
-        menuButtonPanel.add(createUtilityButton("Reset", e -> {
+        menuButtonPanel.add(SettingsUI.createButton("Save", 0, e -> Utils.saveBlueprints(entitySelectionPanel.getSelectedItems().stream().mapToInt(id -> id).toArray())));
+        menuButtonPanel.add(SettingsUI.createButton("Save All", 0, e -> Utils.saveBlueprints(BlueprintManager.getInstance().getBlueprintIDs().stream().mapToInt(id -> id).toArray())));
+        menuButtonPanel.add(SettingsUI.createButton("Reset", 0, e -> {
             List<Integer> selectedIDs = entitySelectionPanel.getSelectedItems();
             if(selectedIDs.size() == 0)
                 return;
@@ -67,7 +68,7 @@ public class EntityEditor extends Editor {
             });
             entitySelectionPanel.select(entitySelectionPanel.getSelectedIndex());
         }));
-        menuButtonPanel.add(createUtilityButton("Delete", e -> {
+        menuButtonPanel.add(SettingsUI.createButton("Delete", 0, e -> {
             List<Integer> removedIDs = entitySelectionPanel.getSelectedItems();
             if(removedIDs.size() == 0)
                 return;
