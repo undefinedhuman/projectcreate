@@ -46,7 +46,9 @@ public class Main extends Game {
         managerList = new ManagerList();
         managerList.addManager(
                 Log.getInstance().setLogMessageDecorator(
-                    new LogMessage().andThen(value -> LogMessageDecorators.withDate(value, Variables.LOG_DATE_FORMAT)).andThen(value -> LogMessageDecorators.withModuleName(value, "Game"))
+                    new LogMessage()
+                            .andThen(value -> LogMessageDecorators.withDate(value, Variables.LOG_DATE_FORMAT))
+                            .andThen(value -> LogMessageDecorators.withModuleName(value, "Game"))
                 ),
                 ConfigManager.getInstance().setConfigs(GameConfig.getInstance()),
                 LanguageManager.getInstance(),

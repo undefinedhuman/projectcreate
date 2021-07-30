@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.game.Main;
 import de.undefinedhuman.projectcreate.game.gui.Gui;
@@ -43,7 +43,7 @@ public class ScrollPanel<T extends Gui> extends Gui {
         super(guiTexture);
         scrollBar = (ScrollBar) new ScrollBar(GuiTemplate.SCROLL_BAR, 10).addListener((ChangeListener) progress -> {
             if (maxOffset > 0)
-                updateOffset(Tools.clamp(Math.max(maxOffset * (1f / 0.9f), 1f) * progress, 0, maxOffset));
+                updateOffset(Utils.clamp(Math.max(maxOffset * (1f / 0.9f), 1f) * progress, 0, maxOffset));
         });
 
         viewport = (Gui) new Gui(new GuiTexture())
@@ -107,7 +107,7 @@ public class ScrollPanel<T extends Gui> extends Gui {
     public void scroll(int amount) {
         if(amount == 0 || maxOffset < 0)
             return;
-        updateOffset(Tools.clamp(offset - (float) (amount * Variables.MOUSE_SENSITIVITY) / scrollBar.getScrollBarHeight(), 0, maxOffset));
+        updateOffset(Utils.clamp(offset - (float) (amount * Variables.MOUSE_SENSITIVITY) / scrollBar.getScrollBarHeight(), 0, maxOffset));
     }
 
     public void addContent(T gui) {
@@ -129,14 +129,14 @@ public class ScrollPanel<T extends Gui> extends Gui {
     }
 
     private void updateOffset(float offset) {
-        scrollBar.updateThumbY(Tools.clamp((offset / Math.max(maxOffset, 0.9f)) * 0.9f, 0, 0.9f));
+        scrollBar.updateThumbY(Utils.clamp((offset / Math.max(maxOffset, 0.9f)) * 0.9f, 0, 0.9f));
         for (Gui gui : content)
             gui.setValue(Axis.Y, -offset).resize();
         this.offset = offset;
     }
 
     private int calculateContentHeight() {
-        if(Tools.isInRange(content.size(), 0, 1))
+        if(Utils.isInRange(content.size(), 0, 1))
             return content.stream().map(gui -> gui.getCurrentValue(Axis.HEIGHT)).reduce(0, Integer::sum);
         Gui lastItem = content.get(content.size()-1);
         return lastItem.getCurrentValue(Axis.Y) + lastItem.getCurrentValue(Axis.HEIGHT) - content.get(0).getCurrentValue(Axis.Y);

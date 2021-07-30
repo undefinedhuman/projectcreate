@@ -2,12 +2,11 @@ package de.undefinedhuman.projectcreate.editor.types.entity.ui;
 
 import de.undefinedhuman.projectcreate.core.ecs.name.NameBlueprint;
 import de.undefinedhuman.projectcreate.editor.ui.SelectionPanel;
-import de.undefinedhuman.projectcreate.editor.utils.Utils;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.Blueprint;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
 import de.undefinedhuman.projectcreate.engine.settings.ui.listener.ResizeListener;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,9 +18,9 @@ public abstract class EntitySelectionPanel extends SelectionPanel<Integer> {
         super("Entities", key -> {
             if(key.getKey1().matches("^[0-9]+-[0-9]+$")) {
                 String[] ids = key.getKey1().split("-");
-                Integer lower = Tools.isInteger(ids[0]), upper = Tools.isInteger(ids[1]);
+                Integer lower = Utils.isInteger(ids[0]), upper = Utils.isInteger(ids[1]);
                 if(lower != null && upper != null && lower <= upper)
-                    return Arrays.stream(key.getKey2()).filter(itemID -> Tools.isInRange(itemID, lower, upper)).toArray(Integer[]::new);
+                    return Arrays.stream(key.getKey2()).filter(itemID -> Utils.isInRange(itemID, lower, upper)).toArray(Integer[]::new);
             }
             return new Integer[0];
         });
@@ -30,10 +29,10 @@ public abstract class EntitySelectionPanel extends SelectionPanel<Integer> {
     @Override
     public void add() {
         Integer[] ids = BlueprintManager.getInstance().getBlueprintIDs().toArray(new Integer[0]);
-        int newID = Utils.findSmallestMissing(ids, 0, ids.length-1);
+        int newID = de.undefinedhuman.projectcreate.editor.utils.Utils.findSmallestMissing(ids, 0, ids.length-1);
         Blueprint blueprint = new Blueprint();
         BlueprintManager.getInstance().addBlueprint(newID, blueprint);
-        Utils.saveBlueprints(newID);
+        de.undefinedhuman.projectcreate.editor.utils.Utils.saveBlueprints(newID);
     }
 
     @Override
@@ -71,4 +70,8 @@ public abstract class EntitySelectionPanel extends SelectionPanel<Integer> {
         return id + (nameBlueprint != null ?  " " + nameBlueprint.name.getValue() : "");
     }
 
+    @Override
+    public void renderCell(JLabel label, Integer integer) {
+        label.setText(getTitle(integer));
+    }
 }

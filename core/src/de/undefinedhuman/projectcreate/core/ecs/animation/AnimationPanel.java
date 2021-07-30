@@ -1,11 +1,9 @@
 package de.undefinedhuman.projectcreate.core.ecs.animation;
 
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
+import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.settings.panels.BatchPanel;
-
-import java.io.File;
 
 public class AnimationPanel extends BatchPanel<Animation> {
 
@@ -14,8 +12,7 @@ public class AnimationPanel extends BatchPanel<Animation> {
     }
 
     @Override
-    public void loadBatch(File file) {
-        FileHandle dataFile = new FileHandle(file);
+    public void loadBatch(FsFile dataFile) {
         JsonValue base = reader.parse(dataFile);
         JsonValue frameData = base.get("frames");
         JsonValue metaData = base.get("meta");

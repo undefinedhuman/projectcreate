@@ -15,6 +15,7 @@ import de.undefinedhuman.projectcreate.core.ecs.rightarm.RightarmBlueprint;
 import de.undefinedhuman.projectcreate.core.ecs.shoulder.ShoulderBlueprint;
 import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteBlueprint;
 import de.undefinedhuman.projectcreate.core.ecs.transform.TransformBlueprint;
+import de.undefinedhuman.projectcreate.core.ecs.type.TypeBlueprint;
 import de.undefinedhuman.projectcreate.engine.ecs.component.ComponentBlueprint;
 
 import java.util.HashMap;
@@ -39,7 +40,8 @@ public class ComponentType {
                 RightarmBlueprint.class,
                 ShoulderBlueprint.class,
                 SpriteBlueprint.class,
-                TransformBlueprint.class
+                TransformBlueprint.class,
+                TypeBlueprint.class
         );
     }
 

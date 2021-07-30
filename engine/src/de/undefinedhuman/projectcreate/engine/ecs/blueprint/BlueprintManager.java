@@ -10,7 +10,7 @@ import de.undefinedhuman.projectcreate.engine.resources.RessourceUtils;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectAdapter;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
 import java.util.*;
 
@@ -50,9 +50,9 @@ public class BlueprintManager extends Manager {
             return true;
         }).toArray();
         if(failedBlueprintIDs.length > 0)
-            Log.error("Error while loading blueprint" + Tools.appendSToString(failedBlueprintIDs.length) + ": " + Arrays.toString(Arrays.stream(failedBlueprintIDs).sorted().toArray()));
+            Log.error("Error while loading blueprint" + Utils.appendSToString(failedBlueprintIDs.length) + ": " + Arrays.toString(Arrays.stream(failedBlueprintIDs).sorted().toArray()));
         if(loadedBlueprintIDs.length > 0)
-            Log.debug("Blueprint" + Tools.appendSToString(loadedBlueprintIDs.length) + " loaded: " + Arrays.toString(Arrays.stream(loadedBlueprintIDs).sorted().toArray()));
+            Log.debug("Blueprint" + Utils.appendSToString(loadedBlueprintIDs.length) + " loaded: " + Arrays.toString(Arrays.stream(loadedBlueprintIDs).sorted().toArray()));
         return loadedBlueprintIDs.length == ids.length;
     }
 

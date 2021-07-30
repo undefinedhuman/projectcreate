@@ -2,7 +2,7 @@ package de.undefinedhuman.projectcreate.engine.file;
 
 import com.badlogic.gdx.files.FileHandle;
 import de.undefinedhuman.projectcreate.engine.log.Log;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -57,7 +57,7 @@ public enum FileError implements Predicate<FsFile> {
         }
         boolean hasErrors = errorMessages.size() > 0;
         if(hasErrors)
-            Log.error("Error" + Tools.appendSToString(errorMessages.size()) + " while " + fileActionName + " file: " + errorMessages);
+            Log.error("Error" + Utils.appendSToString(errorMessages.size()) + " while " + fileActionName + " file: " + errorMessages);
         errorMessages.clear();
         return hasErrors;
     }

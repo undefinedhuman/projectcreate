@@ -87,10 +87,6 @@ public class Log extends Manager implements ApplicationLogger, Serializable {
         return logLevel;
     }
 
-    public void setFileLocation(Files.FileType fileLocation) {
-        this.fileLocation = fileLocation;
-    }
-
     public void addLogEvent(LogEvent logEvent) {
         if(logEvents.contains(logEvent))
             return;
@@ -169,11 +165,11 @@ public class Log extends Manager implements ApplicationLogger, Serializable {
     }
 
     public static Log getInstance() {
-        if (instance == null) {
-            synchronized (Log.class) {
-                if (instance == null)
-                    instance = new Log();
-            }
+        if(instance != null)
+            return instance;
+        synchronized (Log.class) {
+            if (instance == null)
+                instance = new Log();
         }
         return instance;
     }

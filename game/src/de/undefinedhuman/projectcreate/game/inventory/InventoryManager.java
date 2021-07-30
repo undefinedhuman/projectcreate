@@ -167,12 +167,12 @@ public class InventoryManager extends Manager {
 
     public synchronized boolean craftItem(int id, int quantity, Collection<RecipeItem> ingredients) {
         for(RecipeItem ingredient : ingredients)
-            if(amountOf(ingredient.getID()) < ingredient.quantity.getValue())
+            if(amountOf(ingredient.getKey()) < ingredient.quantity.getValue())
                 return false;
         if(isFull(id, quantity))
             return false;
         for(RecipeItem ingredient : ingredients)
-            removeItem(ingredient.getID(), ingredient.quantity.getValue());
+            removeItem(ingredient.getKey(), ingredient.quantity.getValue());
         addItem(id, quantity);
         return true;
     }

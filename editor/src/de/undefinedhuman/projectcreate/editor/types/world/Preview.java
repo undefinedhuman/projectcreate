@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.editor.types.world;
 
 import de.undefinedhuman.projectcreate.core.noise.functions.NoisePanel;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +26,7 @@ public class Preview extends JLabel implements Runnable {
 
         for(int x = 0; x < noiseImage.getWidth(); x++)
             for(int y = 0; y < noiseImage.getHeight(); y++) {
-                double noiseValue = Tools.clamp((float) noisePanel.calculateValue(x, y), 0f, 1f);
+                double noiseValue = Utils.clamp((float) noisePanel.calculateValue(x, y), 0f, 1f);
                 noiseImage.setRGB(x, y, new Color((int) (noiseValue * 255), (int) (noiseValue * 255), (int) (noiseValue * 255)).getRGB());
             }
 

@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import de.undefinedhuman.projectcreate.core.ecs.equip.EquipComponent;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 import de.undefinedhuman.projectcreate.game.Main;
@@ -32,7 +33,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Random;
 
-public class Tools extends de.undefinedhuman.projectcreate.engine.utils.Tools {
+public class Tools extends Utils {
 
     public static boolean isMac = System.getProperty("os.name").contains("OS X");
     public static boolean isWindows = System.getProperty("os.name").contains("Windows");

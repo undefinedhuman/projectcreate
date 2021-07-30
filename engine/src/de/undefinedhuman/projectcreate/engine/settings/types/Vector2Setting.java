@@ -7,7 +7,7 @@ import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
 import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
 import javax.swing.*;
 
@@ -27,8 +27,8 @@ public class Vector2Setting extends Setting<Vector2> {
     @Override
     public void createSettingUI(Accordion accordion) {
         JPanel panel = new JPanel(new RelativeLayout(RelativeLayout.X_AXIS).setFill(true));
-        panel.add(xTextField = Tools.createTextField(String.valueOf(getValue().x), s -> setValue(new Vector2(Float.parseFloat(s), getValue().y))), 0.5f);
-        panel.add(yTextField = Tools.createTextField(String.valueOf(getValue().y), s -> setValue(new Vector2(getValue().x, Float.parseFloat(s)))), 0.5f);
+        panel.add(xTextField = Utils.createTextField(String.valueOf(getValue().x), s -> setValue(new Vector2(Float.parseFloat(s), getValue().y))), 0.5f);
+        panel.add(yTextField = Utils.createTextField(String.valueOf(getValue().y), s -> setValue(new Vector2(getValue().x, Float.parseFloat(s)))), 0.5f);
         accordion.addInlinePanel(key, panel);
     }
 

@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
 import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.imageio.ImageIO;
@@ -61,7 +61,7 @@ public class TextureOffsetSetting extends Vector2ArraySetting {
 
         });
         panel.add(textureLabel);
-        valueField = Tools.createTextField(serializer.serialize(getValue()), s -> setValue(parser.parse(s)));
+        valueField = Utils.createTextField(serializer.serialize(getValue()), s -> setValue(parser.parse(s)));
         valueField.setPreferredSize(new Dimension(0, Variables.DEFAULT_CONTENT_HEIGHT));
         valueField.setEditable(false);
         panel.add(valueField, 0.9f);

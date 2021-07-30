@@ -1,11 +1,9 @@
 package de.undefinedhuman.projectcreate.core.ecs.sprite;
 
 import com.badlogic.gdx.Files;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.JsonValue;
+import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.settings.panels.BatchPanel;
-
-import java.io.File;
 
 public class SpritePanel extends BatchPanel<SpriteLayer> {
 
@@ -14,8 +12,7 @@ public class SpritePanel extends BatchPanel<SpriteLayer> {
     }
 
     @Override
-    public void loadBatch(File file) {
-        FileHandle dataFile = new FileHandle(file);
+    public void loadBatch(FsFile dataFile) {
         JsonValue base = reader.parse(dataFile);
         JsonValue frameData = base.get("frames");
         JsonValue metaData = base.get("meta");
@@ -29,7 +26,7 @@ public class SpritePanel extends BatchPanel<SpriteLayer> {
             if (value.containsKey(name) || (layer.has("data") && layer.getString("data").equalsIgnoreCase("IGNORE")))
                 continue;
             SpriteLayer spriteLayer = createNewInstance();
-            spriteLayer.texture.setTexture(new FileHandle(file).parent().path() + "/layers/" + name + ".png", Files.FileType.Absolute);
+            spriteLayer.texture.setTexture(dataFile.parent().path() + "/layers/" + name + ".png", Files.FileType.Absolute);
             spriteLayer.frameCount.setValue(frameData.size);
             spriteLayer.renderLevel.setValue(renderLevel++);
             addPanelObject(name, spriteLayer);

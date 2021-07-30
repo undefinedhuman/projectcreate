@@ -51,12 +51,8 @@ public class ManagerList {
     }
 
     public void delete() {
-        for (int i = managers.size() - 1; i >= 0; i--) {
-            Manager manager = managers.get(i);
-            if(manager instanceof Serializable)
-                ((Serializable) manager).save();
-            managers.get(i).delete();
-        }
+        save();
+        managers.forEach(Manager::delete);
         managers.clear();
     }
 

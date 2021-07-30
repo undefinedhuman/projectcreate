@@ -7,7 +7,7 @@ import de.undefinedhuman.projectcreate.engine.settings.types.selection.Selection
 import de.undefinedhuman.projectcreate.engine.settings.types.Vector2Setting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.FloatSetting;
 
-public class Animation extends PanelObject {
+public class Animation extends PanelObject<String> {
 
     public Vector2Setting
             bounds = new Vector2Setting("Bounds", new Vector2());

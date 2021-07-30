@@ -10,10 +10,9 @@ import de.undefinedhuman.projectcreate.engine.settings.types.slider.SliderSettin
 public class FractalFunction extends BaseFunction {
 
     private NoiseGenerator noiseGenerator = NoiseType.values()[0].newInstance(1337);
-    private float fractalBounding = 0;
 
     public SelectionSetting<NoiseType>
-            noiseType = (SelectionSetting<NoiseType>) new SelectionSetting<>("Noise Type", NoiseType.values(), value -> NoiseType.valueOf(String.valueOf(value)), Enum::name)
+            noiseType = (SelectionSetting<NoiseType>) new SelectionSetting<>("Noise Type", NoiseType.values(), NoiseType::valueOf, Enum::name)
             .addValueListener(value -> {
                 noiseGenerator = value.newInstance(1337);
                 if(noiseGenerator == null)
@@ -35,6 +34,7 @@ public class FractalFunction extends BaseFunction {
                     .build(),
             octaves = (SliderSetting) SliderSettingDirector.createIntegerSlider(SliderSetting.newInstance("Octaves"))
                     .with(builder -> {
+                        builder.scale = 1f;
                         builder.bounds.set(1, 10);
                         builder.defaultValue = 3;
                     })
@@ -56,6 +56,8 @@ public class FractalFunction extends BaseFunction {
                     .with(builder -> builder.defaultValue = 50)
                     .build()
                     .addValueListener(value -> fractalBounding = calculateFractalBounding());
+
+    private float fractalBounding = calculateFractalBounding();
 
     public FractalFunction() {
         super("Fractal");

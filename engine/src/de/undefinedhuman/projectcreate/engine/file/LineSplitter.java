@@ -3,7 +3,7 @@ package de.undefinedhuman.projectcreate.engine.file;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Base64Coder;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 public class LineSplitter {
@@ -36,7 +36,7 @@ public class LineSplitter {
     public int getNextInt() {
         String s = getNextData();
         Integer i;
-        if(s == null || (i = Tools.isInteger(s)) == null)
+        if(s == null || (i = Utils.isInteger(s)) == null)
             return 0;
         return i;
     }
@@ -44,7 +44,7 @@ public class LineSplitter {
     public long getNextLong() {
         String s = getNextData();
         Long l;
-        if(s == null || (l = Tools.isLong(s)) == null)
+        if(s == null || (l = Utils.isLong(s)) == null)
             return 0;
         return l;
     }
@@ -52,7 +52,7 @@ public class LineSplitter {
     public double getNextDouble() {
         String s = getNextData();
         Double d;
-        if(s == null || (d = Tools.isDouble(s)) == null)
+        if(s == null || (d = Utils.isDouble(s)) == null)
             return 0;
         return d;
     }

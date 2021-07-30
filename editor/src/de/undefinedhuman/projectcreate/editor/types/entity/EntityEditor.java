@@ -6,14 +6,13 @@ import de.undefinedhuman.projectcreate.core.ecs.name.NameBlueprint;
 import de.undefinedhuman.projectcreate.editor.types.Editor;
 import de.undefinedhuman.projectcreate.editor.types.entity.ui.EntitySelectionPanel;
 import de.undefinedhuman.projectcreate.editor.types.entity.ui.EntitySettingsPanel;
-import de.undefinedhuman.projectcreate.editor.utils.Utils;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.Blueprint;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.file.FileUtils;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.settings.ui.ui.SettingsUI;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
@@ -33,7 +32,7 @@ public class EntityEditor extends Editor {
 
         BlueprintManager.getInstance().loadBlueprints(
                 Arrays.stream(new FsFile(Paths.ENTITY_PATH, Files.FileType.Internal).list(File::isDirectory))
-                        .filter(fileHandle -> Tools.isInteger(fileHandle.name()) != null)
+                        .filter(fileHandle -> Utils.isInteger(fileHandle.name()) != null)
                         .mapToInt(fileHandle -> Integer.parseInt(fileHandle.name())).toArray()
         );
 
@@ -55,8 +54,8 @@ public class EntityEditor extends Editor {
     @Override
     public void createMenuButtonsPanel(JPanel menuButtonPanel) {
         menuButtonPanel.setLayout(new GridLayout(1, 3, 5, 0));
-        menuButtonPanel.add(SettingsUI.createButton("Save", 0, e -> Utils.saveBlueprints(entitySelectionPanel.getSelectedItems().stream().mapToInt(id -> id).toArray())));
-        menuButtonPanel.add(SettingsUI.createButton("Save All", 0, e -> Utils.saveBlueprints(BlueprintManager.getInstance().getBlueprintIDs().stream().mapToInt(id -> id).toArray())));
+        menuButtonPanel.add(SettingsUI.createButton("Save", 0, e -> de.undefinedhuman.projectcreate.editor.utils.Utils.saveBlueprints(entitySelectionPanel.getSelectedItems().stream().mapToInt(id -> id).toArray())));
+        menuButtonPanel.add(SettingsUI.createButton("Save All", 0, e -> de.undefinedhuman.projectcreate.editor.utils.Utils.saveBlueprints(BlueprintManager.getInstance().getBlueprintIDs().stream().mapToInt(id -> id).toArray())));
         menuButtonPanel.add(SettingsUI.createButton("Reset", 0, e -> {
             List<Integer> selectedIDs = entitySelectionPanel.getSelectedItems();
             if(selectedIDs.size() == 0)
@@ -77,7 +76,7 @@ public class EntityEditor extends Editor {
                 NameBlueprint nameBlueprint = (NameBlueprint) selectedBlueprint.getComponentBlueprint(NameBlueprint.class);
                 return id + (nameBlueprint != null ? " " + nameBlueprint.name.getValue() : "");
             }).toArray(String[]::new));
-            int result = JOptionPane.showConfirmDialog(null, "Delete Blueprint" + Tools.appendSToString(removedIDs.size()) + " " + removeBlueprintIDsMessage, "Are you sure you want to delete " + (removedIDs.size() > 1 ? "those" : "this") +  " blueprint" + Tools.appendSToString(removedIDs.size()) + "?", JOptionPane.YES_NO_OPTION);
+            int result = JOptionPane.showConfirmDialog(null, "Delete Blueprint" + Utils.appendSToString(removedIDs.size()) + " " + removeBlueprintIDsMessage, "Are you sure you want to delete " + (removedIDs.size() > 1 ? "those" : "this") +  " blueprint" + Utils.appendSToString(removedIDs.size()) + "?", JOptionPane.YES_NO_OPTION);
             if(result != 0)
                 return;
             FileUtils.deleteFile(removedIDs.stream().map(id -> new FsFile(Paths.ENTITY_PATH, id + Variables.FILE_SEPARATOR, Files.FileType.Local)).filter(FileHandle::exists).toArray(FsFile[]::new));

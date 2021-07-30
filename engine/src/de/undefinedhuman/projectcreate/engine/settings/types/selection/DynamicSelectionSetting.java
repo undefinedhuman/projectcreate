@@ -5,6 +5,7 @@ import de.undefinedhuman.projectcreate.engine.settings.interfaces.Parser;
 import de.undefinedhuman.projectcreate.engine.settings.interfaces.Serializer;
 import de.undefinedhuman.projectcreate.engine.settings.types.BaseSetting;
 import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -31,7 +32,7 @@ public class DynamicSelectionSetting<T> extends BaseSetting<T> {
         Arrays.stream(values).forEach(comboBoxModel::addElement);
         selection = new JComboBox<>(comboBoxModel);
         selection.setFont(selection.getFont().deriveFont(16f).deriveFont(Font.BOLD));
-        if(hasValue(values, getValue()))
+        if(Utils.hasValue(values, getValue()))
             selection.setSelectedItem(getValue());
         selection.addPopupMenuListener(new PopupMenuListener() {
             @Override
@@ -42,7 +43,7 @@ public class DynamicSelectionSetting<T> extends BaseSetting<T> {
                 if(values.length == 0)
                     return;
                 Arrays.stream(values).forEach(comboBoxModel::addElement);
-                selection.setSelectedItem(hasValue(values, selectedItem) ? selectedItem : values[0]);
+                selection.setSelectedItem(Utils.hasValue(values, selectedItem) ? selectedItem : values[0]);
             }
 
             @Override
@@ -63,7 +64,7 @@ public class DynamicSelectionSetting<T> extends BaseSetting<T> {
     protected void loadValue(FileHandle parentDir, Object value) {
         super.loadValue(parentDir, value);
         T[] values = getValues.get();
-        if(hasValue(values, getValue()) || values.length == 0)
+        if(Utils.hasValue(values, getValue()) || values.length == 0)
             return;
         setValue(values[0]);
     }
@@ -72,13 +73,6 @@ public class DynamicSelectionSetting<T> extends BaseSetting<T> {
     protected void updateMenu(T value) {
         if(selection != null)
             selection.setSelectedItem(serializer.serialize(value));
-    }
-
-    private boolean hasValue(T[] values, T value) {
-        for(T s : values)
-            if(s.equals(value))
-                return true;
-        return false;
     }
 
 }

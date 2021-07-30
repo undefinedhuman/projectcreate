@@ -10,19 +10,19 @@ import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import javax.swing.*;
 import java.util.function.Consumer;
 
-public abstract class BaseFunction extends PanelObject {
+public abstract class BaseFunction extends PanelObject<String> {
 
     public IntSetting priority = new IntSetting("priority", 0);
 
     public BaseFunction(String key) {
         setKey(key);
-        settings.add(priority);
+        addSettings(priority);
     }
 
     public JPanel createPanel(Consumer<JPanel> removeFunction) {
         JPanel panel = new JPanel(new RelativeLayout(RelativeLayout.Y_AXIS).setFill(true));
         Accordion accordion = new Accordion(Variables.BACKGROUND_COLOR, false);
-        settings.stream().filter(setting -> setting != priority).forEach(setting -> setting.createSettingUI(accordion));
+        getSettings().stream().filter(setting -> setting != priority).forEach(setting -> setting.createSettingUI(accordion));
         panel.add(SettingsUI.createButton("Remove", Variables.DEFAULT_CONTENT_HEIGHT, e -> removeFunction.accept(panel)));
         panel.add(accordion);
         return panel;

@@ -11,7 +11,7 @@ public class TransformBlueprint extends ComponentBlueprint {
     public Vector2Setting size = new Vector2Setting("Size", new Vector2(0, 0));
 
     public TransformBlueprint() {
-        settings.add(size);
+        addSettings(size);
         priority = ComponentPriority.LOWEST;
     }
 

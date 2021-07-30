@@ -29,7 +29,7 @@ public class WorldManager {
 
     private WorldManager() {}
 
-    private static final byte[] collisionMask = new byte[] {
+    private static final byte[] COLLISION_MASK = new byte[] {
             0, 0, 0, 2, 0, 0, 3, 1, 0, 4, 0, 1, 5, 1, 1, 1
     };
 
@@ -175,7 +175,7 @@ public class WorldManager {
     }
 
     public void checkCollisionCell(int x, int y) {
-        World.instance.setCollision(x, y, World.COLLISION_STATE_LAYER, collisionMask[getCollisionValue(x-1, y, (byte) 1) + getCollisionValue(x, y+1, (byte) 2) + getCollisionValue(x+1, y, (byte) 4) + getCollisionValue(x, y-1, (byte) 8)]);
+        World.instance.setCollision(x, y, World.COLLISION_STATE_LAYER, COLLISION_MASK[getCollisionValue(x-1, y, (byte) 1) + getCollisionValue(x, y+1, (byte) 2) + getCollisionValue(x+1, y, (byte) 4) + getCollisionValue(x, y-1, (byte) 8)]);
     }
 
     private byte getCollisionValue(int x, int y, byte value) {

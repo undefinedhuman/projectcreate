@@ -15,7 +15,6 @@ import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsGroup;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import java.util.Arrays;
@@ -29,16 +28,16 @@ public class Utils {
             if(itemDir.exists())
                 FileUtils.deleteFile(itemDir);
 
-            FileWriter writer = new FsFile(itemDir, "settings.item", Files.FileType.Local).getFileWriter(true);
+            FileWriter writer = new FsFile(itemDir, "settings.item").getFileWriter(true);
             writer.writeString("Type").writeString(item.type.name());
             writer.nextLine();
-            Tools.saveSettings(writer, item.getSettingsList());
+            de.undefinedhuman.projectcreate.engine.utils.Utils.saveSettings(writer, item.getSettingsList());
             writer.close();
         }).toArray();
         if(savedItems.length > 0)
-            Log.debug("Item" + Tools.appendSToString(savedItems.length) + " " + Arrays.toString(savedItems) + " saved!");
+            Log.debug("Item" + de.undefinedhuman.projectcreate.engine.utils.Utils.appendSToString(savedItems.length) + " " + Arrays.toString(savedItems) + " saved!");
         if(savedItems.length != ids.length)
-            Log.error("Error while saving item" + Tools.appendSToString(ids.length - savedItems.length) + ": " + Arrays.toString(Arrays.stream(ids).filter(id -> Arrays.stream(savedItems).noneMatch(value -> value == id)).toArray()));
+            Log.error("Error while saving item" + de.undefinedhuman.projectcreate.engine.utils.Utils.appendSToString(ids.length - savedItems.length) + ": " + Arrays.toString(Arrays.stream(ids).filter(id -> Arrays.stream(savedItems).noneMatch(value -> value == id)).toArray()));
     }
 
     public static void saveBlueprints(int... ids) {
@@ -48,15 +47,15 @@ public class Utils {
             if(entityDir.exists())
                 FileUtils.deleteFile(entityDir);
 
-            FileWriter writer = new FsFile(entityDir, "settings.entity", Files.FileType.Local).getFileWriter(true);
+            FileWriter writer = new FsFile(entityDir, "settings.entity").getFileWriter(true);
             for(ComponentBlueprint componentBlueprint : blueprint.getComponentBlueprints().values())
                 componentBlueprint.save(writer);
             writer.close();
         }).toArray();
         if(savedBlueprints.length > 0)
-            Log.debug("Blueprint" + Tools.appendSToString(savedBlueprints.length) + " " + Arrays.toString(savedBlueprints) + " saved!");
+            Log.debug("Blueprint" + de.undefinedhuman.projectcreate.engine.utils.Utils.appendSToString(savedBlueprints.length) + " " + Arrays.toString(savedBlueprints) + " saved!");
         if(savedBlueprints.length != ids.length)
-            Log.error("Error while saving blueprint" + Tools.appendSToString(ids.length - savedBlueprints.length) + ": " + Arrays.toString(Arrays.stream(ids).filter(id -> Arrays.stream(savedBlueprints).noneMatch(value -> value == id)).toArray()));
+            Log.error("Error while saving blueprint" + de.undefinedhuman.projectcreate.engine.utils.Utils.appendSToString(ids.length - savedBlueprints.length) + ": " + Arrays.toString(Arrays.stream(ids).filter(id -> Arrays.stream(savedBlueprints).noneMatch(value -> value == id)).toArray()));
     }
 
     public static void addSettingsListToAccordion(SettingsGroup settingsGroup, Accordion accordion) {

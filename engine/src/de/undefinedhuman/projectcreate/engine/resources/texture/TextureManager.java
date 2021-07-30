@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.resources.RessourceUtils;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -26,7 +26,7 @@ public class TextureManager extends Manager {
     public void init() {
         Log.debug(() -> {
             Object[] loadedTextures = addTextures("Unknown.png", "blank.png").toArray();
-            return "Texture" + Tools.appendSToString(loadedTextures.length) + " loaded: " + Tools.convertArrayToPrintableString(loadedTextures);
+            return "Texture" + Utils.appendSToString(loadedTextures.length) + " loaded: " + Utils.convertArrayToPrintableString(loadedTextures);
         });
     }
 
@@ -41,7 +41,7 @@ public class TextureManager extends Manager {
         Log.debug(() -> {
             if(loadedTextures.length == 0)
                 return "";
-            return "Texture" + Tools.appendSToString(loadedTextures.length) + " loaded: " + Tools.convertArrayToPrintableString(loadedTextures);
+            return "Texture" + Utils.appendSToString(loadedTextures.length) + " loaded: " + Utils.convertArrayToPrintableString(loadedTextures);
         });
         return Arrays.stream(names).filter(name -> hasTexture(name) && textures.get(name) != null).count() == names.length;
     }
@@ -82,7 +82,7 @@ public class TextureManager extends Manager {
                     entry.getValue().delete();
                     return entry.getKey();
                 });
-        Log.debug(() -> "Texture" + Tools.appendSToString(entries.size()) + " unloaded: " + deletedTextures.collect(Collectors.joining(", ")));
+        Log.debug(() -> "Texture" + Utils.appendSToString(entries.size()) + " unloaded: " + deletedTextures.collect(Collectors.joining(", ")));
     }
 
     public TextureRegion getTexture(String name) {

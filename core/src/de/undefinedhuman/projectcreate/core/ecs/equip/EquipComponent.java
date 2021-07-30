@@ -6,7 +6,7 @@ import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.LineWriter;
 import de.undefinedhuman.projectcreate.engine.network.NetworkComponent;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
 public class EquipComponent implements Component, NetworkComponent {
 
@@ -26,7 +26,7 @@ public class EquipComponent implements Component, NetworkComponent {
     }
 
     public Vector2 getCurrentOffset(int index) {
-        if(!Tools.isInRange(index, 0, itemOffsets.length-1))
+        if(!Utils.isInRange(index, 0, itemOffsets.length-1))
             return new Vector2();
         Vector2 vector = itemOffsets[index];
         return new Vector2(vector);
@@ -35,12 +35,12 @@ public class EquipComponent implements Component, NetworkComponent {
     public String[] getInvisibleSprites() { return invisibleSprites; }
 
     public void setItemID(int index, int itemID) {
-        if (!Tools.isInRange(index, 0, 4)) return;
+        if (!Utils.isInRange(index, 0, 4)) return;
         itemIDs[index] = itemID;
     }
 
     public void setItemID(int index, Item item) {
-        if (!Tools.isInRange(index, 0, 4))
+        if (!Utils.isInRange(index, 0, 4))
             return;
         // itemIDs[index] = itemID;
         // TODO ADD ARMOR

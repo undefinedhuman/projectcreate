@@ -2,7 +2,7 @@ package de.undefinedhuman.projectcreate.core.ecs.shoulder;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
 public class ShoulderComponent implements Component {
 
@@ -14,7 +14,7 @@ public class ShoulderComponent implements Component {
     }
 
     public Vector2 getShoulderPos(int index) {
-        if(!Tools.isInRange(index, 0, shoulderPos.length-1))
+        if(!Utils.isInRange(index, 0, shoulderPos.length-1))
             return new Vector2();
         Vector2 vector = shoulderPos[index];
         return new Vector2(vector);

@@ -33,7 +33,7 @@ public class Variables {
     public static final String LOG_MESSAGE_FORMAT = "[%prefix% - %time%] %message%";
     public static final String LOG_DATE_FORMAT = "dd-MM-yyyy - HH-mm-ss";
 
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 
     // World
     public static final int CHUNK_SIZE = 20;

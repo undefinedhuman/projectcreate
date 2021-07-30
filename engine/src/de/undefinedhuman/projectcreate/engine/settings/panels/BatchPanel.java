@@ -10,8 +10,10 @@ import de.undefinedhuman.projectcreate.engine.settings.ui.ui.SettingsUI;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
-public abstract class BatchPanel<T extends PanelObject> extends StringPanel<T> {
+public abstract class BatchPanel<T extends PanelObject<String>> extends StringPanel<T> {
 
     private static final float BUTTON_WIDTH = 0.6f;
 
@@ -23,22 +25,42 @@ public abstract class BatchPanel<T extends PanelObject> extends StringPanel<T> {
 
     @Override
     protected void createUtilityButtons(JPanel panel, float remainingWidth) {
-        panel.add(SettingsUI.createButton("Load Layers", BUTTON_HEIGHT, e -> {
+        panel.add(SettingsUI.createButton("Aseprite", BUTTON_HEIGHT, e -> {
             JFileChooser chooser = new JFileChooser();
-            chooser.setCurrentDirectory(new FsFile(Paths.EDITOR_PATH, Files.FileType.Internal).file());
-            chooser.setFileFilter(new FileNameExtensionFilter("Sprite Layer Data", "json"));
+            chooser.setCurrentDirectory(new FsFile(Paths.EDITOR_PATH, Files.FileType.Local).file());
+            chooser.setFileFilter(new FileNameExtensionFilter("Sprite", "aseprite"));
 
             int returnVal = chooser.showOpenDialog(null);
             if(returnVal != JFileChooser.APPROVE_OPTION) return;
-            File dataFile = chooser.getSelectedFile();
-            if(dataFile == null) {
-                Log.error("Please select a valid json data file!");
+            File asepriteFile = chooser.getSelectedFile();
+            if(asepriteFile == null || asepriteFile.isDirectory()) {
+                Log.error("Please select a valid aseprite data file!");
                 return;
             }
-            loadBatch(dataFile);
+
+            FsFile exportFile = new FsFile(Paths.EDITOR_PATH, "export/", Files.FileType.Local);
+            if(exportFile.exists()) exportFile.emptyDirectory();
+
+            Process process;
+            try {
+                process = Runtime.getRuntime().exec("zsh " + new FsFile(Paths.EDITOR_PATH, "scripts/export.sh", Files.FileType.Internal).file().getAbsolutePath() + " " + asepriteFile.getAbsolutePath() + " " + exportFile.file().getAbsolutePath());
+                InputStream inputStream = process.getInputStream();
+                while (inputStream.read() != -1);
+                process.waitFor();
+            } catch (IOException | InterruptedException ex) {
+                Log.error("Exception encountered", ex);
+            }
+
+            FsFile dataFile = new FsFile(exportFile, "data.json");
+            if(!dataFile.exists())
+                Log.error("Error while exporting sprite layers and creating data file");
+            else loadBatch(dataFile);
+
+            if(exportFile.exists() && exportFile.isDirectory())
+                exportFile.deleteDirectory();
         }), BUTTON_WIDTH);
         super.createUtilityButtons(panel, remainingWidth - BUTTON_WIDTH);
     }
 
-    public abstract void loadBatch(File file);
+    public abstract void loadBatch(FsFile file);
 }

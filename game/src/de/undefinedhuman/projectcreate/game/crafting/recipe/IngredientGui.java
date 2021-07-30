@@ -78,7 +78,7 @@ public class IngredientGui extends Gui implements Poolable {
 
     public IngredientGui update(RecipeItem item) {
         InventoryManager.getInstance().removeListener(ingredientID, listener);
-        ingredientID = Integer.parseInt(item.getKey());
+        ingredientID = item.getKey();
         amountNeededToCraft = item.quantity.getValue();
         Item currentItem = ItemManager.getInstance().getItem(ingredientID);
         this.icon.setTexture(currentItem.iconTexture.getValue());

@@ -25,7 +25,7 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class Tools {
+public class Utils {
 
     public static void loadSettings(FileReader reader, SettingsList settings) {
         SettingsObject object = new SettingsObjectAdapter(reader);
@@ -78,10 +78,12 @@ public class Tools {
         return textField;
     }
 
-    public static void drawLine(SpriteBatch batch, Vector2 point1, Vector2 point2, int lineWidth, Color color) {
+    public static void drawLine(SpriteBatch batch, Vector2 point1, Vector2 point2, float lineWidth, Color color) {
         Vector2 vec = new Vector2(point2).sub(point1);
         TextureRegion texture = TextureManager.getInstance().getTexture("blank.png");
-        Sprite sprite = new Sprite(texture, 0, 0, lineWidth, (int) vec.len());
+        Sprite sprite = new Sprite(texture);
+        sprite.setBounds(point1.x, point1.y, lineWidth, vec.len());
+        sprite.setSize(lineWidth, vec.len());
         sprite.setColor(color);
         sprite.setOrigin(0, 0);
         sprite.setPosition(point1.x, point1.y);
@@ -182,6 +184,13 @@ public class Tools {
 
     public static Vector2 getTextureSize(TextureRegion texture) {
         return new Vector2(texture.getRegionWidth(), texture.getRegionHeight());
+    }
+
+    public static <T> boolean hasValue(T[] values, T value) {
+        for(T s : values)
+            if(s.equals(value))
+                return true;
+        return false;
     }
 
 }

@@ -3,7 +3,7 @@ package de.undefinedhuman.projectcreate.engine.config;
 import com.badlogic.gdx.Files;
 import de.undefinedhuman.projectcreate.engine.file.*;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
 @SuppressWarnings("ALL")
 public abstract class Config extends SettingsList implements Serializable {
@@ -26,7 +26,7 @@ public abstract class Config extends SettingsList implements Serializable {
         FileWriter writer = configFile.getFileWriter(true);
         if(writer == null)
             return;
-        Tools.saveSettings(writer, this);
+        Utils.saveSettings(writer, this);
         writer.close();
     }
 
@@ -37,7 +37,7 @@ public abstract class Config extends SettingsList implements Serializable {
         FileReader reader = configFile.getFileReader(true);
         if(reader == null)
             return;
-        Tools.loadSettings(reader, this);
+        Utils.loadSettings(reader, this);
         reader.close();
     }
 

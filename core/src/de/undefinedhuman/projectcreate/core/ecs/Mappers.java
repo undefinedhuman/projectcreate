@@ -16,6 +16,7 @@ import de.undefinedhuman.projectcreate.core.ecs.rightarm.RightArmComponent;
 import de.undefinedhuman.projectcreate.core.ecs.shoulder.ShoulderComponent;
 import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteComponent;
 import de.undefinedhuman.projectcreate.core.ecs.transform.TransformComponent;
+import de.undefinedhuman.projectcreate.core.ecs.type.TypeComponent;
 
 public class Mappers {
     public static final ComponentMapper<TransformComponent> TRANSFORM = ComponentMapper.getFor(TransformComponent.class);
@@ -33,4 +34,5 @@ public class Mappers {
     public static final ComponentMapper<CollisionComponent> COLLISION = ComponentMapper.getFor(CollisionComponent.class);
     public static final ComponentMapper<AnimationComponent> ANIMATION = ComponentMapper.getFor(AnimationComponent.class);
     public static final ComponentMapper<AngleComponent> ANGLE = ComponentMapper.getFor(AngleComponent.class);
+    public static final ComponentMapper<TypeComponent> TYPE = ComponentMapper.getFor(TypeComponent.class);
 }

@@ -4,7 +4,7 @@ import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.settings.types.BaseSetting;
 import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
 import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 import de.undefinedhuman.projectcreate.engine.validation.ValidationRule;
@@ -82,14 +82,14 @@ public class SliderSetting extends BaseSetting<Float> {
     protected void updateMenu(Float value) {
         if(slider == null)
             return;
-        Float parsedValue = Tools.isFloat(value.toString());
+        Float parsedValue = Utils.isFloat(value.toString());
         if(parsedValue == null) {
             Log.error("Error while loading value of setting (float conversion error): " + value);
             return;
         }
-        if(Tools.isInteger(parsedValue.toString()) != null)
+        if(Utils.isInteger(parsedValue.toString()) != null)
             return;
-        slider.setValue(Tools.isInRange(parsedValue.intValue(), range.x, range.y) ? (int) (parsedValue * scale) : (int) (range.x * scale));
+        slider.setValue(Utils.isInRange(parsedValue.intValue(), range.x, range.y) ? (int) (parsedValue * scale) : (int) (range.x * scale));
     }
 
     public static Builder newInstance(String key) {
@@ -133,7 +133,7 @@ public class SliderSetting extends BaseSetting<Float> {
                         builder -> builder.numberOfDecimals = 0
                 ),
                 new ValidationRule<>(
-                        builder -> Tools.isInRange(builder.relativeWidth, 0, 1f),
+                        builder -> Utils.isInRange(builder.relativeWidth, 0, 1f),
                         builder -> "Builder (" + builder.key + "): Relative Slider UI width must be between 0f and 1f",
                         builder -> builder.relativeWidth = 0.85f
                 ),
@@ -148,7 +148,7 @@ public class SliderSetting extends BaseSetting<Float> {
                         builder -> builder.relativeWidth = 0.95f
                 ),
                 new ValidationRule<>(
-                        builder -> Tools.isInRange(builder.defaultValue, builder.bounds.x, builder.bounds.y),
+                        builder -> Utils.isInRange(builder.defaultValue, builder.bounds.x, builder.bounds.y),
                         builder -> "Builder (" + builder.key + "): The default value of the slider should be between boundaries",
                         builder -> builder.defaultValue = builder.bounds.x
                 ),

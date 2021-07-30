@@ -15,6 +15,6 @@ public class SettingsGroup extends SettingsList {
 
     @Override
     public void delete() {
-        settings.clear();
+        getSettings().clear();
     }
 }

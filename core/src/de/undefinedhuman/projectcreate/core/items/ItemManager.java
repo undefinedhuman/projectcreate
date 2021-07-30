@@ -11,7 +11,7 @@ import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectAdapter;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -45,9 +45,9 @@ public class ItemManager extends Manager {
             return true;
         }).toArray();
         if(failedItemIDs.length > 0)
-            Log.error("Error while loading item" + Tools.appendSToString(failedItemIDs.length) + ": " + Arrays.toString(Arrays.stream(failedItemIDs).sorted().toArray()));
+            Log.error("Error while loading item" + Utils.appendSToString(failedItemIDs.length) + ": " + Arrays.toString(Arrays.stream(failedItemIDs).sorted().toArray()));
         if(loadedItemIDs.length > 0)
-            Log.debug("Item" + Tools.appendSToString(loadedItemIDs.length) + " loaded: " + Arrays.toString(Arrays.stream(loadedItemIDs).sorted().toArray()));
+            Log.debug("Item" + Utils.appendSToString(loadedItemIDs.length) + " loaded: " + Arrays.toString(Arrays.stream(loadedItemIDs).sorted().toArray()));
         return loadedItemIDs.length == ids.length;
     }
 
@@ -69,7 +69,7 @@ public class ItemManager extends Manager {
                     items.remove(id);
                     return Integer.toString(id);
                 });
-        Log.debug(() -> "Item" + Tools.appendSToString(ids.length) + " unloaded: " + removedItems.collect(Collectors.joining(", ")));
+        Log.debug(() -> "Item" + Utils.appendSToString(ids.length) + " unloaded: " + removedItems.collect(Collectors.joining(", ")));
     }
 
     public Item getItem(int id) {
@@ -89,7 +89,17 @@ public class ItemManager extends Manager {
         items.clear();
     }
 
-    private Item loadItem(int id) {
+    public static ItemManager getInstance() {
+        if (instance == null) {
+            synchronized (ItemManager.class) {
+                if (instance == null)
+                    instance = new ItemManager();
+            }
+        }
+        return instance;
+    }
+
+    public static Item loadItem(int id) {
         FileReader reader = new FsFile(Paths.ITEM_PATH, id + "/settings.item", Files.FileType.Internal).getFileReader(true);
         SettingsObject settingsObject = new SettingsObjectAdapter(reader);
         ItemType type;
@@ -106,16 +116,6 @@ public class ItemManager extends Manager {
         item.init();
         reader.close();
         return item;
-    }
-
-    public static ItemManager getInstance() {
-        if (instance == null) {
-            synchronized (ItemManager.class) {
-                if (instance == null)
-                    instance = new ItemManager();
-            }
-        }
-        return instance;
     }
 
 }

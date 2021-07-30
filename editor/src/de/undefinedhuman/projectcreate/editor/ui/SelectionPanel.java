@@ -35,7 +35,7 @@ public abstract class SelectionPanel<T> extends JPanel {
         add(createTitleLabel(title), 0.4f);
         add(filter = createFilter(), 0.3f);
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setViewportView(itemList = createList(currentData = getListData(), this::select, this::getTitle));
+        scrollPane.setViewportView(itemList = createList(currentData = getListData(), this::select, this::renderCell));
         listModel = (DefaultListModel<T>) itemList.getModel();
         add(scrollPane, itemListHeight);
         createMenuPanels(this);
@@ -82,7 +82,7 @@ public abstract class SelectionPanel<T> extends JPanel {
         return filter;
     }
 
-    protected static <T> JList<T> createList(T[] data, Consumer<T> select, Function<T, String> title) {
+    protected static <T> JList<T> createList(T[] data, Consumer<T> select, RenderJLabel<T> renderJLabel) {
         DefaultListModel<T> listModel = new DefaultListModel<>();
         for(T date : data)
             listModel.addElement(date);
@@ -94,10 +94,10 @@ public abstract class SelectionPanel<T> extends JPanel {
             return list.getComponent(0).toString();
         }));
         list.addListSelectionListener(e -> {
-            T selectedID = list.getSelectedValue();
-            if(selectedID == null)
+            T selectedItem = list.getSelectedValue();
+            if(selectedItem == null)
                 return;
-            select.accept(selectedID);
+            select.accept(selectedItem);
         });
         list.setFont(list.getFont().deriveFont(16f).deriveFont(Font.BOLD));
         list.setCellRenderer(new DefaultListCellRenderer() {
@@ -105,7 +105,7 @@ public abstract class SelectionPanel<T> extends JPanel {
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if(c instanceof JLabel && value != null)
-                    ((JLabel) c).setText(title.apply((T) value));
+                    renderJLabel.render((JLabel) c, (T) value);
                 c.setBackground(index % 2 == 0 ? c.getBackground() : c.getBackground().darker());
                 return c;
             }
@@ -161,6 +161,8 @@ public abstract class SelectionPanel<T> extends JPanel {
     public abstract void select(T t);
 
     public abstract T[] getListData();
+
+    public abstract void renderCell(JLabel label, T t);
 
     public abstract String getTitle(T t);
 

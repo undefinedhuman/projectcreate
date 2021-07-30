@@ -39,7 +39,7 @@ public class TextureSetting extends Setting<String> {
     @Override
     protected void saveValue(FileWriter writer) {
         writer.writeString(getValue());
-        FsFile file = new FsFile(writer.parent(), getValue(),  Files.FileType.Local);
+        FsFile file = new FsFile(writer.parent(), getValue());
         try { ImageIO.write(texture, "png", file.file());
         } catch (IOException ex) { Log.showErrorDialog("Can not save texture (" + this + "): \n" + ex.getMessage(), true); }
     }
@@ -132,4 +132,7 @@ public class TextureSetting extends Setting<String> {
         textureLabel.setIcon(new ImageIcon(texture.getScaledInstance((int) (texture.getWidth() * scaleFactor), (int) (texture.getHeight() * scaleFactor), Image.SCALE_SMOOTH)));
     }
 
+    public BufferedImage getBufferedImage() {
+        return texture;
+    }
 }

@@ -12,7 +12,7 @@ import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessage;
 import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessageDecorators;
 import de.undefinedhuman.projectcreate.engine.settings.ui.utils.SettingsUtils;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.imageio.ImageIO;
@@ -113,7 +113,7 @@ public class Window extends JFrame {
     }
 
     private void createEditorMenuButtons(int index, JPanel menuButtonPanel) {
-        if(Tools.isInRange(index, 0, EDITOR_INSTANCES.size()-1))
+        if(Utils.isInRange(index, 0, EDITOR_INSTANCES.size()-1))
         menuButtonPanel.removeAll();
         EDITOR_INSTANCES.get(index).createMenuButtonsPanel(menuButtonPanel);
         menuButtonPanel.revalidate();

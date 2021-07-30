@@ -1,28 +1,20 @@
 package de.undefinedhuman.projectcreate.engine.settings.panels;
 
-import com.badlogic.gdx.Files;
-import com.badlogic.gdx.files.FileHandle;
-import de.undefinedhuman.projectcreate.engine.file.FileReader;
-import de.undefinedhuman.projectcreate.engine.file.FsFile;
-import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
-import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.log.Log;
-import de.undefinedhuman.projectcreate.engine.resources.RessourceUtils;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
-import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectAdapter;
 import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 
-public class SelectionPanel<T extends PanelObject> extends Panel<T> {
+public abstract class SelectionPanel<K extends Comparable<K>, T extends PanelObject<K>> extends Panel<K, T> {
 
-    private JComboBox<String> selection;
+    private DefaultComboBoxModel<K> comboBoxModel = new DefaultComboBoxModel<>();
+    private JComboBox<K> selection;
 
     public SelectionPanel(String name, Class<T> panelObjectClass) {
         super(name, panelObjectClass);
@@ -30,24 +22,24 @@ public class SelectionPanel<T extends PanelObject> extends Panel<T> {
 
     @Override
     protected void createPanelObjectNameComponent(JPanel panel) {
-        FileHandle[] itemDirs = RessourceUtils.loadDir(Paths.ITEM_PATH).list();
-        ArrayList<String> ids = new ArrayList<>();
-
-        for (FileHandle itemDir : itemDirs) {
-            if (!itemDir.isDirectory()) continue;
-            FileReader reader = new FileReader(new FsFile(Paths.ITEM_PATH, itemDir.name() + "/settings.item", Files.FileType.Internal), true);
-            ids.add(itemDir.name() + "-" + ((LineSplitter) new SettingsObjectAdapter(reader).get("Name")).getNextString());
-            reader.close();
-        }
-
-        String[] idArray = ids.toArray(new String[0]);
-        Arrays.sort(idArray, Comparator.comparing(c -> Integer.valueOf(c.split("-")[0])));
-
-        selection = new JComboBox<>(idArray);
+        setSelectionData();
+        selection = new JComboBox<>(comboBoxModel);
+        selection.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if(c instanceof JLabel && value != null) {
+                    renderJLabel((JLabel) c, (K) value);
+                }
+                return c;
+            }
+        });
         selection.addPopupMenuListener(new PopupMenuListener() {
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-
+                K selectedItem = (K) selection.getSelectedItem();
+                K[] values = setSelectionData();
+                selection.setSelectedItem(Utils.hasValue(values, selectedItem) ? selectedItem : values[0]);
             }
 
             @Override
@@ -62,12 +54,12 @@ public class SelectionPanel<T extends PanelObject> extends Panel<T> {
     }
 
     @Override
-    protected String getSelectedObjectName() {
+    protected K getSelectedKey() {
         if(selection.getSelectedItem() == null) {
-            Log.error("Please select a object from the panel!");
-            return "";
+            Log.error("Please select a object from the combo box!");
+            return null;
         }
-        return (String) selection.getSelectedItem();
+        return (K) selection.getSelectedItem();
     }
 
     @Override
@@ -75,6 +67,17 @@ public class SelectionPanel<T extends PanelObject> extends Panel<T> {
         selection.setSelectedItem(object.getKey());
         for(Setting<?> setting : object.getSettings())
             setting.createSettingUI(panel);
+    }
+
+    public abstract void renderJLabel(JLabel label, K k);
+
+    public abstract K[] getSelectionData();
+
+    private K[] setSelectionData() {
+        comboBoxModel.removeAllElements();
+        K[] data = getSelectionData();
+        Arrays.stream(data).forEach(key -> comboBoxModel.addElement(key));
+        return data;
     }
 
 }

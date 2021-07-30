@@ -1,33 +1,39 @@
 package de.undefinedhuman.projectcreate.server;
 
-import com.badlogic.gdx.Files;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.headless.HeadlessApplication;
-import de.undefinedhuman.projectcreate.engine.gl.HeadlessApplicationListener;
-import de.undefinedhuman.projectcreate.engine.log.Log;
+import java.util.Scanner;
 
 public class Main {
 
+    private static boolean isTerminated = false, isClosing = false;
+
     public static void main(String[] args) {
-        new HeadlessApplication(new HeadlessApplicationListener());
-        Log.getInstance().setFileLocation(Files.FileType.Local);
-        Log.getInstance().init();
-        Log.getInstance().load();
-        Log.info("SERVER STARTED!");
-        Log.info("SERVER STOPPED!");
-        int i = 500;
-        while(i > 0) {
-            try {
-                Thread.sleep(1000);
-                i--;
-            } catch (InterruptedException e) {
-                Log.error("Error in server thread", e);
-                Thread.currentThread().interrupt();
-            }
+        ServerManager.getInstance();
+
+        final Scanner scanner = new Scanner(System.in);
+        boolean exit = false;
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            isClosing = true;
+            terminateServer(scanner);
+        }));
+
+        while (!exit) {
+            String str = scanner.nextLine();
+            if (str.equals("exit") || str.equals("quit") || str.equals("stop")) { exit = true; isClosing = true; }
         }
-        Log.getInstance().save();
-        Gdx.app.exit();
+
+        terminateServer(scanner);
         System.exit(0);
+    }
+
+    private static void terminateServer(Scanner scanner) {
+        scanner.close();
+        if(!isTerminated) ServerManager.getInstance().dispose();
+        isTerminated = true;
+    }
+
+    public static boolean isClosing() {
+        return isClosing;
     }
 
 }

@@ -10,12 +10,12 @@ public class FsFile extends FileHandle {
         this(path + fileName, type);
     }
 
-    public FsFile(FileHandle parentFile, String fileName, Files.FileType type) {
-        super(parentFile.path() + Variables.FILE_SEPARATOR + fileName, type);
+    public FsFile(FileHandle parentFile, String fileName) {
+        super(parentFile.path() + Variables.FILE_SEPARATOR + fileName, parentFile.type());
     }
 
-    public FsFile(FsFile parentFile, String fileName, Files.FileType type) {
-        super(parentFile.path() + Variables.FILE_SEPARATOR + fileName, type);
+    public FsFile(FsFile parentFile, String fileName) {
+        super(parentFile.path() + Variables.FILE_SEPARATOR + fileName, parentFile.type());
     }
 
     public FsFile(String fileName, Files.FileType type) {

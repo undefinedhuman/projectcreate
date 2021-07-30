@@ -6,7 +6,7 @@ import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
 import java.util.Locale;
 
@@ -17,13 +17,13 @@ public abstract class ComponentBlueprint extends SettingsList implements Compara
     public abstract Component createInstance();
 
     public void load(FileHandle parentDir, SettingsObject settingsObject) {
-        for(Setting<?> setting : this.settings)
+        for(Setting<?> setting : this.getSettings())
             setting.load(parentDir, settingsObject);
     }
 
     public void save(FileWriter writer) {
         writer.writeString("{:" + getClass().getName()).nextLine();
-        Tools.saveSettings(writer, this);
+        Utils.saveSettings(writer, this);
         writer.writeString("}").nextLine();
     }
 

@@ -4,7 +4,7 @@ import de.undefinedhuman.projectcreate.engine.settings.panels.PanelObject;
 import de.undefinedhuman.projectcreate.engine.settings.types.TextureSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.IntSetting;
 
-public class SpriteLayer extends PanelObject {
+public class SpriteLayer extends PanelObject<String> {
 
     public TextureSetting
             texture = new TextureSetting("Texture", "Unknown.png");

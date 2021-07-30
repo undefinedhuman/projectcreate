@@ -6,7 +6,7 @@ import java.util.List;
 
 public class SettingsList {
 
-    protected ArrayList<Setting<?>> settings = new ArrayList<>();
+    private ArrayList<Setting<?>> settings = new ArrayList<>();
 
     public void addSettings(Setting<?>... settings) {
         this.settings.addAll(Arrays.asList(settings));

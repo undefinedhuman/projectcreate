@@ -65,13 +65,4 @@ public class Transform implements NetworkComponent {
         return "(X: " + position.x + ", Y: " + position.y + "), (WIDTH: " + size.x + ", HEIGHT: " + size.y + ")";
     }
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-
-    public Transform copy() {
-        return new Transform(this);
-    }
-
 }

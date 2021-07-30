@@ -14,7 +14,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 
-public abstract class Panel<T extends PanelObject> extends Setting<HashMap<String, T>> {
+public abstract class Panel<K extends Comparable<K>, T extends PanelObject<K>> extends Setting<HashMap<K, T>> {
 
     protected static final int INPUT_HEIGHT = Variables.DEFAULT_CONTENT_HEIGHT;
     protected static final int BUTTON_HEIGHT = Variables.DEFAULT_CONTENT_HEIGHT;
@@ -26,8 +26,8 @@ public abstract class Panel<T extends PanelObject> extends Setting<HashMap<Strin
     private JList<T> panelObjectList;
     private Accordion objectPanel;
 
-    public Panel(String key, Class<T> panelObjectClass) {
-        super(key, new HashMap<>());
+    public Panel(String settingKey, Class<T> panelObjectClass) {
+        super(settingKey, new HashMap<>());
         this.panelObjectClass = panelObjectClass;
     }
 
@@ -69,7 +69,7 @@ public abstract class Panel<T extends PanelObject> extends Setting<HashMap<Strin
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if(c instanceof JLabel && value != null)
-                    ((JLabel) c).setText(((PanelObject) value).getKey());
+                    ((JLabel) c).setText(((PanelObject<K>) value).getDisplayText());
                 c.setBackground(index % 2 == 0 ? c.getBackground() : c.getBackground().darker());
                 return c;
             }
@@ -110,7 +110,8 @@ public abstract class Panel<T extends PanelObject> extends Setting<HashMap<Strin
             T panelObject = createNewInstance();
             if(panelObject == null)
                 return;
-            this.value.put(key, (T) panelObject.setKey(key).load(parentDir, (SettingsObject) panelObjectSettings));
+            K k = parseKey(key);
+            this.value.put(k, (T) panelObject.setKey(k).load(parentDir, (SettingsObject) panelObjectSettings));
         }
     }
 
@@ -122,48 +123,47 @@ public abstract class Panel<T extends PanelObject> extends Setting<HashMap<Strin
     }
 
     protected abstract void createPanelObjectNameComponent(JPanel panel);
-    protected abstract String getSelectedObjectName();
+    protected abstract K getSelectedKey();
     protected abstract void selectObject(T object, Accordion panel);
 
     protected void createMenuButtons(JPanel panel) {
         panel.add(SettingsUI.createButton("Add",
                 BUTTON_HEIGHT,
-                e -> {
-                    String name = getSelectedObjectName();
-                    if(name.equalsIgnoreCase(""))
-                        return;
-                    addPanelObject(name);
-                }
+                e -> addPanelObject(getSelectedKey())
         ), 0.5f);
-        panel.add(SettingsUI.createButton("Remove", BUTTON_HEIGHT, e -> removePanelObject(getSelectedObjectName())), 0.5f);
+        panel.add(SettingsUI.createButton("Remove", BUTTON_HEIGHT, e -> removePanelObject(getSelectedKey())), 0.5f);
     }
 
     protected void createUtilityButtons(JPanel panel, float remainingWidth) {
         panel.add(SettingsUI.createButton("Clear All", BUTTON_HEIGHT, e -> removeAllPanelObjects()), remainingWidth);
     }
 
-    protected void addPanelObject(String name) {
-        addPanelObject(name, createNewInstance());
+    protected void addPanelObject(K key) {
+        if(key == null)
+            return;
+        addPanelObject(key, createNewInstance());
     }
 
-    protected void addPanelObject(String name, T panelObject) {
+    protected void addPanelObject(K key, T panelObject) {
         if(panelObject == null)
             return;
-        if(value.containsKey(name)) {
-            Log.error(this.key + " with name " + name + " already exist!");
+        if(value.containsKey(key)) {
+            Log.error(this.key + " with name " + key + " already exist!");
             return;
         }
-        panelObject.setKey(name);
-        value.put(name, panelObject);
+        panelObject.setKey(key);
+        value.put(key, panelObject);
         listModel.removeAllElements();
         value.values().stream().sorted().forEach(listModel::addElement);
         panelObjectList.setSelectedValue(panelObject, true);
     }
 
-    protected void removePanelObject(String name) {
+    protected void removePanelObject(K key) {
+        if(key == null)
+            return;
         int selectedIndex = panelObjectList.getSelectedIndex();
-        listModel.removeElement(value.get(name));
-        value.remove(name);
+        listModel.removeElement(value.get(key));
+        value.remove(key);
         objectPanel.removeAll();
         panelObjectList.setSelectedIndex(selectedIndex == listModel.size() ? selectedIndex-1 : selectedIndex);
     }
@@ -181,8 +181,10 @@ public abstract class Panel<T extends PanelObject> extends Setting<HashMap<Strin
         return instance;
     }
 
+    protected abstract K parseKey(String key);
+
     @Override
-    protected void updateMenu(HashMap<String, T> value) {}
+    protected void updateMenu(HashMap<K, T> value) {}
 
     @Override
     protected void saveValue(FileWriter writer) {}

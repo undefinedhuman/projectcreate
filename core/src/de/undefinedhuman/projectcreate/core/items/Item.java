@@ -2,16 +2,19 @@ package de.undefinedhuman.projectcreate.core.items;
 
 import de.undefinedhuman.projectcreate.core.crafting.RecipeItem;
 import de.undefinedhuman.projectcreate.core.crafting.RecipeType;
+import de.undefinedhuman.projectcreate.core.utils.ItemLabelUtils;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsGroup;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.panels.SelectionPanel;
-import de.undefinedhuman.projectcreate.engine.settings.types.selection.SelectionSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.TextureSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.BooleanSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.IntSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.StringSetting;
+import de.undefinedhuman.projectcreate.engine.settings.types.selection.SelectionSetting;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -35,7 +38,23 @@ public class Item implements ItemUsage {
     public SelectionSetting<Rarity>
             rarity = new SelectionSetting<>("Rarity", Rarity.values(), value -> Rarity.valueOf(String.valueOf(value)), Enum::name);
 
-    public SelectionPanel<RecipeItem> recipeItems = new SelectionPanel<>("Recipe Item", RecipeItem.class);
+    public SelectionPanel<Integer, RecipeItem> recipeItems = new SelectionPanel<Integer, RecipeItem>("Recipe Item", RecipeItem.class) {
+        @Override
+        public Integer[] getSelectionData() {
+            return ItemManager.getInstance().getItems().keySet().toArray(new Integer[0]);
+        }
+
+        @Override
+        public void renderJLabel(JLabel label, Integer integer) {
+            ItemLabelUtils.renderItemInJLabel(label, integer);
+        }
+
+        @Override
+        protected Integer parseKey(String key) {
+            Integer i = Utils.isInteger(key);
+            return i != null ? i : -1;
+        }
+    };
 
     public ItemType type;
     public RecipeType recipeType;

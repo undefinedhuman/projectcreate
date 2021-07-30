@@ -3,11 +3,11 @@ package de.undefinedhuman.projectcreate.editor.types.item.ui;
 import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.core.items.ItemType;
+import de.undefinedhuman.projectcreate.core.utils.ItemLabelUtils;
 import de.undefinedhuman.projectcreate.editor.ui.SelectionPanel;
-import de.undefinedhuman.projectcreate.editor.utils.Utils;
 import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
 import de.undefinedhuman.projectcreate.engine.settings.ui.listener.ResizeListener;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,9 +22,9 @@ public abstract class ItemSelectionPanel extends SelectionPanel<Integer> {
         super("Items", key -> {
             if(key.getKey1().matches("^[0-9]+-[0-9]+$")) {
                 String[] ids = key.getKey1().split("-");
-                Integer lower = Tools.isInteger(ids[0]), upper = Tools.isInteger(ids[1]);
+                Integer lower = Utils.isInteger(ids[0]), upper = Utils.isInteger(ids[1]);
                 if(lower != null && upper != null && lower <= upper)
-                    return Arrays.stream(key.getKey2()).filter(itemID -> Tools.isInRange(itemID, lower, upper)).toArray(Integer[]::new);
+                    return Arrays.stream(key.getKey2()).filter(itemID -> Utils.isInRange(itemID, lower, upper)).toArray(Integer[]::new);
             }
             return new Integer[0];
         });
@@ -35,11 +35,11 @@ public abstract class ItemSelectionPanel extends SelectionPanel<Integer> {
         if(itemSelection.getSelectedItem() == null)
             return;
         Integer[] ids = ItemManager.getInstance().getItems().keySet().toArray(new Integer[0]);
-        int newID = Utils.findSmallestMissing(ids, 0, ids.length-1);
+        int newID = de.undefinedhuman.projectcreate.editor.utils.Utils.findSmallestMissing(ids, 0, ids.length-1);
         Item item = ((ItemType) itemSelection.getSelectedItem()).createInstance();
         item.id.setValue(newID);
         ItemManager.getInstance().addItem(newID, item);
-        Utils.saveItem(newID);
+        de.undefinedhuman.projectcreate.editor.utils.Utils.saveItem(newID);
     }
 
     @Override
@@ -97,8 +97,13 @@ public abstract class ItemSelectionPanel extends SelectionPanel<Integer> {
     @Override
     public String getTitle(Integer id) {
         if(!ItemManager.getInstance().hasItem(id))
-            return "ERROR " + " TITLE NOT FOUND, ID: " + id;
+            return "ERROR TITLE NOT FOUND, ID: " + id;
         return id + " " + ItemManager.getInstance().getItem(id).name.getValue();
+    }
+
+    @Override
+    public void renderCell(JLabel label, Integer integer) {
+        ItemLabelUtils.renderItemInJLabel(label, integer);
     }
 
 }

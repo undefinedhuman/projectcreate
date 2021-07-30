@@ -6,7 +6,7 @@ import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
 import javax.swing.*;
 import java.awt.*;
 
-public class StringPanel<T extends PanelObject> extends Panel<T> {
+public class StringPanel<T extends PanelObject<String>> extends Panel<String, T> {
 
     private JTextField objectName;
 
@@ -23,8 +23,13 @@ public class StringPanel<T extends PanelObject> extends Panel<T> {
     }
 
     @Override
-    public String getSelectedObjectName() {
+    protected String getSelectedKey() {
         return objectName.getText();
+    }
+
+    @Override
+    protected String parseKey(String key) {
+        return key;
     }
 
     @Override
@@ -45,4 +50,5 @@ public class StringPanel<T extends PanelObject> extends Panel<T> {
         super.removeAllPanelObjects();
         objectName.setText("");
     }
+
 }

@@ -62,7 +62,8 @@ public abstract class ComponentSelection extends SelectionPanel<ComponentBluepri
     @Override
     public void createMenuPanels(JPanel parentPanel) {
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setViewportView(componentSelection = createList(Arrays.stream(ComponentType.getComponentTypes()).sorted().toArray(String[]::new), s -> {}, s -> s));
+        scrollPane.setViewportView(componentSelection = createList(Arrays.stream(ComponentType.getComponentTypes()).sorted().toArray(String[]::new), s -> {
+        }, JLabel::setText));
         componentListModel = (DefaultListModel<String>) componentSelection.getModel();
 
         JPanel buttonPanel = new JPanel(new RelativeLayout(RelativeLayout.Y_AXIS, 5).setFill(true));
@@ -107,4 +108,8 @@ public abstract class ComponentSelection extends SelectionPanel<ComponentBluepri
 
     public abstract int getSelectedBlueprintID();
 
+    @Override
+    public void renderCell(JLabel label, ComponentBlueprint componentBlueprint) {
+        label.setText(getTitle(componentBlueprint));
+    }
 }
