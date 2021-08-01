@@ -1,5 +1,5 @@
 package de.undefinedhuman.projectcreate.core.network;
 
-interface Packet {
+public interface Packet {
     void handle(PacketHandler handler);
 }

@@ -3,7 +3,7 @@ package de.undefinedhuman.projectcreate.editor.ui;
 import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
 import de.undefinedhuman.projectcreate.engine.settings.ui.listener.ResizeListener;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
-import de.undefinedhuman.projectcreate.engine.utils.ds.Key;
+import de.undefinedhuman.projectcreate.engine.utils.ds.Tuple;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -22,13 +22,13 @@ public abstract class SelectionPanel<T> extends JPanel {
     private DefaultListModel<T> listModel;
     protected JList<T> itemList;
     private JTextField filter;
-    private Function<Key<String, T[]>, T[]>[] filters;
+    private Function<Tuple<String, T[]>, T[]>[] filters;
 
-    public SelectionPanel(String title, Function<Key<String, T[]>, T[]>... filters) {
+    public SelectionPanel(String title, Function<Tuple<String, T[]>, T[]>... filters) {
         this(title, 8.8f, filters);
     }
 
-    public SelectionPanel(String title, float itemListHeight, Function<Key<String, T[]>, T[]>... filters) {
+    public SelectionPanel(String title, float itemListHeight, Function<Tuple<String, T[]>, T[]>... filters) {
         super(null);
         this.filters = filters;
         setLayout(new RelativeLayout(RelativeLayout.Y_AXIS, 0).setFill(true));
@@ -120,8 +120,8 @@ public abstract class SelectionPanel<T> extends JPanel {
                 if(!listModel.contains(t)) listModel.addElement(t);
             return;
         }
-        for(Function<Key<String, T[]>, T[]> filterFunction : filters) {
-            T[] passedElements = filterFunction.apply(new Key<>(filter, data));
+        for(Function<Tuple<String, T[]>, T[]> filterFunction : filters) {
+            T[] passedElements = filterFunction.apply(new Tuple<>(filter, data));
             for(T t : passedElements)
                 if(!listModel.contains(t)) listModel.addElement(t);
         }

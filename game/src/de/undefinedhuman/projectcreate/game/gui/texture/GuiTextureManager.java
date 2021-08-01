@@ -1,10 +1,9 @@
 package de.undefinedhuman.projectcreate.game.gui.texture;
 
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
-import de.undefinedhuman.projectcreate.engine.utils.ds.Key;
+import de.undefinedhuman.projectcreate.engine.utils.ds.Tuple;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 import de.undefinedhuman.projectcreate.game.Main;
-import de.undefinedhuman.projectcreate.game.crafting.CraftingInventory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,22 +12,22 @@ public class GuiTextureManager extends Manager {
 
     private static volatile GuiTextureManager instance;
 
-    private ArrayList<Key<String, Vector2i>> toBeRemoved = new ArrayList<>();
-    private Key<String, Vector2i> tempKey = new Key<>("", new Vector2i());
-    private HashMap<Key<String, Vector2i>, GuiTexture> guiTextures = new HashMap<>();
+    private ArrayList<Tuple<String, Vector2i>> toBeRemoved = new ArrayList<>();
+    private Tuple<String, Vector2i> tempKey = new Tuple<>("", new Vector2i());
+    private HashMap<Tuple<String, Vector2i>, GuiTexture> guiTextures = new HashMap<>();
 
     private GuiTextureManager() { }
 
     @Override
     public void resize(int width, int height) {
-        for(Key<String, Vector2i> key : guiTextures.keySet()) {
+        for(Tuple<String, Vector2i> key : guiTextures.keySet()) {
             GuiTexture texture = guiTextures.get(key);
             if(!texture.remove)
                 continue;
             texture.delete();
             toBeRemoved.add(key);
         }
-        for(Key<String, Vector2i> key : toBeRemoved)
+        for(Tuple<String, Vector2i> key : toBeRemoved)
             guiTextures.remove(key);
         toBeRemoved.clear();
     }
@@ -48,7 +47,7 @@ public class GuiTextureManager extends Manager {
         }
         GuiTexture texture = new GuiTexture(textureName).init();
         texture.resize(width, height, Main.guiScale);
-        guiTextures.put(new Key<>(textureName, new Vector2i(width, height)), texture);
+        guiTextures.put(new Tuple<>(textureName, new Vector2i(width, height)), texture);
     }
 
     public void addGuiTexture(GuiTemplate template, int width, int height) {
@@ -58,7 +57,7 @@ public class GuiTextureManager extends Manager {
         }
         GuiTexture texture = new GuiTexture(template).init();
         texture.resize(width, height, Main.guiScale);
-        guiTextures.put(new Key<>(template.templateName, new Vector2i(width, height)), texture);
+        guiTextures.put(new Tuple<>(template.templateName, new Vector2i(width, height)), texture);
     }
 
     public GuiTexture getGuiTexture(String textureName, int width, int height) {
@@ -85,8 +84,8 @@ public class GuiTextureManager extends Manager {
     }
 
     private void setKey(String textureName, int width, int height) {
-        this.tempKey.setKey1(textureName);
-        this.tempKey.getKey2().set(width, height);
+        this.tempKey.setT(textureName);
+        this.tempKey.getU().set(width, height);
     }
 
     public static GuiTextureManager getInstance() {
