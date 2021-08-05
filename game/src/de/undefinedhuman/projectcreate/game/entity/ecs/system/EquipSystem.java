@@ -17,15 +17,16 @@ import de.undefinedhuman.projectcreate.core.ecs.transform.TransformComponent;
 import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.core.items.ItemType;
+import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
 import de.undefinedhuman.projectcreate.engine.ecs.listener.EntityAdapter;
 
 public class EquipSystem extends EntitySystem {
 
     private ImmutableArray<Entity> entities;
 
-    public EquipSystem(Engine engine) {
+    public EquipSystem() {
         super(4);
-        engine.addEntityListener(new EntityAdapter() {
+        EntityManager.getInstance().getEngine().addEntityListener(new EntityAdapter() {
             @Override
             public void entityAdded(Entity entity) {
                 SpriteComponent spriteComponent = entity.getComponent(SpriteComponent.class);

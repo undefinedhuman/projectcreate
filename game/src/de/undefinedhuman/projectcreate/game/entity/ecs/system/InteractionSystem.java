@@ -44,7 +44,7 @@ public class InteractionSystem extends EntitySystem {
             transformComponent = Mappers.TRANSFORM.get(entity);
             interactionComponent = Mappers.INTERACTION.get(entity);
 
-            if (distanceVector.set(transformComponent.getCenterPosition()).dst(GameManager.instance.player.getComponent(TransformComponent.class).getCenterPosition()) < interactionComponent.getRange()) {
+            if (distanceVector.set(transformComponent.getCenterPosition()).dst(GameManager.getInstance().player.getComponent(TransformComponent.class).getCenterPosition()) < interactionComponent.getRange()) {
 
                 //helpText.setVisible(true);
                 //helpText.setText("Press " + Input.Keys.toString(interactionComponent.getInputKey()) + " for interaction!");

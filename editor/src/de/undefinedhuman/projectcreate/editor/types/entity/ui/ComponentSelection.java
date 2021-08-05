@@ -1,6 +1,5 @@
 package de.undefinedhuman.projectcreate.editor.types.entity.ui;
 
-import de.undefinedhuman.projectcreate.core.ecs.ComponentType;
 import de.undefinedhuman.projectcreate.editor.ui.SelectionPanel;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.Blueprint;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
@@ -36,7 +35,7 @@ public abstract class ComponentSelection extends SelectionPanel<ComponentBluepri
         if(selectedIndices.length == 0 || blueprint == null)
             return;
         for(int i = selectedIndices.length-1; i >= 0; i--) {
-            Class<? extends ComponentBlueprint> componentBlueprintClass = ComponentType.getComponentClass(componentListModel.getElementAt(selectedIndices[i]));
+            Class<? extends ComponentBlueprint> componentBlueprintClass = BlueprintManager.getInstance().getComponentBlueprintClass(componentListModel.getElementAt(selectedIndices[i]));
             if(blueprint.hasComponentBlueprints(componentBlueprintClass))
                 continue;
             ComponentBlueprint componentBlueprint;
@@ -62,8 +61,7 @@ public abstract class ComponentSelection extends SelectionPanel<ComponentBluepri
     @Override
     public void createMenuPanels(JPanel parentPanel) {
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setViewportView(componentSelection = createList(Arrays.stream(ComponentType.getComponentTypes()).sorted().toArray(String[]::new), s -> {
-        }, JLabel::setText));
+        scrollPane.setViewportView(componentSelection = createList(BlueprintManager.getInstance().getComponentBlueprintClasses().keySet().stream().sorted().toArray(String[]::new), s -> {}, JLabel::setText));
         componentListModel = (DefaultListModel<String>) componentSelection.getModel();
 
         JPanel buttonPanel = new JPanel(new RelativeLayout(RelativeLayout.Y_AXIS, 5).setFill(true));
@@ -97,7 +95,7 @@ public abstract class ComponentSelection extends SelectionPanel<ComponentBluepri
         int selectedIndex = componentSelection.getSelectedIndex();
         componentListModel.removeAllElements();
         List<String> currentComponents = Arrays.stream(currentData).map(ComponentBlueprint::toString).collect(Collectors.toList());
-        Arrays.stream(ComponentType.getComponentTypes()).filter(name -> !currentComponents.contains(name)).sorted().forEach(componentListModel::addElement);
+        BlueprintManager.getInstance().getComponentBlueprintClasses().keySet().stream().filter(name -> !currentComponents.contains(name)).sorted().forEach(componentListModel::addElement);
         componentSelection.setSelectedIndex(selectedIndex >= componentListModel.size() ? 0 : selectedIndex);
     }
 

@@ -1,48 +1,40 @@
 package de.undefinedhuman.projectcreate.game.screen.gamescreen;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
+import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
 import de.undefinedhuman.projectcreate.engine.utils.ManagerList;
 import de.undefinedhuman.projectcreate.game.Main;
 import de.undefinedhuman.projectcreate.game.background.BackgroundManager;
 import de.undefinedhuman.projectcreate.game.camera.CameraManager;
-import de.undefinedhuman.projectcreate.game.entity.ecs.system.*;
 import de.undefinedhuman.projectcreate.game.gui.GuiManager;
 import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
 import de.undefinedhuman.projectcreate.game.item.drop.DropItemManager;
+import de.undefinedhuman.projectcreate.game.network.ClientManager;
 import de.undefinedhuman.projectcreate.game.projectiles.Projectile;
 import de.undefinedhuman.projectcreate.game.world.World;
 import de.undefinedhuman.projectcreate.game.world.WorldManager;
 
 public class GameManager {
 
-    public static GameManager instance;
+    private static volatile GameManager instance;
     public SpriteBatch batch;
     public Entity player;
     public Projectile projectile = null;
 
-    private Engine engine;
-
     private ManagerList manager;
 
-    public GameManager() {
+    private GameManager() {
         batch = new SpriteBatch();
         CameraManager.getInstance();
         manager = new ManagerList();
-        engine = new Engine();
-        engine.addSystem(new AngleSystem());
-        engine.addSystem(new AnimationSystem());
-        engine.addSystem(new ArmSystem());
-        engine.addSystem(new InteractionSystem());
-        engine.addSystem(new EquipSystem(engine));
-        engine.addSystem(new MovementSystem());
-        engine.addSystem(new RenderSystem(engine));
     }
 
     public void init() {
+
         BackgroundManager.getInstance();
         BackgroundManager.getInstance().init();
         loadManager();
@@ -62,10 +54,8 @@ public class GameManager {
     }
 
     public void update(float delta) {
-
-        //if (!ClientManager.getInstance().isConnected()) Main.instance.setScreen(MenuScreen.instance);
-        //ClientManager.getInstance().update(delta);
-        manager.update(delta);
+        if (!ClientManager.getInstance().isConnected())
+            Gdx.app.exit();
 
         if (projectile != null) projectile.update(delta);
 
@@ -90,7 +80,7 @@ public class GameManager {
         batch.begin();
         DropItemManager.instance.render(batch);
         batch.end();
-        engine.update(Main.delta);
+        EntityManager.getInstance().update(Main.delta);
         batch.setProjectionMatrix(CameraManager.gameCamera.combined);
         batch.begin();
         if (projectile != null) projectile.render(batch);
@@ -110,7 +100,7 @@ public class GameManager {
         BackgroundManager.getInstance().delete();
         BlueprintManager.getInstance().delete();
         DropItemManager.instance.delete();
-        engine.removeAllEntities();
+        EntityManager.getInstance().delete();
         ItemManager.getInstance().delete();
         batch.dispose();
     }
@@ -121,7 +111,14 @@ public class GameManager {
         DropItemManager.instance = new DropItemManager();
     }
 
-    public Engine getEngine() {
-        return engine;
+    public static GameManager getInstance() {
+        if(instance != null)
+            return instance;
+        synchronized (GameManager.class) {
+            if (instance == null)
+                instance = new GameManager();
+        }
+        return instance;
     }
+
 }

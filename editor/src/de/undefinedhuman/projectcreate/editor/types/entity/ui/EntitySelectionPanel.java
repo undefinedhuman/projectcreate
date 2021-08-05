@@ -2,6 +2,7 @@ package de.undefinedhuman.projectcreate.editor.types.entity.ui;
 
 import de.undefinedhuman.projectcreate.core.ecs.name.NameBlueprint;
 import de.undefinedhuman.projectcreate.editor.ui.SelectionPanel;
+import de.undefinedhuman.projectcreate.editor.utils.EditorUtils;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.Blueprint;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
@@ -29,10 +30,10 @@ public abstract class EntitySelectionPanel extends SelectionPanel<Integer> {
     @Override
     public void add() {
         Integer[] ids = BlueprintManager.getInstance().getBlueprintIDs().toArray(new Integer[0]);
-        int newID = de.undefinedhuman.projectcreate.editor.utils.Utils.findSmallestMissing(ids, 0, ids.length-1);
+        int newID = EditorUtils.findSmallestMissing(ids, 0, ids.length-1);
         Blueprint blueprint = new Blueprint();
         BlueprintManager.getInstance().addBlueprint(newID, blueprint);
-        de.undefinedhuman.projectcreate.editor.utils.Utils.saveBlueprints(newID);
+        EditorUtils.saveBlueprints(newID);
     }
 
     @Override
@@ -44,7 +45,7 @@ public abstract class EntitySelectionPanel extends SelectionPanel<Integer> {
 
     private JButton createNewButton() {
         JButton button = new JButton("CREATE");
-        button.addComponentListener(new ResizeListener(15, 0, button::getText));
+        button.addComponentListener(new ResizeListener(() -> new Component[] {button}, 15, button::getText));
         button.setFont(button.getFont().deriveFont(25f).deriveFont(Font.BOLD));
         button.addActionListener(e -> {
             add();

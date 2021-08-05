@@ -9,9 +9,6 @@ import de.undefinedhuman.projectcreate.core.items.Armor.Armor;
 import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.core.items.ItemType;
-import de.undefinedhuman.projectcreate.game.network.ClientManager;
-import de.undefinedhuman.projectcreate.game.network.utils.PacketUtils;
-import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 
 public class EquipManager {
@@ -22,8 +19,6 @@ public class EquipManager {
 
     public void equipItemNetwork(Entity entity, int id, boolean armor) {
         equipItem(entity, id, armor);
-        if (entity == GameManager.instance.player)
-            ClientManager.getInstance().sendTCP(PacketUtils.createEquipPacket(entity, armor ? getItemIndex(ItemManager.getInstance().getItem(id).type) : 0, id, true, armor));
     }
 
     // TODO Look into the Vector(0, 0) hitbox Vector in the last line
@@ -57,8 +52,6 @@ public class EquipManager {
 
     public void unEquipItemNetwork(Entity entity, int id, boolean armor) {
         unEquipItem(entity, id, armor);
-        if (entity == GameManager.instance.player)
-            ClientManager.getInstance().sendTCP(PacketUtils.createEquipPacket(entity, armor ? getItemIndex(ItemManager.getInstance().getItem(id).type) : 0, id, false, armor));
     }
 
     public void unEquipItem(Entity entity, int id, boolean armor) {

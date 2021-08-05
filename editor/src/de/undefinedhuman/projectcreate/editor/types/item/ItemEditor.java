@@ -7,6 +7,7 @@ import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.editor.types.Editor;
 import de.undefinedhuman.projectcreate.editor.types.item.ui.ItemSelectionPanel;
 import de.undefinedhuman.projectcreate.editor.types.item.ui.ItemSettingsPanel;
+import de.undefinedhuman.projectcreate.editor.utils.EditorUtils;
 import de.undefinedhuman.projectcreate.engine.file.FileUtils;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
@@ -52,8 +53,8 @@ public class ItemEditor extends Editor {
     @Override
     public void createMenuButtonsPanel(JPanel menuButtonPanel) {
         menuButtonPanel.setLayout(new GridLayout(1, 4, 5, 0));
-        menuButtonPanel.add(SettingsUI.createButton("Save", 0, e -> de.undefinedhuman.projectcreate.editor.utils.Utils.saveItem(itemSelectionPanel.getSelectedItems().stream().mapToInt(id -> id).toArray())));
-        menuButtonPanel.add(SettingsUI.createButton("Save All", 0, e -> de.undefinedhuman.projectcreate.editor.utils.Utils.saveItem(ItemManager.getInstance().getItems().keySet().stream().mapToInt(id -> id).toArray())));
+        menuButtonPanel.add(SettingsUI.createButton("Save", 0, e -> EditorUtils.saveItem(itemSelectionPanel.getSelectedItems().stream().mapToInt(id -> id).toArray())));
+        menuButtonPanel.add(SettingsUI.createButton("Save All", 0, e -> EditorUtils.saveItem(ItemManager.getInstance().getItems().keySet().stream().mapToInt(id -> id).toArray())));
         menuButtonPanel.add(SettingsUI.createButton("Reset", 0, e -> {
             List<Integer> selectedIDs = itemSelectionPanel.getSelectedItems();
             if(selectedIDs.size() == 0)

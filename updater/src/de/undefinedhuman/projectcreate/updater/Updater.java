@@ -8,8 +8,7 @@ import de.undefinedhuman.projectcreate.engine.config.ConfigManager;
 import de.undefinedhuman.projectcreate.engine.file.FileUtils;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
-import de.undefinedhuman.projectcreate.engine.gl.HeadlessApplicationListener;
-import de.undefinedhuman.projectcreate.engine.log.Level;
+import de.undefinedhuman.projectcreate.engine.gl.HeadlessApplicationAdapter;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessage;
 import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessageDecorators;
@@ -40,7 +39,7 @@ public class Updater extends JFrame {
     private UpdaterUI updaterUI;
 
     private Updater() {
-        new HeadlessApplication(new HeadlessApplicationListener());
+        new HeadlessApplication(new HeadlessApplicationAdapter());
         FlatDarkLaf.install();
         managerList.addManager(Log.getInstance(), ConfigManager.getInstance().setConfigs(UpdaterConfig.getInstance()));
 

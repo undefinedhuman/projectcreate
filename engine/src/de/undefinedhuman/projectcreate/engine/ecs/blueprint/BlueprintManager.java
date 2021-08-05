@@ -12,16 +12,24 @@ import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectAdapter;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
 import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Stream;
 
 public class BlueprintManager extends Manager {
 
+    public static final int PLAYER_BLUEPRINT_ID = 0;
+
     private static volatile BlueprintManager instance;
 
-    private HashMap<Integer, Blueprint> blueprints;
+    private final HashMap<Integer, Blueprint> blueprints;
+    private HashMap<String, Class<? extends ComponentBlueprint>> componentBlueprintClasses;
 
     private BlueprintManager() {
         blueprints = new HashMap<>();
+        componentBlueprintClasses = new HashMap<>();
     }
 
     @Override
@@ -67,6 +75,23 @@ public class BlueprintManager extends Manager {
         blueprints.clear();
     }
 
+    @SafeVarargs
+    public final void registerComponentBlueprints(Class<? extends ComponentBlueprint>... componentBlueprintClasses) {
+        this.registerComponentBlueprints(Arrays.stream(componentBlueprintClasses));
+    }
+
+    public void registerComponentBlueprints(Stream<Class<? extends ComponentBlueprint>> componentBlueprintClasses) {
+        componentBlueprintClasses.forEach(componentBlueprintClass -> this.componentBlueprintClasses.put(ComponentBlueprint.getName(componentBlueprintClass), componentBlueprintClass));
+    }
+
+    public Class<? extends ComponentBlueprint> getComponentBlueprintClass(String name) {
+        return componentBlueprintClasses.get(name);
+    }
+
+    public HashMap<String, Class<? extends ComponentBlueprint>> getComponentBlueprintClasses() {
+        return componentBlueprintClasses;
+    }
+
     public void removeBlueprints(int... ids) {
         for (int id : ids) {
             if (!hasBlueprint(id)) continue;
@@ -91,22 +116,13 @@ public class BlueprintManager extends Manager {
         SettingsObject object = new SettingsObjectAdapter(reader);
 
         for(Map.Entry<String, Object> entry : object.getSettings().entrySet()) {
-            if(!(entry.getValue() instanceof SettingsObject))
+            if(!(entry.getValue() instanceof SettingsObject) || !componentBlueprintClasses.containsKey(entry.getKey()))
                 continue;
-            Class<? extends ComponentBlueprint> componentBlueprintClass;
-            try {
-                Class<?> parsedClass = Class.forName(entry.getKey());
-                componentBlueprintClass = (Class<? extends ComponentBlueprint>) parsedClass;
-            } catch (ClassNotFoundException e) {
-                Log.error("Error while parsing Component Blueprint class " + entry.getKey());
-                continue;
-            }
             ComponentBlueprint componentBlueprint;
             try {
-                componentBlueprint = componentBlueprintClass.newInstance();
-            } catch (InstantiationException | IllegalAccessException e) {
-                Log.error("Error while creating instance for Component Blueprint: " + entry.getKey());
-                e.printStackTrace();
+                componentBlueprint = componentBlueprintClasses.get(entry.getKey()).newInstance();
+            } catch (InstantiationException | IllegalAccessException ex) {
+                Log.error("Error while creating instance for Component Blueprint: " + entry.getKey(), ex);
                 continue;
             }
             componentBlueprint.load(reader.parent(), (SettingsObject) entry.getValue());

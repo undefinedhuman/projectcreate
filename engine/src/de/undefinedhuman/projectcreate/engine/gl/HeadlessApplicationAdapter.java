@@ -2,7 +2,7 @@ package de.undefinedhuman.projectcreate.engine.gl;
 
 import com.badlogic.gdx.ApplicationListener;
 
-public class HeadlessApplicationListener implements ApplicationListener {
+public class HeadlessApplicationAdapter implements ApplicationListener {
     @Override
     public void create() {
 

@@ -31,14 +31,6 @@ public class ManagerList {
         managers.forEach(manager -> manager.resize(width, height));
     }
 
-    public void update(float delta) {
-        managers.forEach(manager -> manager.update(delta));
-    }
-
-    public void render(SpriteBatch batch, OrthographicCamera camera) {
-        managers.forEach(manager -> manager.render(batch, camera));
-    }
-
     public void renderGui(SpriteBatch batch, OrthographicCamera camera) {
         managers.forEach(manager -> manager.renderGui(batch, camera));
     }
@@ -51,8 +43,11 @@ public class ManagerList {
     }
 
     public void delete() {
-        save();
-        managers.forEach(Manager::delete);
+        for(int i = managers.size()-1; i >= 0; i--) {
+            Manager manager = managers.get(i);
+            if(manager instanceof Serializable) ((Serializable) manager).save();
+            manager.delete();
+        }
         managers.clear();
     }
 

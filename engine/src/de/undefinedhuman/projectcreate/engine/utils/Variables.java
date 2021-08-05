@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.log.Level;
 
 import java.awt.*;
+import java.io.File;
 
 public class Variables {
     // General
@@ -12,7 +13,6 @@ public class Variables {
 
     // Engine
     public static final float GAME_CAMERA_ZOOM = 3f;
-    public static final float DELTA_MULTIPLIER = 1.0f;
     public static final String DEFAULT_TEXTURE = "Unknown.png";
 
     // Settings
@@ -22,7 +22,7 @@ public class Variables {
 
     // File System
     public static final String SEPARATOR = ";";
-    public static final String FILE_SEPARATOR = "/";
+    public static final String FILE_SEPARATOR = File.separator;
 
     // Language
     public static final String DEFAULT_LANGUAGE = "eu_DE";

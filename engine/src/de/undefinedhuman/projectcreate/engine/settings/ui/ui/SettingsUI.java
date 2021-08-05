@@ -16,7 +16,7 @@ public class SettingsUI {
         JLabel titleLabel = new JLabel(title);
         titleLabel.setHorizontalAlignment(orientation);
         titleLabel.setBackground(color);
-        titleLabel.setFont(titleLabel.getFont().deriveFont(16f).deriveFont(Font.BOLD));
+        titleLabel.setFont(titleLabel.getFont().deriveFont(20f).deriveFont(Font.BOLD));
         titleLabel.setOpaque(true);
         return titleLabel;
     }

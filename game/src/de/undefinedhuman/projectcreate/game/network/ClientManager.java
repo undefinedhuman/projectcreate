@@ -1,114 +1,65 @@
 package de.undefinedhuman.projectcreate.game.network;
 
-import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Client;
-import com.esotericsoftware.kryonet.Listener;
+import de.undefinedhuman.projectcreate.core.network.utils.NetworkConstants;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
-import de.undefinedhuman.projectcreate.game.network.packets.PacketManager;
-import de.undefinedhuman.projectcreate.game.utils.Timer;
 
 import java.io.IOException;
 
 public class ClientManager extends Manager {
 
     private static volatile ClientManager instance;
+    private static final String IP_ADDRESS = "127.0.0.1";
+    private static final int TCP_PORT = NetworkConstants.DEFAULT_TCP_PORT;
+    private static final int UDP_PORT = NetworkConstants.DEFAULT_UDP_PORT;
 
-    public String ip = "127.0.0.1";
-    public boolean connected = false;
-    private Timer playerUpdateTimer60, playerUpdateTimer10;
     private Client client;
 
     private ClientManager() {
-
-        client = new Client(1048576, 1048576);
+        client = new Client(NetworkConstants.WRITE_BUFFER_SIZE, NetworkConstants.OBJECT_BUFFER_SIZE);
         client.start();
 
-        PacketManager.register(client);
+        NetworkConstants.register(client);
 
-        client.addListener(new Listener.QueuedListener(new ClientListener()) {
-            protected void queue(Runnable runnable) {
-                Gdx.app.postRunnable(runnable);
-            }
-        });
-
-        playerUpdateTimer60 = new Timer(0.015f, true, () -> {
-            /*Entity player = GameManager.instance.player;
-            ((AngleComponent) player.getComponent(AngleComponent.class)).mousePos = Tools.getMouseCoordsInWorldSpace(CameraManager.gameCamera);
-            ComponentPacket packet = PacketUtils.createComponentPacket(player, AngleComponent.class);
-            ClientManager.getInstance().sendUDP(packet);*/
-        });
-
-        playerUpdateTimer10 = new Timer(0.1f, true, () -> {
-            /*Entity player = GameManager.instance.player;
-            InvItem item = Selector.getInstance().getSelectedInvItem();
-            ComponentPacket packet = PacketUtils.createComponentPacket(player, EquipComponent.class);
-            ClientManager.getInstance().sendUDP(packet);*/
-        });
-
-    }
-
-    public void sendUDP(Object object) {
-        client.sendUDP(object);
+        client.addListener(new ClientListener());
     }
 
     public void connect() {
-
         try {
-            client.connect(5000, ip, 56098, 56099);
+            client.connect(NetworkConstants.NETWORK_TIME_OUT, IP_ADDRESS, TCP_PORT, UDP_PORT);
         } catch (IOException e) {
-            Log.error(e.getMessage());
-        }
-        if (client.isConnected()) Log.info("Connected to Server!");
-
-    }
-
-    public void reconnect() {
-
-        try {
-            client.reconnect();
-        } catch (IOException e) {
-            Log.error(e.getMessage());
-        }
-        if (client.isConnected()) Log.info("Connected to Server!");
-
-    }
-
-    @Override
-    public void update(float delta) {
-        if (connected) {
-            playerUpdateTimer60.update(delta);
-            playerUpdateTimer10.update(delta);
+            Log.error("Error while connecting to server " + IP_ADDRESS + ":" + TCP_PORT + "/" + UDP_PORT);
         }
     }
 
     @Override
     public void delete() {
-        super.delete();
+        client.stop();
     }
 
     public boolean isConnected() {
         return client.isConnected();
     }
 
-    public int getID() {
-        return client.getID();
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
     public void sendTCP(Object object) {
+        if(!client.isConnected())
+            return;
         client.sendTCP(object);
     }
 
+    public void sendUDP(Object object) {
+        if(!client.isConnected())
+            return;
+        client.sendUDP(object);
+    }
+
     public static ClientManager getInstance() {
-        if (instance == null) {
-            synchronized (ClientManager.class) {
-                if (instance == null)
-                    instance = new ClientManager();
-            }
+        if(instance != null)
+            return instance;
+        synchronized (ClientManager.class) {
+            if (instance == null)
+                instance = new ClientManager();
         }
         return instance;
     }

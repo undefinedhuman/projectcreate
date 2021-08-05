@@ -47,7 +47,7 @@ public abstract class SelectionPanel<T> extends JPanel {
 
     private JLabel createTitleLabel(String title) {
         JLabel label = new JLabel(title);
-        label.addComponentListener(new ResizeListener(10, 0, label::getText));
+        label.addComponentListener(new ResizeListener(() -> new Component[] {label}, 10, label::getText));
         label.setOpaque(true);
         label.setBackground(Variables.BACKGROUND_COLOR.darker());
         label.setHorizontalAlignment(SwingConstants.CENTER);
@@ -78,7 +78,7 @@ public abstract class SelectionPanel<T> extends JPanel {
                 updateList(filter.getText(), currentData);
             }
         });
-        filter.addComponentListener(new ResizeListener(15, 0, () -> "PLACEHOLDER"));
+        filter.addComponentListener(new ResizeListener(() -> new Component[] {filter}, 15, () -> "PLACEHOLDER"));
         return filter;
     }
 
@@ -88,24 +88,21 @@ public abstract class SelectionPanel<T> extends JPanel {
             listModel.addElement(date);
         JList<T> list = new JList<>(listModel);
         list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        list.addComponentListener(new ResizeListener(0, 5, () -> {
-            if(list.getComponentCount() <= 0)
-                return "";
-            return list.getComponent(0).toString();
-        }));
+        list.setFont(list.getFont().deriveFont(25f).deriveFont(Font.BOLD));
         list.addListSelectionListener(e -> {
             T selectedItem = list.getSelectedValue();
             if(selectedItem == null)
                 return;
             select.accept(selectedItem);
         });
-        list.setFont(list.getFont().deriveFont(16f).deriveFont(Font.BOLD));
         list.setCellRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if(c instanceof JLabel && value != null)
+                if(c instanceof JLabel && value != null) {
+                    c.setFont(list.getFont());
                     renderJLabel.render((JLabel) c, (T) value);
+                }
                 c.setBackground(index % 2 == 0 ? c.getBackground() : c.getBackground().darker());
                 return c;
             }

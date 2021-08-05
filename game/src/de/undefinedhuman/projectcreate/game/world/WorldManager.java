@@ -11,8 +11,6 @@ import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 import de.undefinedhuman.projectcreate.game.camera.CameraManager;
 import de.undefinedhuman.projectcreate.game.inventory.player.Selector;
 import de.undefinedhuman.projectcreate.game.item.drop.DropItemManager;
-import de.undefinedhuman.projectcreate.game.network.ClientManager;
-import de.undefinedhuman.projectcreate.game.network.utils.PacketUtils;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.game.utils.Mouse;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
@@ -68,7 +66,7 @@ public class WorldManager {
         Block block = (Block) ItemManager.getInstance().getItem(id);
         Vector2i blockPos = Tools.convertToBlockPos(Tools.getWorldPos(CameraManager.gameCamera, Mouse.getMouseCoords()));
 
-        if(id == 0 || !isInRange(blockPos, Tools.convertToBlockPos(GameManager.instance.player.getComponent(TransformComponent.class).getCenterPosition()), Variables.BLOCK_PLACEMENT_RANGE)) return;
+        if(id == 0 || !isInRange(blockPos, Tools.convertToBlockPos(GameManager.getInstance().player.getComponent(TransformComponent.class).getCenterPosition()), Variables.BLOCK_PLACEMENT_RANGE)) return;
         if(worldLayer == World.MAIN_LAYER) placeBlockInMainLayer(blockPos.x, blockPos.y, block);
         if(worldLayer == World.BACK_LAYER) placeBlockInBackLayer(blockPos.x, blockPos.y, block);
     }
@@ -102,7 +100,7 @@ public class WorldManager {
         if (!canDestroy) return;
 
         Pickaxe pickaxe = (Pickaxe) Selector.getInstance().getSelectedItem();
-        Vector2i blockPos = Tools.convertToBlockPos(Tools.getWorldPos(CameraManager.gameCamera, Mouse.getMouseCoords())), playerCenter = Tools.convertToBlockPos(new Vector2().add(GameManager.instance.player.getComponent(TransformComponent.class).getPosition()).add(GameManager.instance.player.getComponent(TransformComponent.class).getCenter()));
+        Vector2i blockPos = Tools.convertToBlockPos(Tools.getWorldPos(CameraManager.gameCamera, Mouse.getMouseCoords())), playerCenter = Tools.convertToBlockPos(new Vector2().add(GameManager.getInstance().player.getComponent(TransformComponent.class).getPosition()).add(GameManager.getInstance().player.getComponent(TransformComponent.class).getCenter()));
         Block currentBlock = (Block) ItemManager.getInstance().getItem(World.instance.getBlock(blockPos.x, blockPos.y, World.MAIN_LAYER));
 
         if (currentBlock.id.getValue() == 0 || !isInRange(blockPos, playerCenter, pickaxe.range.getValue()) || currentBlock.durability.getValue() == -1)
@@ -128,8 +126,7 @@ public class WorldManager {
         DropItemManager.instance.addDropItem(World.instance.getBlock(x, y, worldLayer), 1, new Vector2(x, y).scl(Variables.BLOCK_SIZE).add(Variables.BLOCK_SIZE*0.5f, Variables.BLOCK_SIZE*0.5f));
         World.instance.setBlock(x, y, worldLayer, (byte) 0);
         checkCells(x, y, worldLayer);
-        if(send)
-            ClientManager.getInstance().sendTCP(PacketUtils.createBlockPacket(x, y, worldLayer, (byte) -1));
+        // if(send) ClientManager.getInstance().sendTCP(PacketUtils.createBlockPacket(x, y, worldLayer, (byte) -1));
         if(worldLayer == World.BACK_LAYER && getBlock(x, y, World.MAIN_LAYER).needBack.getValue()) {
             destroyBlock(x, y, World.MAIN_LAYER, send);
         }

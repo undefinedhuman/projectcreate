@@ -1,134 +1,22 @@
 package de.undefinedhuman.projectcreate.game.network;
 
-import com.badlogic.ashley.core.Entity;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
-import de.undefinedhuman.projectcreate.engine.log.Log;
-import de.undefinedhuman.projectcreate.game.network.packets.LoginPacket;
-import de.undefinedhuman.projectcreate.game.network.packets.ServerClosedPacket;
-import de.undefinedhuman.projectcreate.game.network.packets.entity.AddEntityPacket;
-import de.undefinedhuman.projectcreate.game.network.packets.entity.ComponentPacket;
-import de.undefinedhuman.projectcreate.game.network.packets.entity.RemoveEntityPacket;
-import de.undefinedhuman.projectcreate.game.network.packets.inventory.EquipPacket;
-import de.undefinedhuman.projectcreate.game.network.packets.player.AddPlayerPacket;
-import de.undefinedhuman.projectcreate.game.network.packets.player.JumpPacket;
-import de.undefinedhuman.projectcreate.game.network.packets.world.BlockPacket;
-import de.undefinedhuman.projectcreate.game.network.packets.world.WorldLayerPacket;
-import de.undefinedhuman.projectcreate.game.network.packets.world.WorldPacket;
-import de.undefinedhuman.projectcreate.game.network.utils.PacketUtils;
-import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
-import de.undefinedhuman.projectcreate.game.world.World;
+import de.undefinedhuman.projectcreate.core.network.Packet;
 
 public class ClientListener extends Listener {
 
-    @Override
-    public void connected(Connection connection) {}
+    private ClientPacketHandler packetHandler;
 
-    @Override
-    public void disconnected(Connection connection) {
-        ClientManager.getInstance().connected = false;
+    public ClientListener() {
+        this.packetHandler = new ClientPacketHandler();
     }
 
-    public void received(Connection c, Object o) {
-
-        if (o instanceof LoginPacket) {
-
-            LoginPacket packet = (LoginPacket) o;
-            if (packet.loggedIn) Log.info(packet.name + " connected!");
-            else {
-//                Main.instance.setScreen(MenuScreen.instance);
-//                MenuScreen.instance.setErrorMessage("You are already logged in!");
-//                Log.info(packet.name + " is already connected!");
-            }
-
-        }
-
-        if (o instanceof AddPlayerPacket) {
-
-            AddPlayerPacket packet = (AddPlayerPacket) o;
-            Entity player = BlueprintManager.getInstance().getBlueprint(0).createInstance();
-            // player.receive(packet.playerInfo);
-            player.flags = packet.worldID;
-            GameManager.instance.player = player;
-            GameManager.instance.getEngine().addEntity(player);
-
-            ClientManager.getInstance().connected = true;
-
-//            Main.instance.setScreen(LoadingScreen.instance);
-
-        }
-
-        if (ClientManager.getInstance().connected) {
-
-            if (o instanceof AddEntityPacket) {
-
-                AddEntityPacket packet = (AddEntityPacket) o;
-                Entity entity = BlueprintManager.getInstance().getBlueprint(packet.blueprintID).createInstance();
-                // entity.receive(packet.entityInfo);
-                entity.flags = packet.worldID;
-                GameManager.instance.getEngine().addEntity(entity);
-
-            }
-
-            if (o instanceof RemoveEntityPacket) {
-                RemoveEntityPacket packet = (RemoveEntityPacket) o;
-                for(Entity entity : GameManager.instance.getEngine().getEntities())
-                    if(entity.flags == packet.worldID)
-                        GameManager.instance.getEngine().removeEntity(entity);
-            }
-
-            if (o instanceof ServerClosedPacket) {
-//                ClientManager.getInstance().connected = false;
-//                Main.instance.setScreen(MenuScreen.instance);
-//                MenuScreen.instance.setErrorMessage("Server closed!");
-            }
-
-            if (o instanceof WorldPacket) {
-
-                // TODO Add maxHeight
-
-                WorldPacket packet = (WorldPacket) o;
-                World.instance = new World(packet.worldName, 50, packet.width, packet.height, 0);
-                //EntityManager.getInstance().init();
-//                LoadingScreen.instance.worldLoaded = true;
-
-            }
-
-            if (o instanceof WorldLayerPacket) {
-//
-//                WorldLayerPacket packet = (WorldLayerPacket) o;
-//                LoadingScreen.instance.loadLayer(packet);
-
-            }
-
-            if (o instanceof JumpPacket) {
-
-            }
-
-            if (o instanceof ComponentPacket) {
-
-                ComponentPacket packet = (ComponentPacket) o;
-                PacketUtils.handleComponentPacket(packet);
-
-            }
-
-            if (o instanceof BlockPacket) {
-
-                BlockPacket packet = (BlockPacket) o;
-                PacketUtils.handleBlockPacket(packet);
-
-            }
-
-            if (o instanceof EquipPacket) {
-
-                EquipPacket packet = (EquipPacket) o;
-                PacketUtils.handleEquipComponent(packet);
-
-            }
-
-        }
-
+    public void received(Connection connection, Object object) {
+        if(!(object instanceof Packet))
+            return;
+        Packet packet = (Packet) object;
+        packet.handle(packetHandler);
     }
 
 }

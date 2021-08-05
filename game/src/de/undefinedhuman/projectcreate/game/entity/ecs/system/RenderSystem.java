@@ -1,6 +1,5 @@
 package de.undefinedhuman.projectcreate.game.entity.ecs.system;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
@@ -10,6 +9,7 @@ import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteComponent;
 import de.undefinedhuman.projectcreate.core.ecs.transform.TransformComponent;
 import de.undefinedhuman.projectcreate.core.ecs.type.TypeComponent;
+import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
 import de.undefinedhuman.projectcreate.game.camera.CameraManager;
 
 import java.util.Comparator;
@@ -18,13 +18,13 @@ public class RenderSystem extends SortedIteratingSystem {
 
     private SpriteBatch batch;
 
-    public RenderSystem(Engine engine) {
+    public RenderSystem() {
         super(Family.all(TransformComponent.class, SpriteComponent.class).get(), new TypeComparator(), 6);
         batch = new SpriteBatch();
-        engine.addEntityListener(new EntityListener() {
+        EntityManager.getInstance().getEngine().addEntityListener(new EntityListener() {
             @Override
             public void entityAdded(Entity entity) {
-                SpriteComponent spriteComponent = entity.getComponent(SpriteComponent.class);
+                SpriteComponent spriteComponent = Mappers.SPRITE.get(entity);
                 if(spriteComponent != null)
                     spriteComponent.init();
             }

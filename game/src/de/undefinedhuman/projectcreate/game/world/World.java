@@ -37,10 +37,10 @@ public class World {
     private int[][][] blockLayer;       // Y, X, DATA LAYER (BLOCK, STATE)
     private short[][][] collisionLayer;   // Y, X, COLLISION LAYER
 
-    public World(String name, int maxHeight, int width, int height, int seed) {
+    public World(String name, int maxBlockHeight, int width, int height, int seed) {
         this.name = name;
         this.random.setSeed(this.seed = seed);
-        this.maxHeight = maxHeight * Variables.BLOCK_SIZE;
+        this.maxHeight = maxBlockHeight * Variables.BLOCK_SIZE;
 
         this.size.set(width, height);
         this.pixelSize.set(width * Variables.BLOCK_SIZE, height * Variables.BLOCK_SIZE);

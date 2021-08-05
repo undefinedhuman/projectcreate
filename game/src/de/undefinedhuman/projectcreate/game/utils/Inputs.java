@@ -8,8 +8,6 @@ import de.undefinedhuman.projectcreate.core.ecs.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
 import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
 import de.undefinedhuman.projectcreate.game.inventory.player.Selector;
-import de.undefinedhuman.projectcreate.game.network.ClientManager;
-import de.undefinedhuman.projectcreate.game.network.packets.player.JumpPacket;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 
 public class Inputs extends Manager implements InputProcessor {
@@ -21,7 +19,7 @@ public class Inputs extends Manager implements InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
 
-        Entity player = GameManager.instance.player;
+        Entity player = GameManager.getInstance().player;
 
         switch (keycode) {
 
@@ -35,9 +33,7 @@ public class Inputs extends Manager implements InputProcessor {
                 break;
             case Input.Keys.SPACE:
                 if (player.getComponent(MovementComponent.class).jump()) {
-                    JumpPacket packet = new JumpPacket();
-                    packet.id = player.flags;
-                    ClientManager.getInstance().sendTCP(packet);
+                    // SEND JUMP PACKET
                 }
                 break;
             case Input.Keys.NUM_1:
@@ -83,7 +79,7 @@ public class Inputs extends Manager implements InputProcessor {
     @Override
     public boolean keyUp(int keycode) {
 
-        Entity player = GameManager.instance.player;
+        Entity player = GameManager.getInstance().player;
 
         switch (keycode) {
 

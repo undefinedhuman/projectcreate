@@ -25,10 +25,7 @@ public class WorldGenerator {
     }
 
     public void generateTestWorld(String name, WorldSetting worldSetting, BiomeSetting biomeSetting) {
-        World.instance = new World(name, 50, worldSetting.getBiomeSize() * (biomeSetting.getSize() + biomeSetting.getTransition()), 2000, 432);
-        for (int x = 0; x < World.instance.size.x; x++) for (int y = 0; y < 50; y++) World.instance.setBlock(x, y, World.MAIN_LAYER, (byte) 1);
-        World.instance.setBlock(-1, 51, World.MAIN_LAYER, (byte) 1);
-        WorldManager.getInstance().checkMap(World.MAIN_LAYER);
+        World.instance = new World(name, 0, worldSetting.getBiomeSize() * (biomeSetting.getSize() + biomeSetting.getTransition()), 2000, 432);
     }
 
     public World generateWorld(String name, WorldSetting worldSetting, BiomeSetting biomeSetting) {

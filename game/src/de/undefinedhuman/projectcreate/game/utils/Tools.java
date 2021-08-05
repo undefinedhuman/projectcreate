@@ -292,8 +292,8 @@ public class Tools extends Utils {
 
     public static boolean isItemSelected(Entity entity) {
         EquipComponent equipComponent;
-        if ((equipComponent = (EquipComponent) entity.getComponent(EquipComponent.class)) != null || entity == GameManager.instance.player)
-            return (entity == GameManager.instance.player ? Selector.getInstance().getSelectedInvItem() != null : equipComponent.itemIDs[0] != -1);
+        if ((equipComponent = (EquipComponent) entity.getComponent(EquipComponent.class)) != null || entity == GameManager.getInstance().player)
+            return (entity == GameManager.getInstance().player ? Selector.getInstance().getSelectedInvItem() != null : equipComponent.itemIDs[0] != -1);
         return false;
     }
 

@@ -5,6 +5,7 @@ import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.core.items.ItemType;
 import de.undefinedhuman.projectcreate.core.utils.ItemLabelUtils;
 import de.undefinedhuman.projectcreate.editor.ui.SelectionPanel;
+import de.undefinedhuman.projectcreate.editor.utils.EditorUtils;
 import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
 import de.undefinedhuman.projectcreate.engine.settings.ui.listener.ResizeListener;
 import de.undefinedhuman.projectcreate.engine.utils.Utils;
@@ -13,6 +14,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.function.Supplier;
 
 public abstract class ItemSelectionPanel extends SelectionPanel<Integer> {
 
@@ -35,11 +37,11 @@ public abstract class ItemSelectionPanel extends SelectionPanel<Integer> {
         if(itemSelection.getSelectedItem() == null)
             return;
         Integer[] ids = ItemManager.getInstance().getItems().keySet().toArray(new Integer[0]);
-        int newID = de.undefinedhuman.projectcreate.editor.utils.Utils.findSmallestMissing(ids, 0, ids.length-1);
+        int newID = EditorUtils.findSmallestMissing(ids, 0, ids.length-1);
         Item item = ((ItemType) itemSelection.getSelectedItem()).createInstance();
         item.id.setValue(newID);
         ItemManager.getInstance().addItem(newID, item);
-        de.undefinedhuman.projectcreate.editor.utils.Utils.saveItem(newID);
+        EditorUtils.saveItem(newID);
     }
 
     @Override
@@ -65,8 +67,13 @@ public abstract class ItemSelectionPanel extends SelectionPanel<Integer> {
                 return c;
             }
         });
-        itemTypeSelection.addComponentListener(new ResizeListener(10, 0, () -> {
-            if(itemTypeSelection.getItemCount() <= 0)
+        itemTypeSelection.addComponentListener(new ResizeListener(new Supplier<Component[]>() {
+            @Override
+            public Component[] get() {
+                return new Component[] {itemTypeSelection};
+            }
+        }, 10, () -> {
+            if (itemTypeSelection.getItemCount() <= 0)
                 return "";
             return Arrays.stream(ItemType.values()).map(Enum::name).sorted(Comparator.comparingInt(String::length)).reduce((a, b) -> b).orElse("");
         }));
@@ -76,7 +83,7 @@ public abstract class ItemSelectionPanel extends SelectionPanel<Integer> {
     private JButton createNewButton() {
         JButton button = new JButton("ADD");
         button.setFont(button.getFont().deriveFont(Font.BOLD));
-        button.addComponentListener(new ResizeListener(15, 0, button::getText));
+        button.addComponentListener(new ResizeListener(() -> new Component[] {button}, 15, button::getText));
         button.setFont(button.getFont().deriveFont(25f).deriveFont(Font.BOLD));
         button.addActionListener(e -> {
             add();

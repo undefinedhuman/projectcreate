@@ -1,30 +1,20 @@
 package de.undefinedhuman.projectcreate.server.config;
 
+import de.undefinedhuman.projectcreate.core.network.utils.NetworkConstants;
 import de.undefinedhuman.projectcreate.engine.config.Config;
-import de.undefinedhuman.projectcreate.engine.settings.types.primitive.BooleanSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.IntSetting;
-import de.undefinedhuman.projectcreate.engine.settings.types.primitive.StringSetting;
 
 public class ServerConfig extends Config {
 
     private static volatile ServerConfig instance;
+    private static final ServerConfigValidator VALIDATOR = new ServerConfigValidator();
 
-    public IntSetting
-            displayWidth = new IntSetting("displayWidth", 1280),
-            displayHeight = new IntSetting("displayHeight", 720),
-            maxFps = new IntSetting("maxFPS", 0),
-            guiScale = new IntSetting("guiScale", 5);
-    public BooleanSetting
-            vSync = new BooleanSetting("vSync", false),
-            fullScreen = new BooleanSetting("fullScreen", false),
-            renderHitboxes = new BooleanSetting("renderHitboxes", false),
-            firstRun = new BooleanSetting("firstRun", false);
-    public StringSetting
-            language = new StringSetting("language", "eu_DE");
+    public final IntSetting
+            TCP_PORT = new IntSetting("tcpPort", NetworkConstants.DEFAULT_TCP_PORT, 1, 65535);
 
     private ServerConfig() {
         super("server");
-        addSettings(displayWidth, displayHeight, vSync, maxFps, fullScreen, language, renderHitboxes, firstRun, guiScale);
+        addSettings(TCP_PORT);
     }
 
     public static ServerConfig getInstance() {
@@ -40,8 +30,7 @@ public class ServerConfig extends Config {
     }
 
     @Override
-    public void validate() {}
-
-    @Override
-    public void validate() {}
+    public void validate() {
+        VALIDATOR.validate(this);
+    }
 }

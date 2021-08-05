@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.core.network;
 
-import de.undefinedhuman.projectcreate.core.network.packets.PingPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.LoginPacket;
 
 public interface PacketHandler {
-    void handle(PingPacket packet);
+    void handle(LoginPacket packet);
 }

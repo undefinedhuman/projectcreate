@@ -53,11 +53,11 @@ public class CameraManager extends Manager {
     }
 
     private void updateCameraPosition() {
-        if (GameManager.instance.player == null) return;
+        if (GameManager.getInstance().player == null) return;
         int cameraYBounds = (int) (gameCamera.viewportHeight * gameCamera.zoom * 0.5f);
         // If lerp gets added again, make sure, that if the player gets teleported to the other side of the world the camera sets with him, otherwise there will be some kind of laggy movement
         gameCamera.position
-                .set(new Vector3(GameManager.instance.player.getComponent(TransformComponent.class).getCenterPosition(), 0))
+                .set(new Vector3(GameManager.getInstance().player.getComponent(TransformComponent.class).getCenterPosition(), 0))
                 .y = Tools.clamp(gameCamera.position.y, cameraYBounds, World.instance.pixelSize.y - cameraYBounds);
         gameCamera.update();
     }

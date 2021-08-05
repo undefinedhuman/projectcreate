@@ -1,6 +1,6 @@
 package de.undefinedhuman.projectcreate.editor.types.entity.ui;
 
-import de.undefinedhuman.projectcreate.editor.utils.Utils;
+import de.undefinedhuman.projectcreate.editor.utils.EditorUtils;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.Blueprint;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.ecs.component.ComponentBlueprint;
@@ -32,7 +32,7 @@ public class EntitySettingsPanel extends JPanel {
                 if(selectedComponentBlueprint == null || blueprint == null)
                     return;
 
-                Utils.addComponentBlueprintsToAccordion(componentSettings, blueprint
+                EditorUtils.addComponentBlueprintsToAccordion(componentSettings, blueprint
                         .getComponentBlueprints()
                         .entrySet()
                         .stream()
@@ -41,7 +41,7 @@ public class EntitySettingsPanel extends JPanel {
                         .filter(componentBlueprint -> !componentBlueprint.isEmpty())
                         .sorted()
                         .toArray(ComponentBlueprint[]::new));
-                Utils.addComponentBlueprintsToAccordion(selectedComponentSettings, selectedComponentBlueprint);
+                EditorUtils.addComponentBlueprintsToAccordion(selectedComponentSettings, selectedComponentBlueprint);
             }
         }, 0.2f);
         add(componentSettings = new Accordion(Variables.BACKGROUND_COLOR), 0.25f);

@@ -20,7 +20,7 @@ public class Window {
         config.title = Variables.NAME;
         config.allowSoftwareMode = true;
         config.x = 2560 + 3440/2 - Variables.BASE_WINDOW_WIDTH/2;
-        config.foregroundFPS = -1;
+        config.foregroundFPS = 1000;
         config.backgroundFPS = 60;
         config.vSyncEnabled = false;
         config.addIcon("logo/32x32.png", Files.FileType.Internal);

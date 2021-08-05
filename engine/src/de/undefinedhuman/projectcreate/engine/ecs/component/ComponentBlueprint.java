@@ -22,7 +22,7 @@ public abstract class ComponentBlueprint extends SettingsList implements Compara
     }
 
     public void save(FileWriter writer) {
-        writer.writeString("{:" + getClass().getName()).nextLine();
+        writer.writeString("{:" + getName(getClass())).nextLine();
         Utils.saveSettings(writer, this);
         writer.writeString("}").nextLine();
     }

@@ -65,7 +65,7 @@ public class ArmSystem extends EntitySystem {
             Vector2 shoulderPosition = shoulderComponent.getShoulderPos(animationComponent.getAnimationFrameIndex());
             shoulderPosition.set((angleComponent.isTurned ? shoulderPosition.x : transformComponent.getWidth() - shoulderPosition.x), shoulderPosition.y);
 
-            if (GameManager.instance.player == entity) {
+            if (GameManager.getInstance().player == entity) {
                 float angle = new Vector2(mousePos).sub(shoulderPosition).sub(transformComponent.getPosition()).angleDeg() + (angleComponent.isTurned ? 0 : 180);
                 angle += angleComponent.isTurned ? 95 : -95;
 

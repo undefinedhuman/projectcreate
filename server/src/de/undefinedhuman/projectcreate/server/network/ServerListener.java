@@ -6,10 +6,10 @@ import de.undefinedhuman.projectcreate.core.network.Packet;
 
 public class ServerListener extends Listener {
 
-    private ServerHandler packetHandler;
+    private ServerPacketHandler packetHandler;
 
-    private ServerListener() {
-        packetHandler = new ServerHandler();
+    public ServerListener() {
+        packetHandler = new ServerPacketHandler();
     }
 
     @Override

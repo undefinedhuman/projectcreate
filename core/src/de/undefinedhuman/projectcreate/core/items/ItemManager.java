@@ -31,10 +31,7 @@ public class ItemManager extends Manager {
     public boolean loadItems(int... ids) {
         int[] loadedItemIDs = Arrays.stream(ids)
                 .filter(id -> !hasItem(id) && RessourceUtils.existItem(id))
-                .peek(id -> {
-                    Item item = loadItem(id);
-                    addItem(id, item);
-                })
+                .peek(id -> addItem(id, loadItem(id)))
                 .filter(this::hasItem)
                 .toArray();
         int[] failedItemIDs = Arrays.stream(ids).filter(id -> {

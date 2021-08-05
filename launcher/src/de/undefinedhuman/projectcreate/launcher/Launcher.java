@@ -7,7 +7,7 @@ import com.formdev.flatlaf.FlatDarculaLaf;
 import de.undefinedhuman.projectcreate.engine.config.ConfigManager;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
-import de.undefinedhuman.projectcreate.engine.gl.HeadlessApplicationListener;
+import de.undefinedhuman.projectcreate.engine.gl.HeadlessApplicationAdapter;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.resources.RessourceUtils;
 import de.undefinedhuman.projectcreate.engine.utils.ManagerList;
@@ -35,7 +35,7 @@ public class Launcher extends JFrame {
     private ManagerList managerList = new ManagerList();
 
     private Launcher() {
-        new HeadlessApplication(new HeadlessApplicationListener());
+        new HeadlessApplication(new HeadlessApplicationAdapter());
         FlatDarculaLaf.install();
         setUIComponentProperties();
         managerList.addManager(Log.getInstance(), ConfigManager.getInstance().setConfigs(LauncherConfig.getInstance()), IconManager.getInstance());

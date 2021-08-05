@@ -6,28 +6,26 @@ import de.undefinedhuman.projectcreate.game.utils.Inputs;
 
 public class GameScreen implements Screen {
 
-    public static GameScreen instance;
+    private static volatile GameScreen instance;
 
-    public GameScreen() {
-        GameManager.instance = new GameManager();
-    }
+    private GameScreen() {}
 
     @Override
     public void show() {
-        GameManager.instance.init();
+        GameManager.getInstance().init();
         Gdx.graphics.setResizable(true);
         Gdx.input.setInputProcessor(Inputs.getInstance());
     }
 
     @Override
     public void render(float delta) {
-        GameManager.instance.update(delta);
-        GameManager.instance.render();
+        GameManager.getInstance().update(delta);
+        GameManager.getInstance().render();
     }
 
     @Override
     public void resize(int width, int height) {
-        GameManager.instance.resize(width, height);
+        GameManager.getInstance().resize(width, height);
     }
 
     @Override
@@ -41,7 +39,17 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-        GameManager.instance.delete();
+        GameManager.getInstance().delete();
+    }
+
+    public static GameScreen getInstance() {
+        if(instance != null)
+            return instance;
+        synchronized (GameScreen.class) {
+            if (instance == null)
+                instance = new GameScreen();
+        }
+        return instance;
     }
 
 }

@@ -2,7 +2,7 @@ package de.undefinedhuman.projectcreate.editor.types.item.ui;
 
 import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
-import de.undefinedhuman.projectcreate.editor.utils.Utils;
+import de.undefinedhuman.projectcreate.editor.utils.EditorUtils;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsGroup;
 import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
 import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
@@ -27,11 +27,11 @@ public class ItemSettingsPanel extends JPanel {
             return;
         Item item = ItemManager.getInstance().getItem(id);
         clear();
-        Utils.addSettingsListToAccordion(item.getGeneralSettings(), generalSettings);
-        Utils.addSettingsListToAccordion(item.getTextureSettings(), textureSettings);
-        Utils.addSettingsListToAccordion(item.getRecipeSettings(), generalSettings);
+        EditorUtils.addSettingsListToAccordion(item.getGeneralSettings(), generalSettings);
+        EditorUtils.addSettingsListToAccordion(item.getTextureSettings(), textureSettings);
+        EditorUtils.addSettingsListToAccordion(item.getRecipeSettings(), generalSettings);
         for(SettingsGroup settingsGroup : item.getSettingsGroups())
-            Utils.addSettingsListToAccordion(settingsGroup, typeSettings);
+            EditorUtils.addSettingsListToAccordion(settingsGroup, typeSettings);
     }
 
     public void clear() {

@@ -38,7 +38,7 @@ public class AngleSystem extends EntitySystem {
             angleComponent = Mappers.ANGLE.get(entity);
             spriteComponent = Mappers.SPRITE.get(entity);
 
-            if (entity == GameManager.instance.player) {
+            if (entity == GameManager.getInstance().player) {
                 angleComponent.mousePos = Tools.getMouseCoordsInWorldSpace(CameraManager.gameCamera);
                 boolean turned = angleComponent.mousePos.x < transformComponent.getCenterPosition().x;
                 angleComponent.angle = ((turned ? -1 : 1) * angleComponent.angle) % 360;

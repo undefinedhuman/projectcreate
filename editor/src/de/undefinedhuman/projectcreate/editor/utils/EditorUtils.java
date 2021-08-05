@@ -19,7 +19,7 @@ import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import java.util.Arrays;
 
-public class Utils {
+public class EditorUtils {
 
     public static void saveItem(int... ids) {
         int[] savedItems = Arrays.stream(ids).filter(id -> ItemManager.getInstance().hasItem(id)).peek(id -> {

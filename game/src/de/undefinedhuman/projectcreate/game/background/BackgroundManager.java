@@ -63,7 +63,7 @@ public class BackgroundManager extends Manager {
     @Override
     public void update(float delta) {
         layers[0].update(delta, 5f);
-        Entity player = GameManager.instance.player;
+        Entity player = GameManager.getInstance().player;
         if(player == null) return;
         speed = Math.abs(Tools.floorBackgroundSpeed(lastX - player.getComponent(TransformComponent.class).getX())) * -player.getComponent(MovementComponent.class).velocity.x;
         lastX = player.getComponent(TransformComponent.class).getX();

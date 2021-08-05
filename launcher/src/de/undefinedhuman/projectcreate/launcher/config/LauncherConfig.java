@@ -12,7 +12,9 @@ import de.undefinedhuman.projectcreate.launcher.Launcher;
 import de.undefinedhuman.projectcreate.launcher.utils.Tools;
 import de.undefinedhuman.projectcreate.updater.utils.InstallationUtils;
 
-public class LauncherConfig extends Config {
+public class LauncherConfig extends Config
+{
+    private static LauncherConfigValidator VALIDATOR = new LauncherConfigValidator();
 
     private static LauncherConfig instance;
 
@@ -24,34 +26,32 @@ public class LauncherConfig extends Config {
                 }
             };
     public BooleanSetting
-            includeSnapshots = new BooleanSetting("Include Snapshots", false),
-            closeLauncherAfterGameStart = new BooleanSetting("Close Launcher", true);
+    includeSnapshots = new BooleanSetting("Include Snapshots", false),
+    closeLauncherAfterGameStart = new BooleanSetting("Close Launcher", true);
     public SliderSetting
-        maximumMemory = new SliderSetting("Xmx", 0, Tools.AVAILABLE_MAX_MEMORY_IN_MB_HALVED, 0, 500, 1000f),
-        initialMemory = new SliderSetting("Xms", 0, Tools.AVAILABLE_MAX_MEMORY_IN_MB_HALVED, 0, 500, 1000f);
+    maximumMemory = new SliderSetting("Xmx", 0, Tools.AVAILABLE_MAX_MEMORY_IN_MB_HALVED, 0, 500, 1000f),
+    initialMemory = new SliderSetting("Xms", 0, Tools.AVAILABLE_MAX_MEMORY_IN_MB_HALVED, 0, 500, 1000f);
     public Setting<Version>
             lastPlayedGameVersion = new Setting<>("lastPlayedVersion", new Version(Stage.INDEV, 0, 0, 0, 0).toString(), value -> Version.parse(String.valueOf(value)));
 
-    private LauncherConfigValidator validator;
 
     private LauncherConfig() {
         super("launcher");
         addSettings(gameInstallationPath, includeSnapshots, maximumMemory, initialMemory, closeLauncherAfterGameStart, lastPlayedGameVersion);
-        validator = new LauncherConfigValidator();
     }
 
 
     @Override
     public void validate() {
-        validator.validate(this);
+        VALIDATOR.validate(this);
     }
 
     public static LauncherConfig getInstance() {
-        if (instance == null) {
-            synchronized (LauncherConfig.class) {
-                if (instance == null)
-                    instance = new LauncherConfig();
-            }
+        if(instance != null)
+            return instance;
+        synchronized (LauncherConfig.class) {
+            if (instance == null)
+                instance = new LauncherConfig();
         }
         return instance;
     }
