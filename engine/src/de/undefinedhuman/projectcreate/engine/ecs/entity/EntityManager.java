@@ -1,15 +1,21 @@
 package de.undefinedhuman.projectcreate.engine.ecs.entity;
 
 import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.EntitySystem;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Stream;
 
 public class EntityManager extends Manager {
 
     private static volatile EntityManager instance;
 
+    private HashMap<Long, Entity> entitiesByIDs = new HashMap<>();
     private Engine engine;
 
     private EntityManager() {
@@ -30,8 +36,23 @@ public class EntityManager extends Manager {
         Arrays.stream(systems).forEach(entitySystem -> engine.addSystem(entitySystem));
     }
 
-    public Engine getEngine() {
-        return engine;
+    public void addEntity(long worldID, Entity entity) {
+        entitiesByIDs.put(worldID, entity);
+        this.engine.addEntity(entity);
+    }
+
+    public void removeEntity(long worldID) {
+        Entity entity = this.entitiesByIDs.remove(worldID);
+        if(entity != null)
+            engine.removeEntity(entity);
+    }
+
+    public Stream<Map.Entry<Long, Entity>> stream() {
+        return entitiesByIDs.entrySet().stream();
+    }
+
+    public void addEntityListener(EntityListener listener) {
+        this.engine.addEntityListener(listener);
     }
 
     public static EntityManager getInstance() {

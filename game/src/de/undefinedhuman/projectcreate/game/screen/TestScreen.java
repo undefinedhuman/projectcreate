@@ -8,9 +8,13 @@ import de.undefinedhuman.projectcreate.game.world.WorldGenerator;
 import de.undefinedhuman.projectcreate.game.world.settings.BiomeSetting;
 import de.undefinedhuman.projectcreate.game.world.settings.WorldSetting;
 
+import java.util.Random;
+
 public class TestScreen extends ScreenAdapter {
 
     public static TestScreen instance;
+
+    private static final Random RANDOM = new Random();
 
     @Override
     public void show() {
@@ -21,7 +25,7 @@ public class TestScreen extends ScreenAdapter {
         ClientManager.getInstance().connect();
 
         LoginPacket packet = new LoginPacket();
-        packet.name = "GentleXD";
+        packet.name = "GentleXD " + RANDOM.nextInt(100);
         ClientManager.getInstance().sendTCP(packet);
 
         Gdx.graphics.setResizable(true);

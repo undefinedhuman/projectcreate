@@ -14,6 +14,10 @@ public class LineSplitter {
     private boolean base;
     private String separator;
 
+    public LineSplitter(boolean base) {
+        this("", base, Variables.SEPARATOR);
+    }
+
     public LineSplitter(String string, boolean base) {
         this(string, base, Variables.SEPARATOR);
     }
@@ -80,6 +84,11 @@ public class LineSplitter {
         while (hasMoreValues())
             builder.append(getNextData()).append(separator);
         return new LineSplitter(builder.toString(), false, separator);
+    }
+
+    public void setData(String data) {
+        this.data = data.split(separator);
+        this.pointer = 0;
     }
 
     public String getData() {

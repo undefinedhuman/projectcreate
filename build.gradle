@@ -9,7 +9,7 @@ sonarqube {
     }
 }
 
-version = '5.1.1'
+version = '5.1.2'
 
 task setVersion {
     group = 'Versioning'
@@ -51,6 +51,7 @@ subprojects {
 
 project(":game") {
     dependencies {
+        compile project(":engine")
         compile project(":core")
 
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
@@ -79,6 +80,7 @@ project(":core") {
 
 project(":server") {
     dependencies {
+        compile project(":engine")
         compile project(":core")
 
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
@@ -107,6 +109,7 @@ project(":engine") {
 
 project(":editor") {
     dependencies {
+        compile project(":engine")
         compile project(":core")
 
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"

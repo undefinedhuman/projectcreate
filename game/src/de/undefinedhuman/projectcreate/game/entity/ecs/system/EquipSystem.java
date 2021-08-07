@@ -26,7 +26,7 @@ public class EquipSystem extends EntitySystem {
 
     public EquipSystem() {
         super(4);
-        EntityManager.getInstance().getEngine().addEntityListener(new EntityAdapter() {
+        EntityManager.getInstance().addEntityListener(new EntityAdapter() {
             @Override
             public void entityAdded(Entity entity) {
                 SpriteComponent spriteComponent = entity.getComponent(SpriteComponent.class);

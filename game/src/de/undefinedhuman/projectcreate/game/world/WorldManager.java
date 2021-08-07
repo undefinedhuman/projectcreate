@@ -12,7 +12,7 @@ import de.undefinedhuman.projectcreate.game.camera.CameraManager;
 import de.undefinedhuman.projectcreate.game.inventory.player.Selector;
 import de.undefinedhuman.projectcreate.game.item.drop.DropItemManager;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
-import de.undefinedhuman.projectcreate.game.utils.Mouse;
+import de.undefinedhuman.projectcreate.engine.utils.Mouse;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 
 public class WorldManager {

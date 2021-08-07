@@ -3,12 +3,12 @@ package de.undefinedhuman.projectcreate.game.inventory.slot;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
-import de.undefinedhuman.projectcreate.game.gui.Gui;
-import de.undefinedhuman.projectcreate.game.gui.event.ClickListener;
-import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.CenterConstraint;
-import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.Constraint;
-import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.PixelConstraint;
-import de.undefinedhuman.projectcreate.game.gui.transforms.offset.CenterOffset;
+import de.undefinedhuman.projectcreate.engine.gui.Gui;
+import de.undefinedhuman.projectcreate.engine.gui.event.ClickListener;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.CenterConstraint;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.Constraint;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.PixelConstraint;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.offset.CenterOffset;
 
 public class MenuSlot extends Slot {
 

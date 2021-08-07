@@ -6,14 +6,14 @@ import de.undefinedhuman.projectcreate.engine.resources.font.Font;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.ds.Poolable;
 import de.undefinedhuman.projectcreate.game.crafting.CraftingInventory;
-import de.undefinedhuman.projectcreate.game.gui.Gui;
-import de.undefinedhuman.projectcreate.game.gui.event.ClickListener;
-import de.undefinedhuman.projectcreate.game.gui.text.Text;
-import de.undefinedhuman.projectcreate.game.gui.texture.GuiTemplate;
-import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.CenterConstraint;
-import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.PixelConstraint;
-import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.RelativeConstraint;
-import de.undefinedhuman.projectcreate.game.gui.transforms.offset.CenterOffset;
+import de.undefinedhuman.projectcreate.engine.gui.Gui;
+import de.undefinedhuman.projectcreate.engine.gui.event.ClickListener;
+import de.undefinedhuman.projectcreate.engine.gui.text.Text;
+import de.undefinedhuman.projectcreate.engine.gui.texture.GuiTemplate;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.CenterConstraint;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.PixelConstraint;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.RelativeConstraint;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
 
 public class RecipeGui extends Gui implements Poolable {

@@ -1,10 +1,10 @@
 package de.undefinedhuman.projectcreate.game.crafting.recipe;
 
-import de.undefinedhuman.projectcreate.game.gui.Gui;
-import de.undefinedhuman.projectcreate.game.gui.texture.GuiTemplate;
-import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.PixelConstraint;
-import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.RelativeConstraint;
-import de.undefinedhuman.projectcreate.game.gui.transforms.offset.RelativeOffset;
+import de.undefinedhuman.projectcreate.engine.gui.Gui;
+import de.undefinedhuman.projectcreate.engine.gui.texture.GuiTemplate;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.PixelConstraint;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.RelativeConstraint;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.offset.RelativeOffset;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 
 public class RecipeTypePanel extends Gui {

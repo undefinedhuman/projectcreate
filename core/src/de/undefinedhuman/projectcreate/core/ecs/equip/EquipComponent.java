@@ -5,10 +5,10 @@ import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.LineWriter;
-import de.undefinedhuman.projectcreate.engine.network.NetworkComponent;
+import de.undefinedhuman.projectcreate.engine.network.NetworkSerializable;
 import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
-public class EquipComponent implements Component, NetworkComponent {
+public class EquipComponent implements Component, NetworkSerializable {
 
     public int[] itemIDs = new int[5];
     private Vector2[] itemOffsets, itemPositions;

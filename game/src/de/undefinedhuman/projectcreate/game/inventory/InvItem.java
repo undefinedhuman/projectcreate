@@ -3,13 +3,13 @@ package de.undefinedhuman.projectcreate.game.inventory;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
-import de.undefinedhuman.projectcreate.game.gui.Gui;
-import de.undefinedhuman.projectcreate.game.gui.text.Text;
-import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.CenterConstraint;
-import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.PixelConstraint;
-import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.RelativeConstraint;
-import de.undefinedhuman.projectcreate.game.gui.transforms.offset.CenterOffset;
-import de.undefinedhuman.projectcreate.game.gui.transforms.offset.RelativeOffset;
+import de.undefinedhuman.projectcreate.engine.gui.Gui;
+import de.undefinedhuman.projectcreate.engine.gui.text.Text;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.CenterConstraint;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.PixelConstraint;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.RelativeConstraint;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.offset.CenterOffset;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.offset.RelativeOffset;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
 
 public class InvItem extends Gui {

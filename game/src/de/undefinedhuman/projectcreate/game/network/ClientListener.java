@@ -16,7 +16,7 @@ public class ClientListener extends Listener {
         if(!(object instanceof Packet))
             return;
         Packet packet = (Packet) object;
-        packet.handle(packetHandler);
+        packet.handle(connection, packetHandler);
     }
 
 }

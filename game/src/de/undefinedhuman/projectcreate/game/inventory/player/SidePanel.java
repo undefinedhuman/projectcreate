@@ -1,14 +1,13 @@
 package de.undefinedhuman.projectcreate.game.inventory.player;
 
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
-import de.undefinedhuman.projectcreate.game.crafting.CraftingInventory;
-import de.undefinedhuman.projectcreate.game.gui.Gui;
-import de.undefinedhuman.projectcreate.game.gui.texture.GuiTemplate;
-import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.CenterConstraint;
-import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.PixelConstraint;
-import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.RelativeConstraint;
-import de.undefinedhuman.projectcreate.game.gui.transforms.offset.CenterOffset;
-import de.undefinedhuman.projectcreate.game.gui.transforms.offset.PixelOffset;
+import de.undefinedhuman.projectcreate.engine.gui.Gui;
+import de.undefinedhuman.projectcreate.engine.gui.texture.GuiTemplate;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.CenterConstraint;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.PixelConstraint;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.RelativeConstraint;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.offset.CenterOffset;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.offset.PixelOffset;
 import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
 import de.undefinedhuman.projectcreate.game.inventory.slot.MenuSlot;
 import de.undefinedhuman.projectcreate.game.utils.Tools;

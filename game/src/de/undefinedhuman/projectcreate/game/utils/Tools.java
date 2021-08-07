@@ -19,9 +19,9 @@ import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 import de.undefinedhuman.projectcreate.game.Main;
 import de.undefinedhuman.projectcreate.game.camera.CameraManager;
-import de.undefinedhuman.projectcreate.game.gui.Gui;
-import de.undefinedhuman.projectcreate.game.gui.texture.GuiTemplate;
-import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.PixelConstraint;
+import de.undefinedhuman.projectcreate.engine.gui.Gui;
+import de.undefinedhuman.projectcreate.engine.gui.texture.GuiTemplate;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.projectcreate.game.inventory.player.Selector;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.game.world.World;
@@ -40,8 +40,6 @@ public class Tools extends Utils {
     public static boolean isLinux = System.getProperty("os.name").contains("Linux");
 
     public static Random random = new Random();
-
-    // private static Noise noise = new Noise(2, 1.7f, 0.4f);
 
     public static Vector2 getScreenPos(OrthographicCamera cam, Vector2 position) {
         return getScreenPos(cam, position.x, position.y);

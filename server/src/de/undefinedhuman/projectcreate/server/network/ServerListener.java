@@ -3,6 +3,9 @@ package de.undefinedhuman.projectcreate.server.network;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import de.undefinedhuman.projectcreate.core.network.Packet;
+import de.undefinedhuman.projectcreate.core.network.packets.entity.RemoveEntityPacket;
+import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
+import de.undefinedhuman.projectcreate.server.ServerManager;
 
 public class ServerListener extends Listener {
 
@@ -17,7 +20,16 @@ public class ServerListener extends Listener {
         if(!(object instanceof Packet))
             return;
         Packet packet = (Packet) object;
-        packet.handle(packetHandler);
+        packet.handle(connection, packetHandler);
     }
 
+    @Override
+    public void disconnected(Connection connection) {
+        if(!(connection instanceof PlayerConnection))
+            return;
+        PlayerConnection playerConnection = (PlayerConnection) connection;
+        if(playerConnection.worldID == -1) return;
+        EntityManager.getInstance().removeEntity(playerConnection.worldID);
+        ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), RemoveEntityPacket.create(playerConnection.worldID));
+    }
 }

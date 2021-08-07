@@ -1,6 +1,8 @@
 package de.undefinedhuman.projectcreate.game.network;
 
+import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Client;
+import com.esotericsoftware.kryonet.Listener;
 import de.undefinedhuman.projectcreate.core.network.utils.NetworkConstants;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
@@ -22,7 +24,11 @@ public class ClientManager extends Manager {
 
         NetworkConstants.register(client);
 
-        client.addListener(new ClientListener());
+        client.addListener(new Listener.QueuedListener(new ClientListener()) {
+            protected void queue (Runnable runnable) {
+                Gdx.app.postRunnable(runnable);
+            }
+        });
     }
 
     public void connect() {

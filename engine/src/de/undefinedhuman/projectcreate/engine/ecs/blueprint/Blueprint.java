@@ -8,15 +8,17 @@ import java.util.HashMap;
 public class Blueprint {
 
     private HashMap<Class<? extends ComponentBlueprint>, ComponentBlueprint> componentBlueprints;
+    private int blueprintID;
 
-    public Blueprint() {
+    public Blueprint(int id) {
         componentBlueprints = new HashMap<>();
+        this.blueprintID = id;
     }
 
     public Entity createInstance() {
         Entity entity = new Entity();
-        for (ComponentBlueprint blueprint : componentBlueprints.values())
-            entity.add(blueprint.createInstance());
+        for (ComponentBlueprint componentBlueprint : componentBlueprints.values())
+            entity.add(componentBlueprint.createInstance());
         return entity;
     }
 

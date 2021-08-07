@@ -8,7 +8,7 @@ import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.resources.RessourceUtils;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
-import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectAdapter;
+import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectFileReader;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
 import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
@@ -36,6 +36,13 @@ public class BlueprintManager extends Manager {
     public void init() {
         super.init();
         loadBlueprints(0, 1);
+    }
+
+    @Override
+    public void delete() {
+        for (Blueprint blueprint : blueprints.values())
+            blueprint.delete();
+        blueprints.clear();
     }
 
     public void addBlueprint(int id, Blueprint blueprint) {
@@ -66,13 +73,6 @@ public class BlueprintManager extends Manager {
 
     public boolean hasBlueprint(int id) {
         return blueprints.containsKey(id);
-    }
-
-    @Override
-    public void delete() {
-        for (Blueprint blueprint : blueprints.values())
-            blueprint.delete();
-        blueprints.clear();
     }
 
     @SafeVarargs
@@ -111,9 +111,9 @@ public class BlueprintManager extends Manager {
 
     private Blueprint loadBlueprint(int id) {
         FsFile file = new FsFile(Paths.ENTITY_PATH, id + "/settings.entity", Files.FileType.Internal);
-        Blueprint blueprint = new Blueprint();
+        Blueprint blueprint = new Blueprint(id);
         FileReader reader = file.getFileReader(true);
-        SettingsObject object = new SettingsObjectAdapter(reader);
+        SettingsObject object = new SettingsObjectFileReader(reader);
 
         for(Map.Entry<String, Object> entry : object.getSettings().entrySet()) {
             if(!(entry.getValue() instanceof SettingsObject) || !componentBlueprintClasses.containsKey(entry.getKey()))

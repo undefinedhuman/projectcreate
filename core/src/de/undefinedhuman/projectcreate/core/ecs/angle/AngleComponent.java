@@ -4,9 +4,9 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.LineWriter;
-import de.undefinedhuman.projectcreate.engine.network.NetworkComponent;
+import de.undefinedhuman.projectcreate.engine.network.NetworkSerializable;
 
-public class AngleComponent implements Component, NetworkComponent {
+public class AngleComponent implements Component, NetworkSerializable {
 
     public float angle = 0;
     public boolean isTurned;

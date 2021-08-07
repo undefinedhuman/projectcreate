@@ -10,7 +10,7 @@ import de.undefinedhuman.projectcreate.engine.utils.ManagerList;
 import de.undefinedhuman.projectcreate.game.Main;
 import de.undefinedhuman.projectcreate.game.background.BackgroundManager;
 import de.undefinedhuman.projectcreate.game.camera.CameraManager;
-import de.undefinedhuman.projectcreate.game.gui.GuiManager;
+import de.undefinedhuman.projectcreate.engine.gui.GuiManager;
 import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
 import de.undefinedhuman.projectcreate.game.item.drop.DropItemManager;
 import de.undefinedhuman.projectcreate.game.network.ClientManager;

@@ -1,17 +1,19 @@
 package de.undefinedhuman.projectcreate.engine.utils;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import de.undefinedhuman.projectcreate.engine.file.FileReader;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
-import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectAdapter;
+import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectFileReader;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector4;
 
 import javax.swing.*;
@@ -28,7 +30,7 @@ import java.util.stream.Collectors;
 public class Utils {
 
     public static void loadSettings(FileReader reader, SettingsList settings) {
-        SettingsObject object = new SettingsObjectAdapter(reader);
+        SettingsObject object = new SettingsObjectFileReader(reader);
         for(Setting<?> setting : settings.getSettings())
             setting.load(reader.parent(), object);
     }
@@ -191,6 +193,28 @@ public class Utils {
             if(s.equals(value))
                 return true;
         return false;
+    }
+
+    private static final Vector3 TEMP_VECTOR3 = new Vector3();
+
+    public static Vector2 calculateScreenFromWorldSpace(OrthographicCamera camera, Vector2 worldPosition) {
+        return calculateScreenFromWorldSpace(camera, worldPosition.x, worldPosition.y);
+    }
+
+    public static Vector2 calculateScreenFromWorldSpace(OrthographicCamera camera, float worldX, float worldY) {
+        TEMP_VECTOR3.set(worldX, worldY, 0);
+        camera.project(TEMP_VECTOR3);
+        return new Vector2(TEMP_VECTOR3.x, TEMP_VECTOR3.y);
+    }
+
+    public static Vector2 calculateWorldFromScreenSpace(OrthographicCamera camera, Vector2 screenPosition) {
+        return calculateWorldFromScreenSpace(camera, screenPosition.x, screenPosition.y);
+    }
+
+    public static Vector2 calculateWorldFromScreenSpace(OrthographicCamera camera, float screenX, float screenY) {
+        TEMP_VECTOR3.set(screenX, screenY, 0);
+        camera.unproject(TEMP_VECTOR3);
+        return new Vector2(TEMP_VECTOR3.x, TEMP_VECTOR3.y);
     }
 
 }

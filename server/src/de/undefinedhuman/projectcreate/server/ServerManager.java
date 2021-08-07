@@ -20,6 +20,7 @@ import de.undefinedhuman.projectcreate.engine.utils.ManagerList;
 import de.undefinedhuman.projectcreate.engine.utils.Timer;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.server.config.ServerConfig;
+import de.undefinedhuman.projectcreate.server.network.PlayerConnection;
 import de.undefinedhuman.projectcreate.server.network.ServerListener;
 
 import java.io.IOException;
@@ -62,6 +63,11 @@ public class ServerManager extends Server {
         addListener(new ServerListener());
     }
 
+    @Override
+    protected Connection newConnection() {
+        return new PlayerConnection();
+    }
+
     public void init() {
         initGDX();
         ComponentTypes.registerComponentTypes(BlueprintManager.getInstance(), AnimationBlueprint.class, SpriteBlueprint.class, InteractionBlueprint.class);
@@ -95,7 +101,7 @@ public class ServerManager extends Server {
     }
 
     private void readInput() {
-        if(consoleInput == null)
+        if(consoleInput == null || !consoleInput.hasNext())
             return;
         String input = consoleInput.nextLine();
         if (input.equalsIgnoreCase("exit") || input.equalsIgnoreCase("quit") || input.equalsIgnoreCase("stop"))

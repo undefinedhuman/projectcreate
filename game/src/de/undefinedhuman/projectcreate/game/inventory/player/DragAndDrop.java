@@ -5,14 +5,14 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.game.camera.CameraManager;
-import de.undefinedhuman.projectcreate.game.gui.GuiManager;
-import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.MouseConstraint;
+import de.undefinedhuman.projectcreate.engine.gui.GuiManager;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.MouseConstraint;
 import de.undefinedhuman.projectcreate.game.inventory.InvItem;
 import de.undefinedhuman.projectcreate.game.inventory.InvTarget;
 import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
 import de.undefinedhuman.projectcreate.game.inventory.slot.InvSlot;
 import de.undefinedhuman.projectcreate.game.item.drop.DropItemManager;
-import de.undefinedhuman.projectcreate.game.utils.Mouse;
+import de.undefinedhuman.projectcreate.engine.utils.Mouse;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 
 import java.util.ArrayList;

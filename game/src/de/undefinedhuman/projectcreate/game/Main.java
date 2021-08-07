@@ -23,8 +23,8 @@ import de.undefinedhuman.projectcreate.engine.utils.Timer;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.game.config.GameConfig;
 import de.undefinedhuman.projectcreate.game.entity.ecs.system.*;
-import de.undefinedhuman.projectcreate.game.gui.GuiManager;
-import de.undefinedhuman.projectcreate.game.gui.texture.GuiTextureManager;
+import de.undefinedhuman.projectcreate.engine.gui.GuiManager;
+import de.undefinedhuman.projectcreate.engine.gui.texture.GuiTextureManager;
 import de.undefinedhuman.projectcreate.game.network.ClientManager;
 import de.undefinedhuman.projectcreate.game.screen.TestScreen;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
@@ -37,7 +37,6 @@ public class Main extends Game {
     public static Main instance;
 
     public static float delta;
-    public static int guiScale = 1;
 
     private ManagerList managerList;
     private Timer timer;
@@ -78,8 +77,6 @@ public class Main extends Game {
 
     @Override
     public void resize(int width, int height) {
-        int guiSetting = GameConfig.getInstance().guiScale.getValue();
-        guiScale = (int) Math.max((guiSetting == 5 ? Math.ceil(width/640f) : guiSetting) / 2, 1);
         managerList.resize(width, height);
         super.resize(width, height);
     }

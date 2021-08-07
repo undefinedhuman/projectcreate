@@ -31,7 +31,7 @@ public abstract class EntitySelectionPanel extends SelectionPanel<Integer> {
     public void add() {
         Integer[] ids = BlueprintManager.getInstance().getBlueprintIDs().toArray(new Integer[0]);
         int newID = EditorUtils.findSmallestMissing(ids, 0, ids.length-1);
-        Blueprint blueprint = new Blueprint();
+        Blueprint blueprint = new Blueprint(newID);
         BlueprintManager.getInstance().addBlueprint(newID, blueprint);
         EditorUtils.saveBlueprints(newID);
     }

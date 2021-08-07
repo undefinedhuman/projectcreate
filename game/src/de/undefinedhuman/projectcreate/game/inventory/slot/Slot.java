@@ -2,15 +2,15 @@ package de.undefinedhuman.projectcreate.game.inventory.slot;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import de.undefinedhuman.projectcreate.engine.gui.GuiComponent;
+import de.undefinedhuman.projectcreate.engine.gui.GuiManager;
+import de.undefinedhuman.projectcreate.engine.gui.texture.GuiTemplate;
+import de.undefinedhuman.projectcreate.engine.gui.texture.GuiTexture;
+import de.undefinedhuman.projectcreate.engine.gui.texture.GuiTextureManager;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.Axis;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.Constraint;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
-import de.undefinedhuman.projectcreate.game.Main;
-import de.undefinedhuman.projectcreate.game.gui.GuiComponent;
-import de.undefinedhuman.projectcreate.game.gui.texture.GuiTemplate;
-import de.undefinedhuman.projectcreate.game.gui.texture.GuiTexture;
-import de.undefinedhuman.projectcreate.game.gui.texture.GuiTextureManager;
-import de.undefinedhuman.projectcreate.game.gui.transforms.Axis;
-import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.Constraint;
-import de.undefinedhuman.projectcreate.game.gui.transforms.constraints.PixelConstraint;
 
 public class Slot extends GuiComponent {
 
@@ -34,7 +34,7 @@ public class Slot extends GuiComponent {
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         super.render(batch, camera);
         GuiTexture texture = GuiTextureManager.getInstance().getGuiTexture(GuiTemplate.SLOT, getCurrentValue(Axis.WIDTH), getCurrentValue(Axis.HEIGHT));
-        int offset = -(selected ? (Variables.SELECTED_SIZE / 2) : 0) * Main.guiScale;
+        int offset = -(selected ? (Variables.SELECTED_SIZE / 2) : 0) * GuiManager.GUI_SCALE;
         if(texture != null)
             texture.render(batch, getCurrentValue(Axis.X) + offset, getCurrentValue(Axis.Y) + offset, alpha);
     }

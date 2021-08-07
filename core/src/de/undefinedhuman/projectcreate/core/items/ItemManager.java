@@ -9,7 +9,7 @@ import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.resources.RessourceUtils;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
-import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectAdapter;
+import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectFileReader;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
 import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
@@ -98,7 +98,7 @@ public class ItemManager extends Manager {
 
     public static Item loadItem(int id) {
         FileReader reader = new FsFile(Paths.ITEM_PATH, id + "/settings.item", Files.FileType.Internal).getFileReader(true);
-        SettingsObject settingsObject = new SettingsObjectAdapter(reader);
+        SettingsObject settingsObject = new SettingsObjectFileReader(reader);
         ItemType type;
         if(!settingsObject.containsKey("Type"))
             type = ItemType.ITEM;

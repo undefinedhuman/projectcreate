@@ -3,9 +3,9 @@ package de.undefinedhuman.projectcreate.engine.base;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.LineWriter;
-import de.undefinedhuman.projectcreate.engine.network.NetworkComponent;
+import de.undefinedhuman.projectcreate.engine.network.NetworkSerializable;
 
-public class Transform implements NetworkComponent {
+public class Transform implements NetworkSerializable {
 
     protected Vector2 position = new Vector2();
     protected Vector2 size = new Vector2();
