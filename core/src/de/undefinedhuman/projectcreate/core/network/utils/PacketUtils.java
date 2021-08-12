@@ -1,6 +1,7 @@
 package de.undefinedhuman.projectcreate.core.network.utils;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.Entity;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.LineWriter;
 import de.undefinedhuman.projectcreate.engine.network.NetworkSerializable;
@@ -34,6 +35,16 @@ public class PacketUtils {
             parsedComponentData.put(componentClass, splitter.getDataAsLineSplitter());
         }
         return parsedComponentData;
+    }
+
+    public static void setComponentData(Entity entity, HashMap<String, LineSplitter> componentData) {
+        for(Component component : entity.getComponents()) {
+            if(!(component instanceof NetworkSerializable))
+                continue;
+            LineSplitter splitter = componentData.get(component.getClass().getSimpleName());
+            if(splitter == null) continue;
+            ((NetworkSerializable) component).receive(splitter);
+        }
     }
 
 }

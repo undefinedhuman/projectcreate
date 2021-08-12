@@ -56,7 +56,7 @@ public class ServerManager extends Server {
         );
 
         addTimers(
-                new Timer(1f, () -> Arrays.stream(getConnections()).forEach(Connection::updateReturnTripTime)),
+                new Timer(0.5f, () -> Arrays.stream(getConnections()).forEach(Connection::updateReturnTripTime)),
                 new Timer(900f, () -> Log.getInstance().save())
         );
 

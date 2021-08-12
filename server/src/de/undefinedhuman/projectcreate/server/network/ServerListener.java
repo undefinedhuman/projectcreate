@@ -30,6 +30,6 @@ public class ServerListener extends Listener {
         PlayerConnection playerConnection = (PlayerConnection) connection;
         if(playerConnection.worldID == -1) return;
         EntityManager.getInstance().removeEntity(playerConnection.worldID);
-        ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), RemoveEntityPacket.create(playerConnection.worldID));
+        ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), RemoveEntityPacket.serialize(playerConnection.worldID));
     }
 }

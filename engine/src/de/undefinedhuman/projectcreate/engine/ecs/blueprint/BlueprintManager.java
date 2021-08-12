@@ -1,5 +1,6 @@
 package de.undefinedhuman.projectcreate.engine.ecs.blueprint;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Files;
 import de.undefinedhuman.projectcreate.engine.ecs.component.ComponentBlueprint;
 import de.undefinedhuman.projectcreate.engine.file.FileReader;
@@ -103,6 +104,13 @@ public class BlueprintManager extends Manager {
     public Set<Integer> getBlueprintIDs() {
         return blueprints.keySet();
     }
+
+    public Entity createEntity(int blueprintID, long worldID) {
+        Blueprint blueprint = getBlueprint(blueprintID);
+        if(blueprint == null) return null;
+        return blueprint.createInstance(worldID);
+    }
+
 
     public Blueprint getBlueprint(int id) {
         if (hasBlueprint(id) || loadBlueprints(id)) return blueprints.get(id);

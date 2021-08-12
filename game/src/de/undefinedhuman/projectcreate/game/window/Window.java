@@ -19,7 +19,6 @@ public class Window {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = Variables.NAME;
         config.allowSoftwareMode = true;
-        config.x = 2560 + 3440/2 - Variables.BASE_WINDOW_WIDTH/2;
         config.foregroundFPS = 1000;
         config.backgroundFPS = 60;
         config.vSyncEnabled = false;

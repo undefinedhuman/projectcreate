@@ -13,7 +13,7 @@ public class RemoveEntityPacket implements Packet {
         handler.handle(connection, this);
     }
 
-    public static RemoveEntityPacket create(long worldID) {
+    public static RemoveEntityPacket serialize(long worldID) {
         RemoveEntityPacket packet = new RemoveEntityPacket();
         packet.worldID = worldID;
         return packet;

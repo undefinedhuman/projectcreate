@@ -1,21 +1,20 @@
 package de.undefinedhuman.projectcreate.core.network.packets.entity;
 
-import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.esotericsoftware.kryonet.Connection;
+import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.network.Packet;
 import de.undefinedhuman.projectcreate.core.network.PacketHandler;
 import de.undefinedhuman.projectcreate.core.network.utils.PacketUtils;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
-import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
-import de.undefinedhuman.projectcreate.engine.network.NetworkSerializable;
-
-import java.util.HashMap;
+import de.undefinedhuman.projectcreate.engine.ecs.component.IDComponent;
+import de.undefinedhuman.projectcreate.engine.log.Log;
+import de.undefinedhuman.projectcreate.engine.resources.RessourceUtils;
 
 public class CreateEntityPacket implements Packet {
 
-    public long worldID;
-    public int blueprintID;
+    public long worldID = IDComponent.UNDEFINED;
+    public int blueprintID = IDComponent.UNDEFINED;
     public String componentData;
 
     @Override
@@ -23,26 +22,26 @@ public class CreateEntityPacket implements Packet {
         handler.handle(connection, this);
     }
 
-    public static CreateEntityPacket create(int blueprintID, long worldID, Entity entity) {
+    public static CreateEntityPacket serialize(Entity entity) {
         CreateEntityPacket entityPacket = new CreateEntityPacket();
-        entityPacket.blueprintID = blueprintID;
-        entityPacket.worldID = worldID;
         entityPacket.componentData = PacketUtils.createComponentData(entity.getComponents());
+        IDComponent idComponent = Mappers.ID.get(entity);
+        if(idComponent == null) {
+            Log.debug("Entity has no ID Component, might be a bug!");
+            return entityPacket;
+        }
+        entityPacket.blueprintID = idComponent.getBlueprintID();
+        entityPacket.worldID = idComponent.getWorldID();
         return entityPacket;
     }
 
     public static Entity parse(CreateEntityPacket entityPacket) {
-        if(!BlueprintManager.getInstance().hasBlueprint(entityPacket.blueprintID))
+        if(!BlueprintManager.getInstance().hasBlueprint(entityPacket.blueprintID) && RessourceUtils.existBlueprint(entityPacket.blueprintID)) {
+            Log.debug("Error while loading entity blueprint. ID: " + entityPacket.blueprintID);
             return null;
-        HashMap<String, LineSplitter> componentData = PacketUtils.parseComponentData(entityPacket.componentData);
-        Entity entity = BlueprintManager.getInstance().getBlueprint(entityPacket.blueprintID).createInstance();
-        for(Component component : entity.getComponents()) {
-            if(!(component instanceof NetworkSerializable))
-                continue;
-            LineSplitter splitter = componentData.get(component.getClass().getSimpleName());
-            if(splitter == null) continue;
-            ((NetworkSerializable) component).receive(splitter);
         }
+        Entity entity = BlueprintManager.getInstance().createEntity(entityPacket.blueprintID, entityPacket.worldID);
+        PacketUtils.setComponentData(entity, PacketUtils.parseComponentData(entityPacket.componentData));
         return entity;
     }
 }

@@ -2,6 +2,7 @@ package de.undefinedhuman.projectcreate.engine.ecs.blueprint;
 
 import com.badlogic.ashley.core.Entity;
 import de.undefinedhuman.projectcreate.engine.ecs.component.ComponentBlueprint;
+import de.undefinedhuman.projectcreate.engine.ecs.component.IDComponent;
 
 import java.util.HashMap;
 
@@ -15,8 +16,13 @@ public class Blueprint {
         this.blueprintID = id;
     }
 
-    public Entity createInstance() {
+    /*public Entity createInstance() {
+        return this.createInstance(IDComponent.UNDEFINED);
+    }*/
+
+    public Entity createInstance(long worldID) {
         Entity entity = new Entity();
+        entity.add(new IDComponent(worldID, blueprintID));
         for (ComponentBlueprint componentBlueprint : componentBlueprints.values())
             entity.add(componentBlueprint.createInstance());
         return entity;

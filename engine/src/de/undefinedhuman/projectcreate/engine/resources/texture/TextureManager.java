@@ -16,6 +16,8 @@ import java.util.stream.Stream;
 
 public class TextureManager extends Manager {
 
+    private static final int MAX_ELEMENTS_DEBUG = 25;
+
     private static volatile TextureManager instance;
 
     private HashMap<String, TextureValue> textures = new HashMap<>();
@@ -76,13 +78,15 @@ public class TextureManager extends Manager {
         List<Map.Entry<String, TextureValue>> entries = texturesToBeRemoved.collect(Collectors.toList());
         if(entries.size() == 0)
             return;
-        Stream<String> deletedTextures = entries.stream()
+        List<String> deletedTextures = entries.stream()
                 .map(entry -> {
                     textures.remove(entry.getKey());
                     entry.getValue().delete();
                     return entry.getKey();
-                });
-        Log.debug(() -> "Texture" + Utils.appendSToString(entries.size()) + " unloaded: " + deletedTextures.collect(Collectors.joining(", ")));
+                }).collect(Collectors.toList());
+        Log.debug(() -> "Texture" + Utils.appendSToString(entries.size()) + " unloaded: "
+                + deletedTextures.stream().limit(MAX_ELEMENTS_DEBUG).collect(Collectors.joining(", "))
+                + (deletedTextures.size() > MAX_ELEMENTS_DEBUG ? " +" + (deletedTextures.size() - MAX_ELEMENTS_DEBUG) + " more" : ""));
     }
 
     public TextureRegion getTexture(String name) {

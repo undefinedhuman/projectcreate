@@ -7,6 +7,8 @@ import de.undefinedhuman.projectcreate.core.network.PacketHandler;
 public class LoginPacket implements Packet {
 
     public String name;
+    public long worldID;
+    public String componentData;
 
     @Override
     public void handle(Connection connection, PacketHandler handler) {

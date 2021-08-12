@@ -10,7 +10,7 @@ public class IDManager {
 
     private IDManager() {}
 
-    public long getCurrentMaxWorldID() {
+    public long createNewID() {
         return currentMaxWorldID.getAndIncrement();
     }
 

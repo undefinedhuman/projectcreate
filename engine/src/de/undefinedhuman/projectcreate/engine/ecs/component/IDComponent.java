@@ -3,8 +3,10 @@ package de.undefinedhuman.projectcreate.engine.ecs.component;
 import com.badlogic.ashley.core.Component;
 
 public class IDComponent implements Component {
-    public long worldID = -1;
-    public int blueprintID = -1;
+    public static final int UNDEFINED = -1;
+
+    private long worldID = UNDEFINED;
+    private int blueprintID = UNDEFINED;
 
     public IDComponent() {}
 
@@ -21,4 +23,11 @@ public class IDComponent implements Component {
         this.blueprintID = blueprintID;
     }
 
+    public long getWorldID() {
+        return worldID;
+    }
+
+    public int getBlueprintID() {
+        return blueprintID;
+    }
 }

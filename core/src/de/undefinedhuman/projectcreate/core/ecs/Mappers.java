@@ -17,8 +17,10 @@ import de.undefinedhuman.projectcreate.core.ecs.shoulder.ShoulderComponent;
 import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteComponent;
 import de.undefinedhuman.projectcreate.core.ecs.transform.TransformComponent;
 import de.undefinedhuman.projectcreate.core.ecs.type.TypeComponent;
+import de.undefinedhuman.projectcreate.engine.ecs.component.IDComponent;
 
 public class Mappers {
+    public static final ComponentMapper<IDComponent> ID = ComponentMapper.getFor(IDComponent.class);
     public static final ComponentMapper<TransformComponent> TRANSFORM = ComponentMapper.getFor(TransformComponent.class);
     public static final ComponentMapper<SpriteComponent> SPRITE = ComponentMapper.getFor(SpriteComponent.class);
     public static final ComponentMapper<ShoulderComponent> SHOULDER = ComponentMapper.getFor(ShoulderComponent.class);
