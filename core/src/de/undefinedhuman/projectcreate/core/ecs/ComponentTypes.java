@@ -43,6 +43,7 @@ public class ComponentTypes {
             TypeBlueprint.class
     };
 
+    @SafeVarargs
     public static void registerComponentTypes(BlueprintManager blueprintManager, Class<? extends ComponentBlueprint>... except) {
         List<Class<? extends ComponentBlueprint>> exceptList = Arrays.asList(except);
         blueprintManager.registerComponentBlueprints(

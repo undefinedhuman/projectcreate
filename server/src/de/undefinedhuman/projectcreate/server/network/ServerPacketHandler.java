@@ -6,8 +6,10 @@ import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.name.NameComponent;
 import de.undefinedhuman.projectcreate.core.network.PacketHandler;
 import de.undefinedhuman.projectcreate.core.network.packets.LoginPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.entity.components.ComponentPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.CreateEntityPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.RemoveEntityPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.entity.components.MovementPacket;
 import de.undefinedhuman.projectcreate.core.network.utils.PacketUtils;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
@@ -34,11 +36,25 @@ public class ServerPacketHandler implements PacketHandler {
     }
 
     @Override
-    public void handle(Connection connection, CreateEntityPacket packet) {
-        EntityManager.getInstance().addEntity(packet.worldID, CreateEntityPacket.parse(packet));
-    }
+    public void handle(Connection connection, CreateEntityPacket packet) {}
 
     @Override
     public void handle(Connection connection, RemoveEntityPacket packet) {}
+
+    @Override
+    public void handle(Connection connection, ComponentPacket packet) {
+        Entity entity = EntityManager.getInstance().getEntity(packet.worldID);
+        if(entity == null) return;
+        ComponentPacket.parse(entity, packet);
+        ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), packet);
+    }
+
+    @Override
+    public void handle(Connection connection, MovementPacket packet) {
+        Entity entity = EntityManager.getInstance().getEntity(packet.worldID);
+        if(entity == null) return;
+        MovementPacket.parse(entity, packet);
+        ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), packet);
+    }
 
 }

@@ -4,8 +4,10 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 import de.undefinedhuman.projectcreate.core.network.Packet;
 import de.undefinedhuman.projectcreate.core.network.packets.LoginPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.entity.components.ComponentPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.CreateEntityPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.RemoveEntityPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.entity.components.MovementPacket;
 
 public class NetworkConstants {
 
@@ -18,7 +20,13 @@ public class NetworkConstants {
     public static final int NETWORK_TIME_OUT = 5000;
 
     public static void register(EndPoint endpoint) {
-        registerPackets(endpoint.getKryo(), LoginPacket.class, CreateEntityPacket.class, RemoveEntityPacket.class);
+        registerPackets(endpoint.getKryo(),
+                LoginPacket.class,
+                CreateEntityPacket.class,
+                RemoveEntityPacket.class,
+                ComponentPacket.class,
+                MovementPacket.class
+        );
     }
 
     @SafeVarargs

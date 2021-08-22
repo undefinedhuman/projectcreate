@@ -8,6 +8,8 @@ import de.undefinedhuman.projectcreate.engine.gl.HeadlessApplicationAdapter;
 public class Main {
 
     public static void main(String[] args) {
+        HeadlessApplicationConfiguration config = new HeadlessApplicationConfiguration();
+        config.updatesPerSecond = 240;
         new HeadlessApplication(new HeadlessApplicationAdapter() {
             @Override
             public void create() {
@@ -23,7 +25,7 @@ public class Main {
             public void dispose() {
                 ServerManager.getInstance().delete();
             }
-        }, new HeadlessApplicationConfiguration());
+        }, config);
     }
 
 }

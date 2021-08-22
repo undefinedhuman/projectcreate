@@ -6,10 +6,13 @@ import de.undefinedhuman.projectcreate.core.network.PacketHandler;
 import de.undefinedhuman.projectcreate.core.network.packets.LoginPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.CreateEntityPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.RemoveEntityPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.entity.components.ComponentPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.entity.components.MovementPacket;
 import de.undefinedhuman.projectcreate.core.network.utils.PacketUtils;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
 import de.undefinedhuman.projectcreate.game.Main;
+import de.undefinedhuman.projectcreate.game.entity.ecs.system.MovementSystem;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameScreen;
 
@@ -34,4 +37,21 @@ public class ClientPacketHandler implements PacketHandler {
     public void handle(Connection connection, RemoveEntityPacket packet) {
         EntityManager.getInstance().removeEntity(packet.worldID);
     }
+
+    @Override
+    public void handle(Connection connection, ComponentPacket packet) {
+        Entity entity = EntityManager.getInstance().getEntity(packet.worldID);
+        if(entity == null) return;
+        ComponentPacket.parse(entity, packet);
+    }
+
+    @Override
+    public void handle(Connection connection, MovementPacket packet) {
+        Entity entity = EntityManager.getInstance().getEntity(packet.worldID);
+        if(entity == null) return;
+        MovementPacket.parse(entity, packet);
+        MovementSystem system = EntityManager.getInstance().getSystem(MovementSystem.class);
+        system.processEntity(entity, ClientManager.getInstance().getReturnTime() / 1000f);
+    }
+
 }

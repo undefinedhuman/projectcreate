@@ -4,32 +4,28 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.animation.AnimationComponent;
 import de.undefinedhuman.projectcreate.core.ecs.collision.CollisionComponent;
 import de.undefinedhuman.projectcreate.core.ecs.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.core.ecs.transform.TransformComponent;
-import de.undefinedhuman.projectcreate.engine.utils.Variables;
-import de.undefinedhuman.projectcreate.game.screen.CollisionUtils;
-import de.undefinedhuman.projectcreate.game.utils.Tools;
 
 public class MovementSystem extends IteratingSystem {
 
-    private Vector2 currentPosition = new Vector2();
+    private final Vector2 currentPosition = new Vector2();
 
      public MovementSystem() {
          super(Family.all(TransformComponent.class, MovementComponent.class, CollisionComponent.class, AnimationComponent.class).get(), 5);
      }
 
     @Override
-    protected void processEntity(Entity entity, float deltaTime) {
+    public void processEntity(Entity entity, float delta) {
         TransformComponent transformComponent = Mappers.TRANSFORM.get(entity);
         MovementComponent movementComponent = Mappers.MOVEMENT.get(entity);
         CollisionComponent collisionComponent = Mappers.COLLISION.get(entity);
         AnimationComponent animationComponent = Mappers.ANIMATION.get(entity);
 
-        movementComponent.velocity.x += ((movementComponent.getDirection() * movementComponent.getSpeed()) - movementComponent.velocity.x) * 0.1f;
+        /*movementComponent.velocity.x += ((movementComponent.getDirection() * movementComponent.getSpeed()) - movementComponent.velocity.x) * 0.1f;
         if(movementComponent.getDirection() == 0 && Tools.isInRange(movementComponent.velocity.x, -5, 5)) movementComponent.velocity.x = 0;
         movementComponent.velocity.y -= movementComponent.getGravity() * deltaTime;
 
@@ -56,11 +52,13 @@ public class MovementSystem extends IteratingSystem {
         collisionComponent.update(currentPosition);
         currentPosition.add(0, CollisionUtils.calculateSlopeCollisionY(collisionComponent).y);
         collisionComponent.update(currentPosition);
-        currentPosition.add(CollisionUtils.calculateSlopeCollisionX(collisionComponent).x, 0);
+        currentPosition.add(CollisionUtils.calculateSlopeCollisionX(collisionComponent).x, 0);*/
 
+        currentPosition.set(transformComponent.getPosition());
+        currentPosition.add(movementComponent.getDirection() * movementComponent.getSpeed() * delta, 0);
         transformComponent.setPosition(currentPosition);
 
-        animate(animationComponent, movementComponent);
+        // animate(animationComponent, movementComponent);
     }
 
     private void animate(AnimationComponent animationComponent, MovementComponent movementComponent) {

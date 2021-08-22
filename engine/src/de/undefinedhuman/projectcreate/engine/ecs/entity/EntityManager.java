@@ -36,6 +36,10 @@ public class EntityManager extends Manager {
         Arrays.stream(systems).forEach(entitySystem -> engine.addSystem(entitySystem));
     }
 
+    public <T extends EntitySystem> T getSystem(Class<T> systemClass) {
+        return engine.getSystem(systemClass);
+    }
+
     public void addEntity(long worldID, Entity entity) {
         entitiesByIDs.put(worldID, entity);
         this.engine.addEntity(entity);
@@ -49,6 +53,10 @@ public class EntityManager extends Manager {
 
     public Stream<Map.Entry<Long, Entity>> stream() {
         return entitiesByIDs.entrySet().stream();
+    }
+
+    public Entity getEntity(long worldID) {
+        return entitiesByIDs.get(worldID);
     }
 
     public void addEntityListener(EntityListener listener) {

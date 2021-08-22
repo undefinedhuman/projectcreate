@@ -59,6 +59,8 @@ public class GameManager {
 
         if (projectile != null) projectile.update(delta);
 
+        ClientManager.getInstance().update(delta);
+
         GuiManager.getInstance().update(delta);
         InventoryManager.getInstance().update(delta);
         DropItemManager.instance.update(delta);

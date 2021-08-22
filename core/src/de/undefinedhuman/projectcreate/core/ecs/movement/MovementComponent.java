@@ -47,6 +47,10 @@ public class MovementComponent implements Component, NetworkSerializable {
         direction = left ? -1 : right ? 1 : 0;
     }
 
+    public void move(int direction) {
+        this.direction = direction;
+    }
+
     @Override
     public void receive(LineSplitter splitter) {
         this.direction = splitter.getNextInt();

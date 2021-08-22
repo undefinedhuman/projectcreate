@@ -36,7 +36,7 @@ public class CreateEntityPacket implements Packet {
     }
 
     public static Entity parse(CreateEntityPacket entityPacket) {
-        if(!BlueprintManager.getInstance().hasBlueprint(entityPacket.blueprintID) && RessourceUtils.existBlueprint(entityPacket.blueprintID)) {
+        if(!BlueprintManager.getInstance().hasBlueprint(entityPacket.blueprintID) && !RessourceUtils.existBlueprint(entityPacket.blueprintID)) {
             Log.debug("Error while loading entity blueprint. ID: " + entityPacket.blueprintID);
             return null;
         }

@@ -3,9 +3,11 @@ package de.undefinedhuman.projectcreate.game.network;
 import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Listener;
+import de.undefinedhuman.projectcreate.core.network.Packet;
 import de.undefinedhuman.projectcreate.core.network.utils.NetworkConstants;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
+import de.undefinedhuman.projectcreate.engine.utils.Timer;
 
 import java.io.IOException;
 
@@ -16,7 +18,9 @@ public class ClientManager extends Manager {
     private static final int TCP_PORT = NetworkConstants.DEFAULT_TCP_PORT;
     private static final int UDP_PORT = NetworkConstants.DEFAULT_UDP_PORT;
 
-    private Client client;
+    private final Client client;
+
+    private Timer timer;
 
     private ClientManager() {
         client = new Client(NetworkConstants.WRITE_BUFFER_SIZE, NetworkConstants.OBJECT_BUFFER_SIZE);
@@ -29,6 +33,8 @@ public class ClientManager extends Manager {
                 Gdx.app.postRunnable(runnable);
             }
         });
+
+        timer = new Timer(0.5f, client::updateReturnTripTime);
     }
 
     public void connect() {
@@ -40,6 +46,11 @@ public class ClientManager extends Manager {
     }
 
     @Override
+    public void update(float delta) {
+        timer.update(delta);
+    }
+
+    @Override
     public void delete() {
         client.stop();
     }
@@ -48,10 +59,18 @@ public class ClientManager extends Manager {
         return client.isConnected();
     }
 
-    public void sendTCP(Object object) {
+    public void sendTCP(Packet packet) {
         if(!client.isConnected())
             return;
-        client.sendTCP(object);
+        if(packet == null) {
+            Log.debug("Error while sending TCP packet, packet is null!");
+            return;
+        }
+        client.sendTCP(packet);
+    }
+
+    public int getReturnTime() {
+        return client.getReturnTripTime();
     }
 
     public void sendUDP(Object object) {
