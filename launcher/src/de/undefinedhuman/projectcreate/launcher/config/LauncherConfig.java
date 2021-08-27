@@ -2,10 +2,11 @@ package de.undefinedhuman.projectcreate.launcher.config;
 
 import de.undefinedhuman.projectcreate.engine.config.Config;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
-import de.undefinedhuman.projectcreate.engine.settings.Setting;
+import de.undefinedhuman.projectcreate.engine.settings.types.BaseSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.FilePathSetting;
-import de.undefinedhuman.projectcreate.engine.settings.types.slider.SliderSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.BooleanSetting;
+import de.undefinedhuman.projectcreate.engine.settings.types.slider.SliderSetting;
+import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
 import de.undefinedhuman.projectcreate.engine.utils.Stage;
 import de.undefinedhuman.projectcreate.engine.utils.Version;
 import de.undefinedhuman.projectcreate.launcher.Launcher;
@@ -29,15 +30,35 @@ public class LauncherConfig extends Config
     includeSnapshots = new BooleanSetting("Include Snapshots", false),
     closeLauncherAfterGameStart = new BooleanSetting("Close Launcher", true);
     public SliderSetting
-    maximumMemory = new SliderSetting("Xmx", 0, Tools.AVAILABLE_MAX_MEMORY_IN_MB_HALVED, 0, 500, 1000f),
-    initialMemory = new SliderSetting("Xms", 0, Tools.AVAILABLE_MAX_MEMORY_IN_MB_HALVED, 0, 500, 1000f);
-    public Setting<Version>
-            lastPlayedGameVersion = new Setting<>("lastPlayedVersion", new Version(Stage.INDEV, 0, 0, 0, 0).toString(), value -> Version.parse(String.valueOf(value)));
+            maximumMemory = SliderSetting.newInstance("Xmx").with(
+                    builder -> {
+                        builder.defaultValue = 0;
+                        builder.bounds.set(0, Tools.AVAILABLE_MAX_MEMORY_IN_MB_HALVED);
+                        builder.scale = 1000f;
+                        builder.tickSpeed = 500;
+                    }
+            ).build(),
+            initialMemory = SliderSetting.newInstance("Xms").with(
+                    builder -> {
+                        builder.tickSpeed = 500;
+                        builder.bounds.set(0, Tools.AVAILABLE_MAX_MEMORY_IN_MB_HALVED);
+                        builder.defaultValue = 0;
+                        builder.scale = 1000f;
+                    }
+            ).build();
+    public BaseSetting<Version>
+            lastPlayedGameVersion = new BaseSetting<Version>("lastPlayedVersion", new Version(Stage.INDEV, 0, 0, 0, 0), value -> Version.parse(String.valueOf(value)), Version::toString) {
+        @Override
+        public void createSettingUI(Accordion accordion) {}
+
+        @Override
+        protected void updateMenu(Version value) {}
+    };
 
 
     private LauncherConfig() {
         super("launcher");
-        addSettings(gameInstallationPath, includeSnapshots, maximumMemory, initialMemory, closeLauncherAfterGameStart, lastPlayedGameVersion);
+        addSettings(gameInstallationPath, includeSnapshots,closeLauncherAfterGameStart);
     }
 
 

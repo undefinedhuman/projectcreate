@@ -80,7 +80,7 @@ public class InstallationUtils {
     }
 
     public static boolean isVersionDownloaded(String downloadURL, FsFile installationDirectory, Version version) {
-        FsFile installedVersion = new FsFile(installationDirectory, version + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
+        FsFile installedVersion = new FsFile(installationDirectory.path(), version + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
         return installedVersion.nameWithoutExtension().equalsIgnoreCase(version.toString())
                 && !installedVersion.isDirectory()
                 && installedVersion.name().substring(installedVersion.name().lastIndexOf(".")).equalsIgnoreCase(DownloadUtils.DOWNLOAD_FILE_EXTENSION)

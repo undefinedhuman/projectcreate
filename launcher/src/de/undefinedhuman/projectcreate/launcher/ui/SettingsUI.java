@@ -1,13 +1,11 @@
 package de.undefinedhuman.projectcreate.launcher.ui;
 
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
-import de.undefinedhuman.projectcreate.engine.utils.Utils;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 
 public class SettingsUI extends JFrame {
 
@@ -52,7 +50,7 @@ public class SettingsUI extends JFrame {
         });
         settingsPanel.add(saveButton);
 
-        Utils.createSettingsPanel(settingsPanel, 32, 32, 5, WINDOW_WIDTH - 64, Arrays.stream(settings));
+        // Utils.createSettingsPanel(settingsPanel, 32, 32, 5, WINDOW_WIDTH - 64, Arrays.stream(settings));
         setVisible(true);
     }
 

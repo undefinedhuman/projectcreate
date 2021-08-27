@@ -98,7 +98,7 @@ public class SliderSetting extends BaseSetting<Float> {
 
     public static class Builder {
 
-        public String key;
+        private String key;
         public Vector2i bounds = new Vector2i(0, 100);
         public boolean isLabelVisible = true;
         public float relativeWidth = 0.85f;

@@ -18,7 +18,7 @@ public interface GameAction {
 
     static GameAction playAction() {
         return version -> {
-            FsFile gameVersion = new FsFile(LauncherConfig.getInstance().gameInstallationPath.getValue(), version.toString() + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
+            FsFile gameVersion = new FsFile(LauncherConfig.getInstance().gameInstallationPath.getValue().path(), version.toString() + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
             if(!InstallationUtils.isVersionDownloaded(Launcher.DOWNLOAD_GAME_URL, LauncherConfig.getInstance().gameInstallationPath.getValue(), version)) {
                 GameManagerUI.getInstance().checkVersion(version);
                 return;
@@ -35,7 +35,7 @@ public interface GameAction {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            LauncherConfig.getInstance().lastPlayedGameVersion.setValue(version.toString());
+            LauncherConfig.getInstance().lastPlayedGameVersion.setValue(version);
             if(LauncherConfig.getInstance().closeLauncherAfterGameStart.getValue()) {
                 Launcher.getInstance().setVisible(false);
                 Launcher.getInstance().dispose();
@@ -50,7 +50,7 @@ public interface GameAction {
                 LauncherConfig.getInstance().gameInstallationPath.setValue(InstallationUtils.chooseInstallationDirectory(Launcher.DEFAULT_INSTALLATION_DIRECTORY));
             }
             String downloadURL = Launcher.DOWNLOAD_GAME_URL + version + DownloadUtils.DOWNLOAD_FILE_EXTENSION;
-            FsFile destination = new FsFile(LauncherConfig.getInstance().gameInstallationPath.getValue(), version.toString() + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
+            FsFile destination = new FsFile(LauncherConfig.getInstance().gameInstallationPath.getValue().path(), version.toString() + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
             long downloadedBytes = 0;
             try {
                 downloadedBytes = DownloadUtils.downloadFile(downloadURL, destination);

@@ -81,7 +81,7 @@ public class Updater extends JFrame {
         InstallationUtils.loadInstallationDirectory(UpdaterConfig.getInstance().firstRun.getValue(), UpdaterConfig.getInstance().installationPath, DEFAULT_INSTALLATION_DIRECTORY);
         updaterUI.updateProgressText("Checking for installed version...");
         sleep();
-        FsFile currentlyInstalledVersion = new FsFile(UpdaterConfig.getInstance().installationPath.getValue(), UpdaterConfig.getInstance().version.getValue() + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
+        FsFile currentlyInstalledVersion = new FsFile(UpdaterConfig.getInstance().installationPath.getValue().path(), UpdaterConfig.getInstance().version.getValue() + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
         List<Version> versions = InstallationUtils.fetchAvailableVersions(DOWNLOAD_LAUNCHER_URL, null);
         if(versions.isEmpty())
             Log.showErrorDialog("Error while fetching available launcher versions. \nPlease restart, if the error persists, please contact the author.", true);
@@ -92,7 +92,7 @@ public class Updater extends JFrame {
             sleep();
             FileUtils.deleteFile(currentlyInstalledVersion);
             Log.info(maxVersion);
-            currentlyInstalledVersion = new FsFile(UpdaterConfig.getInstance().installationPath.getValue(), maxVersion + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
+            currentlyInstalledVersion = new FsFile(UpdaterConfig.getInstance().installationPath.getValue().path(), maxVersion + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
             try {
                 DownloadUtils.downloadFile(downloadUrl, currentlyInstalledVersion);
             } catch (IOException | URISyntaxException e) {
@@ -100,7 +100,7 @@ public class Updater extends JFrame {
             }
         } else Log.info("Launcher already up to date. Version: " + maxVersion);
 
-        UpdaterConfig.getInstance().version.setValue(maxVersion.toString());
+        UpdaterConfig.getInstance().version.setValue(maxVersion);
 
         updaterUI.updateProgressText("Start launcher...");
         sleep();
