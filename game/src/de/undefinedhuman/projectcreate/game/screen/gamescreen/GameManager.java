@@ -3,20 +3,33 @@ package de.undefinedhuman.projectcreate.game.screen.gamescreen;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import de.undefinedhuman.projectcreate.core.ecs.Mappers;
+import de.undefinedhuman.projectcreate.core.ecs.transform.TransformComponent;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
+import de.undefinedhuman.projectcreate.engine.gui.GuiManager;
+import de.undefinedhuman.projectcreate.engine.gui.text.Text;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.CenterConstraint;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.PixelConstraint;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.RelativeConstraint;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.offset.CenterOffset;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.offset.PixelOffset;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.offset.RelativeOffset;
 import de.undefinedhuman.projectcreate.engine.utils.ManagerList;
 import de.undefinedhuman.projectcreate.game.Main;
 import de.undefinedhuman.projectcreate.game.background.BackgroundManager;
 import de.undefinedhuman.projectcreate.game.camera.CameraManager;
-import de.undefinedhuman.projectcreate.engine.gui.GuiManager;
 import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
 import de.undefinedhuman.projectcreate.game.item.drop.DropItemManager;
 import de.undefinedhuman.projectcreate.game.network.ClientManager;
 import de.undefinedhuman.projectcreate.game.projectiles.Projectile;
 import de.undefinedhuman.projectcreate.game.world.World;
 import de.undefinedhuman.projectcreate.game.world.WorldManager;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class GameManager {
 
@@ -26,6 +39,8 @@ public class GameManager {
     public Projectile projectile = null;
 
     private ManagerList manager;
+
+    private Text ping, player1Text, player2Text;
 
     private GameManager() {
         batch = new SpriteBatch();
@@ -40,6 +55,10 @@ public class GameManager {
         loadManager();
 
         //GuiManager.getInstance().addGui(CraftingInventory.getInstance());
+        GuiManager.getInstance().addGui(player1Text = new Text(""), player2Text = new Text(""), ping = new Text(""));
+        player1Text.setPosition(new CenterConstraint(), new CenterConstraint()).setOffset(new PixelOffset(-200), new CenterOffset());
+        player2Text.setPosition(new CenterConstraint(), new CenterConstraint()).setOffset(new PixelOffset(200), new CenterOffset());
+        ping.setPosition(new PixelConstraint(0), new RelativeConstraint(1f)).setOffset(new PixelOffset(10), new RelativeOffset(-1f));
     }
 
     public void resize(int width, int height) {
@@ -57,9 +76,24 @@ public class GameManager {
         if (!ClientManager.getInstance().isConnected())
             Gdx.app.exit();
 
-        if (projectile != null) projectile.update(delta);
+        ClientManager.getInstance().update(Main.delta);
 
-        ClientManager.getInstance().update(delta);
+        ping.setText(ClientManager.getInstance().getReturnTime());
+
+        List<Entity> entities = EntityManager.getInstance().stream().map(Map.Entry::getValue).collect(Collectors.toList());
+        if(entities.size() > 0) {
+            Entity player1 = entities.get(0);
+            TransformComponent transformComponent = Mappers.TRANSFORM.get(player1);
+            player1Text.setText((int) (transformComponent.getPosition().x * 1000) / 1000f);
+        }
+
+        if(entities.size() > 1) {
+            Entity player2 = entities.get(1);
+            TransformComponent transformComponent = Mappers.TRANSFORM.get(player2);
+            player2Text.setText((int) (transformComponent.getPosition().x * 1000) / 1000f);
+        }
+
+        if (projectile != null) projectile.update(delta);
 
         GuiManager.getInstance().update(delta);
         InventoryManager.getInstance().update(delta);

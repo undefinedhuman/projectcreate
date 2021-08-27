@@ -6,6 +6,8 @@ import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.LineWriter;
 import de.undefinedhuman.projectcreate.engine.network.NetworkSerializable;
 
+import java.util.LinkedList;
+
 public class MovementComponent implements Component, NetworkSerializable {
 
     public Vector2 velocity = new Vector2();
@@ -13,6 +15,10 @@ public class MovementComponent implements Component, NetworkSerializable {
 
     private float jumpTans, speed, jumpSpeed, gravity;
     private int direction = 0;
+
+    public Vector2 predictedPosition = new Vector2();
+    public float historyLength = 0f;
+    public LinkedList<MovementFrame> movementHistory = new LinkedList<>();
 
     public MovementComponent(float speed, float jumpSpeed, float gravity, float jumpTans) {
         this.speed = speed;
@@ -59,6 +65,13 @@ public class MovementComponent implements Component, NetworkSerializable {
     @Override
     public void send(LineWriter writer) {
         writer.writeInt(direction);
+    }
+
+    public static class MovementFrame {
+        public Vector2 position;
+        public Vector2 velocity;
+        public int direction;
+        public float delta;
     }
 
 }

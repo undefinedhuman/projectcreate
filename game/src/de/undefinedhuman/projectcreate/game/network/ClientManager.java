@@ -14,7 +14,7 @@ import java.io.IOException;
 public class ClientManager extends Manager {
 
     private static volatile ClientManager instance;
-    private static final String IP_ADDRESS = "127.0.0.1";
+    private static final String IP_ADDRESS = "161.97.165.34";
     private static final int TCP_PORT = NetworkConstants.DEFAULT_TCP_PORT;
     private static final int UDP_PORT = NetworkConstants.DEFAULT_UDP_PORT;
 
@@ -29,12 +29,13 @@ public class ClientManager extends Manager {
         NetworkConstants.register(client);
 
         client.addListener(new Listener.QueuedListener(new ClientListener()) {
-            protected void queue (Runnable runnable) {
+            @Override
+            protected void queue(Runnable runnable) {
                 Gdx.app.postRunnable(runnable);
             }
         });
 
-        timer = new Timer(0.5f, client::updateReturnTripTime);
+        timer = new Timer(0.2f, client::updateReturnTripTime);
     }
 
     public void connect() {

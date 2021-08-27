@@ -21,7 +21,8 @@ public class Timer {
         if(time < delay || finished)
             return;
         timerAction.action();
-        if (loop) time = 0;
+        if (loop)
+            time = time % delay;
         finished = !loop;
     }
 

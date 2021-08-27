@@ -12,6 +12,7 @@ import de.undefinedhuman.projectcreate.engine.log.Log;
 public class MovementPacket implements Packet {
 
     public long worldID;
+    public float delay;
     public int direction;
 
     @Override

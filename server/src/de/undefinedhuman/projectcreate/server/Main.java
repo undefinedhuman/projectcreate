@@ -7,9 +7,11 @@ import de.undefinedhuman.projectcreate.engine.gl.HeadlessApplicationAdapter;
 
 public class Main {
 
+    public static float delta;
+
     public static void main(String[] args) {
         HeadlessApplicationConfiguration config = new HeadlessApplicationConfiguration();
-        config.updatesPerSecond = 240;
+        config.updatesPerSecond = 20;
         new HeadlessApplication(new HeadlessApplicationAdapter() {
             @Override
             public void create() {
@@ -18,7 +20,8 @@ public class Main {
 
             @Override
             public void render() {
-                ServerManager.getInstance().update(Gdx.graphics.getDeltaTime());
+                delta = Gdx.graphics.getDeltaTime();
+                ServerManager.getInstance().update(delta);
             }
 
             @Override
