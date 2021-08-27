@@ -1,4 +1,4 @@
-package de.undefinedhuman.projectcreate.game.entity.ecs.system;
+package de.undefinedhuman.projectcreate.core.ecs.system;
 
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
