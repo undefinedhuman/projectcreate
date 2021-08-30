@@ -58,6 +58,7 @@ public class ClientPacketHandler implements PacketHandler {
     }
 
     private long latestPositionPacketTime = 0;
+    private long lastPositionPacketTimeLocal = 0;
 
     @Override
     public void handle(Connection connection, PositionPacket packet) {
@@ -68,9 +69,12 @@ public class ClientPacketHandler implements PacketHandler {
             return;
         latestPositionPacketTime = packet.timeStamp;
 
+        if(lastPositionPacketTimeLocal == 0)
+            latestPositionPacketTime = System.nanoTime();
+
         MovementComponent movementComponent = Mappers.MOVEMENT.get(entity);
 
-        float dt = Math.max(0.001f, movementComponent.historyLength - (ClientManager.getInstance().getReturnTime() / 1000f) - (Gdx.graphics.getFramesPerSecond()/1000f - 20f/1000f));
+        float dt = Math.max(0.001f, movementComponent.historyLength - ((System.nanoTime() - lastPositionPacketTimeLocal) / 1000000000f) - (Gdx.graphics.getFramesPerSecond()/1000f - 20f/1000f));
         movementComponent.historyLength -= dt;
 
         while(movementComponent.movementHistory.size() > 0 && dt > 0) {
@@ -101,6 +105,8 @@ public class ClientPacketHandler implements PacketHandler {
             for(MovementComponent.MovementFrame frame : movementComponent.movementHistory)
                 movementComponent.predictedPosition.add(frame.position);
         }
+
+        lastPositionPacketTimeLocal = System.nanoTime();
 
     }
 

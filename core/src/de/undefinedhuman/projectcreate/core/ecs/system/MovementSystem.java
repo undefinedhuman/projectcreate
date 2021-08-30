@@ -15,6 +15,8 @@ public abstract class MovementSystem extends IteratingSystem {
 
     // BE CAREFULL WHEN ADDING ANIMATION BACK IN, SERVER SIDE MOVEMENT SYSTEM WONT UPDATE WHEN YOU ADD ANIMATION COMPONENT
 
+    private static final float CONVERGE_MULTIPLIER = 0.025f;
+
     private boolean client;
 
      public MovementSystem(boolean client) {
@@ -69,10 +71,10 @@ public abstract class MovementSystem extends IteratingSystem {
             movementComponent.movementHistory.add(frame);
             movementComponent.historyLength += delta;
 
-            float latency = Math.max(0.001f, getLatency()) + (60/1000f - 20f/1000f); // Math.max(0.001f, getLatency()) * 1000f;
+            float latency = Math.max(0.001f, getLatency()) + (60f/1000f - 20f/1000f); // Math.max(0.001f, getLatency()) * 1000f;
 
-            Vector2 extrapolatedPosition = new Vector2(movementComponent.predictedPosition).add(frame.velocity.x * latency * 0.025f, frame.velocity.y * latency * 0.025f);
-            float t = delta / (latency * (1.025f));
+            Vector2 extrapolatedPosition = new Vector2(movementComponent.predictedPosition).add(frame.velocity.x * latency * CONVERGE_MULTIPLIER, frame.velocity.y * latency * CONVERGE_MULTIPLIER);
+            float t = delta / (latency * (1f + CONVERGE_MULTIPLIER));
             transformComponent.addPosition((extrapolatedPosition.x - transformComponent.getPosition().x) * t, (extrapolatedPosition.y - transformComponent.getPosition().y) * t);
 
             movementComponent.predictedPosition = position;
