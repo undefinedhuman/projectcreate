@@ -1,6 +1,5 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Server" type="GradleRunConfiguration" factoryName="Gradle">
-    <target name="root@161.97.165.34:22" />
     <ExternalSystemSettings>
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$/server" />
