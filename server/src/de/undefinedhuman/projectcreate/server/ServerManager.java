@@ -9,7 +9,7 @@ import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.animation.AnimationBlueprint;
 import de.undefinedhuman.projectcreate.core.ecs.interaction.InteractionBlueprint;
 import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteBlueprint;
-import de.undefinedhuman.projectcreate.core.ecs.system.MovementSystem;
+import de.undefinedhuman.projectcreate.server.entity.MovementSystem;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.core.network.log.NetworkLogger;
 import de.undefinedhuman.projectcreate.core.network.packets.CommandCache;
@@ -83,12 +83,7 @@ public class ServerManager extends Server {
     public void init() {
         initGDX();
         ComponentTypes.registerComponentTypes(BlueprintManager.getInstance(), AnimationBlueprint.class, SpriteBlueprint.class, InteractionBlueprint.class);
-        EntityManager.getInstance().addSystems(new MovementSystem(false) {
-            @Override
-            public float getLatency() {
-                return 0;
-            }
-        });
+        EntityManager.getInstance().addSystems(new MovementSystem());
         managers.init();
         try {
             bind(ServerConfig.getInstance().TCP_PORT.getValue(), NetworkConstants.DEFAULT_UDP_PORT);

@@ -5,7 +5,7 @@ import com.esotericsoftware.kryonet.Connection;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.core.ecs.name.NameComponent;
-import de.undefinedhuman.projectcreate.core.ecs.system.MovementSystem;
+import de.undefinedhuman.projectcreate.server.entity.MovementSystem;
 import de.undefinedhuman.projectcreate.core.ecs.transform.TransformComponent;
 import de.undefinedhuman.projectcreate.core.network.PacketHandler;
 import de.undefinedhuman.projectcreate.core.network.packets.LoginPacket;
@@ -17,7 +17,6 @@ import de.undefinedhuman.projectcreate.core.network.packets.entity.components.Po
 import de.undefinedhuman.projectcreate.core.network.utils.PacketUtils;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
-import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.server.ServerManager;
 import de.undefinedhuman.projectcreate.server.utils.IDManager;
 
@@ -70,9 +69,8 @@ public class ServerPacketHandler implements PacketHandler {
                 transformComponent.setPosition(MovementSystem.moveEntity(transformComponent.getPosition(), packet.direction, movementComponent.getSpeed(), delta));
                 movementComponent.velocity.set(movementComponent.getDirection() * movementComponent.getSpeed() * delta, 0);
             } else {
-                if(movementComponent.getDirection() != 0) {
+                if(movementComponent.getDirection() != 0)
                     transformComponent.setPosition(MovementSystem.moveEntity(transformComponent.getPosition(), movementComponent.getDirection(), movementComponent.getSpeed(), -1f * delta));
-                }
             }
             MovementPacket.parse(entity, packet);
         });

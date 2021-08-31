@@ -14,7 +14,7 @@ import java.io.IOException;
 public class ClientManager extends Manager {
 
     private static volatile ClientManager instance;
-    private static final String IP_ADDRESS = "127.0.0.1";
+    private static final String IP_ADDRESS = "playprojectcreate.com";
     private static final int TCP_PORT = NetworkConstants.DEFAULT_TCP_PORT;
     private static final int UDP_PORT = NetworkConstants.DEFAULT_UDP_PORT;
 
@@ -68,6 +68,10 @@ public class ClientManager extends Manager {
             return;
         }
         client.sendTCP(packet);
+    }
+
+    public float getLatency() {
+        return client.getReturnTripTime() / 1000f;
     }
 
     public int getReturnTime() {

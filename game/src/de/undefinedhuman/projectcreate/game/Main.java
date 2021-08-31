@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import de.undefinedhuman.projectcreate.core.ecs.ComponentTypes;
-import de.undefinedhuman.projectcreate.core.ecs.system.MovementSystem;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.core.network.log.NetworkLogger;
 import de.undefinedhuman.projectcreate.engine.config.ConfigManager;
@@ -26,6 +25,7 @@ import de.undefinedhuman.projectcreate.engine.utils.Timer;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.game.config.GameConfig;
 import de.undefinedhuman.projectcreate.game.entity.system.EquipSystem;
+import de.undefinedhuman.projectcreate.game.entity.system.MovementSystem;
 import de.undefinedhuman.projectcreate.game.entity.system.RenderSystem;
 import de.undefinedhuman.projectcreate.game.network.ClientManager;
 import de.undefinedhuman.projectcreate.game.screen.TestScreen;
@@ -71,12 +71,7 @@ public class Main extends Game {
     public void create() {
         initGDX();
         // EntityManager.getInstance().addSystems(new AngleSystem(), new AnimationSystem(), new ArmSystem(), new InteractionSystem(), new EquipSystem(), new MovementSystem(), new RenderSystem());
-        EntityManager.getInstance().addSystems(new EquipSystem(), new MovementSystem(true) {
-            @Override
-            public float getLatency() {
-                return ClientManager.getInstance().getReturnTime() / 1000f;
-            }
-        }, new RenderSystem());
+        EntityManager.getInstance().addSystems(new EquipSystem(), new MovementSystem(), new RenderSystem());
         ComponentTypes.registerComponentTypes(BlueprintManager.getInstance());
         managerList.init();
         TEMP();
