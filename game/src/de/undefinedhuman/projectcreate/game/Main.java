@@ -24,9 +24,7 @@ import de.undefinedhuman.projectcreate.engine.utils.ManagerList;
 import de.undefinedhuman.projectcreate.engine.utils.Timer;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.game.config.GameConfig;
-import de.undefinedhuman.projectcreate.game.entity.system.EquipSystem;
-import de.undefinedhuman.projectcreate.game.entity.system.MovementSystem;
-import de.undefinedhuman.projectcreate.game.entity.system.RenderSystem;
+import de.undefinedhuman.projectcreate.game.entity.system.*;
 import de.undefinedhuman.projectcreate.game.network.ClientManager;
 import de.undefinedhuman.projectcreate.game.screen.TestScreen;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
@@ -71,7 +69,7 @@ public class Main extends Game {
     public void create() {
         initGDX();
         // EntityManager.getInstance().addSystems(new AngleSystem(), new AnimationSystem(), new ArmSystem(), new InteractionSystem(), new EquipSystem(), new MovementSystem(), new RenderSystem());
-        EntityManager.getInstance().addSystems(new EquipSystem(), new MovementSystem(), new RenderSystem());
+        EntityManager.getInstance().addSystems(new AngleSystem(), new AnimationSystem(), new ArmSystem(), new InteractionSystem(), new EquipSystem(), new MovementSystem(), new CameraSystem(), new RenderSystem());
         ComponentTypes.registerComponentTypes(BlueprintManager.getInstance());
         managerList.init();
         TEMP();

@@ -37,8 +37,8 @@ public class Inputs extends Manager implements InputProcessor {
                 ClientManager.getInstance().sendTCP(MovementPacket.serialize(player, Mappers.MOVEMENT.get(player)));
                 break;
             case Input.Keys.SPACE:
-                if (player.getComponent(MovementComponent.class).jump()) {
-                    // SEND JUMP PACKET
+                if (Mappers.MOVEMENT.get(player).jump()) {
+                    // IMPLEMENT JUMPING
                 }
                 break;
             case Input.Keys.NUM_0:

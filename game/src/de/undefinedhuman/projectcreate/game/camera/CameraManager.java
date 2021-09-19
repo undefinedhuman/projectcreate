@@ -1,10 +1,14 @@
 package de.undefinedhuman.projectcreate.game.camera;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector3;
+import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector4i;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
+import de.undefinedhuman.projectcreate.game.utils.Tools;
+import de.undefinedhuman.projectcreate.game.world.World;
 
 public class CameraManager extends Manager {
 
@@ -52,18 +56,18 @@ public class CameraManager extends Manager {
         if (GameManager.getInstance().player == null) return;
         int cameraYBounds = (int) (gameCamera.viewportHeight * gameCamera.zoom * 0.5f);
         // If lerp gets added again, make sure, that if the player gets teleported to the other side of the world the camera sets with him, otherwise there will be some kind of laggy movement
-        /*gameCamera.position
-                .set(new Vector3(GameManager.getInstance().player.getComponent(TransformComponent.class).getCenterPosition(), 0))
-                .y = Tools.clamp(gameCamera.position.y, cameraYBounds, World.instance.pixelSize.y - cameraYBounds);*/
+        gameCamera.position
+                .set(new Vector3(Mappers.TRANSFORM.get(GameManager.getInstance().player).getCenterPosition(), 0))
+                .y = Tools.clamp(gameCamera.position.y, cameraYBounds, World.instance.pixelSize.y - cameraYBounds);
         gameCamera.update();
     }
 
     public static CameraManager getInstance() {
-        if (instance == null) {
-            synchronized (CameraManager.class) {
-                if (instance == null)
-                    instance = new CameraManager();
-            }
+        if(instance != null)
+            return instance;
+        synchronized (CameraManager.class) {
+            if (instance == null)
+                instance = new CameraManager();
         }
         return instance;
     }

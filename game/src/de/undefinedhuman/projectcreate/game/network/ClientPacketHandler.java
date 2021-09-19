@@ -1,7 +1,6 @@
 package de.undefinedhuman.projectcreate.game.network;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Connection;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
@@ -26,6 +25,7 @@ public class ClientPacketHandler implements PacketHandler {
     public void handle(Connection connection, LoginPacket packet) {
         Entity player = BlueprintManager.getInstance().createEntity(BlueprintManager.PLAYER_BLUEPRINT_ID, packet.worldID);
         PacketUtils.setComponentData(player, PacketUtils.parseComponentData(packet.componentData));
+        Mappers.MOVEMENT.get(player).predictedPosition.set(Mappers.TRANSFORM.get(player).getPosition());
         EntityManager.getInstance().addEntity(packet.worldID, player);
         GameManager.getInstance().player = player;
         Main.instance.setScreen(GameScreen.getInstance());
@@ -35,6 +35,8 @@ public class ClientPacketHandler implements PacketHandler {
     public void handle(Connection connection, CreateEntityPacket packet) {
         Entity entity = CreateEntityPacket.parse(packet);
         if(entity == null) return;
+        if(Mappers.MOVEMENT.get(entity) != null)
+            Mappers.MOVEMENT.get(entity).predictedPosition.set(Mappers.TRANSFORM.get(entity).getPosition());
         EntityManager.getInstance().addEntity(packet.worldID, entity);
     }
 
@@ -67,20 +69,26 @@ public class ClientPacketHandler implements PacketHandler {
             return;
         movementComponent.latestPositionPacketTime = packet.timeStamp;
 
-        if(movementComponent.lastPositionPacketTimeLocal == 0)
+        boolean init = false;
+
+        if(movementComponent.lastPositionPacketTimeLocal == 0) {
             movementComponent.lastPositionPacketTimeLocal = System.nanoTime();
+            init = true;
+        }
 
         if(entity != GameManager.getInstance().player) {
-            /*MovementComponent.MovementFrame frame = new MovementComponent.MovementFrame();
-            frame.position = new Vector2(packet.x, packet.y);
-            frame.delta = (System.nanoTime() - movementComponent.lastPositionPacketTimeLocal) * 0.000000001f;
-            movementComponent.movementHistory.add(frame);*/
-            movementComponent.lastPosition.set(movementComponent.predictedPosition);
+
+            // CHANGE FROM PREDICTED POSITION TO PREVIOUS POSITION SO TRANSFORM COMPONENT IS ALWAYS AT SERVER POSITION BUT RENDERSYSTEM IS AT INTERPOLATED POSITION
+            /*Mappers.TRANSFORM.get(entity).setPosition(movementComponent.predictedPosition);
             movementComponent.predictedPosition.set(packet.x, packet.y);
             movementComponent.historyLength = (System.nanoTime() - movementComponent.lastPositionPacketTimeLocal) * 0.000000001f;
-            movementComponent.test = 0;
+            movementComponent.delta = 0;*/
+            MovementComponent.MovementFrame frame = new MovementComponent.MovementFrame();
+            frame.position = new Vector2(packet.x, packet.y);
+            frame.delta = (System.nanoTime() - movementComponent.lastPositionPacketTimeLocal) * 0.000000001f;
+            movementComponent.movementHistory.add(frame);
         } else {
-            float dt = Math.max(0.001f, movementComponent.historyLength - ((System.nanoTime() - movementComponent.lastPositionPacketTimeLocal) * 0.000000001f) - ((Gdx.graphics.getFramesPerSecond()-20)*0.001f));
+            float dt = Math.max(0.001f, (System.nanoTime() - movementComponent.lastPositionPacketTimeLocal) * 0.000000001f);
             movementComponent.historyLength -= dt;
 
             while(movementComponent.movementHistory.size() > 0 && dt > 0) {

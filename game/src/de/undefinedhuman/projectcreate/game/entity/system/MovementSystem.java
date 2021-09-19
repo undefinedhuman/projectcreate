@@ -16,10 +16,8 @@ public class MovementSystem extends IteratingSystem {
     private static final float CONVERGE_MULTIPLIER = 0.025f;
 
     public MovementSystem() {
-        super(Family.all(TransformComponent.class, MovementComponent.class).get(), 5);
+        super(Family.all(TransformComponent.class, MovementComponent.class).get(), 4);
     }
-
-    private float lerp = 0;
 
     @Override
     protected void processEntity(Entity entity, float delta) {
@@ -40,25 +38,28 @@ public class MovementSystem extends IteratingSystem {
 
             float latency = Math.max(0.001f, ClientManager.getInstance().getLatency()) + 0.04f; // Math.max(0.001f, getLatency()) * 1000f;
 
-            Vector2 extrapolatedPosition = new Vector2(movementComponent.predictedPosition).add(frame.velocity.x * latency * CONVERGE_MULTIPLIER, frame.velocity.y * latency * CONVERGE_MULTIPLIER);
+            Vector2 extrapolatedPosition = new Vector2(movementComponent.predictedPosition).add(frame.velocity.x * latency * (1f + CONVERGE_MULTIPLIER), frame.velocity.y * latency * (1f + CONVERGE_MULTIPLIER));
             float t = delta / (latency * (1f + CONVERGE_MULTIPLIER));
             transformComponent.addPosition((extrapolatedPosition.x - transformComponent.getPosition().x) * t, (extrapolatedPosition.y - transformComponent.getPosition().y) * t);
 
             movementComponent.predictedPosition = position;
         } else {
-            movementComponent.test += delta;
-            transformComponent.setPosition(
-                    Tools.lerp(movementComponent.lastPosition.x, movementComponent.predictedPosition.x, movementComponent.test / movementComponent.historyLength),
-                    Tools.lerp(movementComponent.lastPosition.y, movementComponent.predictedPosition.y, movementComponent.test / movementComponent.historyLength)
-            );
-            /*if(movementComponent.movementHistory.size() <= 1)
+            if(movementComponent.movementHistory.size() <= 1) {
+                movementComponent.delta = 0;
                 return;
-            MovementComponent.MovementFrame frame1 = movementComponent.movementHistory.get(0);
-            MovementComponent.MovementFrame frame2 = movementComponent.movementHistory.get(1);
-            transformComponent.setPosition(Tools.lerp(frame1.position.x, frame2.position.x, delta / frame2.delta), Tools.lerp(frame1.position.y, frame2.position.y, delta / frame2.delta));
-            frame2.delta -= delta;
-            if(frame2.delta <= 0)
-                movementComponent.movementHistory.remove(0);*/
+            }
+            MovementComponent.MovementFrame frame = movementComponent.movementHistory.get(0);
+            MovementComponent.MovementFrame frame1 = movementComponent.movementHistory.get(1);
+            float f = movementComponent.delta / frame1.delta;
+            transformComponent.setPosition(
+                    Tools.lerp(frame.position.x, frame1.position.x, f),
+                    Tools.lerp(frame.position.y, frame1.position.y, f)
+            );
+            movementComponent.delta += delta;
+            if(movementComponent.delta >= frame1.delta) {
+                movementComponent.movementHistory.remove(0);
+                movementComponent.delta = movementComponent.delta - frame1.delta;
+            }
         }
     }
 

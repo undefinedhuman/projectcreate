@@ -25,7 +25,7 @@ public class EquipSystem extends EntitySystem {
     private ImmutableArray<Entity> entities;
 
     public EquipSystem() {
-        super(4);
+        super(3);
         EntityManager.getInstance().addEntityListener(new EntityAdapter() {
             @Override
             public void entityAdded(Entity entity) {

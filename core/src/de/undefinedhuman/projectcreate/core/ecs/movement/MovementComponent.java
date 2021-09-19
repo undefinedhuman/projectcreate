@@ -11,16 +11,15 @@ import java.util.LinkedList;
 public class MovementComponent implements Component, NetworkSerializable {
 
     public Vector2 velocity = new Vector2();
-    public boolean canJump = false;
 
+    private boolean canJump = false;
     private float jumpTans, speed, jumpSpeed, gravity;
     private int direction = 0;
 
-    public Vector2 lastPosition = new Vector2();
     public long latestPositionPacketTime = 0;
     public long lastPositionPacketTimeLocal = 0;
     public Vector2 predictedPosition = new Vector2();
-    public float historyLength = 0f, test = 0f;
+    public float historyLength = 0f, delta = 0f;
     public LinkedList<MovementFrame> movementHistory = new LinkedList<>();
 
     public MovementComponent(float speed, float jumpSpeed, float gravity, float jumpTans) {

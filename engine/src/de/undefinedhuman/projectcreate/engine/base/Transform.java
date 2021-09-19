@@ -3,6 +3,7 @@ package de.undefinedhuman.projectcreate.engine.base;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.LineWriter;
+import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.network.NetworkSerializable;
 
 public class Transform implements NetworkSerializable {
@@ -22,7 +23,7 @@ public class Transform implements NetworkSerializable {
     }
 
     public Vector2 getPosition() {
-        return position;
+        return new Vector2(position);
     }
     public void setPosition(Vector2 position) {
         setPosition(position.x, position.y);
@@ -32,7 +33,7 @@ public class Transform implements NetworkSerializable {
         this.position.add(x, y);
     }
     public void addPosition(Vector2 position) {
-        this.position.add(position);
+        this.addPosition(position.x, position.y);
     }
     public Vector2 getSize() { return size; }
     public void setSize(Vector2 size) {

@@ -101,8 +101,6 @@ public class GameManager {
         WorldManager.getInstance().update(delta);
 
         BackgroundManager.getInstance().update(delta);
-
-        CameraManager.getInstance().update(delta);
     }
 
     public void render() {
@@ -116,7 +114,9 @@ public class GameManager {
         batch.begin();
         DropItemManager.instance.render(batch);
         batch.end();
+
         EntityManager.getInstance().update(Main.delta);
+
         batch.setProjectionMatrix(CameraManager.gameCamera.combined);
         batch.begin();
         if (projectile != null) projectile.render(batch);

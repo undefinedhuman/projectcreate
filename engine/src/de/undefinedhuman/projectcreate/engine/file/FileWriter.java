@@ -36,6 +36,9 @@ public class FileWriter {
     public FileWriter writeFloat(float f) {
         return writeValue(f);
     }
+    public FileWriter writeShort(short s) {
+        return writeValue(s);
+    }
     public FileWriter writeLong(long l) {
         return writeValue(l);
     }
