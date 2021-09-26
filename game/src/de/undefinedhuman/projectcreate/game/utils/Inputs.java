@@ -6,7 +6,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.movement.MovementComponent;
-import de.undefinedhuman.projectcreate.core.network.packets.entity.components.MovementPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.JumpPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementPacket;
 import de.undefinedhuman.projectcreate.engine.utils.Manager;
 import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
 import de.undefinedhuman.projectcreate.game.inventory.player.Selector;
@@ -37,9 +38,9 @@ public class Inputs extends Manager implements InputProcessor {
                 ClientManager.getInstance().sendTCP(MovementPacket.serialize(player, Mappers.MOVEMENT.get(player)));
                 break;
             case Input.Keys.SPACE:
-                if (Mappers.MOVEMENT.get(player).jump()) {
-                    // IMPLEMENT JUMPING
-                }
+                if (!Mappers.MOVEMENT.get(player).jump())
+                    break;
+                ClientManager.getInstance().sendTCP(JumpPacket.serialize(player));
                 break;
             case Input.Keys.NUM_0:
             case Input.Keys.NUM_1:

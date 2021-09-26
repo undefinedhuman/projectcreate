@@ -1,4 +1,4 @@
-package de.undefinedhuman.projectcreate.core.network.packets.entity.components;
+package de.undefinedhuman.projectcreate.core.network.packets.entity.movement;
 
 import com.badlogic.ashley.core.Entity;
 import com.esotericsoftware.kryonet.Connection;

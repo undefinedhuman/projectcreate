@@ -25,24 +25,33 @@ public class MovementSystem extends IteratingSystem {
         MovementComponent movementComponent = Mappers.MOVEMENT.get(entity);
 
         if(entity == GameManager.getInstance().player) {
-            Vector2 position = moveEntity(movementComponent.predictedPosition, movementComponent.getDirection(), movementComponent.getSpeed(), delta);
-            movementComponent.velocity.set(movementComponent.getDirection() * movementComponent.getSpeed() * delta, 0);
+
+            movementComponent.velocity.x = movementComponent.getDirection() * movementComponent.getSpeed();
+            movementComponent.velocity.y -= movementComponent.getGravity() * delta;
+
+            Vector2 currentPosition = moveEntity(movementComponent.predictedPosition, movementComponent.velocity, delta);
+
+            if(currentPosition.y <= 0) {
+                movementComponent.velocity.y = 0f;
+                currentPosition.y = 0;
+                movementComponent.setCanJump();
+            }
 
             MovementComponent.MovementFrame frame = new MovementComponent.MovementFrame();
             frame.delta = delta;
-            frame.direction = movementComponent.getDirection();
-            frame.position = new Vector2(position).sub(movementComponent.predictedPosition);
-            frame.velocity = new Vector2(movementComponent.velocity);
+            // frame.direction = movementComponent.getDirection();
+            frame.position = new Vector2(currentPosition).sub(movementComponent.predictedPosition);
+            frame.velocity = new Vector2(movementComponent.velocity).scl(delta);
             movementComponent.movementHistory.add(frame);
             movementComponent.historyLength += delta;
 
             float latency = Math.max(0.001f, ClientManager.getInstance().getLatency()) + 0.04f; // Math.max(0.001f, getLatency()) * 1000f;
 
-            Vector2 extrapolatedPosition = new Vector2(movementComponent.predictedPosition).add(frame.velocity.x * latency * (1f + CONVERGE_MULTIPLIER), frame.velocity.y * latency * (1f + CONVERGE_MULTIPLIER));
+            Vector2 extrapolatedPosition = new Vector2(movementComponent.predictedPosition).mulAdd(frame.velocity, latency * (1f + CONVERGE_MULTIPLIER));
             float t = delta / (latency * (1f + CONVERGE_MULTIPLIER));
             transformComponent.addPosition((extrapolatedPosition.x - transformComponent.getPosition().x) * t, (extrapolatedPosition.y - transformComponent.getPosition().y) * t);
 
-            movementComponent.predictedPosition = position;
+            movementComponent.predictedPosition = currentPosition;
         } else {
             if(movementComponent.movementHistory.size() <= 1) {
                 movementComponent.delta = 0;
@@ -63,9 +72,9 @@ public class MovementSystem extends IteratingSystem {
         }
     }
 
-    public static Vector2 moveEntity(Vector2 position, int direction, float speed, float delta) {
+    public static Vector2 moveEntity(Vector2 position, Vector2 velocity, float delta) {
         if(position == null)
             return new Vector2();
-        return new Vector2(position).add(direction * speed * delta, 0);
+        return new Vector2(position).mulAdd(velocity, delta);
     }
 }

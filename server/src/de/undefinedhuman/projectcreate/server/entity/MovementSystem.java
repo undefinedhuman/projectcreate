@@ -21,7 +21,27 @@ public class MovementSystem extends IteratingSystem {
         TransformComponent transformComponent = Mappers.TRANSFORM.get(entity);
         MovementComponent movementComponent = Mappers.MOVEMENT.get(entity);
 
-        /*movementComponent.velocity.x += ((movementComponent.getDirection() * movementComponent.getSpeed()) - movementComponent.velocity.x) * 0.1f;
+        movementComponent.velocity.x = movementComponent.getDirection() * movementComponent.getSpeed();
+        movementComponent.velocity.y -= movementComponent.getGravity() * delta;
+
+        currentPosition.set(moveEntity(transformComponent.getPosition(), movementComponent.velocity, delta));
+
+        if(currentPosition.y <= 0) {
+            currentPosition.y = 0;
+            movementComponent.velocity.y = 0;
+            movementComponent.setCanJump();
+        }
+
+        transformComponent.setPosition(currentPosition);
+    }
+
+    public static Vector2 moveEntity(Vector2 position, Vector2 velocity, float delta) {
+         if(position == null)
+             return new Vector2();
+        return new Vector2(position).mulAdd(velocity, delta);
+    }
+
+            /*movementComponent.velocity.x += ((movementComponent.getDirection() * movementComponent.getSpeed()) - movementComponent.velocity.x) * 0.1f;
         if(movementComponent.getDirection() == 0 && Tools.isInRange(movementComponent.velocity.x, -5, 5)) movementComponent.velocity.x = 0;
         movementComponent.velocity.y -= movementComponent.getGravity() * deltaTime;
 
@@ -49,14 +69,5 @@ public class MovementSystem extends IteratingSystem {
         currentPosition.add(0, CollisionUtils.calculateSlopeCollisionY(collisionComponent).y);
         collisionComponent.update(currentPosition);
         currentPosition.add(CollisionUtils.calculateSlopeCollisionX(collisionComponent).x, 0);*/
-        transformComponent.addPosition(movementComponent.getDirection() * movementComponent.getSpeed() * delta, 0);
-        movementComponent.velocity.set(movementComponent.getDirection() * movementComponent.getSpeed() * delta, 0);
-    }
-
-    public static Vector2 moveEntity(Vector2 position, int direction, float speed, float delta) {
-         if(position == null)
-             return new Vector2();
-        return new Vector2(position).add(direction * speed * delta, 0);
-    }
 
 }

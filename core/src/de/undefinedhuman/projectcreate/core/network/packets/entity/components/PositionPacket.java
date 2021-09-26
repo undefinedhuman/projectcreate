@@ -42,8 +42,4 @@ public class PositionPacket implements Packet {
         return positionPacket;
     }
 
-    public static void parse(Entity entity, PositionPacket packet) {
-        Mappers.TRANSFORM.get(entity).setPosition(packet.x, packet.y);
-    }
-
 }

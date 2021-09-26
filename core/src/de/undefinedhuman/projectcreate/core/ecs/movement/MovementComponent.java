@@ -47,10 +47,20 @@ public class MovementComponent implements Component, NetworkSerializable {
         setJump();
         return true;
     }
+
+    public void forceJump() {
+        setJump();
+    }
+
     public void setJump() {
         this.velocity.y = jumpSpeed;
         this.canJump = false;
     }
+
+    public void setCanJump() {
+        this.canJump = true;
+    }
+
     public void move(boolean left, boolean right) {
         direction = left ? -1 : right ? 1 : 0;
     }
@@ -72,7 +82,7 @@ public class MovementComponent implements Component, NetworkSerializable {
     public static class MovementFrame {
         public Vector2 position;
         public Vector2 velocity;
-        public int direction;
+        // public int direction;
         public float delta;
     }
 

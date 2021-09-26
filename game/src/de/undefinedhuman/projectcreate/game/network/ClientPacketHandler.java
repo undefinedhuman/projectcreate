@@ -10,8 +10,9 @@ import de.undefinedhuman.projectcreate.core.network.packets.LoginPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.CreateEntityPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.RemoveEntityPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.ComponentPacket;
-import de.undefinedhuman.projectcreate.core.network.packets.entity.components.MovementPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.PositionPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.JumpPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementPacket;
 import de.undefinedhuman.projectcreate.core.network.utils.PacketUtils;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
@@ -34,7 +35,7 @@ public class ClientPacketHandler implements PacketHandler {
     @Override
     public void handle(Connection connection, CreateEntityPacket packet) {
         Entity entity = CreateEntityPacket.parse(packet);
-        if(entity == null) return;
+        if(entity == null || entity.isScheduledForRemoval() || entity.isRemoving()) return;
         if(Mappers.MOVEMENT.get(entity) != null)
             Mappers.MOVEMENT.get(entity).predictedPosition.set(Mappers.TRANSFORM.get(entity).getPosition());
         EntityManager.getInstance().addEntity(packet.worldID, entity);
@@ -48,7 +49,7 @@ public class ClientPacketHandler implements PacketHandler {
     @Override
     public void handle(Connection connection, ComponentPacket packet) {
         Entity entity = EntityManager.getInstance().getEntity(packet.worldID);
-        if(entity == null) return;
+        if(entity == null || entity.isScheduledForRemoval() || entity.isRemoving()) return;
         ComponentPacket.parse(entity, packet);
     }
 
@@ -62,29 +63,21 @@ public class ClientPacketHandler implements PacketHandler {
     @Override
     public void handle(Connection connection, PositionPacket packet) {
         Entity entity = EntityManager.getInstance().getEntity(packet.worldID);
-        if(entity == null) return;
+        if(entity == null || entity.isScheduledForRemoval() || entity.isRemoving()) return;
         MovementComponent movementComponent = Mappers.MOVEMENT.get(entity);
 
         if(!(packet.timeStamp > movementComponent.latestPositionPacketTime))
             return;
         movementComponent.latestPositionPacketTime = packet.timeStamp;
 
-        boolean init = false;
-
-        if(movementComponent.lastPositionPacketTimeLocal == 0) {
+        if(movementComponent.lastPositionPacketTimeLocal == 0)
             movementComponent.lastPositionPacketTimeLocal = System.nanoTime();
-            init = true;
-        }
 
         if(entity != GameManager.getInstance().player) {
-
             // CHANGE FROM PREDICTED POSITION TO PREVIOUS POSITION SO TRANSFORM COMPONENT IS ALWAYS AT SERVER POSITION BUT RENDERSYSTEM IS AT INTERPOLATED POSITION
-            /*Mappers.TRANSFORM.get(entity).setPosition(movementComponent.predictedPosition);
-            movementComponent.predictedPosition.set(packet.x, packet.y);
-            movementComponent.historyLength = (System.nanoTime() - movementComponent.lastPositionPacketTimeLocal) * 0.000000001f;
-            movementComponent.delta = 0;*/
             MovementComponent.MovementFrame frame = new MovementComponent.MovementFrame();
             frame.position = new Vector2(packet.x, packet.y);
+            frame.velocity = new Vector2(packet.velX, packet.velY);
             frame.delta = (System.nanoTime() - movementComponent.lastPositionPacketTimeLocal) * 0.000000001f;
             movementComponent.movementHistory.add(frame);
         } else {
@@ -106,12 +99,13 @@ public class ClientPacketHandler implements PacketHandler {
 
             }
 
-            if (movementComponent.movementHistory.size() > 0 && new Vector2(packet.velX, packet.velY).sub(movementComponent.movementHistory.get(0).velocity).len() > 5f) {
+            if (movementComponent.movementHistory.size() > 0 && Math.abs(packet.velX - movementComponent.movementHistory.get(0).velocity.x) > 5f) {
                 movementComponent.predictedPosition = new Vector2(packet.x, packet.y);
                 for(MovementComponent.MovementFrame frame : movementComponent.movementHistory) {
-                    Vector2 newPosition = MovementSystem.moveEntity(movementComponent.predictedPosition, frame.direction, frame.velocity.x, frame.delta);
+                    Vector2 newPosition = MovementSystem.moveEntity(movementComponent.predictedPosition, frame.velocity, frame.delta);
+                    if(newPosition.y <= 0)
+                        newPosition.y = 0;
                     frame.position.set(newPosition).sub(movementComponent.predictedPosition);
-                    frame.velocity.x = frame.direction * frame.velocity.x * frame.delta;
                     movementComponent.predictedPosition = newPosition;
                 }
             } else {
@@ -120,9 +114,16 @@ public class ClientPacketHandler implements PacketHandler {
                     movementComponent.predictedPosition.add(frame.position);
             }
         }
-
         movementComponent.lastPositionPacketTimeLocal = System.nanoTime();
+    }
 
+    @Override
+    public void handle(Connection connection, JumpPacket packet) {
+        Entity entity = EntityManager.getInstance().getEntity(packet.worldID);
+        if(entity == null) return;
+        MovementComponent component = Mappers.MOVEMENT.get(entity);
+        if(component == null) return;
+        component.forceJump();
     }
 
 }

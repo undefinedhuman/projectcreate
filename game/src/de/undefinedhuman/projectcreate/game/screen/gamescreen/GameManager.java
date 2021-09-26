@@ -2,6 +2,7 @@ package de.undefinedhuman.projectcreate.game.screen.gamescreen;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.transform.TransformComponent;
@@ -57,7 +58,9 @@ public class GameManager {
         //GuiManager.getInstance().addGui(CraftingInventory.getInstance());
         GuiManager.getInstance().addGui(player1Text = new Text(""), player2Text = new Text(""), ping = new Text(""));
         player1Text.setPosition(new CenterConstraint(), new CenterConstraint()).setOffset(new PixelOffset(-200), new CenterOffset());
+        player1Text.setColor(Color.DARK_GRAY);
         player2Text.setPosition(new CenterConstraint(), new CenterConstraint()).setOffset(new PixelOffset(200), new CenterOffset());
+        player2Text.setColor(Color.DARK_GRAY);
         ping.setPosition(new PixelConstraint(0), new RelativeConstraint(1f)).setOffset(new PixelOffset(10), new RelativeOffset(-1f));
     }
 
@@ -107,7 +110,7 @@ public class GameManager {
 
         batch.setProjectionMatrix(CameraManager.gameCamera.combined);
         batch.begin();
-        BackgroundManager.getInstance().render(batch, CameraManager.gameCamera);
+        // BackgroundManager.getInstance().render(batch, CameraManager.gameCamera);
         batch.end();
         // World.instance.renderBackLayer(gameBatch);
         batch.setProjectionMatrix(CameraManager.gameCamera.combined);

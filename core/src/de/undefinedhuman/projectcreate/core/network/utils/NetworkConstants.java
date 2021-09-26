@@ -7,7 +7,8 @@ import de.undefinedhuman.projectcreate.core.network.packets.LoginPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.ComponentPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.CreateEntityPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.RemoveEntityPacket;
-import de.undefinedhuman.projectcreate.core.network.packets.entity.components.MovementPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.JumpPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.PositionPacket;
 
 public class NetworkConstants {
@@ -27,7 +28,8 @@ public class NetworkConstants {
                 RemoveEntityPacket.class,
                 ComponentPacket.class,
                 MovementPacket.class,
-                PositionPacket.class
+                PositionPacket.class,
+                JumpPacket.class
         );
     }
 

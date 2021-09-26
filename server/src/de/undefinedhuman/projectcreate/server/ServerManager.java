@@ -1,15 +1,12 @@
 package de.undefinedhuman.projectcreate.server;
 
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 import de.undefinedhuman.projectcreate.core.ecs.ComponentTypes;
-import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.animation.AnimationBlueprint;
 import de.undefinedhuman.projectcreate.core.ecs.interaction.InteractionBlueprint;
 import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteBlueprint;
-import de.undefinedhuman.projectcreate.server.entity.MovementSystem;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.core.network.log.NetworkLogger;
 import de.undefinedhuman.projectcreate.core.network.packets.CommandCache;
@@ -25,6 +22,7 @@ import de.undefinedhuman.projectcreate.engine.utils.ManagerList;
 import de.undefinedhuman.projectcreate.engine.utils.Timer;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.server.config.ServerConfig;
+import de.undefinedhuman.projectcreate.server.entity.MovementSystem;
 import de.undefinedhuman.projectcreate.server.network.PlayerConnection;
 import de.undefinedhuman.projectcreate.server.network.ServerListener;
 
@@ -33,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class ServerManager extends Server {
 
@@ -66,14 +63,6 @@ public class ServerManager extends Server {
 
         addTimers(
                 new Timer(0.2f, () -> Arrays.stream(getConnections()).forEach(Connection::updateReturnTripTime)),
-                new Timer(0.25f, () -> {
-                    if(!EntityManager.getInstance().stream().findAny().isPresent())
-                        return;
-                    Log.info(EntityManager.getInstance().stream().map(longEntityEntry -> {
-                        Entity entity = longEntityEntry.getValue();
-                        return Mappers.TRANSFORM.get(entity).getPosition();
-                    }).collect(Collectors.toList()).toString());
-                }),
                 new Timer(900f, () -> Log.getInstance().save())
         );
 
