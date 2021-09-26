@@ -103,8 +103,6 @@ public class ClientPacketHandler implements PacketHandler {
                 movementComponent.predictedPosition = new Vector2(packet.x, packet.y);
                 for(MovementComponent.MovementFrame frame : movementComponent.movementHistory) {
                     Vector2 newPosition = MovementSystem.moveEntity(movementComponent.predictedPosition, frame.velocity, frame.delta);
-                    if(newPosition.y <= 0)
-                        newPosition.y = 0;
                     frame.position.set(newPosition).sub(movementComponent.predictedPosition);
                     movementComponent.predictedPosition = newPosition;
                 }
@@ -113,6 +111,8 @@ public class ClientPacketHandler implements PacketHandler {
                 for(MovementComponent.MovementFrame frame : movementComponent.movementHistory)
                     movementComponent.predictedPosition.add(frame.position);
             }
+            if(movementComponent.predictedPosition.y <= 0)
+                movementComponent.predictedPosition.y = 0;
         }
         movementComponent.lastPositionPacketTimeLocal = System.nanoTime();
     }

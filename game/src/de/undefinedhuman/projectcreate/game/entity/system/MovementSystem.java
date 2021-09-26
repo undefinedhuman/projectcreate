@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.core.ecs.transform.TransformComponent;
+import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.game.network.ClientManager;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
@@ -42,6 +43,7 @@ public class MovementSystem extends IteratingSystem {
             // frame.direction = movementComponent.getDirection();
             frame.position = new Vector2(currentPosition).sub(movementComponent.predictedPosition);
             frame.velocity = new Vector2(movementComponent.velocity).scl(delta);
+
             movementComponent.movementHistory.add(frame);
             movementComponent.historyLength += delta;
 
