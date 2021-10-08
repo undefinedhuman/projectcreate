@@ -15,7 +15,6 @@ public class PositionPacket implements Packet {
     public long timeStamp;
     public long worldID;
     public float x, y;
-    public int direction;
     public float velX, velY;
 
     @Override
@@ -37,7 +36,6 @@ public class PositionPacket implements Packet {
         MovementComponent movementComponent = Mappers.MOVEMENT.get(entity);
         positionPacket.velX = movementComponent.velocity.x;
         positionPacket.velY = movementComponent.velocity.y;
-        positionPacket.direction = movementComponent.getDirection();
         positionPacket.timeStamp = System.currentTimeMillis();
         return positionPacket;
     }

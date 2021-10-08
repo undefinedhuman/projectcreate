@@ -84,8 +84,8 @@ public class ServerPacketHandler implements PacketHandler {
     public void handle(Connection connection, JumpPacket packet) {
         Entity entity = EntityManager.getInstance().getEntity(((PlayerConnection) connection).worldID);
         if(entity == null) return;
-        ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), packet);
         packet.worldID = ((PlayerConnection) connection).worldID;
+        ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), packet);
         long packetReceivedTime = System.nanoTime();
         ServerManager.getInstance().COMMAND_CACHE.add(() -> {
             JumpPacket.parse(entity, packet);

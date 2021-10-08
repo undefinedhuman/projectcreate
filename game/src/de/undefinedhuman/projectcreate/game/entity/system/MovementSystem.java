@@ -7,14 +7,13 @@ import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.core.ecs.transform.TransformComponent;
-import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.game.network.ClientManager;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 
 public class MovementSystem extends IteratingSystem {
 
-    private static final float CONVERGE_MULTIPLIER = 0.025f;
+    private static final float CONVERGE_MULTIPLIER = 0.05f;
 
     public MovementSystem() {
         super(Family.all(TransformComponent.class, MovementComponent.class).get(), 4);
@@ -55,6 +54,8 @@ public class MovementSystem extends IteratingSystem {
 
             movementComponent.predictedPosition = currentPosition;
         } else {
+
+            // IF MOVEMENTHISTORY IS SMALLER THEN ONE FOR EXAMPLE IF LATENCY IS VERY BIG SUDDENLY, JUST INTERPOLATE MOVEMENT BASED ON VELOCITY FROM LAST FRAME
             if(movementComponent.movementHistory.size() <= 1) {
                 movementComponent.delta = 0;
                 return;

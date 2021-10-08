@@ -82,7 +82,6 @@ public class MovementComponent implements Component, NetworkSerializable {
     public static class MovementFrame {
         public Vector2 position;
         public Vector2 velocity;
-        // public int direction;
         public float delta;
     }
 

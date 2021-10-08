@@ -94,6 +94,7 @@ public class ClientPacketHandler implements PacketHandler {
                     float newDelta = 1 - dt / frame.delta;
                     frame.delta -= dt;
                     frame.position.scl(newDelta);
+                    frame.velocity.scl(newDelta);
                     break;
                 }
 
