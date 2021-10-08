@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
+import de.undefinedhuman.projectcreate.core.ecs.animation.AnimationComponent;
 import de.undefinedhuman.projectcreate.core.ecs.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.core.ecs.transform.TransformComponent;
 import de.undefinedhuman.projectcreate.game.network.ClientManager;
@@ -16,13 +17,14 @@ public class MovementSystem extends IteratingSystem {
     private static final float CONVERGE_MULTIPLIER = 0.05f;
 
     public MovementSystem() {
-        super(Family.all(TransformComponent.class, MovementComponent.class).get(), 4);
+        super(Family.all(TransformComponent.class, MovementComponent.class, AnimationComponent.class).get(), 4);
     }
 
     @Override
     protected void processEntity(Entity entity, float delta) {
         TransformComponent transformComponent = Mappers.TRANSFORM.get(entity);
         MovementComponent movementComponent = Mappers.MOVEMENT.get(entity);
+        Vector2 velocity;
 
         if(entity == GameManager.getInstance().player) {
 
@@ -39,7 +41,6 @@ public class MovementSystem extends IteratingSystem {
 
             MovementComponent.MovementFrame frame = new MovementComponent.MovementFrame();
             frame.delta = delta;
-            // frame.direction = movementComponent.getDirection();
             frame.position = new Vector2(currentPosition).sub(movementComponent.predictedPosition);
             frame.velocity = new Vector2(movementComponent.velocity).scl(delta);
 
@@ -53,6 +54,7 @@ public class MovementSystem extends IteratingSystem {
             transformComponent.addPosition((extrapolatedPosition.x - transformComponent.getPosition().x) * t, (extrapolatedPosition.y - transformComponent.getPosition().y) * t);
 
             movementComponent.predictedPosition = currentPosition;
+            velocity = movementComponent.velocity;
         } else {
 
             // IF MOVEMENTHISTORY IS SMALLER THEN ONE FOR EXAMPLE IF LATENCY IS VERY BIG SUDDENLY, JUST INTERPOLATE MOVEMENT BASED ON VELOCITY FROM LAST FRAME
@@ -72,7 +74,10 @@ public class MovementSystem extends IteratingSystem {
                 movementComponent.movementHistory.remove(0);
                 movementComponent.delta = movementComponent.delta - frame1.delta;
             }
+            velocity = frame1.velocity;
         }
+
+        animate(entity, velocity);
     }
 
     public static Vector2 moveEntity(Vector2 position, Vector2 velocity, float delta) {
@@ -80,4 +85,11 @@ public class MovementSystem extends IteratingSystem {
             return new Vector2();
         return new Vector2(position).mulAdd(velocity, delta);
     }
+
+    public static void animate(Entity entity, Vector2 velocity) {
+        AnimationComponent animationComponent = Mappers.ANIMATION.get(entity);
+        if(velocity.y != 0) animationComponent.setAnimation(velocity.y > 20f ? "Jump" : velocity.y < -20f ? "Fall" : "Transition");
+        else animationComponent.setAnimation(velocity.x != 0 ? "Run" : "Idle");
+    }
+
 }

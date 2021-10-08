@@ -50,9 +50,10 @@ public class AnimationComponent implements Component {
 
     }
 
-    public void addAnimationTime(float delta) {
+    public AnimationComponent addAnimationTime(float delta) {
         this.animationTime += delta * animationTimeMultiplier;
         this.animationTime = animationTime % 100000;
+        return this;
     }
 
     public void setAnimationTimeMultiplier(float animationTimeMultiplier) {

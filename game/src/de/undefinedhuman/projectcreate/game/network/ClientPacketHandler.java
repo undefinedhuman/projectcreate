@@ -17,7 +17,6 @@ import de.undefinedhuman.projectcreate.core.network.utils.PacketUtils;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
 import de.undefinedhuman.projectcreate.game.Main;
-import de.undefinedhuman.projectcreate.game.entity.system.MovementSystem;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameScreen;
 
@@ -60,6 +59,8 @@ public class ClientPacketHandler implements PacketHandler {
         MovementPacket.parse(entity, packet);
     }
 
+    private Vector2 TEMP_POSITION = new Vector2();
+
     @Override
     public void handle(Connection connection, PositionPacket packet) {
         Entity entity = EntityManager.getInstance().getEntity(packet.worldID);
@@ -100,18 +101,13 @@ public class ClientPacketHandler implements PacketHandler {
 
             }
 
-            if (movementComponent.movementHistory.size() > 0 && Math.abs(packet.velX - movementComponent.movementHistory.get(0).velocity.x) > 5f) {
-                movementComponent.predictedPosition = new Vector2(packet.x, packet.y);
-                for(MovementComponent.MovementFrame frame : movementComponent.movementHistory) {
-                    Vector2 newPosition = MovementSystem.moveEntity(movementComponent.predictedPosition, frame.velocity, frame.delta);
-                    frame.position.set(newPosition).sub(movementComponent.predictedPosition);
-                    movementComponent.predictedPosition = newPosition;
-                }
-            } else {
-                movementComponent.predictedPosition = new Vector2(packet.x, packet.y);
-                for(MovementComponent.MovementFrame frame : movementComponent.movementHistory)
-                    movementComponent.predictedPosition.add(frame.position);
+            movementComponent.predictedPosition = new Vector2(packet.x, packet.y);
+            for(MovementComponent.MovementFrame frame : movementComponent.movementHistory) {
+                TEMP_POSITION.set(movementComponent.predictedPosition).mulAdd(frame.velocity, frame.delta);
+                frame.position.set(TEMP_POSITION).sub(movementComponent.predictedPosition);
+                movementComponent.predictedPosition.set(TEMP_POSITION);
             }
+
             if(movementComponent.predictedPosition.y <= 0)
                 movementComponent.predictedPosition.y = 0;
         }

@@ -10,9 +10,7 @@ import de.undefinedhuman.projectcreate.core.ecs.transform.TransformComponent;
 import de.undefinedhuman.projectcreate.core.network.PacketHandler;
 import de.undefinedhuman.projectcreate.core.network.packets.LoginPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.CreateEntityPacket;
-import de.undefinedhuman.projectcreate.core.network.packets.entity.RemoveEntityPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.ComponentPacket;
-import de.undefinedhuman.projectcreate.core.network.packets.entity.components.PositionPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.JumpPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementPacket;
 import de.undefinedhuman.projectcreate.core.network.utils.PacketUtils;
@@ -40,12 +38,6 @@ public class ServerPacketHandler implements PacketHandler {
         EntityManager.getInstance().addEntity(worldID, player);
         ((PlayerConnection) connection).worldID = worldID;
     }
-
-    @Override
-    public void handle(Connection connection, CreateEntityPacket packet) {}
-
-    @Override
-    public void handle(Connection connection, RemoveEntityPacket packet) {}
 
     @Override
     public void handle(Connection connection, ComponentPacket packet) {
@@ -76,9 +68,6 @@ public class ServerPacketHandler implements PacketHandler {
             MovementPacket.parse(entity, packet);
         });
     }
-
-    @Override
-    public void handle(Connection connection, PositionPacket packet) {}
 
     @Override
     public void handle(Connection connection, JumpPacket packet) {

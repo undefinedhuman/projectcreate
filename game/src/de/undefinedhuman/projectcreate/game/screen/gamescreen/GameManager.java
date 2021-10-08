@@ -62,6 +62,7 @@ public class GameManager {
         player2Text.setPosition(new CenterConstraint(), new CenterConstraint()).setOffset(new PixelOffset(200), new CenterOffset());
         player2Text.setColor(Color.DARK_GRAY);
         ping.setPosition(new PixelConstraint(0), new RelativeConstraint(1f)).setOffset(new PixelOffset(10), new RelativeOffset(-1f));
+        ping.setColor(Color.DARK_GRAY);
     }
 
     public void resize(int width, int height) {
@@ -87,13 +88,13 @@ public class GameManager {
         if(entities.size() > 0) {
             Entity player1 = entities.get(0);
             TransformComponent transformComponent = Mappers.TRANSFORM.get(player1);
-            player1Text.setText((int) (transformComponent.getPosition().x * 1000) / 1000f);
+            player1Text.setText((int) (transformComponent.getPosition().x * 1000) / 1000f + ", " + (int) (transformComponent.getPosition().y * 1000) / 1000f);
         }
 
         if(entities.size() > 1) {
             Entity player2 = entities.get(1);
             TransformComponent transformComponent = Mappers.TRANSFORM.get(player2);
-            player2Text.setText((int) (transformComponent.getPosition().x * 1000) / 1000f);
+            player2Text.setText((int) (transformComponent.getPosition().x * 1000) / 1000f + ", " + (int) (transformComponent.getPosition().y * 1000) / 1000f);
         }
 
         if (projectile != null) projectile.update(delta);

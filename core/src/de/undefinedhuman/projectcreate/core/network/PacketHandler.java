@@ -11,10 +11,10 @@ import de.undefinedhuman.projectcreate.core.network.packets.entity.components.Po
 
 public interface PacketHandler {
     void handle(Connection connection, LoginPacket packet);
-    void handle(Connection connection, CreateEntityPacket packet);
-    void handle(Connection connection, RemoveEntityPacket packet);
+    default void handle(Connection connection, CreateEntityPacket packet) {}
+    default void handle(Connection connection, RemoveEntityPacket packet) {}
     void handle(Connection connection, ComponentPacket packet);
-    void handle(Connection connection, MovementPacket packet);
-    void handle(Connection connection, PositionPacket packet);
-    void handle(Connection connection, JumpPacket packet);
+    default void handle(Connection connection, MovementPacket packet) {}
+    default void handle(Connection connection, PositionPacket packet) {}
+    default void handle(Connection connection, JumpPacket packet) {}
 }

@@ -1,6 +1,7 @@
 package de.undefinedhuman.projectcreate.core.ecs.name;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.gdx.graphics.Color;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.LineWriter;
 import de.undefinedhuman.projectcreate.engine.gui.text.Text;
@@ -28,6 +29,7 @@ public class NameComponent implements Component, NetworkSerializable {
         if(text != null)
             return text;
         text = new Text(name);
+        text.setColor(Color.DARK_GRAY);
         return text;
     }
 
