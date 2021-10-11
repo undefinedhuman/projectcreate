@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.game.world;
 
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.core.ecs.transform.TransformComponent;
+import de.undefinedhuman.projectcreate.core.ecs.base.transform.TransformComponent;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.core.items.blocks.Block;
 import de.undefinedhuman.projectcreate.core.items.blocks.PlacementLayer;
@@ -64,7 +64,7 @@ public class WorldManager {
         if (!canPlace) return;
         short id = Selector.getInstance().getSelectedItemID();
         Block block = (Block) ItemManager.getInstance().getItem(id);
-        Vector2i blockPos = Tools.convertToBlockPos(Tools.getWorldPos(CameraManager.gameCamera, Mouse.getMouseCoords()));
+        Vector2i blockPos = Tools.convertToBlockPos(Tools.getWorldPos(CameraManager.gameCamera, Mouse.getMousePosition()));
 
         if(id == 0 || !isInRange(blockPos, Tools.convertToBlockPos(GameManager.getInstance().player.getComponent(TransformComponent.class).getCenterPosition()), Variables.BLOCK_PLACEMENT_RANGE)) return;
         if(worldLayer == World.MAIN_LAYER) placeBlockInMainLayer(blockPos.x, blockPos.y, block);
@@ -100,7 +100,7 @@ public class WorldManager {
         if (!canDestroy) return;
 
         Pickaxe pickaxe = (Pickaxe) Selector.getInstance().getSelectedItem();
-        Vector2i blockPos = Tools.convertToBlockPos(Tools.getWorldPos(CameraManager.gameCamera, Mouse.getMouseCoords())), playerCenter = Tools.convertToBlockPos(new Vector2().add(GameManager.getInstance().player.getComponent(TransformComponent.class).getPosition()).add(GameManager.getInstance().player.getComponent(TransformComponent.class).getCenter()));
+        Vector2i blockPos = Tools.convertToBlockPos(Tools.getWorldPos(CameraManager.gameCamera, Mouse.getMousePosition())), playerCenter = Tools.convertToBlockPos(new Vector2().add(GameManager.getInstance().player.getComponent(TransformComponent.class).getPosition()).add(GameManager.getInstance().player.getComponent(TransformComponent.class).getCenter()));
         Block currentBlock = (Block) ItemManager.getInstance().getItem(World.instance.getBlock(blockPos.x, blockPos.y, World.MAIN_LAYER));
 
         if (currentBlock.id.getValue() == 0 || !isInRange(blockPos, playerCenter, pickaxe.range.getValue()) || currentBlock.durability.getValue() == -1)

@@ -30,8 +30,7 @@ public class Selector extends Inventory {
     @Override
     public void update(float delta) {
         super.update(delta);
-        //ItemManager.getInstance().useItem(getSelectedItemID());
-        if (inventory[0][selected].getItem().getAmount() == -1)
+        if (inventory[0][selected].getInvItem().getAmount() == -1)
             EquipManager.getInstance().unEquipItemNetwork(GameManager.getInstance().player, 0, false);
     }
 
@@ -41,7 +40,7 @@ public class Selector extends Inventory {
     }
 
     public short getSelectedItemID() {
-        InvItem item = inventory[0][selected].getItem();
+        InvItem item = inventory[0][selected].getInvItem();
         return (short) (item.getAmount() != -1 ? item.getID() : 0);
     }
 
@@ -50,19 +49,19 @@ public class Selector extends Inventory {
             return;
         inventory[0][selected].setSelected(false);
         this.selected = index;
-        InvItem item = inventory[0][selected].getItem();
-        if (item.getAmount() != -1)
+        InvItem item = inventory[0][selected].getInvItem();
+        if (!item.isEmpty())
             EquipManager.getInstance().equipItemNetwork(GameManager.getInstance().player, item.getID(), false);
         else EquipManager.getInstance().unEquipItemNetwork(GameManager.getInstance().player, 0, false);
         inventory[0][selected].setSelected(true);
     }
 
     public Item getSelectedItem() {
-        return ItemManager.getInstance().getItem(inventory[0][selected].getItem().getID());
+        return ItemManager.getInstance().getItem(inventory[0][selected].getInvItem().getID());
     }
 
     public InvItem getSelectedInvItem() {
-        return inventory[0][selected].getItem();
+        return inventory[0][selected].getInvItem();
     }
 
     public int getSelected() {
@@ -70,11 +69,11 @@ public class Selector extends Inventory {
     }
 
     public static Selector getInstance() {
-        if (instance == null) {
-            synchronized (Selector.class) {
-                if (instance == null)
-                    instance = new Selector();
-            }
+        if(instance != null)
+            return instance;
+        synchronized (Selector.class) {
+            if (instance == null)
+                instance = new Selector();
         }
         return instance;
     }

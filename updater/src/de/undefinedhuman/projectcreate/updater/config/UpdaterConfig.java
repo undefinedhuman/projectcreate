@@ -6,8 +6,8 @@ import de.undefinedhuman.projectcreate.engine.settings.types.BaseSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.FilePathSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.BooleanSetting;
 import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
-import de.undefinedhuman.projectcreate.engine.utils.Stage;
-import de.undefinedhuman.projectcreate.engine.utils.Version;
+import de.undefinedhuman.projectcreate.engine.utils.version.Stage;
+import de.undefinedhuman.projectcreate.engine.utils.version.Version;
 import de.undefinedhuman.projectcreate.updater.Updater;
 import de.undefinedhuman.projectcreate.updater.utils.InstallationUtils;
 

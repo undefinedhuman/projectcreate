@@ -15,6 +15,7 @@ public class CreateEntityPacket implements Packet {
 
     public long worldID = IDComponent.UNDEFINED;
     public int blueprintID = IDComponent.UNDEFINED;
+    public int entityFlagMask = 0;
     public String componentData;
 
     @Override
@@ -32,6 +33,7 @@ public class CreateEntityPacket implements Packet {
         }
         entityPacket.blueprintID = idComponent.getBlueprintID();
         entityPacket.worldID = idComponent.getWorldID();
+        entityPacket.entityFlagMask = entity.flags;
         return entityPacket;
     }
 
@@ -40,7 +42,7 @@ public class CreateEntityPacket implements Packet {
             Log.debug("Error while loading entity blueprint. ID: " + entityPacket.blueprintID);
             return null;
         }
-        Entity entity = BlueprintManager.getInstance().createEntity(entityPacket.blueprintID, entityPacket.worldID);
+        Entity entity = BlueprintManager.getInstance().createEntity(entityPacket.blueprintID, entityPacket.worldID, entityPacket.entityFlagMask);
         PacketUtils.setComponentData(entity, PacketUtils.parseComponentData(entityPacket.componentData));
         return entity;
     }

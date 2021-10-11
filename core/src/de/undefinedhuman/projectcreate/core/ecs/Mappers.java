@@ -1,22 +1,23 @@
 package de.undefinedhuman.projectcreate.core.ecs;
 
 import com.badlogic.ashley.core.ComponentMapper;
-import de.undefinedhuman.projectcreate.core.ecs.angle.AngleComponent;
-import de.undefinedhuman.projectcreate.core.ecs.animation.AnimationComponent;
+import de.undefinedhuman.projectcreate.core.ecs.base.transform.TransformComponent;
+import de.undefinedhuman.projectcreate.core.ecs.base.type.TypeComponent;
 import de.undefinedhuman.projectcreate.core.ecs.collision.CollisionComponent;
-import de.undefinedhuman.projectcreate.core.ecs.combat.CombatComponent;
-import de.undefinedhuman.projectcreate.core.ecs.equip.EquipComponent;
-import de.undefinedhuman.projectcreate.core.ecs.food.FoodComponent;
-import de.undefinedhuman.projectcreate.core.ecs.health.HealthComponent;
 import de.undefinedhuman.projectcreate.core.ecs.interaction.InteractionComponent;
-import de.undefinedhuman.projectcreate.core.ecs.mana.ManaComponent;
-import de.undefinedhuman.projectcreate.core.ecs.movement.MovementComponent;
-import de.undefinedhuman.projectcreate.core.ecs.name.NameComponent;
-import de.undefinedhuman.projectcreate.core.ecs.rightarm.RightArmComponent;
-import de.undefinedhuman.projectcreate.core.ecs.shoulder.ShoulderComponent;
-import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteComponent;
-import de.undefinedhuman.projectcreate.core.ecs.transform.TransformComponent;
-import de.undefinedhuman.projectcreate.core.ecs.type.TypeComponent;
+import de.undefinedhuman.projectcreate.core.ecs.inventory.InventoryComponent;
+import de.undefinedhuman.projectcreate.core.ecs.mouse.MouseComponent;
+import de.undefinedhuman.projectcreate.core.ecs.player.combat.CombatComponent;
+import de.undefinedhuman.projectcreate.core.ecs.player.equip.EquipComponent;
+import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponent;
+import de.undefinedhuman.projectcreate.core.ecs.player.rightarm.RightArmComponent;
+import de.undefinedhuman.projectcreate.core.ecs.player.shoulder.ShoulderComponent;
+import de.undefinedhuman.projectcreate.core.ecs.stats.food.FoodComponent;
+import de.undefinedhuman.projectcreate.core.ecs.stats.health.HealthComponent;
+import de.undefinedhuman.projectcreate.core.ecs.stats.mana.ManaComponent;
+import de.undefinedhuman.projectcreate.core.ecs.stats.name.NameComponent;
+import de.undefinedhuman.projectcreate.core.ecs.visual.animation.AnimationComponent;
+import de.undefinedhuman.projectcreate.core.ecs.visual.sprite.SpriteComponent;
 import de.undefinedhuman.projectcreate.engine.ecs.component.IDComponent;
 
 public class Mappers {
@@ -35,6 +36,7 @@ public class Mappers {
     public static final ComponentMapper<CombatComponent> COMBAT = ComponentMapper.getFor(CombatComponent.class);
     public static final ComponentMapper<CollisionComponent> COLLISION = ComponentMapper.getFor(CollisionComponent.class);
     public static final ComponentMapper<AnimationComponent> ANIMATION = ComponentMapper.getFor(AnimationComponent.class);
-    public static final ComponentMapper<AngleComponent> ANGLE = ComponentMapper.getFor(AngleComponent.class);
     public static final ComponentMapper<TypeComponent> TYPE = ComponentMapper.getFor(TypeComponent.class);
+    public static final ComponentMapper<MouseComponent> MOUSE = ComponentMapper.getFor(MouseComponent.class);
+    public static final ComponentMapper<InventoryComponent> INVENTORY = ComponentMapper.getFor(InventoryComponent.class);
 }

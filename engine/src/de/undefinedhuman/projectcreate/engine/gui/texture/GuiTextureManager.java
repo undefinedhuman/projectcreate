@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.engine.gui.texture;
 
 import de.undefinedhuman.projectcreate.engine.gui.GuiManager;
-import de.undefinedhuman.projectcreate.engine.utils.Manager;
+import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 import de.undefinedhuman.projectcreate.engine.utils.ds.Tuple;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 

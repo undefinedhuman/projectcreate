@@ -1,0 +1,19 @@
+package de.undefinedhuman.projectcreate.engine.utils.version;
+
+import java.util.Arrays;
+
+public enum Stage {
+    SNAPSHOT,
+    INDEV,
+    ALPHA,
+    BETA,
+    RELEASE;
+
+    public static Stage parse(String value) {
+        return Arrays
+                .stream(Stage.values())
+                .filter(stage -> stage.name().equalsIgnoreCase(value))
+                .findFirst()
+                .orElse(null);
+    }
+}

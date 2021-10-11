@@ -5,9 +5,9 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
-import de.undefinedhuman.projectcreate.core.ecs.animation.AnimationComponent;
-import de.undefinedhuman.projectcreate.core.ecs.movement.MovementComponent;
-import de.undefinedhuman.projectcreate.core.ecs.transform.TransformComponent;
+import de.undefinedhuman.projectcreate.core.ecs.visual.animation.AnimationComponent;
+import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponent;
+import de.undefinedhuman.projectcreate.core.ecs.base.transform.TransformComponent;
 import de.undefinedhuman.projectcreate.game.network.ClientManager;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
@@ -88,7 +88,7 @@ public class MovementSystem extends IteratingSystem {
 
     public static void animate(Entity entity, Vector2 velocity) {
         AnimationComponent animationComponent = Mappers.ANIMATION.get(entity);
-        if(velocity.y != 0) animationComponent.setAnimation(velocity.y > 20f ? "Jump" : velocity.y < -20f ? "Fall" : "Transition");
+        if(velocity.y != 0) animationComponent.setAnimation(velocity.y > 75f ? "Jump" : velocity.y < -75f ? "Fall" : "Transition");
         else animationComponent.setAnimation(velocity.x != 0 ? "Run" : "Idle");
     }
 

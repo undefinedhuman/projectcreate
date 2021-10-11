@@ -13,7 +13,7 @@ public class Mouse {
         return Gdx.input.isButtonPressed(1);
     }
 
-    public static Vector2 getMouseCoords() {
+    public static Vector2 getMousePosition() {
         return new Vector2(getX(), getY());
     }
 

@@ -3,7 +3,7 @@ package de.undefinedhuman.projectcreate.launcher.game;
 import com.badlogic.gdx.Files;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.log.Log;
-import de.undefinedhuman.projectcreate.engine.utils.Version;
+import de.undefinedhuman.projectcreate.engine.utils.version.Version;
 import de.undefinedhuman.projectcreate.launcher.Launcher;
 import de.undefinedhuman.projectcreate.launcher.config.LauncherConfig;
 import de.undefinedhuman.projectcreate.launcher.ui.GameManagerUI;

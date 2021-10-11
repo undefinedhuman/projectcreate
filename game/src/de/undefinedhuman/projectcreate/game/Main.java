@@ -20,8 +20,8 @@ import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessageDecorators
 import de.undefinedhuman.projectcreate.engine.resources.font.FontManager;
 import de.undefinedhuman.projectcreate.engine.resources.sound.SoundManager;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
-import de.undefinedhuman.projectcreate.engine.utils.ManagerList;
-import de.undefinedhuman.projectcreate.engine.utils.Timer;
+import de.undefinedhuman.projectcreate.engine.utils.manager.ManagerList;
+import de.undefinedhuman.projectcreate.engine.utils.timer.Timer;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.game.config.GameConfig;
 import de.undefinedhuman.projectcreate.game.entity.system.*;
@@ -69,7 +69,7 @@ public class Main extends Game {
     public void create() {
         initGDX();
         // EntityManager.getInstance().addSystems(new AngleSystem(), new AnimationSystem(), new ArmSystem(), new InteractionSystem(), new EquipSystem(), new MovementSystem(), new RenderSystem());
-        EntityManager.getInstance().addSystems(new AngleSystem(), new AnimationSystem(), new ArmSystem(), new InteractionSystem(), new EquipSystem(), new MovementSystem(), new CameraSystem(), new RenderSystem());
+        EntityManager.getInstance().addSystems(new MouseSystem(), new AnimationSystem(), new ArmSystem(), new InteractionSystem(), new EquipSystem(), new MovementSystem(), new CameraSystem(), new RenderSystem());
         ComponentTypes.registerComponentTypes(BlueprintManager.getInstance());
         managerList.init();
         TEMP();

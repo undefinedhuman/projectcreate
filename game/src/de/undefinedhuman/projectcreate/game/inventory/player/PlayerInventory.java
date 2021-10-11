@@ -8,6 +8,8 @@ public class PlayerInventory extends Inventory {
 
     private static volatile PlayerInventory instance;
 
+    // IMPLEMENT POOLING FOR SLOTS, CONNECT TO ONE INVENTORY (NETWORK FROM CORE MODULE), LISTEN TO SLOT UPDATES, AND RESIZE THIS GUI INVENTORY WHEN ASSIGNED TO NEW NETWORK INVENTORY AND USE SLOTS FROM POOL
+
     private PlayerInventory() {
         super(10, 5);
         setTitle("Inventory", Font.Title, Color.WHITE);

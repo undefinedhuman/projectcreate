@@ -4,8 +4,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
-import de.undefinedhuman.projectcreate.core.ecs.animation.AnimationComponent;
-import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteComponent;
+import de.undefinedhuman.projectcreate.core.ecs.visual.animation.AnimationComponent;
+import de.undefinedhuman.projectcreate.core.ecs.visual.sprite.SpriteComponent;
 
 public class AnimationSystem extends IteratingSystem {
 

@@ -4,11 +4,12 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Connection;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
-import de.undefinedhuman.projectcreate.core.ecs.movement.MovementComponent;
-import de.undefinedhuman.projectcreate.core.ecs.name.NameComponent;
-import de.undefinedhuman.projectcreate.core.ecs.transform.TransformComponent;
+import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponent;
+import de.undefinedhuman.projectcreate.core.ecs.stats.name.NameComponent;
+import de.undefinedhuman.projectcreate.core.ecs.base.transform.TransformComponent;
 import de.undefinedhuman.projectcreate.core.network.PacketHandler;
 import de.undefinedhuman.projectcreate.core.network.packets.LoginPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.MousePacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.CreateEntityPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.ComponentPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.JumpPacket;
@@ -71,9 +72,10 @@ public class ServerPacketHandler implements PacketHandler {
 
     @Override
     public void handle(Connection connection, JumpPacket packet) {
-        Entity entity = EntityManager.getInstance().getEntity(((PlayerConnection) connection).worldID);
+        PlayerConnection playerConnection = (PlayerConnection) connection;
+        Entity entity = EntityManager.getInstance().getEntity(playerConnection.worldID);
         if(entity == null) return;
-        packet.worldID = ((PlayerConnection) connection).worldID;
+        packet.worldID = playerConnection.worldID;
         ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), packet);
         long packetReceivedTime = System.nanoTime();
         ServerManager.getInstance().COMMAND_CACHE.add(() -> {
@@ -88,4 +90,13 @@ public class ServerPacketHandler implements PacketHandler {
         });
     }
 
+    @Override
+    public void handle(Connection connection, MousePacket packet) {
+        PlayerConnection playerConnection = (PlayerConnection) connection;
+        Entity entity = EntityManager.getInstance().getEntity(((PlayerConnection) connection).worldID);
+        if(entity == null) return;
+        packet.worldID = playerConnection.worldID;
+        ServerManager.getInstance().sendToAllExceptUDP(connection.getID(), packet);
+        MousePacket.parse(entity, packet);
+    }
 }

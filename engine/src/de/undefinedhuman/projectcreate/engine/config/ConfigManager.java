@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.engine.config;
 
 import de.undefinedhuman.projectcreate.engine.file.Serializable;
-import de.undefinedhuman.projectcreate.engine.utils.Manager;
+import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 
 import java.util.ArrayList;
 import java.util.Collections;

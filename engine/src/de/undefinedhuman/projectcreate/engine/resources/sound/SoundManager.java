@@ -2,7 +2,7 @@ package de.undefinedhuman.projectcreate.engine.resources.sound;
 
 import com.badlogic.gdx.audio.Sound;
 import de.undefinedhuman.projectcreate.engine.resources.RessourceUtils;
-import de.undefinedhuman.projectcreate.engine.utils.Manager;
+import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 
 import java.util.HashMap;
 

@@ -69,10 +69,10 @@ public class DragAndDrop {
                 for (InvTarget inventory : targets) if ((clickedSlot = inventory.getClickedSlot(camera)) != null) break;
                 if (clickedSlot != null && clickedSlot.isTypeCompatible(currentItem)) {
 
-                    if (clickedSlot.getItem() == null || clickedSlot.getItem().getID() == currentItem.getID() || half) {
+                    if (clickedSlot.getInvItem() == null || clickedSlot.getInvItem().getID() == currentItem.getID() || half) {
                         currentItem.setAmount(clickedSlot.addItem(currentItem));
                     } else {
-                        InvItem clickedItem = clickedSlot.getItem();
+                        InvItem clickedItem = clickedSlot.getInvItem();
                         clickedSlot.setInvItem(currentItem.getID(), currentItem.getAmount());
                         currentItem.setStats(clickedItem.getID(), clickedItem.getAmount());
                     }
@@ -126,7 +126,7 @@ public class DragAndDrop {
         for (InvTarget inventory : targets) if ((clickedSlot = inventory.getClickedSlot(camera)) != null) break;
         if (clickedSlot != null) {
 
-            InvItem clickedItem = clickedSlot.getItem();
+            InvItem clickedItem = clickedSlot.getInvItem();
 
             if (clickedItem != null) {
 

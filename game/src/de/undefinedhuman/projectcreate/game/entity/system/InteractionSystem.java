@@ -9,7 +9,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.interaction.InteractionComponent;
-import de.undefinedhuman.projectcreate.core.ecs.transform.TransformComponent;
+import de.undefinedhuman.projectcreate.core.ecs.base.transform.TransformComponent;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 
@@ -27,12 +27,6 @@ public class InteractionSystem extends EntitySystem {
     public void addedToEngine(Engine engine) {
         entities = engine.getEntitiesFor(Family.all(TransformComponent.class, InteractionComponent.class).get());
     }
-
-    /*@Override
-    public void init(Entity entity) {
-        helpText = new Text("");
-        GuiManager.getInstance().addGui(helpText.setPosition(new RelativeConstraint(0.5f), new PixelConstraint(50)).setVisible(true));
-    }*/
 
     @Override
     public void update(float delta) {

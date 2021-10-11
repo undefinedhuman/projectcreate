@@ -4,9 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 import de.undefinedhuman.projectcreate.core.ecs.ComponentTypes;
-import de.undefinedhuman.projectcreate.core.ecs.animation.AnimationBlueprint;
+import de.undefinedhuman.projectcreate.core.ecs.visual.animation.AnimationBlueprint;
 import de.undefinedhuman.projectcreate.core.ecs.interaction.InteractionBlueprint;
-import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteBlueprint;
+import de.undefinedhuman.projectcreate.core.ecs.visual.sprite.SpriteBlueprint;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.core.network.log.NetworkLogger;
 import de.undefinedhuman.projectcreate.core.network.packets.CommandCache;
@@ -18,9 +18,10 @@ import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessage;
 import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessageDecorators;
-import de.undefinedhuman.projectcreate.engine.utils.ManagerList;
-import de.undefinedhuman.projectcreate.engine.utils.Timer;
+import de.undefinedhuman.projectcreate.engine.utils.manager.ManagerList;
+import de.undefinedhuman.projectcreate.engine.utils.timer.Timer;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.engine.utils.timer.TimerList;
 import de.undefinedhuman.projectcreate.server.config.ServerConfig;
 import de.undefinedhuman.projectcreate.server.entity.MovementSystem;
 import de.undefinedhuman.projectcreate.server.network.PlayerConnection;
@@ -37,7 +38,7 @@ public class ServerManager extends Server {
     private static volatile ServerManager instance;
 
     private final ManagerList managers = new ManagerList();
-    private final ArrayList<Timer> timers = new ArrayList<>();
+    private final TimerList timers = new TimerList();
 
     private Scanner consoleInput;
 
@@ -61,7 +62,7 @@ public class ServerManager extends Server {
                 ItemManager.getInstance()
         );
 
-        addTimers(
+        timers.addTimers(
                 new Timer(0.2f, () -> Arrays.stream(getConnections()).forEach(Connection::updateReturnTripTime)),
                 new Timer(900f, () -> Log.getInstance().save())
         );
@@ -83,7 +84,7 @@ public class ServerManager extends Server {
     }
 
     public void update(float delta) {
-        timers.forEach(timer -> timer.update(delta));
+        timers.update(delta);
         EntityManager.getInstance().update(delta);
         COMMAND_CACHE.forEach(CommandCache::process);
         COMMAND_CACHE.clear();
@@ -97,14 +98,9 @@ public class ServerManager extends Server {
         consoleInput.close();
         consoleInput = null;
         stop();
-        timers.forEach(Timer::delete);
-        timers.clear();
+        timers.delete();
         managers.delete();
         System.exit(0);
-    }
-
-    public void addTimers(Timer... timers) {
-        this.timers.addAll(Arrays.asList(timers));
     }
 
     private void readInput() {

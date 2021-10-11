@@ -1,6 +1,5 @@
 package de.undefinedhuman.projectcreate.game.utils;
 
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.*;
@@ -11,19 +10,16 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
-import de.undefinedhuman.projectcreate.core.ecs.equip.EquipComponent;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
+import de.undefinedhuman.projectcreate.engine.gui.Gui;
+import de.undefinedhuman.projectcreate.engine.gui.texture.GuiTemplate;
+import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
 import de.undefinedhuman.projectcreate.engine.utils.Utils;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 import de.undefinedhuman.projectcreate.game.Main;
 import de.undefinedhuman.projectcreate.game.camera.CameraManager;
-import de.undefinedhuman.projectcreate.engine.gui.Gui;
-import de.undefinedhuman.projectcreate.engine.gui.texture.GuiTemplate;
-import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.PixelConstraint;
-import de.undefinedhuman.projectcreate.game.inventory.player.Selector;
-import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.game.world.World;
 import de.undefinedhuman.projectcreate.game.world.layer.LayerTransition;
 
@@ -286,13 +282,6 @@ public class Tools extends Utils {
 
         return false;
 
-    }
-
-    public static boolean isItemSelected(Entity entity) {
-        EquipComponent equipComponent;
-        if ((equipComponent = (EquipComponent) entity.getComponent(EquipComponent.class)) != null || entity == GameManager.getInstance().player)
-            return (entity == GameManager.getInstance().player ? Selector.getInstance().getSelectedInvItem() != null : equipComponent.itemIDs[0] != -1);
-        return false;
     }
 
     public static int isEqual(int i, int j) {

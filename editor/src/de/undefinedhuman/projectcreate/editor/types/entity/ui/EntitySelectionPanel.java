@@ -1,6 +1,6 @@
 package de.undefinedhuman.projectcreate.editor.types.entity.ui;
 
-import de.undefinedhuman.projectcreate.core.ecs.name.NameBlueprint;
+import de.undefinedhuman.projectcreate.core.ecs.stats.name.NameBlueprint;
 import de.undefinedhuman.projectcreate.editor.ui.SelectionPanel;
 import de.undefinedhuman.projectcreate.editor.utils.EditorUtils;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.Blueprint;

@@ -55,19 +55,22 @@ public class InvSlot extends Slot {
     }
 
     public int addItem(int id, int amount) {
-        if(id != 0 && amount != 0) {
-            if(invItem.getAmount() != -1) {
-                if (id != invItem.getID())
-                    return amount;
-                int maxAmount = ItemManager.getInstance().getItem(id).maxAmount.getValue();
-                if ((invItem.getAmount() + amount) <= maxAmount)
-                    setInvItem(invItem.getAmount() + amount);
-                else {
-                    int currentAmount = invItem.getAmount();
-                    setInvItem(maxAmount);
-                    return amount - (maxAmount - currentAmount);
-                }
-            } else setInvItem(id, amount);
+        if(id == 0 || amount == 0)
+            return 0;
+        int maxAmount = ItemManager.getInstance().getItem(id).maxAmount.getValue();
+        if(!isEmpty()) {
+            if (id != invItem.getID())
+                return amount;
+            if ((invItem.getAmount() + amount) <= maxAmount)
+                setInvItem(invItem.getAmount() + amount);
+            else {
+                int currentAmount = invItem.getAmount();
+                setInvItem(maxAmount);
+                return amount - (maxAmount - currentAmount);
+            }
+        } else {
+            setInvItem(id, amount);
+            return amount - maxAmount;
         }
         return 0;
     }
@@ -85,11 +88,13 @@ public class InvSlot extends Slot {
         setInvItem(0, -1);
     }
 
-    public InvItem getItem() {
+    public InvItem getInvItem() {
         return this.invItem;
     }
 
-    public ItemType getItemType() { return itemType; }
+    public boolean isEmpty() {
+        return invItem.isEmpty();
+    }
 
     public void setInvItem(int id, int amount) {
         this.invItem.setStats(id, amount);

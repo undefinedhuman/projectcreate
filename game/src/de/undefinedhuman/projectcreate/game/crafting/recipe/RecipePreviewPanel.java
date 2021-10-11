@@ -9,7 +9,7 @@ import de.undefinedhuman.projectcreate.engine.resources.font.Font;
 import de.undefinedhuman.projectcreate.engine.utils.Colors;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.gui.Gui;
-import de.undefinedhuman.projectcreate.engine.gui.elements.scrollpanel.PooledScrollPanel;
+import de.undefinedhuman.projectcreate.engine.gui.elements.scrollpanel.PoolableScrollPanel;
 import de.undefinedhuman.projectcreate.engine.gui.event.ClickListener;
 import de.undefinedhuman.projectcreate.engine.gui.text.Text;
 import de.undefinedhuman.projectcreate.engine.gui.texture.GuiTemplate;
@@ -29,7 +29,7 @@ public class RecipePreviewPanel extends Gui {
 
     private Gui itemPreview;
     private Text name, category, description;
-    private PooledScrollPanel<IngredientGui> ingredients;
+    private PoolableScrollPanel<IngredientGui> ingredients;
     private boolean childrenVisible;
 
     public RecipePreviewPanel() {
@@ -86,7 +86,7 @@ public class RecipePreviewPanel extends Gui {
                 .set(new RelativeConstraint(0.975f), new RelativeConstraint(0.025f), new PixelConstraint(50), new PixelConstraint(Variables.SLOT_SIZE))
                 .setOffsetX(new RelativeOffset(-1f));
 
-        ingredients = new PooledScrollPanel<>(GuiTemplate.HOTBAR, IngredientGui::new);
+        ingredients = new PoolableScrollPanel<>(GuiTemplate.HOTBAR, IngredientGui::new);
         ingredients
                 .set(new CenterConstraint(), new RelativeConstraint(0.675f), new RelativeConstraint(0.95f), new RelativeConstraint(0.5f))
                 .setOffset(new CenterOffset(), new RelativeOffset(-1f));

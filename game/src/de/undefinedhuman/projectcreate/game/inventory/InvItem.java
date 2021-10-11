@@ -35,7 +35,7 @@ public class InvItem extends Gui {
 
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
-        if(amount == -1)
+        if(amount <= 0)
             return;
         super.render(batch, camera);
     }
@@ -73,9 +73,11 @@ public class InvItem extends Gui {
     }
 
     private void updateAmountText() {
-        amountText
-                .setText(amount)
-                .setVisible(this.amount > 1);
+        amountText.setText(amount).setVisible(this.amount > 1);
+    }
+
+    public boolean isEmpty() {
+        return amount <= 0;
     }
 
 }

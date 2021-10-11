@@ -3,7 +3,7 @@ package de.undefinedhuman.projectcreate.engine.gui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import de.undefinedhuman.projectcreate.engine.utils.Manager;
+import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 import de.undefinedhuman.projectcreate.engine.gui.texture.GuiTemplate;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.GuiTransform;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.PixelConstraint;

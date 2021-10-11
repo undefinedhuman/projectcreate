@@ -2,6 +2,8 @@ package de.undefinedhuman.projectcreate.engine.utils;
 
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.log.Level;
+import de.undefinedhuman.projectcreate.engine.utils.version.Stage;
+import de.undefinedhuman.projectcreate.engine.utils.version.Version;
 
 import java.awt.*;
 import java.io.File;

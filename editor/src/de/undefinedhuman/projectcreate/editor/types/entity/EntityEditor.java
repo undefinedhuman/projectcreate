@@ -3,7 +3,7 @@ package de.undefinedhuman.projectcreate.editor.types.entity;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.files.FileHandle;
 import de.undefinedhuman.projectcreate.core.ecs.ComponentTypes;
-import de.undefinedhuman.projectcreate.core.ecs.name.NameBlueprint;
+import de.undefinedhuman.projectcreate.core.ecs.stats.name.NameBlueprint;
 import de.undefinedhuman.projectcreate.editor.types.Editor;
 import de.undefinedhuman.projectcreate.editor.types.entity.ui.EntitySelectionPanel;
 import de.undefinedhuman.projectcreate.editor.types.entity.ui.EntitySettingsPanel;

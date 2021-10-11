@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.game.camera;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import de.undefinedhuman.projectcreate.engine.utils.Manager;
+import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector4i;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;

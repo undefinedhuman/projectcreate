@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
-import de.undefinedhuman.projectcreate.core.ecs.transform.TransformComponent;
+import de.undefinedhuman.projectcreate.core.ecs.base.transform.TransformComponent;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
@@ -17,7 +17,7 @@ import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.Relativ
 import de.undefinedhuman.projectcreate.engine.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.offset.PixelOffset;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.offset.RelativeOffset;
-import de.undefinedhuman.projectcreate.engine.utils.ManagerList;
+import de.undefinedhuman.projectcreate.engine.utils.manager.ManagerList;
 import de.undefinedhuman.projectcreate.game.Main;
 import de.undefinedhuman.projectcreate.game.background.BackgroundManager;
 import de.undefinedhuman.projectcreate.game.camera.CameraManager;
@@ -50,7 +50,6 @@ public class GameManager {
     }
 
     public void init() {
-
         BackgroundManager.getInstance();
         BackgroundManager.getInstance().init();
         loadManager();

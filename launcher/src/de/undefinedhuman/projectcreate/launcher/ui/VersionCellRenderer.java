@@ -1,6 +1,6 @@
 package de.undefinedhuman.projectcreate.launcher.ui;
 
-import de.undefinedhuman.projectcreate.engine.utils.Version;
+import de.undefinedhuman.projectcreate.engine.utils.version.Version;
 import de.undefinedhuman.projectcreate.launcher.icon.IconManager;
 
 import javax.swing.*;

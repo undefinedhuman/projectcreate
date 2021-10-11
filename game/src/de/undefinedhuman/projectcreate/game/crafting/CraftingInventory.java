@@ -8,7 +8,7 @@ import de.undefinedhuman.projectcreate.engine.utils.ds.MultiMap;
 import de.undefinedhuman.projectcreate.game.crafting.recipe.RecipeGui;
 import de.undefinedhuman.projectcreate.game.crafting.recipe.RecipePreviewPanel;
 import de.undefinedhuman.projectcreate.engine.gui.Gui;
-import de.undefinedhuman.projectcreate.engine.gui.elements.scrollpanel.PooledScrollPanel;
+import de.undefinedhuman.projectcreate.engine.gui.elements.scrollpanel.PoolableScrollPanel;
 import de.undefinedhuman.projectcreate.engine.gui.texture.GuiTemplate;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.CenterConstraint;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.PixelConstraint;
@@ -27,7 +27,7 @@ public class CraftingInventory extends Gui {
     private static volatile CraftingInventory instance;
 
     private Gui menuBackground;
-    private PooledScrollPanel<RecipeGui> recipesScrollPanel;
+    private PoolableScrollPanel<RecipeGui> recipesScrollPanel;
 
     private RecipePreviewPanel recipePreviewPanel;
 
@@ -50,7 +50,7 @@ public class CraftingInventory extends Gui {
     }
 
     private void initBackgrounds() {
-        recipesScrollPanel = new PooledScrollPanel<>(GuiTemplate.HOTBAR, RecipeGui::new);
+        recipesScrollPanel = new PoolableScrollPanel<>(GuiTemplate.HOTBAR, RecipeGui::new);
         recipesScrollPanel.setSize(Tools.getInventoryConstraint(GuiTemplate.HOTBAR, 5), Tools.getInventoryConstraint(GuiTemplate.HOTBAR, 8));
 
         addChild(

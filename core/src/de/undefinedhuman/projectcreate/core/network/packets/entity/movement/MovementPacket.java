@@ -3,7 +3,7 @@ package de.undefinedhuman.projectcreate.core.network.packets.entity.movement;
 import com.badlogic.ashley.core.Entity;
 import com.esotericsoftware.kryonet.Connection;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
-import de.undefinedhuman.projectcreate.core.ecs.movement.MovementComponent;
+import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.core.network.Packet;
 import de.undefinedhuman.projectcreate.core.network.PacketHandler;
 import de.undefinedhuman.projectcreate.engine.ecs.component.IDComponent;

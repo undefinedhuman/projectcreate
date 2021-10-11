@@ -3,10 +3,12 @@ package de.undefinedhuman.projectcreate.game.network;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Connection;
+import de.undefinedhuman.projectcreate.core.ecs.EntityFlag;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
-import de.undefinedhuman.projectcreate.core.ecs.movement.MovementComponent;
+import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.core.network.PacketHandler;
 import de.undefinedhuman.projectcreate.core.network.packets.LoginPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.MousePacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.CreateEntityPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.RemoveEntityPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.ComponentPacket;
@@ -23,7 +25,7 @@ import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameScreen;
 public class ClientPacketHandler implements PacketHandler {
     @Override
     public void handle(Connection connection, LoginPacket packet) {
-        Entity player = BlueprintManager.getInstance().createEntity(BlueprintManager.PLAYER_BLUEPRINT_ID, packet.worldID);
+        Entity player = BlueprintManager.getInstance().createEntity(BlueprintManager.PLAYER_BLUEPRINT_ID, packet.worldID, EntityFlag.getBigMask(EntityFlag.IS_MAIN_PLAYER));
         PacketUtils.setComponentData(player, PacketUtils.parseComponentData(packet.componentData));
         Mappers.MOVEMENT.get(player).predictedPosition.set(Mappers.TRANSFORM.get(player).getPosition());
         EntityManager.getInstance().addEntity(packet.worldID, player);
@@ -123,4 +125,10 @@ public class ClientPacketHandler implements PacketHandler {
         component.forceJump();
     }
 
+    @Override
+    public void handle(Connection connection, MousePacket packet) {
+        Entity entity = EntityManager.getInstance().getEntity(packet.worldID);
+        if(entity == null) return;
+        MousePacket.parse(entity, packet);
+    }
 }

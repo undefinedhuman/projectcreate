@@ -67,7 +67,7 @@ public class Inventory extends Gui implements InvTarget {
     public int removeItem(int id, int amountToBeRemoved) {
         for (int i = row - 1; i >= 0; i--)
             for (int j = 0; j < col; j++) {
-                InvItem currentItem = inventory[i][j].getItem();
+                InvItem currentItem = inventory[i][j].getInvItem();
                 if(currentItem == null || currentItem.getID() != id)
                     continue;
                 int amountOfCurrentSlot = currentItem.getAmount();
@@ -83,7 +83,7 @@ public class Inventory extends Gui implements InvTarget {
 
         for (int i = row - 1; i >= 0; i--)
             for (int j = 0; j < col; j++) {
-                InvItem currentItem = inventory[i][j].getItem();
+                InvItem currentItem = inventory[i][j].getInvItem();
                 if(currentItem.getAmount() == -1) {
                     currentAmount += maxAmount;
                     continue;
@@ -99,7 +99,7 @@ public class Inventory extends Gui implements InvTarget {
         for (int i = row - 1; i >= 0; i--)
             for (int j = 0; j < col; j++) {
                 InvSlot slot = inventory[i][j];
-                InvItem currentItem = slot.getItem();
+                InvItem currentItem = slot.getInvItem();
                 if(currentItem.getAmount() == -1 || (currentItem.getID() == id && currentItem.getAmount() < ItemManager.getInstance().getItem(id).maxAmount.getValue())) return slot;
             }
         return null;
@@ -110,7 +110,7 @@ public class Inventory extends Gui implements InvTarget {
         for (int i = row - 1; i >= 0; i--)
             for (int j = 0; j < col; j++) {
                 InvSlot slot = inventory[i][j];
-                InvItem currentItem = slot.getItem();
+                InvItem currentItem = slot.getInvItem();
                 if(currentItem.getAmount() != -1 && currentItem.getID() == id)
                     total += currentItem.getAmount();
             }
@@ -126,7 +126,7 @@ public class Inventory extends Gui implements InvTarget {
 
         for (InvSlot[] invSlots : inventory)
             for (InvSlot slot : invSlots) {
-                InvItem currentItem = slot.getItem();
+                InvItem currentItem = slot.getInvItem();
                 if(currentItem == null || currentItem.getID() != id) continue;
                 containsAmount -= currentItem.getAmount();
             }

@@ -1,13 +1,18 @@
 package de.undefinedhuman.projectcreate.game.network;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Listener;
+import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.network.Packet;
+import de.undefinedhuman.projectcreate.core.network.packets.MousePacket;
 import de.undefinedhuman.projectcreate.core.network.utils.NetworkConstants;
 import de.undefinedhuman.projectcreate.engine.log.Log;
-import de.undefinedhuman.projectcreate.engine.utils.Manager;
-import de.undefinedhuman.projectcreate.engine.utils.Timer;
+import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
+import de.undefinedhuman.projectcreate.engine.utils.timer.Timer;
+import de.undefinedhuman.projectcreate.engine.utils.timer.TimerList;
+import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 
 import java.io.IOException;
 
@@ -20,7 +25,7 @@ public class ClientManager extends Manager {
 
     private final Client client;
 
-    private Timer timer;
+    private TimerList timers = new TimerList();
 
     private ClientManager() {
         client = new Client(NetworkConstants.WRITE_BUFFER_SIZE, NetworkConstants.OBJECT_BUFFER_SIZE);
@@ -35,7 +40,15 @@ public class ClientManager extends Manager {
             }
         });
 
-        timer = new Timer(0.2f, client::updateReturnTripTime);
+        timers.addTimers(
+                new Timer(0.2f, client::updateReturnTripTime),
+                new Timer(0.03f, () -> {
+                    if(GameManager.getInstance().player == null) return;
+                    Vector2 mousePosition = Mappers.MOUSE.get(GameManager.getInstance().player).mousePosition;
+                    client.sendUDP(MousePacket.serialize(mousePosition));
+                })
+        );
+
     }
 
     public void connect() {
@@ -48,11 +61,12 @@ public class ClientManager extends Manager {
 
     @Override
     public void update(float delta) {
-        timer.update(delta);
+        timers.update(delta);
     }
 
     @Override
     public void delete() {
+        timers.delete();
         client.stop();
     }
 

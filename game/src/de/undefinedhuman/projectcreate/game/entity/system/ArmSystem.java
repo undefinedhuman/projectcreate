@@ -1,22 +1,21 @@
 package de.undefinedhuman.projectcreate.game.entity.system;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.projectcreate.core.ecs.EntityFlag;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
-import de.undefinedhuman.projectcreate.core.ecs.angle.AngleComponent;
-import de.undefinedhuman.projectcreate.core.ecs.animation.AnimationComponent;
-import de.undefinedhuman.projectcreate.core.ecs.combat.CombatComponent;
-import de.undefinedhuman.projectcreate.core.ecs.equip.EquipComponent;
-import de.undefinedhuman.projectcreate.core.ecs.rightarm.RightArmComponent;
-import de.undefinedhuman.projectcreate.core.ecs.shoulder.ShoulderComponent;
-import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteComponent;
-import de.undefinedhuman.projectcreate.core.ecs.sprite.SpriteData;
-import de.undefinedhuman.projectcreate.core.ecs.transform.TransformComponent;
+import de.undefinedhuman.projectcreate.core.ecs.visual.animation.AnimationComponent;
+import de.undefinedhuman.projectcreate.core.ecs.player.combat.CombatComponent;
+import de.undefinedhuman.projectcreate.core.ecs.player.equip.EquipComponent;
+import de.undefinedhuman.projectcreate.core.ecs.mouse.MouseComponent;
+import de.undefinedhuman.projectcreate.core.ecs.player.rightarm.RightArmComponent;
+import de.undefinedhuman.projectcreate.core.ecs.player.shoulder.ShoulderComponent;
+import de.undefinedhuman.projectcreate.core.ecs.visual.sprite.SpriteComponent;
+import de.undefinedhuman.projectcreate.core.ecs.visual.sprite.SpriteData;
+import de.undefinedhuman.projectcreate.core.ecs.base.transform.TransformComponent;
 import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.core.items.ItemType;
@@ -24,77 +23,55 @@ import de.undefinedhuman.projectcreate.core.items.weapons.Sword;
 import de.undefinedhuman.projectcreate.game.Main;
 import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
 import de.undefinedhuman.projectcreate.game.inventory.player.Selector;
-import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 
-public class ArmSystem extends EntitySystem {
-
-    private ImmutableArray<Entity> entities;
+public class ArmSystem extends IteratingSystem {
 
     public ArmSystem() {
-        super(2);
+        super(Family.all(TransformComponent.class, SpriteComponent.class, RightArmComponent.class, MouseComponent.class, EquipComponent.class, ShoulderComponent.class, AnimationComponent.class).get(), 2);
     }
 
     @Override
-    public void addedToEngine (Engine engine) {
-        entities = engine.getEntitiesFor(Family.all(TransformComponent.class, SpriteComponent.class, RightArmComponent.class, AngleComponent.class, EquipComponent.class, ShoulderComponent.class, AnimationComponent.class).get());
-    }
+    protected void processEntity(Entity entity, float deltaTime) {
+        TransformComponent transformComponent = Mappers.TRANSFORM.get(entity);
+        SpriteComponent spriteComponent = Mappers.SPRITE.get(entity);
+        RightArmComponent rightArmComponent = Mappers.RIGHT_ARM.get(entity);
+        MouseComponent mouseComponent = Mappers.MOUSE.get(entity);
+        EquipComponent equipComponent = Mappers.EQUIP.get(entity);
+        Vector2 shoulderPosition = Mappers.SHOULDER.get(entity).getShoulderPos(Mappers.ANIMATION.get(entity).getAnimationFrameIndex());
 
-    @Override
-    public void update(float delta) {
-        TransformComponent transformComponent;
-        SpriteComponent spriteComponent;
-        RightArmComponent rightArmComponent;
-        AngleComponent angleComponent;
-        EquipComponent equipComponent;
-        ShoulderComponent shoulderComponent;
-        AnimationComponent animationComponent;
+        SpriteData data = spriteComponent.getSpriteData(rightArmComponent.getSelectedTexture());
+        shoulderPosition.set((mouseComponent.isTurned ? shoulderPosition.x : transformComponent.getWidth() - shoulderPosition.x), shoulderPosition.y);
 
-        for(Entity entity : entities) {
+        if (EntityFlag.hasFlags(entity, EntityFlag.IS_MAIN_PLAYER)) {
+            float angle = new Vector2(mouseComponent.mousePosition).sub(shoulderPosition).sub(transformComponent.getPosition()).angleDeg() + (mouseComponent.isTurned ? 0 : 180);
+            angle += mouseComponent.isTurned ? 95 : -95;
 
-            transformComponent = Mappers.TRANSFORM.get(entity);
-            spriteComponent = Mappers.SPRITE.get(entity);
-            rightArmComponent = Mappers.RIGHT_ARM.get(entity);
-            angleComponent = Mappers.ANGLE.get(entity);
-            equipComponent = Mappers.EQUIP.get(entity);
-            shoulderComponent = Mappers.SHOULDER.get(entity);
-            animationComponent = Mappers.ANIMATION.get(entity);
+            if (!Selector.getInstance().getSelectedInvItem().isEmpty()) {
+                Item item = ItemManager.getInstance().getItem(Selector.getInstance().getSelectedItemID());
+                boolean hasSword = (item.type == ItemType.SWORD);
+                CombatComponent combatComponent = entity.getComponent(CombatComponent.class);
+                calculateShake(rightArmComponent, item);
 
-            SpriteData data = spriteComponent.getSpriteData(rightArmComponent.getSelectedTexture());
-            Vector2 mousePos = angleComponent.mousePos;
-            Vector2 shoulderPosition = shoulderComponent.getShoulderPos(animationComponent.getAnimationFrameIndex());
-            shoulderPosition.set((angleComponent.isTurned ? shoulderPosition.x : transformComponent.getWidth() - shoulderPosition.x), shoulderPosition.y);
+                if (hasSword && combatComponent != null)
+                    angle = animationSword(entity, equipComponent, combatComponent, mouseComponent.isTurned, mouseComponent.angle, angle, (Sword) item);
+                if (combatComponent != null)
+                    if (combatComponent.currentDamage < 0 || !hasSword) combatComponent.currentDamage = 0;
 
-            if (GameManager.getInstance().player == entity) {
-                float angle = new Vector2(mousePos).sub(shoulderPosition).sub(transformComponent.getPosition()).angleDeg() + (angleComponent.isTurned ? 0 : 180);
-                angle += angleComponent.isTurned ? 95 : -95;
-
-                if (Selector.getInstance().getSelectedInvItem() != null) {
-                    Item item = ItemManager.getInstance().getItem(Selector.getInstance().getSelectedItemID());
-                    boolean hasSword = (item.type == ItemType.SWORD);
-                    CombatComponent combatComponent = entity.getComponent(CombatComponent.class);
-                    calculateShake(rightArmComponent, item);
-
-                    if (hasSword && combatComponent != null)
-                        angle = animationSword(entity, equipComponent, combatComponent, angleComponent.isTurned, angleComponent.angle, angle, (Sword) item);
-                    if (combatComponent != null)
-                        if (combatComponent.currentDamage < 0 || !hasSword) combatComponent.currentDamage = 0;
-
-                    angleComponent.angle = angle + rightArmComponent.shakeAngle;
-                }
-
+                mouseComponent.angle = angle + rightArmComponent.shakeAngle;
             }
 
-            boolean selected = Tools.isItemSelected(entity);
-
-            spriteComponent.getSpriteData(rightArmComponent.getTextureName()).setVisible(!selected);
-            spriteComponent.getSpriteData(rightArmComponent.getSelectedTexture()).setVisible(selected);
-
-            if (!selected) return;
-            data.setOrigin(shoulderPosition);
-            data.setRotation(angleComponent.angle);
-
         }
+
+        //boolean selected = Tools.isItemSelected(entity);
+        boolean selected = EntityFlag.hasFlags(entity, EntityFlag.IS_MAIN_PLAYER) && !Selector.getInstance().getSelectedInvItem().isEmpty();
+
+        spriteComponent.getSpriteData(rightArmComponent.getTextureName()).setVisible(!selected);
+        spriteComponent.getSpriteData(rightArmComponent.getSelectedTexture()).setVisible(selected);
+
+        if (!selected) return;
+        data.setOrigin(shoulderPosition);
+        data.setRotation(mouseComponent.angle);
 
     }
 

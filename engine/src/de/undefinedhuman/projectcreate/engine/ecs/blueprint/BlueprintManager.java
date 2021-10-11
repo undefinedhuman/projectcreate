@@ -10,7 +10,7 @@ import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.resources.RessourceUtils;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectFileReader;
-import de.undefinedhuman.projectcreate.engine.utils.Manager;
+import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
 import java.util.Arrays;
@@ -109,6 +109,12 @@ public class BlueprintManager extends Manager {
         Blueprint blueprint = getBlueprint(blueprintID);
         if(blueprint == null) return null;
         return blueprint.createInstance(worldID);
+    }
+
+    public Entity createEntity(int blueprintID, long worldID, int entityFlagMask) {
+        Entity entity = createEntity(blueprintID, worldID);
+        entity.flags = entityFlagMask;
+        return entity;
     }
 
 

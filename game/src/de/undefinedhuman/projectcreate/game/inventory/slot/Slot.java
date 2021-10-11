@@ -16,6 +16,11 @@ public class Slot extends GuiComponent {
 
     private boolean selected = false;
 
+    public Slot() {
+        super();
+        setSize(new PixelConstraint(Variables.SLOT_SIZE), new PixelConstraint(Variables.SLOT_SIZE));
+    }
+
     public Slot(Constraint x, Constraint y) {
         super();
         set(x, y, new PixelConstraint(Variables.SLOT_SIZE), new PixelConstraint(Variables.SLOT_SIZE));

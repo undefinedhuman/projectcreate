@@ -10,7 +10,7 @@ import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.gl.HeadlessApplicationAdapter;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.resources.RessourceUtils;
-import de.undefinedhuman.projectcreate.engine.utils.ManagerList;
+import de.undefinedhuman.projectcreate.engine.utils.manager.ManagerList;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.launcher.config.LauncherConfig;
 import de.undefinedhuman.projectcreate.launcher.icon.IconManager;
