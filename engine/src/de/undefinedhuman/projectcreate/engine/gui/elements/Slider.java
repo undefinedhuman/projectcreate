@@ -94,14 +94,14 @@ public class Slider extends Gui {
         }
 
         super.render(batch, camera);
-        batch.draw(progressTexture, getCurrentValue(Axis.X) + texture.getCornerSize(), getCurrentValue(Axis.Y) + texture.getCornerSize(), 0, 0, (int) progressWidth, (int) progressHeight);
+        batch.draw(progressTexture, getCurrentValue(Axis.X) + texture.getScaledCornerSize(), getCurrentValue(Axis.Y) + texture.getScaledCornerSize(), 0, 0, (int) progressWidth, (int) progressHeight);
         pointer.render(batch, camera);
     }
 
     private void resizePointer() {
         if (pointer == null) return;
-        progressWidth = progress * (getCurrentValue(Axis.WIDTH) - texture.getCornerSize() * 2);
-        progressHeight = getCurrentValue(Axis.HEIGHT) - texture.getCornerSize() * 2;
+        progressWidth = progress * (getCurrentValue(Axis.WIDTH) - texture.getScaledCornerSize() * 2);
+        progressHeight = getCurrentValue(Axis.HEIGHT) - texture.getScaledCornerSize() * 2;
         pointer.setValue(Axis.X, progressWidth / getCurrentValue(Axis.WIDTH));
         pointer.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }

@@ -3,17 +3,13 @@ package de.undefinedhuman.projectcreate.game.inventory.player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.game.camera.CameraManager;
 import de.undefinedhuman.projectcreate.engine.gui.GuiManager;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.MouseConstraint;
+import de.undefinedhuman.projectcreate.game.inventory.ClientInvSlot;
 import de.undefinedhuman.projectcreate.game.inventory.InvItem;
 import de.undefinedhuman.projectcreate.game.inventory.InvTarget;
 import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
 import de.undefinedhuman.projectcreate.game.inventory.slot.InvSlot;
-import de.undefinedhuman.projectcreate.game.item.drop.DropItemManager;
-import de.undefinedhuman.projectcreate.engine.utils.Mouse;
-import de.undefinedhuman.projectcreate.game.utils.Tools;
 
 import java.util.ArrayList;
 
@@ -65,9 +61,9 @@ public class DragAndDrop {
 
             if (moving && ((isLeft && !leftMouse) || (!isLeft && !rightMouse))) {
 
-                InvSlot clickedSlot = null;
+                ClientInvSlot clickedSlot = null;
                 for (InvTarget inventory : targets) if ((clickedSlot = inventory.getClickedSlot(camera)) != null) break;
-                if (clickedSlot != null && clickedSlot.isTypeCompatible(currentItem)) {
+                /*if (clickedSlot != null && clickedSlot.isTypeCompatible(currentItem)) {
 
                     if (clickedSlot.getInvItem() == null || clickedSlot.getInvItem().getID() == currentItem.getID() || half) {
                         currentItem.setAmount(clickedSlot.addItem(currentItem));
@@ -87,7 +83,7 @@ public class DragAndDrop {
                         removeTempItem();
                     }
 
-                }
+                }*/
 
             }
 
@@ -95,11 +91,11 @@ public class DragAndDrop {
 
             if (moving) {
 
-                InvSlot clickedSlot = null;
+                /*InvSlot clickedSlot = null;
                 for (InvTarget inventory : targets) if ((clickedSlot = inventory.getClickedSlot(camera)) != null) break;
                 if (clickedSlot != null && clickedSlot.isTypeCompatible(currentItem))
                     currentItem.setAmount(clickedSlot.addItem(currentItem));
-                cancelMoving();
+                cancelMoving();*/
 
             }
 
@@ -110,20 +106,20 @@ public class DragAndDrop {
     private void placeOneItem(OrthographicCamera camera) {
 
         InvSlot clickedSlot = null;
-        for (InvTarget inventory : targets) if ((clickedSlot = inventory.getClickedSlot(camera)) != null) break;
+        /*for (InvTarget inventory : targets) if ((clickedSlot = inventory.getClickedSlot(camera)) != null) break;
         if (clickedSlot != null && clickedSlot.isTypeCompatible(currentItem)) {
 
             if (clickedSlot.addItem(currentItem.getID(), 1) == 0) currentItem.setAmount(currentItem.getAmount() - 1);
             if (currentItem.getAmount() < 1) cancelMoving();
 
-        }
+        }*/
 
     }
 
     private void startMoving(boolean right, OrthographicCamera camera) {
 
         InvSlot clickedSlot = null;
-        for (InvTarget inventory : targets) if ((clickedSlot = inventory.getClickedSlot(camera)) != null) break;
+        /*for (InvTarget inventory : targets) if ((clickedSlot = inventory.getClickedSlot(camera)) != null) break;
         if (clickedSlot != null) {
 
             InvItem clickedItem = clickedSlot.getInvItem();
@@ -146,7 +142,7 @@ public class DragAndDrop {
 
             }
 
-        }
+        }*/
 
     }
 

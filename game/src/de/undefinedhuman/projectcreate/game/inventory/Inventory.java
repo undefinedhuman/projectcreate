@@ -10,7 +10,7 @@ import de.undefinedhuman.projectcreate.game.inventory.slot.InvSlot;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 
-public class Inventory extends Gui implements InvTarget {
+public class Inventory extends Gui {
 
     protected InvSlot[][] inventory;
     private int row, col;
@@ -43,15 +43,6 @@ public class Inventory extends Gui implements InvTarget {
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         super.render(batch, camera);
-    }
-
-    @Override
-    public InvSlot getClickedSlot(OrthographicCamera camera) {
-        if (!visible) return null;
-        for (InvSlot[] invSlots : inventory)
-            for (InvSlot invSlot : invSlots)
-                if (invSlot.isClicked(camera)) return invSlot;
-        return null;
     }
 
     public int addItem(int id, int amount) {

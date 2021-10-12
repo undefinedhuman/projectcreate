@@ -106,7 +106,7 @@ public class GuiTexture {
         init();
     }
 
-    public int getCornerSize() { return cornerSize; }
+    public int getScaledCornerSize() { return cornerSize; }
 
     public int getBaseCornerSize() { return template == null ? 0 : template.cornerSize; }
 

@@ -23,19 +23,24 @@ public class ObjectPool<T extends Poolable> {
     }
 
     public synchronized void add(T object) {
-        this.objects.put(object, System.currentTimeMillis());
+        this.add(object, System.currentTimeMillis());
     }
 
     public synchronized void add(ArrayList<T> objects) {
         long currentTime = System.currentTimeMillis();
         for(T object : objects)
-            this.objects.put(object, currentTime);
+            add(object, currentTime);
+    }
+
+    private synchronized void add(T object, long time) {
+        object.freeUp();
+        this.objects.put(object, time);
     }
 
     public synchronized T get() {
         long currentTime = System.currentTimeMillis();
         if(objects.size() == 0)
-            return createNewObject(currentTime);
+            return createNewObject();
         T currentObject;
         Enumeration<T> e = objects.keys();
         while (e.hasMoreElements()) {
@@ -49,7 +54,7 @@ public class ObjectPool<T extends Poolable> {
                 } else removeObject(currentObject);
             }
         }
-        return createNewObject(currentTime);
+        return createNewObject();
     }
 
     public void delete() {
@@ -58,10 +63,9 @@ public class ObjectPool<T extends Poolable> {
         objects.clear();
     }
 
-    private T createNewObject(long time) {
+    private T createNewObject() {
         T object = supplier.get();
         object.init();
-        objects.put(object, time);
         return object;
     }
 
@@ -70,4 +74,7 @@ public class ObjectPool<T extends Poolable> {
         objects.remove(object);
     }
 
+    public Hashtable<T, Long> getObjects() {
+        return objects;
+    }
 }

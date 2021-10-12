@@ -4,9 +4,11 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Connection;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
+import de.undefinedhuman.projectcreate.core.ecs.base.transform.TransformComponent;
+import de.undefinedhuman.projectcreate.core.ecs.inventory.InventoryComponent;
 import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.core.ecs.stats.name.NameComponent;
-import de.undefinedhuman.projectcreate.core.ecs.base.transform.TransformComponent;
+import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.core.network.PacketHandler;
 import de.undefinedhuman.projectcreate.core.network.packets.LoginPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.MousePacket;
@@ -32,6 +34,11 @@ public class ServerPacketHandler implements PacketHandler {
         if(nameComponent != null)
             nameComponent.setName(packet.name);
         ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), CreateEntityPacket.serialize(player));
+        // TEMP
+        InventoryComponent inventoryComponent = Mappers.INVENTORY.get(player);
+        inventoryComponent.getInventory("Inventory").addItem(1, Integer.parseInt(packet.name.split(" ")[1]));
+        inventoryComponent.getInventory("Inventory").addItem(2, ItemManager.getInstance().getItem(2).maxAmount.getValue());
+        // TEMP END
         packet.worldID = worldID;
         packet.componentData = PacketUtils.createComponentData(player.getComponents());
         connection.sendTCP(packet);

@@ -9,7 +9,7 @@ public abstract class Editor extends JPanel {
 
     public Editor() {
         super(new RelativeLayout().setFill(true));
-        Variables.IS_EDITOR = true;
+        Variables.DONT_LOAD_TEXTURES = true;
     }
 
     public void init() {}

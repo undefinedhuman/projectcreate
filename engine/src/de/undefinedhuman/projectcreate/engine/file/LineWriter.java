@@ -7,6 +7,8 @@ import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 public class LineWriter {
 
+    // TODO WRITE FUNCTIONS THAT CAN SEND ONE AND TWO DIMENSIONAL ARRAYS
+
     private StringBuilder data;
 
     private boolean base;

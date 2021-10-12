@@ -5,5 +5,6 @@ public interface Poolable {
     default boolean validate() {
         return true;
     }
+    default void freeUp() {}
     void delete();
 }

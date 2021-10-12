@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Connection;
 import de.undefinedhuman.projectcreate.core.ecs.EntityFlag;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
+import de.undefinedhuman.projectcreate.core.ecs.inventory.InventoryComponent;
 import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.core.network.PacketHandler;
 import de.undefinedhuman.projectcreate.core.network.packets.LoginPacket;
@@ -19,6 +20,8 @@ import de.undefinedhuman.projectcreate.core.network.utils.PacketUtils;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
 import de.undefinedhuman.projectcreate.game.Main;
+import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
+import de.undefinedhuman.projectcreate.game.inventory.player.PlayerInventory;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameScreen;
 
@@ -30,6 +33,8 @@ public class ClientPacketHandler implements PacketHandler {
         Mappers.MOVEMENT.get(player).predictedPosition.set(Mappers.TRANSFORM.get(player).getPosition());
         EntityManager.getInstance().addEntity(packet.worldID, player);
         GameManager.getInstance().player = player;
+        InventoryComponent inventoryComponent = Mappers.INVENTORY.get(player);
+        PlayerInventory.getInstance().linkInventory(InventoryManager.getInstance().getClientInvSlotPool(), inventoryComponent.getInventory("Inventory"));
         Main.instance.setScreen(GameScreen.getInstance());
     }
 

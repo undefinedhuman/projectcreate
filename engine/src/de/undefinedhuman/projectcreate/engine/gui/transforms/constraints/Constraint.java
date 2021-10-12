@@ -30,7 +30,7 @@ public abstract class Constraint {
         return (axis == Axis.X || axis == Axis.OFFSET_X) ? Axis.WIDTH : Axis.HEIGHT;
     }
 
-    public float getValue() {
+    public float getBaseValue() {
         return value;
     }
 

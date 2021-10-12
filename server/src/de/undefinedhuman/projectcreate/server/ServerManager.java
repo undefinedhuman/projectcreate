@@ -44,7 +44,7 @@ public class ServerManager extends Server {
 
     public ArrayList<CommandCache> COMMAND_CACHE = new ArrayList<>();
 
-    public ServerManager() {
+    private ServerManager() {
         super(NetworkConstants.WRITE_BUFFER_SIZE, NetworkConstants.OBJECT_BUFFER_SIZE);
         NetworkConstants.register(this);
 

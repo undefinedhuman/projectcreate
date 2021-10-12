@@ -2,6 +2,7 @@ package de.undefinedhuman.projectcreate.core.inventory;
 
 import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -43,7 +44,7 @@ public class InvItem {
     }
 
     public int addItem(int otherID, int otherAmount) {
-        if(otherID == 0 || otherAmount == 0)
+        if(otherID <= 0 || otherAmount <= 0)
             return 0;
         int maxAmount = ItemManager.getInstance().getItem(otherID).maxAmount.getValue();
         if(!isEmpty()) {
@@ -57,8 +58,8 @@ public class InvItem {
                 return otherAmount - (maxAmount - currentAmount);
             }
         } else {
-            updateItem(otherID, amount);
-            return amount - maxAmount;
+            updateItem(otherID, Math.min(otherAmount, maxAmount));
+            return Math.max(otherAmount - maxAmount, 0);
         }
         return 0;
     }
@@ -74,6 +75,10 @@ public class InvItem {
 
     public void deleteItem() {
         updateItem(0, -1);
+    }
+
+    public void setItem(int id, int amount) {
+        updateItem(id, amount);
     }
 
     public int getID() {
@@ -107,8 +112,7 @@ public class InvItem {
         if(id != 0 && !isTypeCompatible(id))
             return;
         this.id = id;
-        this.amount = amount;
+        this.amount = Utils.clamp(amount, 0, ItemManager.getInstance().getItem(id).maxAmount.getValue());
         listeners.forEach(listener -> listener.changed(id, amount));
     }
-
 }

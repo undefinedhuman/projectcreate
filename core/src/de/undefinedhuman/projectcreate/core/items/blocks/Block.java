@@ -40,7 +40,7 @@ public class Block extends Item {
 
     @Override
     public void init() {
-        if(!hasStates.getValue() || Variables.IS_EDITOR)
+        if(!hasStates.getValue() || Variables.DONT_LOAD_TEXTURES)
             return;
         blockTextureAtlas = new TextureAtlas(Gdx.files.internal(Paths.ITEM_PATH + "Block.atlas"), Gdx.files.internal(Paths.ITEM_PATH + id.getValue() + "/"));
         blockTextures = new AtlasRegion[16];

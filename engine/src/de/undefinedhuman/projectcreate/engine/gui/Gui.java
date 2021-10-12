@@ -1,6 +1,5 @@
 package de.undefinedhuman.projectcreate.engine.gui;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -62,6 +61,8 @@ public class Gui extends GuiComponent {
         for (GuiTransform transform : children) transform.update(delta);
     }
 
+    private int count = 0;
+
     @Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         super.render(batch, camera);
@@ -96,10 +97,14 @@ public class Gui extends GuiComponent {
         for (GuiTransform component : components) {
             component.parent = this;
             component.init();
-            component.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            component.resize();
             this.children.add(component);
         }
         return this;
+    }
+
+    public void removeChildren() {
+        children.clear();
     }
 
     public void deleteChildren() {
@@ -127,7 +132,7 @@ public class Gui extends GuiComponent {
 
     @Override
     public int getCornerSize() {
-        return texture.getCornerSize();
+        return texture.getScaledCornerSize();
     }
 
     public int getBaseCornerSize() { return texture.getBaseCornerSize(); }

@@ -1,10 +1,8 @@
 package de.undefinedhuman.projectcreate.game.equip;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.core.items.ItemType;
-import de.undefinedhuman.projectcreate.engine.resources.font.Font;
 import de.undefinedhuman.projectcreate.engine.gui.Gui;
 import de.undefinedhuman.projectcreate.engine.gui.texture.GuiTemplate;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.CenterConstraint;
@@ -12,11 +10,10 @@ import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.PixelCo
 import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.RelativeConstraint;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.offset.PixelOffset;
-import de.undefinedhuman.projectcreate.game.inventory.InvTarget;
-import de.undefinedhuman.projectcreate.game.inventory.slot.InvSlot;
+import de.undefinedhuman.projectcreate.engine.resources.font.Font;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 
-public class EquipScreen extends Gui implements InvTarget {
+public class EquipScreen extends Gui {
 
     private static volatile EquipScreen instance;
 
@@ -44,15 +41,6 @@ public class EquipScreen extends Gui implements InvTarget {
         }
         addChild(slots);
         setVisible(false);
-    }
-
-    @Override
-    public InvSlot getClickedSlot(OrthographicCamera camera) {
-        if (!visible) return null;
-        for (EquipSlot equipSlot : slots)
-            if (equipSlot.isClicked(camera))
-                return equipSlot;
-        return null;
     }
 
     public static EquipScreen getInstance() {

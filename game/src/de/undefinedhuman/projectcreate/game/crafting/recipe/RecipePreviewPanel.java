@@ -5,9 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.core.crafting.RecipeItem;
 import de.undefinedhuman.projectcreate.core.items.Item;
-import de.undefinedhuman.projectcreate.engine.resources.font.Font;
-import de.undefinedhuman.projectcreate.engine.utils.Colors;
-import de.undefinedhuman.projectcreate.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.engine.gui.Gui;
 import de.undefinedhuman.projectcreate.engine.gui.elements.scrollpanel.PoolableScrollPanel;
 import de.undefinedhuman.projectcreate.engine.gui.event.ClickListener;
@@ -19,8 +17,9 @@ import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.PixelCo
 import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.RelativeConstraint;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.offset.RelativeOffset;
-import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
-import de.undefinedhuman.projectcreate.core.items.ItemManager;
+import de.undefinedhuman.projectcreate.engine.resources.font.Font;
+import de.undefinedhuman.projectcreate.engine.utils.Colors;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 
 public class RecipePreviewPanel extends Gui {
@@ -81,7 +80,7 @@ public class RecipePreviewPanel extends Gui {
                 )
                 .addListener((ClickListener) () -> {
                     Item item = ItemManager.getInstance().getItem(currentItemID);
-                    InventoryManager.getInstance().craftItem(currentItemID, item.recipeQuantity.getValue(), item.recipeItems.getValue().values());
+                    // InventoryManager.getInstance().craftItem(currentItemID, item.recipeQuantity.getValue(), item.recipeItems.getValue().values());
                 })
                 .set(new RelativeConstraint(0.975f), new RelativeConstraint(0.025f), new PixelConstraint(50), new PixelConstraint(Variables.SLOT_SIZE))
                 .setOffsetX(new RelativeOffset(-1f));

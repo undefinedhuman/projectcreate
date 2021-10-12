@@ -4,7 +4,7 @@ import de.undefinedhuman.projectcreate.core.items.ItemManager;
 
 public class Inventory {
 
-    protected InvItem[][] items;
+    protected InvItem[][] inventory;
     private int row, col;
     private String title;
 
@@ -13,7 +13,10 @@ public class Inventory {
     }
 
     public Inventory(int row, int col, String title) {
-        items = new InvItem[this.row = row][this.col = col];
+        inventory = new InvItem[this.row = row][this.col = col];
+        for (int i = 0; i < inventory.length; i++)
+            for (int j = 0; j < inventory[i].length; j++)
+                inventory[i][j] = new InvItem();
         this.title = title;
     }
 
@@ -31,11 +34,11 @@ public class Inventory {
         if(id == 0) return 0;
         for (int i = row - 1; i >= 0; i--)
             for (int j = 0; j < col; j++) {
-                InvItem currentItem = items[i][j];
+                InvItem currentItem = inventory[i][j];
                 if(currentItem == null || currentItem.getID() != id)
                     continue;
                 int amountOfCurrentSlot = currentItem.getAmount();
-                items[i][j].removeItem(amountToBeRemoved);
+                inventory[i][j].removeItem(amountToBeRemoved);
                 amountToBeRemoved = Math.max(amountToBeRemoved - amountOfCurrentSlot, 0);
                 if(amountToBeRemoved == 0) return 0;
             }
@@ -48,7 +51,7 @@ public class Inventory {
 
         for (int i = row - 1; i >= 0; i--)
             for (int j = 0; j < col; j++) {
-                InvItem currentItem = items[i][j];
+                InvItem currentItem = inventory[i][j];
                 if(!currentItem.isTypeCompatible(id) || currentItem.getID() != id || currentItem.getAmount() == maxAmount)
                     continue;
                 if(currentItem.isEmpty()) {
@@ -64,7 +67,7 @@ public class Inventory {
     public InvItem isFull(int id) {
         for (int i = row - 1; i >= 0; i--)
             for (int j = 0; j < col; j++) {
-                InvItem invItem = items[i][j];
+                InvItem invItem = inventory[i][j];
                 if(invItem.isEmpty() || (invItem.getID() == id && invItem.getAmount() < ItemManager.getInstance().getItem(id).maxAmount.getValue())) return invItem;
             }
         return null;
@@ -74,7 +77,7 @@ public class Inventory {
         int total = 0;
         for (int i = row - 1; i >= 0; i--)
             for (int j = 0; j < col; j++) {
-                InvItem invItem = items[i][j];
+                InvItem invItem = inventory[i][j];
                 if(invItem.isEmpty() && invItem.getID() == id)
                     total += invItem.getAmount();
             }
@@ -88,7 +91,7 @@ public class Inventory {
     public boolean contains(int id, int amount) {
         outer: for (int i = row - 1; i >= 0; i--)
             for (int j = 0; j < col; j++) {
-                InvItem invItem = items[i][j];
+                InvItem invItem = inventory[i][j];
                 if(invItem.isEmpty() || invItem.getID() != id) continue;
                 amount -= invItem.getAmount();
                 if(amount <= 0) break outer;
@@ -96,11 +99,23 @@ public class Inventory {
         return amount <= 0;
     }
 
-    public InvItem[][] getItems() {
-        return items;
+    public InvItem getInvItem(int i, int j) {
+        return inventory[i][j];
+    }
+
+    public InvItem[][] getInventory() {
+        return inventory;
     }
 
     public String getTitle() {
         return title;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getCol() {
+        return col;
     }
 }

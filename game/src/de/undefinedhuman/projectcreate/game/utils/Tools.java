@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.gui.Gui;
 import de.undefinedhuman.projectcreate.engine.gui.texture.GuiTemplate;
+import de.undefinedhuman.projectcreate.engine.gui.texture.GuiTexture;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
 import de.undefinedhuman.projectcreate.engine.utils.Utils;
@@ -293,11 +294,19 @@ public class Tools extends Utils {
     }
 
     public static PixelConstraint getInventoryConstraint(GuiTemplate template, int size) {
-        return new PixelConstraint(getInventorySize(template, size));
+        return new PixelConstraint(getInventorySize(template.cornerSize, size));
+    }
+
+    public static PixelConstraint getInventoryConstraint(GuiTexture texture, int size) {
+        return new PixelConstraint(getInventorySize(texture.getBaseCornerSize(), size));
     }
 
     public static int getInventorySize(GuiTemplate template, int size) {
-        return template.cornerSize * 2 + size * (Variables.SLOT_SIZE + Variables.SLOT_SPACE) - Variables.SLOT_SPACE;
+        return getInventorySize(template.cornerSize, size);
+    }
+
+    public static int getInventorySize(int cornerSize, int size) {
+        return cornerSize * 2 + size * (Variables.SLOT_SIZE + Variables.SLOT_SPACE) - Variables.SLOT_SPACE;
     }
 
     public static int loop(int currentIndex, int maxLength) {

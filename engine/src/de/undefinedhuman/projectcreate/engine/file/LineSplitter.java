@@ -8,6 +8,8 @@ import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 public class LineSplitter {
 
+    // TODO WRITE FUNCTIONS TO RETURN ONE AND TWO DIMENSIONAL ARRAYS
+
     private int pointer = 0;
     private String[] data;
 

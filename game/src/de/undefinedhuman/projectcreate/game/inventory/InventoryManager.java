@@ -6,10 +6,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.core.crafting.RecipeItem;
 import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
-import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
-import de.undefinedhuman.projectcreate.engine.utils.ds.MultiMap;
-import de.undefinedhuman.projectcreate.game.camera.CameraManager;
-import de.undefinedhuman.projectcreate.game.equip.EquipScreen;
 import de.undefinedhuman.projectcreate.engine.gui.Gui;
 import de.undefinedhuman.projectcreate.engine.gui.GuiManager;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.Axis;
@@ -17,6 +13,11 @@ import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.CenterC
 import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.RelativeConstraint;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.offset.PixelOffset;
+import de.undefinedhuman.projectcreate.engine.utils.ds.MultiMap;
+import de.undefinedhuman.projectcreate.engine.utils.ds.ObjectPool;
+import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
+import de.undefinedhuman.projectcreate.game.camera.CameraManager;
+import de.undefinedhuman.projectcreate.game.equip.EquipScreen;
 import de.undefinedhuman.projectcreate.game.inventory.listener.ItemChangeListener;
 import de.undefinedhuman.projectcreate.game.inventory.player.*;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
@@ -24,7 +25,6 @@ import de.undefinedhuman.projectcreate.game.world.World;
 import de.undefinedhuman.projectcreate.game.world.WorldManager;
 
 import java.util.Collection;
-import java.util.Set;
 
 public class InventoryManager extends Manager {
 
@@ -33,21 +33,22 @@ public class InventoryManager extends Manager {
     private Gui[] slots = new Gui[4];
     private int maxSlot = -1;
 
+    private ObjectPool<ClientInvSlot> clientInvSlotPool;
+
     private MultiMap<Integer, ItemChangeListener> listeners = new MultiMap<>();
 
     private DragAndDrop dragAndDrop;
 
     private InventoryManager() {
+        clientInvSlotPool = new ObjectPool<>(ClientInvSlot::new);
         dragAndDrop = new DragAndDrop(CameraManager.guiCamera);
         GuiManager.getInstance().addGui(Selector.getInstance(), SidePanel.getInstance(), InspectScreen.getInstance(), EquipScreen.getInstance(), PlayerInventory.getInstance());
-        dragAndDrop.addTarget(PlayerInventory.getInstance(), Selector.getInstance(), EquipScreen.getInstance());
+        dragAndDrop.addTarget(PlayerInventory.getInstance());
     }
 
     @Override
     public void init() {
         super.init();
-        addTempItems(Selector.getInstance(), 1, 2);
-        addTempItems(PlayerInventory.getInstance(), ItemManager.getInstance().getItems().keySet());
         Selector.getInstance().setSelected(0);
     }
 
@@ -60,15 +61,6 @@ public class InventoryManager extends Manager {
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         dragAndDrop.update(camera);
         dragAndDrop.render(batch, camera);
-    }
-
-    private void addTempItems(Inventory inventory, int... ids) {
-        for (int id : ids)
-            inventory.addItem(id, ItemManager.getInstance().getItem(id).maxAmount.getValue());
-    }
-
-    private void addTempItems(Inventory inventory, Set<Integer> ids) {
-        for (int id : ids) inventory.addItem(id, ItemManager.getInstance().getItem(id).maxAmount.getValue());
     }
 
     public void addGuiToSlot(Gui gui) {
@@ -123,7 +115,7 @@ public class InventoryManager extends Manager {
 
     public void setGuiVisible(int id, Gui gui) {
         gui.setPosition(new RelativeConstraint(1), new CenterConstraint()).setOffset(new PixelOffset(getWidth(id)), new CenterOffset());
-        gui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        gui.resize();
         gui.setVisible(true);
     }
 
@@ -148,25 +140,27 @@ public class InventoryManager extends Manager {
     }
 
     public synchronized boolean isFull(int id, int amount) {
-        return PlayerInventory.getInstance().isFull(id, amount) && Selector.getInstance().isFull(id, amount);
+        return false;
+        // return PlayerInventory.getInstance().isFull(id, amount) && Selector.getInstance().isFull(id, amount);
     }
 
     public synchronized int addItem(int id, int amount) {
         int i = Selector.getInstance().addItem(id, amount);
-        if (i != 0) i = PlayerInventory.getInstance().addItem(id, i);
+        // if (i != 0) i = PlayerInventory.getInstance().addItem(id, i);
         notifyListeners(id, amount - i);
         return i;
     }
 
     public synchronized int removeItem(int id, int amount) {
         int i = Selector.getInstance().removeItem(id, amount);
-        if (i != 0) i = PlayerInventory.getInstance().removeItem(id, i);
+        //if (i != 0) i = PlayerInventory.getInstance().removeItem(id, i);
         notifyListeners(id, amount - i);
         return i;
     }
 
     public synchronized boolean craftItem(int id, int quantity, Collection<RecipeItem> ingredients) {
-        for(RecipeItem ingredient : ingredients)
+        return false;
+        /*for(RecipeItem ingredient : ingredients)
             if(amountOf(ingredient.getKey()) < ingredient.quantity.getValue())
                 return false;
         if(isFull(id, quantity))
@@ -174,11 +168,12 @@ public class InventoryManager extends Manager {
         for(RecipeItem ingredient : ingredients)
             removeItem(ingredient.getKey(), ingredient.quantity.getValue());
         addItem(id, quantity);
-        return true;
+        return true;*/
     }
 
     public synchronized int amountOf(int id) {
-        return PlayerInventory.getInstance().amountOf(id) + Selector.getInstance().amountOf(id);
+        // return PlayerInventory.getInstance().amountOf(id) + Selector.getInstance().amountOf(id);
+        return 0;
     }
 
     public void addListener(int id, ItemChangeListener listener) {
@@ -250,6 +245,10 @@ public class InventoryManager extends Manager {
                     WorldManager.getInstance().destroyBlock(isLeftMouseButtonClicked ? World.MAIN_LAYER : World.BACK_LAYER);
                 break;
         }
+    }
+
+    public ObjectPool<ClientInvSlot> getClientInvSlotPool() {
+        return clientInvSlotPool;
     }
 
     public static InventoryManager getInstance() {

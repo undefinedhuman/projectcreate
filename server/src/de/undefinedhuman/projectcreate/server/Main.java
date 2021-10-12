@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
 import de.undefinedhuman.projectcreate.engine.gl.HeadlessApplicationAdapter;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 public class Main {
 
@@ -12,6 +13,7 @@ public class Main {
     public static void main(String[] args) {
         HeadlessApplicationConfiguration config = new HeadlessApplicationConfiguration();
         config.updatesPerSecond = 20;
+        Variables.DONT_LOAD_TEXTURES = true;
         new HeadlessApplication(new HeadlessApplicationAdapter() {
             @Override
             public void create() {

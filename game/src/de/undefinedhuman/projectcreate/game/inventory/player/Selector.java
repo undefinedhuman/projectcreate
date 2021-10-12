@@ -3,16 +3,16 @@ package de.undefinedhuman.projectcreate.game.inventory.player;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.core.items.Item;
-import de.undefinedhuman.projectcreate.game.equip.EquipManager;
+import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.engine.gui.texture.GuiTemplate;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.CenterConstraint;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.RelativeConstraint;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.offset.PixelOffset;
+import de.undefinedhuman.projectcreate.game.equip.EquipManager;
 import de.undefinedhuman.projectcreate.game.inventory.InvItem;
 import de.undefinedhuman.projectcreate.game.inventory.Inventory;
 import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
-import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 

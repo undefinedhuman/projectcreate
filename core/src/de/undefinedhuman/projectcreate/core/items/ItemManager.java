@@ -96,7 +96,7 @@ public class ItemManager extends Manager {
         return instance;
     }
 
-    public static Item loadItem(int id) {
+    private static Item loadItem(int id) {
         FileReader reader = new FsFile(Paths.ITEM_PATH, id + "/settings.item", Files.FileType.Internal).getFileReader(true);
         SettingsObject settingsObject = new SettingsObjectFileReader(reader);
         ItemType type;

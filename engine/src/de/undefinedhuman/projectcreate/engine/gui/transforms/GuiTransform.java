@@ -104,7 +104,7 @@ public class GuiTransform {
 
     public float getBaseValue(Axis axis) {
         if (!constraints.containsKey(axis)) return 0;
-        return constraints.get(axis).getValue();
+        return constraints.get(axis).getBaseValue();
     }
 
     // TODO REMOVE THIS FUNCTION AND REPLACE WITH CONSTRAINT
