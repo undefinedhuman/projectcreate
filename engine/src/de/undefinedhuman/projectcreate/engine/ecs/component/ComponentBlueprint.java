@@ -12,6 +12,8 @@ import java.util.Locale;
 
 public abstract class ComponentBlueprint extends SettingsList implements Comparable<ComponentBlueprint> {
 
+    public int blueprintID;
+
     protected ComponentPriority priority = ComponentPriority.LOWEST;
 
     public abstract Component createInstance();
@@ -25,6 +27,11 @@ public abstract class ComponentBlueprint extends SettingsList implements Compara
         writer.writeString("{:" + getName(getClass())).nextLine();
         Utils.saveSettings(writer, this);
         writer.writeString("}").nextLine();
+    }
+
+    public void validate() {
+        for(Setting<?> setting : this.getSettings())
+            setting.validate();
     }
 
     public ComponentPriority getPriority() {

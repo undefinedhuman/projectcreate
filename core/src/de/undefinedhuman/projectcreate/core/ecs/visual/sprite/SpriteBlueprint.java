@@ -6,7 +6,7 @@ import de.undefinedhuman.projectcreate.engine.ecs.component.ComponentPriority;
 
 public class SpriteBlueprint extends ComponentBlueprint {
 
-    private SpritePanel spriteLayers = new SpritePanel("Sprite Layer");
+    public final SpritePanel spriteLayers = new SpritePanel("Sprite Layer");
 
     public SpriteBlueprint() {
         addSettings(spriteLayers);

@@ -9,13 +9,13 @@ import java.util.function.Supplier;
 
 public class AnimationBlueprint extends ComponentBlueprint {
 
-    private DynamicSelectionSetting<String> defaultAnimation = new DynamicSelectionSetting<>("Default Animation", null, new Supplier<String[]>() {
+    private final DynamicSelectionSetting<String> defaultAnimation = new DynamicSelectionSetting<>("Default Animation", new Supplier<String[]>() {
         @Override
         public String[] get() {
             return animations.getValue().keySet().toArray(new String[0]);
         }
     }, value -> value, value -> value);
-    private AnimationPanel animations = new AnimationPanel("Animation");
+    private final AnimationPanel animations = new AnimationPanel("Animation");
 
     public AnimationBlueprint() {
         addSettings(defaultAnimation, animations);

@@ -42,13 +42,13 @@ public class IngredientGui extends Gui implements Poolable {
                 new Gui(GuiTemplate.SLOT)
                         .addChild(
                                 name = (Text) new Text("Unknown")
-                                        .setFont(Font.Normal)
+                                        .setFont(Font.NORMAL)
                                         .setFontSize(10)
                                         .setLineLength(new RelativeConstraint(1f))
                                         .setPosition(new PixelConstraint(Variables.SLOT_SPACE), new RelativeConstraint(0.95f))
                                         .setOffsetY(new RelativeOffset(-1f)),
                                 amount = (Text) new Text("0/0")
-                                        .setFont(Font.Normal)
+                                        .setFont(Font.NORMAL)
                                         .setFontSize(10)
                                         .setPosition(new RelativeConstraint(1f, -Variables.SLOT_SPACE), new RelativeConstraint(0.05f))
                                         .setOffsetX(new RelativeOffset(-1f))

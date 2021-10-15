@@ -3,10 +3,6 @@ package de.undefinedhuman.projectcreate.game.inventory.player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import de.undefinedhuman.projectcreate.engine.gui.GuiManager;
-import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.MouseConstraint;
-import de.undefinedhuman.projectcreate.game.inventory.ClientInvSlot;
-import de.undefinedhuman.projectcreate.game.inventory.InvItem;
 import de.undefinedhuman.projectcreate.game.inventory.InvTarget;
 import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
 import de.undefinedhuman.projectcreate.game.inventory.slot.InvSlot;
@@ -17,17 +13,10 @@ public class DragAndDrop {
 
     private ArrayList<InvTarget> targets;
 
-    private InvSlot lastSlot;
-    private InvItem currentItem;
-
     private boolean half = false, moving = false, isLeft = false, alreadyClicked = false;
 
     public DragAndDrop(OrthographicCamera camera) {
         targets = new ArrayList<>();
-        lastSlot = null;
-        currentItem = new InvItem(0);
-        currentItem.parent = GuiManager.getInstance().screen;
-        currentItem.setPosition(new MouseConstraint(camera), new MouseConstraint(camera));
     }
 
     public void update(OrthographicCamera camera) {
@@ -61,7 +50,7 @@ public class DragAndDrop {
 
             if (moving && ((isLeft && !leftMouse) || (!isLeft && !rightMouse))) {
 
-                ClientInvSlot clickedSlot = null;
+                InvSlot clickedSlot = null;
                 for (InvTarget inventory : targets) if ((clickedSlot = inventory.getClickedSlot(camera)) != null) break;
                 /*if (clickedSlot != null && clickedSlot.isTypeCompatible(currentItem)) {
 
@@ -148,25 +137,26 @@ public class DragAndDrop {
 
     private void cancelMoving() {
 
-        lastSlot.addItem(currentItem);
+        //
+        // lastSlot.addItem(currentItem);
         removeTempItem();
 
     }
 
     private void removeTempItem() {
-        currentItem.setStats(0, 0);
+        //currentItem.setStats(0, 0);
         moving = false;
         half = false;
     }
 
     public void render(SpriteBatch batch, OrthographicCamera camera) {
-        if (moving && (currentItem.getID() != 0 && currentItem.getAmount() != 0)) {
+        /*if (moving && (currentItem.getID() != 0 && currentItem.getAmount() != 0)) {
             currentItem.render(batch, camera);
-        }
+        }*/
     }
 
     public void resize(int width, int height) {
-        currentItem.resize(width, height);
+        //currentItem.resize(width, height);
     }
 
     public void addTarget(InvTarget... targets) {

@@ -25,7 +25,7 @@ public class TestScreen extends ScreenAdapter {
         ClientManager.getInstance().connect();
 
         LoginPacket packet = new LoginPacket();
-        packet.name = "GentleXD " + RANDOM.nextInt(100);
+        packet.name = "undefinedhuman " + RANDOM.nextInt(100);
         ClientManager.getInstance().sendTCP(packet);
 
         Gdx.graphics.setResizable(true);

@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponent;
+import de.undefinedhuman.projectcreate.core.network.packets.SelectorPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.JumpPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementPacket;
 import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
@@ -115,8 +116,9 @@ public class Inputs extends Manager implements InputProcessor {
     public boolean scrolled(float amountX, float amountY) {
         if (InventoryManager.getInstance().isInventoryOpened())
             return false;
-        int selected = (int) (Selector.getInstance().getSelected() + amountY), selectorLength = Selector.getInstance().getInventory()[0].length;
-        Selector.getInstance().setSelected((selectorLength + selected) % selectorLength);
+        int selected = (int) (Selector.getInstance().getCol() + Selector.getInstance().getSelectedIndex() + amountY) % Selector.getInstance().getCol();
+        Selector.getInstance().setSelected(selected);
+        ClientManager.getInstance().sendTCP(SelectorPacket.serialize(Selector.getInstance().getName(), selected));
         return true;
     }
 

@@ -42,6 +42,7 @@ public class Window extends JFrame {
     private Window() {
         FlatDarculaLaf.install();
         SettingsUtils.setCustomUIComponentProperties();
+        Variables.DONT_LOAD_TEXTURES = true;
 
         LwjglAWTCanvas canvas = new LwjglAWTCanvas(new Main());
         canvas.getCanvas().setBounds(25, 300, 480, 345);
@@ -128,9 +129,9 @@ public class Window extends JFrame {
                 Log.showErrorDialog("Error while creating " + name + " editor class instance!", false);
                 continue;
             }
+            editor.init();
             EDITOR_INSTANCES.add(editor);
             editorTabMenu.addTab(name, editor);
-            editor.init();
         }
     }
 

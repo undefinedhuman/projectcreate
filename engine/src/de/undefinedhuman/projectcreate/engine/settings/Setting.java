@@ -56,6 +56,8 @@ public abstract class Setting<T> {
         return this;
     }
 
+    public void validate() {}
+
     protected void delete() { value = null; }
 
     @Override

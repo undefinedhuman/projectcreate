@@ -5,9 +5,10 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
-import de.undefinedhuman.projectcreate.core.ecs.visual.animation.AnimationComponent;
-import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.core.ecs.base.transform.TransformComponent;
+import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponent;
+import de.undefinedhuman.projectcreate.core.ecs.visual.animation.AnimationComponent;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.game.network.ClientManager;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
@@ -16,12 +17,17 @@ public class MovementSystem extends IteratingSystem {
 
     private static final float CONVERGE_MULTIPLIER = 0.05f;
 
+    private static final float LATENCY_OFFSET = 60f/1000f-Variables.SERVER_TICK_RATE/1000f;
+
     public MovementSystem() {
         super(Family.all(TransformComponent.class, MovementComponent.class, AnimationComponent.class).get(), 4);
     }
 
     @Override
     protected void processEntity(Entity entity, float delta) {
+        if(entity.isScheduledForRemoval() || entity.isRemoving())
+            return;
+
         TransformComponent transformComponent = Mappers.TRANSFORM.get(entity);
         MovementComponent movementComponent = Mappers.MOVEMENT.get(entity);
         Vector2 velocity;
@@ -47,7 +53,7 @@ public class MovementSystem extends IteratingSystem {
             movementComponent.movementHistory.add(frame);
             movementComponent.historyLength += delta;
 
-            float latency = Math.max(0.001f, ClientManager.getInstance().getLatency()) + 0.04f; // Math.max(0.001f, getLatency()) * 1000f;
+            float latency = Math.max(0.001f, ClientManager.getInstance().getLatency()) + LATENCY_OFFSET; // Math.max(0.001f, getLatency()) * 1000f;
 
             Vector2 extrapolatedPosition = new Vector2(movementComponent.predictedPosition).mulAdd(frame.velocity, latency * (1f + CONVERGE_MULTIPLIER));
             float t = delta / (latency * (1f + CONVERGE_MULTIPLIER));

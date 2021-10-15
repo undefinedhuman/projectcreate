@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.EntitySystem;
 import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +17,7 @@ public class EntityManager extends Manager {
     private static volatile EntityManager instance;
 
     private HashMap<Long, Entity> entitiesByIDs = new HashMap<>();
+    private ArrayList<Long> entitiesForRemoval = new ArrayList<>();
     private Engine engine;
 
     private EntityManager() {
@@ -24,12 +26,14 @@ public class EntityManager extends Manager {
 
     @Override
     public void update(float delta) {
+        removeEntities();
         engine.update(delta);
     }
 
     @Override
     public void delete() {
         engine.removeAllEntities();
+        entitiesByIDs.clear();
     }
 
     public void addSystems(EntitySystem... systems) {
@@ -46,17 +50,32 @@ public class EntityManager extends Manager {
     }
 
     public void removeEntity(long worldID) {
-        Entity entity = this.entitiesByIDs.remove(worldID);
-        if(entity != null)
-            engine.removeEntity(entity);
+        if(!hasEntity(worldID))
+            return;
+        entitiesForRemoval.add(worldID);
+    }
+
+    public void removeEntities() {
+        for(long worldID : entitiesForRemoval) {
+            Entity entity = this.entitiesByIDs.remove(worldID);
+            if(entity != null) engine.removeEntity(entity);
+        }
     }
 
     public Stream<Map.Entry<Long, Entity>> stream() {
         return entitiesByIDs.entrySet().stream();
     }
 
+    public boolean isRemoving(long worldID) {
+        return entitiesForRemoval.contains(worldID);
+    }
+
     public Entity getEntity(long worldID) {
         return entitiesByIDs.get(worldID);
+    }
+
+    public boolean hasEntity(long worldID) {
+        return entitiesByIDs.containsKey(worldID);
     }
 
     public void addEntityListener(EntityListener listener) {

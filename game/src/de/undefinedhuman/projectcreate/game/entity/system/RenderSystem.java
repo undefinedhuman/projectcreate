@@ -23,6 +23,8 @@ public class RenderSystem extends SortedIteratingSystem {
 
     private SpriteBatch batch;
 
+    private static final int NAME_TEXT_Y_OFFSET = 35;
+
     public RenderSystem() {
         super(Family.all(TransformComponent.class, SpriteComponent.class).get(), new TypeComparator(), 6);
         batch = new SpriteBatch();
@@ -63,8 +65,9 @@ public class RenderSystem extends SortedIteratingSystem {
         NameComponent nameComponent = Mappers.NAME.get(entity);
         if(nameComponent == null)
             return;
-        Vector2 textPosition = Utils.calculateScreenFromWorldSpace(CameraManager.gameCamera, transformComponent.getCenterPosition().add(0, 35));
-        nameComponent.getText().setCurrentPosition((int) textPosition.x - nameComponent.getText().getCurrentValue(Axis.WIDTH)/2, (int) textPosition.y);
+        Vector2 textPosition = Utils.calculateScreenFromWorldSpace(CameraManager.gameCamera, transformComponent.getCenterPosition().add(0, NAME_TEXT_Y_OFFSET));
+        nameComponent.getText().setPosition((int) (textPosition.x - nameComponent.getText().getCurrentValue(Axis.WIDTH)/2f), (int) textPosition.y);
+        nameComponent.getText().resize();
     }
 
     @Override

@@ -1,15 +1,13 @@
 package de.undefinedhuman.projectcreate.editor.types;
 
 import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
-import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.swing.*;
 
 public abstract class Editor extends JPanel {
 
     public Editor() {
-        super(new RelativeLayout().setFill(true));
-        Variables.DONT_LOAD_TEXTURES = true;
+        setLayout(new RelativeLayout().setFill(true));
     }
 
     public void init() {}

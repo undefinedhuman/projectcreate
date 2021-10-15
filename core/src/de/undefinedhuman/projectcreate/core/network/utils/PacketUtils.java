@@ -17,7 +17,7 @@ public class PacketUtils {
             if(!(component instanceof NetworkSerializable))
                 return;
             writer.clear().writeString(component.getClass().getSimpleName());
-            ((NetworkSerializable) component).send(writer);
+            ((NetworkSerializable) component).serialize(writer);
             builder.append(writer.getData()).append("\n");
         });
         return builder.toString();
@@ -43,7 +43,7 @@ public class PacketUtils {
                 continue;
             LineSplitter splitter = componentData.get(component.getClass().getSimpleName());
             if(splitter == null) continue;
-            ((NetworkSerializable) component).receive(splitter);
+            ((NetworkSerializable) component).parse(splitter);
         }
     }
 

@@ -13,7 +13,8 @@ public class Main extends Game {
 
     @Override
     public void create() {
-        if(instance == null) instance = this;
+        if(instance == null)
+            instance = this;
     }
 
     @Override

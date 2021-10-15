@@ -33,8 +33,8 @@ public class ScrollBar extends Gui {
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
-        scrollBarY = getCurrentValue(Axis.Y) + getCornerSize();
-        scrollBarHeight = getCurrentValue(Axis.HEIGHT) - getCornerSize() * 2;
+        scrollBarY = getCurrentValue(Axis.Y) + getScaledCornerSize();
+        scrollBarHeight = getCurrentValue(Axis.HEIGHT) - getScaledCornerSize() * 2;
     }
 
     @Override

@@ -40,7 +40,7 @@ public class CraftingInventory extends Gui {
         setSize(Tools.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 15), Tools.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 10));
         setOffset(new CenterOffset(), new CenterOffset());
         initBackgrounds();
-        setTitle("Crafting", Font.Title, Color.WHITE);
+        setTitle("Crafting", Font.TITLE, Color.WHITE);
     }
 
     @Override

@@ -10,8 +10,8 @@ import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.resources.RessourceUtils;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectFileReader;
-import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 import de.undefinedhuman.projectcreate.engine.utils.Utils;
+import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -55,7 +55,11 @@ public class BlueprintManager extends Manager {
     public boolean loadBlueprints(int... ids) {
         int[] loadedBlueprintIDs = Arrays.stream(ids)
                 .filter(id -> !hasBlueprint(id) && RessourceUtils.existBlueprint(id))
-                .peek(id -> addBlueprint(id, loadBlueprint(id)))
+                .peek(id -> {
+                    Blueprint blueprint = loadBlueprint(id);
+                    addBlueprint(id, blueprint);
+                    blueprint.validate();
+                })
                 .filter(this::hasBlueprint)
                 .toArray();
         int[] failedBlueprintIDs = Arrays.stream(ids).filter(id -> {
@@ -76,21 +80,22 @@ public class BlueprintManager extends Manager {
         return blueprints.containsKey(id);
     }
 
-    @SafeVarargs
-    public final void registerComponentBlueprints(Class<? extends ComponentBlueprint>... componentBlueprintClasses) {
-        this.registerComponentBlueprints(Arrays.stream(componentBlueprintClasses));
-    }
-
     public void registerComponentBlueprints(Stream<Class<? extends ComponentBlueprint>> componentBlueprintClasses) {
         componentBlueprintClasses.forEach(componentBlueprintClass -> this.componentBlueprintClasses.put(ComponentBlueprint.getName(componentBlueprintClass), componentBlueprintClass));
     }
 
-    public Class<? extends ComponentBlueprint> getComponentBlueprintClass(String name) {
-        return componentBlueprintClasses.get(name);
-    }
-
-    public HashMap<String, Class<? extends ComponentBlueprint>> getComponentBlueprintClasses() {
-        return componentBlueprintClasses;
+    public ComponentBlueprint getComponentBlueprint(String name, int blueprintID) {
+        if(!componentBlueprintClasses.containsKey(name))
+            return null;
+        ComponentBlueprint componentBlueprint;
+        try {
+            componentBlueprint = componentBlueprintClasses.get(name).newInstance();
+            componentBlueprint.blueprintID = blueprintID;
+        } catch (InstantiationException | IllegalAccessException ex) {
+            Log.error("Error while creating instance for Component Blueprint: " + name + ", for blueprint ID: " + blueprintID, ex);
+            return null;
+        }
+        return componentBlueprint;
     }
 
     public void removeBlueprints(int... ids) {
@@ -123,6 +128,10 @@ public class BlueprintManager extends Manager {
         return hasBlueprint(0) ? getBlueprint(0) : null;
     }
 
+    public Set<String> getComponentBlueprintClassKeys() {
+        return componentBlueprintClasses.keySet();
+    }
+
     private Blueprint loadBlueprint(int id) {
         FsFile file = new FsFile(Paths.ENTITY_PATH, id + "/settings.entity", Files.FileType.Internal);
         Blueprint blueprint = new Blueprint(id);
@@ -132,13 +141,8 @@ public class BlueprintManager extends Manager {
         for(Map.Entry<String, Object> entry : object.getSettings().entrySet()) {
             if(!(entry.getValue() instanceof SettingsObject) || !componentBlueprintClasses.containsKey(entry.getKey()))
                 continue;
-            ComponentBlueprint componentBlueprint;
-            try {
-                componentBlueprint = componentBlueprintClasses.get(entry.getKey()).newInstance();
-            } catch (InstantiationException | IllegalAccessException ex) {
-                Log.error("Error while creating instance for Component Blueprint: " + entry.getKey(), ex);
-                continue;
-            }
+            ComponentBlueprint componentBlueprint = getComponentBlueprint(entry.getKey(), id);
+            if(componentBlueprint == null) continue;
             componentBlueprint.load(reader.parent(), (SettingsObject) entry.getValue());
             blueprint.addComponentBlueprint(componentBlueprint);
         }

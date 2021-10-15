@@ -29,7 +29,7 @@ public class ServerListener extends Listener {
             return;
         PlayerConnection playerConnection = (PlayerConnection) connection;
         if(playerConnection.worldID == -1) return;
-        EntityManager.getInstance().removeEntity(playerConnection.worldID);
         ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), RemoveEntityPacket.serialize(playerConnection.worldID));
+        EntityManager.getInstance().removeEntity(playerConnection.worldID);
     }
 }

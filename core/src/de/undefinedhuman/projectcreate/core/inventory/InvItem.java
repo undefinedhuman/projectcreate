@@ -104,15 +104,11 @@ public class InvItem {
         listeners.remove(listener);
     }
 
-    private void updateItem() {
-        updateItem(id, amount);
-    }
-
     private void updateItem(int id, int amount) {
         if(id != 0 && !isTypeCompatible(id))
             return;
         this.id = id;
         this.amount = Utils.clamp(amount, 0, ItemManager.getInstance().getItem(id).maxAmount.getValue());
-        listeners.forEach(listener -> listener.changed(id, amount));
+        listeners.forEach(listener -> listener.changed(this.id, this.amount));
     }
 }

@@ -25,10 +25,10 @@ public class InspectScreen extends Gui {
         previewImage = new Gui(item.previewTexture.getValue());
         previewImage.set(new CenterConstraint(), new RelativeConstraint(0.85f), new PixelConstraint(32), new PixelConstraint(32));
         addChild(previewImage);
-        nameText = new Text(item.name).setFont(Font.Title).setLineLength(new RelativeConstraint(0.75f));
+        nameText = new Text(item.name).setFont(Font.TITLE).setLineLength(new RelativeConstraint(0.75f));
         nameText.setColor(Color.RED);
         nameText.setPosition(new CenterConstraint(), new RelativeConstraint(0.75f));
-        this.descriptionText = new Text(item.desc).setFont(Font.Title).setLineLength(new RelativeConstraint(0.8f));
+        this.descriptionText = new Text(item.desc).setFont(Font.TITLE).setLineLength(new RelativeConstraint(0.8f));
         descriptionText.setPosition(new CenterConstraint(), new RelativeConstraint(0.675f));
         addChild(nameText, descriptionText);
         setVisible(false);

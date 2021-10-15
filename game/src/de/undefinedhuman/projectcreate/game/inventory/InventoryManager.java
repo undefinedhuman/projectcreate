@@ -20,6 +20,7 @@ import de.undefinedhuman.projectcreate.game.camera.CameraManager;
 import de.undefinedhuman.projectcreate.game.equip.EquipScreen;
 import de.undefinedhuman.projectcreate.game.inventory.listener.ItemChangeListener;
 import de.undefinedhuman.projectcreate.game.inventory.player.*;
+import de.undefinedhuman.projectcreate.game.inventory.slot.InvSlot;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 import de.undefinedhuman.projectcreate.game.world.World;
 import de.undefinedhuman.projectcreate.game.world.WorldManager;
@@ -30,17 +31,19 @@ public class InventoryManager extends Manager {
 
     private static volatile InventoryManager instance;
 
+    public static final String SELECTOR_INVENTORY_NAME = "Selector";
+    public static final String INVENTORY_NAME = "Inventory";
+
     private Gui[] slots = new Gui[4];
     private int maxSlot = -1;
 
-    private ObjectPool<ClientInvSlot> clientInvSlotPool;
+    private ObjectPool<InvSlot> clientInvSlotPool = new ObjectPool<>(InvSlot::new);
 
     private MultiMap<Integer, ItemChangeListener> listeners = new MultiMap<>();
 
     private DragAndDrop dragAndDrop;
 
     private InventoryManager() {
-        clientInvSlotPool = new ObjectPool<>(ClientInvSlot::new);
         dragAndDrop = new DragAndDrop(CameraManager.guiCamera);
         GuiManager.getInstance().addGui(Selector.getInstance(), SidePanel.getInstance(), InspectScreen.getInstance(), EquipScreen.getInstance(), PlayerInventory.getInstance());
         dragAndDrop.addTarget(PlayerInventory.getInstance());
@@ -145,17 +148,15 @@ public class InventoryManager extends Manager {
     }
 
     public synchronized int addItem(int id, int amount) {
-        int i = Selector.getInstance().addItem(id, amount);
         // if (i != 0) i = PlayerInventory.getInstance().addItem(id, i);
-        notifyListeners(id, amount - i);
-        return i;
+        notifyListeners(id, 0);
+        return 0;
     }
 
     public synchronized int removeItem(int id, int amount) {
-        int i = Selector.getInstance().removeItem(id, amount);
         //if (i != 0) i = PlayerInventory.getInstance().removeItem(id, i);
-        notifyListeners(id, amount - i);
-        return i;
+        notifyListeners(id, 0);
+        return 0;
     }
 
     public synchronized boolean craftItem(int id, int quantity, Collection<RecipeItem> ingredients) {
@@ -214,7 +215,7 @@ public class InventoryManager extends Manager {
                 openGui(PlayerInventory.getInstance());
                 break;
             case 1:
-                openGui(EquipScreen.getInstance());
+                // openGui(EquipScreen.getInstance());
                 break;
             case 2:
             case 3:
@@ -247,7 +248,7 @@ public class InventoryManager extends Manager {
         }
     }
 
-    public ObjectPool<ClientInvSlot> getClientInvSlotPool() {
+    public ObjectPool<InvSlot> getClientInvSlotPool() {
         return clientInvSlotPool;
     }
 

@@ -52,12 +52,12 @@ public class Transform implements NetworkSerializable {
     public float getY() { return position.y; }
 
     @Override
-    public void send(LineWriter writer) {
+    public void serialize(LineWriter writer) {
         writer.writeVector2(position);
     }
 
     @Override
-    public void receive(LineSplitter splitter) {
+    public void parse(LineSplitter splitter) {
         position = splitter.getNextVector2();
     }
 

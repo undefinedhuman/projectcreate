@@ -1,22 +1,20 @@
 package de.undefinedhuman.projectcreate.core.ecs;
 
-import de.undefinedhuman.projectcreate.core.ecs.inventory.InventoryBlueprint;
-import de.undefinedhuman.projectcreate.core.ecs.visual.animation.AnimationBlueprint;
-import de.undefinedhuman.projectcreate.core.ecs.collision.CollisionBlueprint;
-import de.undefinedhuman.projectcreate.core.ecs.player.combat.CombatBlueprint;
-import de.undefinedhuman.projectcreate.core.ecs.player.equip.EquipBlueprint;
-import de.undefinedhuman.projectcreate.core.ecs.stats.food.FoodBlueprint;
-import de.undefinedhuman.projectcreate.core.ecs.stats.health.HealthBlueprint;
-import de.undefinedhuman.projectcreate.core.ecs.interaction.InteractionBlueprint;
-import de.undefinedhuman.projectcreate.core.ecs.stats.mana.ManaBlueprint;
-import de.undefinedhuman.projectcreate.core.ecs.mouse.MouseBlueprint;
-import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementBlueprint;
-import de.undefinedhuman.projectcreate.core.ecs.stats.name.NameBlueprint;
-import de.undefinedhuman.projectcreate.core.ecs.player.rightarm.RightarmBlueprint;
-import de.undefinedhuman.projectcreate.core.ecs.player.shoulder.ShoulderBlueprint;
-import de.undefinedhuman.projectcreate.core.ecs.visual.sprite.SpriteBlueprint;
 import de.undefinedhuman.projectcreate.core.ecs.base.transform.TransformBlueprint;
 import de.undefinedhuman.projectcreate.core.ecs.base.type.TypeBlueprint;
+import de.undefinedhuman.projectcreate.core.ecs.collision.CollisionBlueprint;
+import de.undefinedhuman.projectcreate.core.ecs.interaction.InteractionBlueprint;
+import de.undefinedhuman.projectcreate.core.ecs.inventory.InventoryBlueprint;
+import de.undefinedhuman.projectcreate.core.ecs.mouse.MouseBlueprint;
+import de.undefinedhuman.projectcreate.core.ecs.player.combat.CombatBlueprint;
+import de.undefinedhuman.projectcreate.core.ecs.player.equip.EquipBlueprint;
+import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementBlueprint;
+import de.undefinedhuman.projectcreate.core.ecs.stats.food.FoodBlueprint;
+import de.undefinedhuman.projectcreate.core.ecs.stats.health.HealthBlueprint;
+import de.undefinedhuman.projectcreate.core.ecs.stats.mana.ManaBlueprint;
+import de.undefinedhuman.projectcreate.core.ecs.stats.name.NameBlueprint;
+import de.undefinedhuman.projectcreate.core.ecs.visual.animation.AnimationBlueprint;
+import de.undefinedhuman.projectcreate.core.ecs.visual.sprite.SpriteBlueprint;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.ecs.component.ComponentBlueprint;
 
@@ -36,8 +34,6 @@ public class ComponentTypes {
             ManaBlueprint.class,
             MovementBlueprint.class,
             NameBlueprint.class,
-            RightarmBlueprint.class,
-            ShoulderBlueprint.class,
             SpriteBlueprint.class,
             TransformBlueprint.class,
             TypeBlueprint.class,
@@ -49,7 +45,7 @@ public class ComponentTypes {
     public static void registerComponentTypes(BlueprintManager blueprintManager, Class<? extends ComponentBlueprint>... except) {
         List<Class<? extends ComponentBlueprint>> exceptList = Arrays.asList(except);
         blueprintManager.registerComponentBlueprints(
-                Arrays.stream(COMPONENT_BLUEPRINT_CLASSES).filter(aClass -> !exceptList.contains(aClass))
+                Arrays.stream(COMPONENT_BLUEPRINT_CLASSES).filter(componentBlueprintClass -> !exceptList.contains(componentBlueprintClass))
         );
     }
 

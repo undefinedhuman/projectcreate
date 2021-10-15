@@ -1,10 +1,8 @@
 package de.undefinedhuman.projectcreate.game.network;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Listener;
-import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.network.Packet;
 import de.undefinedhuman.projectcreate.core.network.packets.MousePacket;
 import de.undefinedhuman.projectcreate.core.network.utils.NetworkConstants;
@@ -42,11 +40,7 @@ public class ClientManager extends Manager {
 
         timers.addTimers(
                 new Timer(0.2f, client::updateReturnTripTime),
-                new Timer(0.03f, () -> {
-                    if(GameManager.getInstance().player == null) return;
-                    Vector2 mousePosition = Mappers.MOUSE.get(GameManager.getInstance().player).mousePosition;
-                    client.sendUDP(MousePacket.serialize(mousePosition));
-                })
+                new Timer(0.03f, () -> client.sendUDP(MousePacket.serialize(GameManager.getInstance().player)))
         );
 
     }

@@ -1,14 +1,12 @@
 package de.undefinedhuman.projectcreate.game.equip;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.core.items.ItemType;
-import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.gui.Gui;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.CenterConstraint;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.Constraint;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.offset.CenterOffset;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.game.inventory.slot.InvSlot;
 
 public abstract class EquipSlot extends InvSlot {
@@ -16,7 +14,7 @@ public abstract class EquipSlot extends InvSlot {
     private Gui previewGui;
 
     public EquipSlot(Constraint x, Constraint y, ItemType equipType, String previewTexture) {
-        super(x, y, equipType);
+        super();
         previewGui = (Gui) new Gui(previewTexture)
                 .setAlpha(0.5f)
                 .set(new CenterConstraint(), new CenterConstraint(), new PixelConstraint(Variables.ITEM_SIZE), new PixelConstraint(Variables.ITEM_SIZE))
@@ -42,12 +40,12 @@ public abstract class EquipSlot extends InvSlot {
         previewGui.update(delta);
     }
 
-    @Override
+    /*@Override
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         super.render(batch, camera);
         if(invItem.getAmount() == -1)
             previewGui.render(batch, camera);
-    }
+    }*/
 
     @Override
     public void delete() {
@@ -55,7 +53,7 @@ public abstract class EquipSlot extends InvSlot {
         previewGui.delete();
     }
 
-    @Override
+    /*@Override
     public void setInvItem(int id, int amount) {
         super.setInvItem(id, amount);
         equip();
@@ -65,7 +63,7 @@ public abstract class EquipSlot extends InvSlot {
     public void deleteItem() {
         unEquip();
         super.deleteItem();
-    }
+    }*/
 
     public abstract void equip();
 

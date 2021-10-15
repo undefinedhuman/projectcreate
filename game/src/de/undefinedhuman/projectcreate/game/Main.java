@@ -20,9 +20,9 @@ import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessageDecorators
 import de.undefinedhuman.projectcreate.engine.resources.font.FontManager;
 import de.undefinedhuman.projectcreate.engine.resources.sound.SoundManager;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.manager.ManagerList;
 import de.undefinedhuman.projectcreate.engine.utils.timer.Timer;
-import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.game.config.GameConfig;
 import de.undefinedhuman.projectcreate.game.entity.system.*;
 import de.undefinedhuman.projectcreate.game.network.ClientManager;
@@ -56,8 +56,8 @@ public class Main extends Game {
                 SoundManager.getInstance(),
                 FontManager.getInstance(),
                 Inputs.getInstance(),
-                GuiManager.getInstance(),
                 GuiTextureManager.getInstance(),
+                GuiManager.getInstance(),
                 BlueprintManager.getInstance(),
                 EntityManager.getInstance(),
                 ItemManager.getInstance(),

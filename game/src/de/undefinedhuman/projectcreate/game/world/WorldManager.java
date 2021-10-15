@@ -2,17 +2,18 @@ package de.undefinedhuman.projectcreate.game.world;
 
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.core.ecs.base.transform.TransformComponent;
+import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.core.items.blocks.Block;
 import de.undefinedhuman.projectcreate.core.items.blocks.PlacementLayer;
 import de.undefinedhuman.projectcreate.core.items.tools.Pickaxe;
+import de.undefinedhuman.projectcreate.engine.utils.Mouse;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 import de.undefinedhuman.projectcreate.game.camera.CameraManager;
 import de.undefinedhuman.projectcreate.game.inventory.player.Selector;
 import de.undefinedhuman.projectcreate.game.item.drop.DropItemManager;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
-import de.undefinedhuman.projectcreate.engine.utils.Mouse;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 
 public class WorldManager {
@@ -46,12 +47,13 @@ public class WorldManager {
 
     private void updateDestroyVariables(float delta) {
         if (canDestroy) return;
-        if (!(Selector.getInstance().getSelectedItem() instanceof Pickaxe)) {
+        Item item = ItemManager.getInstance().getItem(Selector.getInstance().getSelectedItemID());
+        if (!(item instanceof Pickaxe)) {
             setDestroyVariables(-1);
             return;
         }
 
-        Pickaxe pickaxe = (Pickaxe) Selector.getInstance().getSelectedItem();
+        Pickaxe pickaxe = (Pickaxe) item;
         if (oldPickaxeID != pickaxe.id.getValue()) {
             setDestroyVariables(oldPickaxeID);
             return;
@@ -62,7 +64,7 @@ public class WorldManager {
 
     public void placeBlock(byte worldLayer) {
         if (!canPlace) return;
-        short id = Selector.getInstance().getSelectedItemID();
+        int id = Selector.getInstance().getSelectedItemID();
         Block block = (Block) ItemManager.getInstance().getItem(id);
         Vector2i blockPos = Tools.convertToBlockPos(Tools.getWorldPos(CameraManager.gameCamera, Mouse.getMousePosition()));
 
@@ -92,14 +94,14 @@ public class WorldManager {
         canPlace = false;
         if(!send) return;
         //ClientManager.getInstance().sendTCP(PacketUtils.createBlockPacket(x, y, worldLayer, blockID));
-        Selector.getInstance().getSelectedInvItem().removeItem();
+        // Selector.getInstance().getSelectedInvItem().removeItem();
     }
 
     public void destroyBlock(byte worldLayer) {
 
         if (!canDestroy) return;
 
-        Pickaxe pickaxe = (Pickaxe) Selector.getInstance().getSelectedItem();
+        Pickaxe pickaxe = (Pickaxe) ItemManager.getInstance().getItem(Selector.getInstance().getSelectedItemID());
         Vector2i blockPos = Tools.convertToBlockPos(Tools.getWorldPos(CameraManager.gameCamera, Mouse.getMousePosition())), playerCenter = Tools.convertToBlockPos(new Vector2().add(GameManager.getInstance().player.getComponent(TransformComponent.class).getPosition()).add(GameManager.getInstance().player.getComponent(TransformComponent.class).getCenter()));
         Block currentBlock = (Block) ItemManager.getInstance().getItem(World.instance.getBlock(blockPos.x, blockPos.y, World.MAIN_LAYER));
 

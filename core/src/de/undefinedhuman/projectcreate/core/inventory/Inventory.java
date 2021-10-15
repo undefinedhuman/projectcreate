@@ -1,16 +1,15 @@
 package de.undefinedhuman.projectcreate.core.inventory;
 
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
+import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
+import de.undefinedhuman.projectcreate.engine.file.LineWriter;
+import de.undefinedhuman.projectcreate.engine.network.NetworkSerializable;
 
-public class Inventory {
+public class Inventory implements NetworkSerializable {
 
     protected InvItem[][] inventory;
     private int row, col;
     private String title;
-
-    public Inventory(int row, int col) {
-        this(row, col, "");
-    }
 
     public Inventory(int row, int col, String title) {
         inventory = new InvItem[this.row = row][this.col = col];
@@ -117,5 +116,21 @@ public class Inventory {
 
     public int getCol() {
         return col;
+    }
+
+    @Override
+    public void serialize(LineWriter writer) {
+        writer.writeInt(row).writeInt(col);
+        for(int i = 0; i < row; i++)
+            for(int j = 0; j < col; j++)
+                writer.writeInt(inventory[i][j].getID()).writeInt(inventory[i][j].getAmount());
+    }
+
+    @Override
+    public void parse(LineSplitter splitter) {
+        int row = splitter.getNextInt(), col = splitter.getNextInt();
+        for(int i = 0; i < row; i++)
+            for(int j = 0; j < col; j++)
+                inventory[i][j].setItem(splitter.getNextInt(), splitter.getNextInt());
     }
 }

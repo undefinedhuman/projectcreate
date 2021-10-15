@@ -24,8 +24,8 @@ public class EquipManager {
         SpriteComponent spriteComponent = entity.getComponent(SpriteComponent.class);
         EquipComponent equipComponent = entity.getComponent(EquipComponent.class);
         Item item = ItemManager.getInstance().getItem(id);
-        equipComponent.setItemID(0, id);
         setSpriteData(spriteComponent, armor ? Tools.capitalizeFirstLetter(item.type.name()) : "Item", item.useIconAsHandTexture.getValue() ? item.iconTexture.getValue() : item.itemTexture.getValue(), item.useIconAsHandTexture.getValue() ? new Vector2(16, 16) : new Vector2(128, 64), true);
+        // TODO SWAP TO INTERFACE SO -> ARMOR AND STUFF GETS A EQUIPABLE_INTERFACE (OR OTHER NAME) -> WHICH DEFINEES METHOD GET_INVISIBLE_SPRITES TO TURN OFF -> AND THEN OTHER ITEMS CAN ALSO IMPLEMENT THAT INTERFACE
         if (armor) setVisible(spriteComponent, false, ((Armor) item).inVisibleSprites.getValue());
         else setSpriteData(spriteComponent, "Item Hitbox", null, new Vector2(0, 0), false);
     }
@@ -53,22 +53,6 @@ public class EquipManager {
         //equipComponent.setItemID(armor ? getItemIndex(item.type) : 0, -1);
         setVisible(spriteComponent, false, armor ? Tools.capitalizeFirstLetter(item.type.name()) : "Item");
         if (armor) setVisible(spriteComponent, true, ((Armor) item).inVisibleSprites.getValue());
-    }
-
-    public void checkEquip(Entity entity) {
-
-        EquipComponent equipComponent;
-
-        if ((equipComponent = entity.getComponent(EquipComponent.class)) != null) {
-
-            for (int i = 0; i < equipComponent.itemIDs.length; i++) {
-                int id = equipComponent.itemIDs[i];
-                if (id == -1) unEquipItem(entity, id, i != 0);
-                else equipItem(entity, id, i != 0);
-            }
-
-        }
-
     }
 
     public static EquipManager getInstance() {

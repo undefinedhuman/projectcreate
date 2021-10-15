@@ -13,10 +13,8 @@ import java.util.Collections;
 
 public class GuiTexture {
 
-    public boolean remove = false;
-
-    private GuiTemplate template = null;
-    private int cornerSize = 0, usages = 1;
+    public GuiTemplate template = null;
+    private int cornerSize = 0;
     private Color color = Color.WHITE;
     private ArrayList<String> textureNames = new ArrayList<>();
     private Texture internalTexture;
@@ -84,16 +82,6 @@ public class GuiTexture {
             TextureManager.getInstance().removeTextures(textureName);
         deleteInternalTexture();
         textureNames.clear();
-    }
-
-    public void add() {
-        usages++;
-    }
-
-    public void remove() {
-        usages--;
-        if (usages <= 0)
-            remove = true;
     }
 
     public void setColor(Color color) {

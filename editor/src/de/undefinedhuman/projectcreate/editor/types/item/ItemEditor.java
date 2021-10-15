@@ -28,7 +28,6 @@ public class ItemEditor extends Editor {
 
     public ItemEditor() {
         super();
-
         ItemManager.getInstance().loadItems(
                 Arrays.stream(new FsFile(Paths.ITEM_PATH, Files.FileType.Internal).list(File::isDirectory))
                         .filter(fileHandle -> Utils.isInteger(fileHandle.name()) != null)
@@ -47,6 +46,7 @@ public class ItemEditor extends Editor {
 
     @Override
     public void init() {
+        super.init();
         itemSelectionPanel.init();
     }
 

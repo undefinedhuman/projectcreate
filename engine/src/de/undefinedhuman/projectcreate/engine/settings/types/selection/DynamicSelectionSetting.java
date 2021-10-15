@@ -20,8 +20,8 @@ public class DynamicSelectionSetting<T> extends BaseSetting<T> {
     private JComboBox<T> selection;
     private Supplier<T[]> getValues;
 
-    public DynamicSelectionSetting(String key, T defaultValue, Supplier<T[]> getValues, Parser<T> parser, Serializer<T> serializer) {
-        super(key, defaultValue, parser, serializer);
+    public DynamicSelectionSetting(String key, Supplier<T[]> getValues, Parser<T> parser, Serializer<T> serializer) {
+        super(key, null, parser, serializer);
         this.getValues = getValues;
     }
 
@@ -63,6 +63,10 @@ public class DynamicSelectionSetting<T> extends BaseSetting<T> {
     @Override
     protected void loadValue(FileHandle parentDir, Object value) {
         super.loadValue(parentDir, value);
+    }
+
+    @Override
+    public void validate() {
         T[] values = getValues.get();
         if(Utils.hasValue(values, getValue()) || values.length == 0)
             return;

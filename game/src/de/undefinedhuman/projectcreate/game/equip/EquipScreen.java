@@ -25,7 +25,7 @@ public class EquipScreen extends Gui {
     private EquipScreen() {
         super(GuiTemplate.SMALL_PANEL);
         setSize(Tools.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 5), Tools.getInventoryConstraint(GuiTemplate.SMALL_PANEL, 10));
-        setTitle("Character", Font.Title, Color.WHITE);
+        setTitle("Character", Font.TITLE, Color.WHITE);
 
         addChild(new Gui("gui/preview/equip/Human-Preview.png").set(new CenterConstraint(), new CenterConstraint(), new PixelConstraint(64), new PixelConstraint(128)).setOffset(new CenterOffset(), new PixelOffset(-48)));
 

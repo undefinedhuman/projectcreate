@@ -12,24 +12,29 @@ public class GuiTextureManager extends Manager {
 
     private static volatile GuiTextureManager instance;
 
-    private ArrayList<Tuple<String, Vector2i>> toBeRemoved = new ArrayList<>();
-    private Tuple<String, Vector2i> tempKey = new Tuple<>("", new Vector2i());
+    private final Tuple<String, Vector2i> TEMP_KEY = new Tuple<>("", new Vector2i());
     private HashMap<Tuple<String, Vector2i>, GuiTexture> guiTextures = new HashMap<>();
+    private ArrayList<Tuple<String, Vector2i>> toBeRemoved = new ArrayList<>();
+    private boolean resize = false;
 
     private GuiTextureManager() { }
 
     @Override
     public void resize(int width, int height) {
-        for(Tuple<String, Vector2i> key : guiTextures.keySet()) {
-            GuiTexture texture = guiTextures.get(key);
-            if(!texture.remove)
-                continue;
-            texture.delete();
-            toBeRemoved.add(key);
-        }
-        for(Tuple<String, Vector2i> key : toBeRemoved)
+        toBeRemoved.addAll(guiTextures.keySet());
+        resize = true;
+    }
+
+    @Override
+    public void update(float delta) {
+        if(!resize)
+            return;
+        for(Tuple<String, Vector2i> key : toBeRemoved) {
+            guiTextures.get(key).delete();
             guiTextures.remove(key);
+        }
         toBeRemoved.clear();
+        resize = false;
     }
 
     @Override
@@ -40,52 +45,46 @@ public class GuiTextureManager extends Manager {
         toBeRemoved.clear();
     }
 
-    public void addGuiTexture(String textureName, int width, int height) {
+    public GuiTextureManager addGuiTexture(String textureName, int width, int height) {
         if(hasGuiTexture(textureName, width, height)) {
-            guiTextures.get(tempKey).add();
-            return;
+            toBeRemoved.remove(TEMP_KEY);
+            return this;
         }
         GuiTexture texture = new GuiTexture(textureName).init();
         texture.resize(width, height, GuiManager.GUI_SCALE);
         guiTextures.put(new Tuple<>(textureName, new Vector2i(width, height)), texture);
+        return this;
     }
 
-    public void addGuiTexture(GuiTemplate template, int width, int height) {
+    public GuiTextureManager addGuiTexture(GuiTemplate template, int width, int height) {
         if(hasGuiTexture(template.templateName, width, height)) {
-            guiTextures.get(tempKey).add();
-            return;
+            toBeRemoved.remove(TEMP_KEY);
+            return this;
         }
         GuiTexture texture = new GuiTexture(template).init();
         texture.resize(width, height, GuiManager.GUI_SCALE);
         guiTextures.put(new Tuple<>(template.templateName, new Vector2i(width, height)), texture);
+        return this;
     }
 
     public GuiTexture getGuiTexture(String textureName, int width, int height) {
         if(hasGuiTexture(textureName, width, height))
-            return guiTextures.get(tempKey);
+            return guiTextures.get(TEMP_KEY);
         else return null;
     }
 
     public GuiTexture getGuiTexture(GuiTemplate template, int width, int height) {
-        if(hasGuiTexture(template.templateName, width, height))
-            return guiTextures.get(tempKey);
-        else return null;
-    }
-
-    public void removeGuiTexture(GuiTemplate template, int width, int height) {
-        if(!hasGuiTexture(template.templateName, width, height))
-            return;
-        guiTextures.get(tempKey).remove();
+        return this.getGuiTexture(template.templateName, width, height);
     }
 
     public boolean hasGuiTexture(String textureName, int width, int height) {
         setKey(textureName, width, height);
-        return guiTextures.containsKey(tempKey);
+        return guiTextures.containsKey(TEMP_KEY);
     }
 
     private void setKey(String textureName, int width, int height) {
-        this.tempKey.setT(textureName);
-        this.tempKey.getU().set(width, height);
+        this.TEMP_KEY.setT(textureName);
+        this.TEMP_KEY.getU().set(width, height);
     }
 
     public static GuiTextureManager getInstance() {

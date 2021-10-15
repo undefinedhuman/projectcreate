@@ -12,7 +12,7 @@ public class Main {
 
     public static void main(String[] args) {
         HeadlessApplicationConfiguration config = new HeadlessApplicationConfiguration();
-        config.updatesPerSecond = 20;
+        config.updatesPerSecond = Variables.SERVER_TICK_RATE;
         Variables.DONT_LOAD_TEXTURES = true;
         new HeadlessApplication(new HeadlessApplicationAdapter() {
             @Override

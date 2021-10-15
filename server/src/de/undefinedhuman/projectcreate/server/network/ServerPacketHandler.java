@@ -12,6 +12,7 @@ import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.core.network.PacketHandler;
 import de.undefinedhuman.projectcreate.core.network.packets.LoginPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.MousePacket;
+import de.undefinedhuman.projectcreate.core.network.packets.SelectorPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.CreateEntityPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.ComponentPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.JumpPacket;
@@ -33,16 +34,23 @@ public class ServerPacketHandler implements PacketHandler {
         NameComponent nameComponent = Mappers.NAME.get(player);
         if(nameComponent != null)
             nameComponent.setName(packet.name);
-        ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), CreateEntityPacket.serialize(player));
         // TEMP
         InventoryComponent inventoryComponent = Mappers.INVENTORY.get(player);
         inventoryComponent.getInventory("Inventory").addItem(1, Integer.parseInt(packet.name.split(" ")[1]));
         inventoryComponent.getInventory("Inventory").addItem(2, ItemManager.getInstance().getItem(2).maxAmount.getValue());
+
+        inventoryComponent.getInventory("Selector").addItem(1, ItemManager.getInstance().getItem(1).maxAmount.getValue());
+        inventoryComponent.getInventory("Selector").addItem(2, ItemManager.getInstance().getItem(2).maxAmount.getValue());
         // TEMP END
         packet.worldID = worldID;
         packet.componentData = PacketUtils.createComponentData(player.getComponents());
         connection.sendTCP(packet);
-        EntityManager.getInstance().stream().map(Map.Entry::getValue).forEach(entity -> connection.sendTCP(CreateEntityPacket.serialize(entity)));
+        ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), CreateEntityPacket.serialize(player));
+        EntityManager.getInstance().stream().map(Map.Entry::getValue).forEach(entity -> {
+            if(EntityManager.getInstance().isRemoving(Mappers.ID.get(entity).getWorldID()) || entity.isRemoving() || entity.isScheduledForRemoval())
+                return;
+            connection.sendTCP(CreateEntityPacket.serialize(entity));
+        });
         EntityManager.getInstance().addEntity(worldID, player);
         ((PlayerConnection) connection).worldID = worldID;
     }
@@ -57,11 +65,14 @@ public class ServerPacketHandler implements PacketHandler {
 
     @Override
     public void handle(Connection connection, MovementPacket packet) {
-        Entity entity = EntityManager.getInstance().getEntity(packet.worldID);
+        long worldID = ((PlayerConnection) connection).worldID;
+        Entity entity = EntityManager.getInstance().getEntity(worldID);
         if(entity == null || entity.isScheduledForRemoval() || entity.isRemoving()) return;
         ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), packet);
         long packetReceivedTime = System.nanoTime();
         ServerManager.getInstance().COMMAND_CACHE.add(() -> {
+            if(!EntityManager.getInstance().hasEntity(worldID) || !connection.isConnected())
+                return;
             float difference = (System.nanoTime() - packetReceivedTime) * 0.000000001f;
             float latency = connection.getReturnTripTime() * 0.0005f;
             float delta = difference + latency;
@@ -86,6 +97,8 @@ public class ServerPacketHandler implements PacketHandler {
         ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), packet);
         long packetReceivedTime = System.nanoTime();
         ServerManager.getInstance().COMMAND_CACHE.add(() -> {
+            if(!EntityManager.getInstance().hasEntity(playerConnection.worldID) || !connection.isConnected())
+                return;
             JumpPacket.parse(entity, packet);
             float difference = (System.nanoTime() - packetReceivedTime) * 0.000000001f;
             float latency = connection.getReturnTripTime() * 0.0005f;
@@ -100,10 +113,20 @@ public class ServerPacketHandler implements PacketHandler {
     @Override
     public void handle(Connection connection, MousePacket packet) {
         PlayerConnection playerConnection = (PlayerConnection) connection;
-        Entity entity = EntityManager.getInstance().getEntity(((PlayerConnection) connection).worldID);
+        Entity entity = EntityManager.getInstance().getEntity(playerConnection.worldID);
         if(entity == null) return;
         packet.worldID = playerConnection.worldID;
         ServerManager.getInstance().sendToAllExceptUDP(connection.getID(), packet);
         MousePacket.parse(entity, packet);
+    }
+
+    @Override
+    public void handle(Connection connection, SelectorPacket packet) {
+        PlayerConnection playerConnection = (PlayerConnection) connection;
+        Entity entity = EntityManager.getInstance().getEntity(playerConnection.worldID);
+        if(entity == null) return;
+        packet.worldID = playerConnection.worldID;
+        ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), packet);
+        SelectorPacket.parse(entity, packet);
     }
 }

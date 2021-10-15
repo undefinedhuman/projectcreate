@@ -91,6 +91,12 @@ public class GuiTransform {
         return constraints.get(axis);
     }
 
+    public GuiTransform setPosition(float x, float y) {
+        constraints.get(Axis.X).setValue(x);
+        constraints.get(Axis.Y).setValue(y);
+        return this;
+    }
+
     public GuiTransform setSize(float width, float height) {
         constraints.get(Axis.WIDTH).setValue(width);
         constraints.get(Axis.HEIGHT).setValue(height);
@@ -105,14 +111,6 @@ public class GuiTransform {
     public float getBaseValue(Axis axis) {
         if (!constraints.containsKey(axis)) return 0;
         return constraints.get(axis).getBaseValue();
-    }
-
-    // TODO REMOVE THIS FUNCTION AND REPLACE WITH CONSTRAINT
-
-    public GuiTransform setCurrentPosition(int x, int y) {
-        currentValues[Axis.X.ordinal()] = x;
-        currentValues[Axis.Y.ordinal()] = y;
-        return this;
     }
 
     public boolean isClicked(OrthographicCamera camera) {
@@ -158,7 +156,7 @@ public class GuiTransform {
         this.constraints.put(axis, constraint.setAxis(axis).setGui(this));
     }
 
-    public int getCornerSize() {
+    public int getScaledCornerSize() {
         return 0;
     }
 

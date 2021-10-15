@@ -25,11 +25,16 @@ import java.util.List;
 
 public class EntityEditor extends Editor {
 
+    public static EntityEditor instance;
+
     private EntitySelectionPanel entitySelectionPanel;
     private EntitySettingsPanel entitySettingsPanel;
 
     public EntityEditor() {
         super();
+        if(instance != null)
+            return;
+        instance = this;
         ComponentTypes.registerComponentTypes(BlueprintManager.getInstance());
 
         BlueprintManager.getInstance().loadBlueprints(
@@ -50,6 +55,7 @@ public class EntityEditor extends Editor {
 
     @Override
     public void init() {
+        super.init();
         entitySelectionPanel.init();
     }
 

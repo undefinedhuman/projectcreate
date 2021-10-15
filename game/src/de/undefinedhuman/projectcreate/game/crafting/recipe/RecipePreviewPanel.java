@@ -50,19 +50,19 @@ public class RecipePreviewPanel extends Gui {
         Gui itemInfoPanel = (Gui) new Gui()
                 .addChild(
                         name = (Text) new Text("Unknown")
-                                .setFont(Font.Normal)
+                                .setFont(Font.NORMAL)
                                 .setLineLength(new RelativeConstraint(1f))
                                 .setColor(Colors.WHITE)
                                 .setPosition(new RelativeConstraint(0f), new RelativeConstraint(1f))
                                 .setOffsetY(new RelativeOffset(-1f)),
                         category = (Text) new Text("Category")
-                                .setFont(Font.Normal)
+                                .setFont(Font.NORMAL)
                                 .setLineLength(new RelativeConstraint(1f))
                                 .setFontSize(8)
                                 .setColor(Color.WHITE)
                                 .setPosition(new RelativeConstraint(0f), new RelativeConstraint(1f, -18)),
                         description = (Text) new Text("Description")
-                                .setFont(Font.Normal)
+                                .setFont(Font.NORMAL)
                                 .setLineLength(new RelativeConstraint(1f))
                                 .setWrap(true)
                                 .setFontSize(10)

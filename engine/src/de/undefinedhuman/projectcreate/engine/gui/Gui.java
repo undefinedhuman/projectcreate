@@ -88,7 +88,7 @@ public class Gui extends GuiComponent {
 
     public Gui setTitle(String titleString, Font font, Color color) {
         Text text = new Text(titleString);
-        text.setFont(font).setColor(color).setPosition(new CenterConstraint(), new RelativeConstraint(1f)).setOffset(new CenterOffset(), new RelativeOffset(0.55f));
+        text.setFont(font).setFontSize(16).setColor(color).setPosition(new CenterConstraint(), new RelativeConstraint(1f)).setOffset(new CenterOffset(), new RelativeOffset(0.55f));
         addChild(text);
         return this;
     }
@@ -113,13 +113,6 @@ public class Gui extends GuiComponent {
         children.clear();
     }
 
-    // TODO Remove this
-    @Override
-    public GuiTransform setCurrentPosition(int x, int y) {
-        texture.resize(getCurrentValue(Axis.WIDTH), getCurrentValue(Axis.HEIGHT), GuiManager.GUI_SCALE);
-        return super.setCurrentPosition(x, y);
-    }
-
     public void setTexture(String texture) {
         this.texture.setTexture(texture);
     }
@@ -131,11 +124,13 @@ public class Gui extends GuiComponent {
     public Vector2 getOffset() { return texture.getOffset(); }
 
     @Override
-    public int getCornerSize() {
+    public int getScaledCornerSize() {
         return texture.getScaledCornerSize();
     }
 
-    public int getBaseCornerSize() { return texture.getBaseCornerSize(); }
+    public int getBaseCornerSize() {
+        return texture.getBaseCornerSize();
+    }
 
     public ArrayList<GuiTransform> getChildren() {
         return children;

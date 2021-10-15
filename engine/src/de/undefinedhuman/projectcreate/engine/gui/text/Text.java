@@ -21,7 +21,7 @@ public class Text extends GuiComponent {
     private GlyphLayout layout = new GlyphLayout();
     private String text, truncate = "...";
     private int align = Align.left;
-    private Font fontType = Font.Normal;
+    private Font fontType = Font.NORMAL;
     private BitmapFont font;
     private boolean wrap = false;
     private Constraint lineLength;

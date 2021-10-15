@@ -70,12 +70,12 @@ public class MovementComponent implements Component, NetworkSerializable {
     }
 
     @Override
-    public void receive(LineSplitter splitter) {
+    public void parse(LineSplitter splitter) {
         this.direction = splitter.getNextInt();
     }
 
     @Override
-    public void send(LineWriter writer) {
+    public void serialize(LineWriter writer) {
         writer.writeInt(direction);
     }
 

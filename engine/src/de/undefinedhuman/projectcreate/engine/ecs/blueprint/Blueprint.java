@@ -16,10 +16,6 @@ public class Blueprint {
         this.blueprintID = id;
     }
 
-    /*public Entity createInstance() {
-        return this.createInstance(IDComponent.UNDEFINED);
-    }*/
-
     public Entity createInstance(long worldID) {
         Entity entity = new Entity();
         entity.add(new IDComponent(worldID, blueprintID));
@@ -28,12 +24,16 @@ public class Blueprint {
         return entity;
     }
 
+    public int getBlueprintID() {
+        return blueprintID;
+    }
+
     public void addComponentBlueprint(ComponentBlueprint blueprint) {
         componentBlueprints.putIfAbsent(blueprint.getClass(), blueprint);
     }
 
-    public ComponentBlueprint getComponentBlueprint(Class<? extends ComponentBlueprint> type) {
-        return hasComponentBlueprints(type) ? componentBlueprints.get(type) : null;
+    public <T extends ComponentBlueprint> T getComponentBlueprint(Class<T> type) {
+        return hasComponentBlueprints(type) ? (T) componentBlueprints.get(type) : null;
     }
 
     public boolean hasComponentBlueprints(Class<? extends ComponentBlueprint> type) {
@@ -48,6 +48,10 @@ public class Blueprint {
 
     public HashMap<Class<? extends ComponentBlueprint>, ComponentBlueprint> getComponentBlueprints() {
         return componentBlueprints;
+    }
+
+    public void validate() {
+        componentBlueprints.values().forEach(ComponentBlueprint::validate);
     }
 
     public void delete() {

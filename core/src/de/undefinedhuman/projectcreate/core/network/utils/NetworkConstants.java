@@ -5,6 +5,7 @@ import com.esotericsoftware.kryonet.EndPoint;
 import de.undefinedhuman.projectcreate.core.network.Packet;
 import de.undefinedhuman.projectcreate.core.network.packets.LoginPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.MousePacket;
+import de.undefinedhuman.projectcreate.core.network.packets.SelectorPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.ComponentPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.CreateEntityPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.RemoveEntityPacket;
@@ -31,7 +32,8 @@ public class NetworkConstants {
                 MovementPacket.class,
                 PositionPacket.class,
                 JumpPacket.class,
-                MousePacket.class
+                MousePacket.class,
+                SelectorPacket.class
         );
     }
 

@@ -5,11 +5,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Connection;
 import de.undefinedhuman.projectcreate.core.ecs.EntityFlag;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
-import de.undefinedhuman.projectcreate.core.ecs.inventory.InventoryComponent;
 import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.core.network.PacketHandler;
 import de.undefinedhuman.projectcreate.core.network.packets.LoginPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.MousePacket;
+import de.undefinedhuman.projectcreate.core.network.packets.SelectorPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.CreateEntityPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.RemoveEntityPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.ComponentPacket;
@@ -20,8 +20,9 @@ import de.undefinedhuman.projectcreate.core.network.utils.PacketUtils;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
 import de.undefinedhuman.projectcreate.game.Main;
-import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
+import de.undefinedhuman.projectcreate.game.inventory.ClientInventory;
 import de.undefinedhuman.projectcreate.game.inventory.player.PlayerInventory;
+import de.undefinedhuman.projectcreate.game.inventory.player.Selector;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameScreen;
 
@@ -33,17 +34,18 @@ public class ClientPacketHandler implements PacketHandler {
         Mappers.MOVEMENT.get(player).predictedPosition.set(Mappers.TRANSFORM.get(player).getPosition());
         EntityManager.getInstance().addEntity(packet.worldID, player);
         GameManager.getInstance().player = player;
-        InventoryComponent inventoryComponent = Mappers.INVENTORY.get(player);
-        PlayerInventory.getInstance().linkInventory(InventoryManager.getInstance().getClientInvSlotPool(), inventoryComponent.getInventory("Inventory"));
+        linkInventories(player, PlayerInventory.getInstance(), Selector.getInstance());
         Main.instance.setScreen(GameScreen.getInstance());
+    }
+
+    private void linkInventories(Entity entity, ClientInventory<?>... inventories) {
+        for(ClientInventory<?> inventory : inventories) inventory.linkInventory(entity);
     }
 
     @Override
     public void handle(Connection connection, CreateEntityPacket packet) {
         Entity entity = CreateEntityPacket.parse(packet);
         if(entity == null || entity.isScheduledForRemoval() || entity.isRemoving()) return;
-        if(Mappers.MOVEMENT.get(entity) != null)
-            Mappers.MOVEMENT.get(entity).predictedPosition.set(Mappers.TRANSFORM.get(entity).getPosition());
         EntityManager.getInstance().addEntity(packet.worldID, entity);
     }
 
@@ -135,5 +137,12 @@ public class ClientPacketHandler implements PacketHandler {
         Entity entity = EntityManager.getInstance().getEntity(packet.worldID);
         if(entity == null) return;
         MousePacket.parse(entity, packet);
+    }
+
+    @Override
+    public void handle(Connection connection, SelectorPacket packet) {
+        Entity entity = EntityManager.getInstance().getEntity(packet.worldID);
+        if(entity == null) return;
+        SelectorPacket.parse(entity, packet);
     }
 }

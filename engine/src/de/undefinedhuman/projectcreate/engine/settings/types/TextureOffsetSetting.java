@@ -2,7 +2,10 @@ package de.undefinedhuman.projectcreate.engine.settings.types;
 
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.JsonValue;
+import de.undefinedhuman.projectcreate.engine.file.FileError;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
+import de.undefinedhuman.projectcreate.engine.settings.panels.AsepriteUtils;
 import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
 import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
 import de.undefinedhuman.projectcreate.engine.utils.Utils;
@@ -15,8 +18,8 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class TextureOffsetSetting extends Vector2ArraySetting {
 
@@ -47,16 +50,37 @@ public class TextureOffsetSetting extends Vector2ArraySetting {
                 chooser.setCurrentDirectory(new FsFile("editor/", Files.FileType.Internal).file());
                 chooser.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));
 
-                int returnVal = chooser.showOpenDialog(null);
-                if(returnVal != JFileChooser.APPROVE_OPTION) return;
-                File textureFile = chooser.getSelectedFile();
-                if(textureFile == null) return;
+                AsepriteUtils.loadAsepriteFile(dataFile -> {
+                    JsonValue base = AsepriteUtils.JSON_READER.parse(dataFile);
+                    JsonValue metaData = base.get("meta");
 
-                BufferedImage texture;
-                try { texture = ImageIO.read(textureFile);
-                } catch (IOException e) { return; }
-                setValue(calculateVectors(texture));
-                updateMenu(getValue());
+                    if(metaData == null)
+                        return;
+
+                    ArrayList<String> layers = new ArrayList<>();
+                    metaData.get("layers").forEach(jsonValue -> {
+                        if(!jsonValue.has("name"))
+                            return;
+                        layers.add(jsonValue.getString("name"));
+                    });
+
+                    JComboBox<String> layerSelection = new JComboBox<>(layers.toArray(new String[0]));
+
+                    JPanel panel = new JPanel();
+                    panel.add(layerSelection);
+
+                    final int option = JOptionPane.showConfirmDialog(null, panel, "Select layer", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    if(option == JOptionPane.CANCEL_OPTION)
+                        return;
+                    FsFile textureFile = new FsFile(dataFile.parent().path() + "/layers/" + layerSelection.getSelectedItem() + ".png", Files.FileType.Absolute);
+                    if(FileError.checkFileForErrors("loading layer texture", textureFile, FileError.NULL, FileError.NON_EXISTENT, FileError.NO_FILE)) return;
+
+                    BufferedImage texture;
+                    try { texture = ImageIO.read(textureFile.file());
+                    } catch (IOException e) { return; }
+                    setValue(calculateVectors(texture));
+                    updateMenu(getValue());
+                });
             }
 
         });
@@ -69,11 +93,13 @@ public class TextureOffsetSetting extends Vector2ArraySetting {
     }
 
     private Vector2[] calculateVectors(BufferedImage currentImage) {
-        int size = currentImage.getWidth() / Variables.PLAYER_TEXTURE_OFFSET;
+        float heightDivider = (float) Variables.PLAYER_TEXTURE_BASE_HEIGHT / (float) currentImage.getHeight();
+        BufferedImage scaledImage = Utils.scaleNearest(currentImage, heightDivider);
+        int size = scaledImage.getWidth() / Variables.PLAYER_TEXTURE_BASE_WIDTH;
         Vector2[] vectors = new Vector2[size];
 
-        for(int i = 0; i < size; i++) for(int x = 0; x < Variables.PLAYER_TEXTURE_OFFSET; x++) for(int y = 0; y < currentImage.getHeight(); y++) {
-            if(new Color(currentImage.getRGB(i * Variables.PLAYER_TEXTURE_OFFSET + x, currentImage.getHeight() - 1 - y)).getRed() != 255) continue;
+        for(int i = 0; i < size; i++) for(int x = 0; x < Variables.PLAYER_TEXTURE_BASE_WIDTH; x++) for(int y = 0; y < scaledImage.getHeight(); y++) {
+            if(new Color(scaledImage.getRGB(i * Variables.PLAYER_TEXTURE_BASE_WIDTH + x, scaledImage.getHeight() - 1 - y)).getRed() != 255) continue;
             vectors[i] = new Vector2(x * 2, y * 2);
             if(i != 0 && offset) vectors[i] = new Vector2(vectors[0].x - vectors[i].x, vectors[0].y - vectors[i].y);
             break;

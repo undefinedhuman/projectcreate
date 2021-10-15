@@ -1,13 +1,11 @@
 package de.undefinedhuman.projectcreate.core.ecs.inventory;
 
 import com.badlogic.ashley.core.Component;
-import de.undefinedhuman.projectcreate.core.inventory.InvItem;
 import de.undefinedhuman.projectcreate.core.inventory.Inventory;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.LineWriter;
 import de.undefinedhuman.projectcreate.engine.network.NetworkSerializable;
 
-import java.util.Collection;
 import java.util.HashMap;
 
 public class InventoryComponent implements Component, NetworkSerializable {
@@ -16,41 +14,47 @@ public class InventoryComponent implements Component, NetworkSerializable {
 
     public InventoryComponent(HashMap<String, InventoryData> inventoryData) {
         this.inventories = new HashMap<>();
-        inventoryData.forEach((key, data) -> inventories.put(key, data.createInventory()));
+        inventoryData.forEach((key, data) -> {
+            Inventory inventory = data.createInventory();
+            if(inventory == null) return;
+            inventories.put(key, inventory);
+        });
     }
 
     public void delete() {
         inventories.clear();
     }
 
-    public Collection<Inventory> getInventories() {
-        return inventories.values();
+    public boolean hasInventory(String name) {
+        return inventories.containsKey(name);
     }
 
     public Inventory getInventory(String key) {
         return inventories.get(key);
     }
 
+    public <T> T getInventory(InventoryType type, String key) {
+        Inventory inventory = getInventory(key);
+        if(!type.getInventoryClass().isInstance(inventory))
+            return null;
+        return (T) inventory;
+    }
+
     @Override
-    public void send(LineWriter writer) {
+    public void serialize(LineWriter writer) {
         inventories.forEach((name, inventory) -> {
+            if(name == null || inventory == null) return;
             writer.writeString(name);
-            InvItem[][] items = inventory.getInventory();
-            writer.writeInt(inventory.getRow()).writeInt(inventory.getCol());
-            for(int i = 0; i < inventory.getRow(); i++)
-                for(int j = 0; j < inventory.getCol(); j++)
-                    writer.writeInt(items[i][j].getID()).writeInt(items[i][j].getAmount());
+            inventory.serialize(writer);
         });
     }
 
     @Override
-    public void receive(LineSplitter splitter) {
+    public void parse(LineSplitter splitter) {
         while(splitter.hasMoreValues()) {
             Inventory inventory = inventories.get(splitter.getNextString());
-            int row = splitter.getNextInt(), col = splitter.getNextInt();
-            for(int i = 0; i < row; i++)
-                for(int j = 0; j < col; j++)
-                    inventory.getInvItem(i, j).setItem(splitter.getNextInt(), splitter.getNextInt());
+            if(inventory == null) continue;
+            inventory.parse(splitter);
         }
     }
 }

@@ -41,7 +41,7 @@ public class RecipeGui extends Gui implements Poolable {
                 new Gui(GuiTemplate.SLOT)
                         .addChild(
                                 name = (Text) new Text("Unknown")
-                                        .setFont(Font.Normal)
+                                        .setFont(Font.NORMAL)
                                         .setLineLength(new RelativeConstraint(1f))
                                         .setColor(Color.WHITE)
                                         .setPosition(new PixelConstraint(Variables.SLOT_SPACE), new CenterConstraint())

@@ -64,11 +64,15 @@ public class Variables {
     public static final int MOUSE_SENSITIVITY = 10;
 
     // Editor
-    public static final int PLAYER_TEXTURE_OFFSET = 64;
+    public static final int PLAYER_TEXTURE_BASE_HEIGHT = 32;
+    public static final int PLAYER_TEXTURE_BASE_WIDTH = 64;
     public static final Color BACKGROUND_COLOR = new Color(60, 63, 65);
 
     // Server & Editor
     public static boolean DONT_LOAD_TEXTURES = false;
+
+    // Server
+    public static final int SERVER_TICK_RATE = 20;
 
     // Player
     public static final int BLOCK_PLACEMENT_RANGE = 6;

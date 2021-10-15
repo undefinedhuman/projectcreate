@@ -57,11 +57,11 @@ public class GameManager {
         //GuiManager.getInstance().addGui(CraftingInventory.getInstance());
         GuiManager.getInstance().addGui(player1Text = new Text(""), player2Text = new Text(""), ping = new Text(""));
         player1Text.setPosition(new CenterConstraint(), new CenterConstraint()).setOffset(new PixelOffset(-200), new CenterOffset());
-        player1Text.setColor(Color.DARK_GRAY);
+        player1Text.setColor(Color.GRAY);
         player2Text.setPosition(new CenterConstraint(), new CenterConstraint()).setOffset(new PixelOffset(200), new CenterOffset());
-        player2Text.setColor(Color.DARK_GRAY);
+        player2Text.setColor(Color.GRAY);
         ping.setPosition(new PixelConstraint(0), new RelativeConstraint(1f)).setOffset(new PixelOffset(10), new RelativeOffset(-1f));
-        ping.setColor(Color.DARK_GRAY);
+        ping.setColor(Color.GRAY);
     }
 
     public void resize(int width, int height) {
@@ -81,7 +81,7 @@ public class GameManager {
 
         ClientManager.getInstance().update(Main.delta);
 
-        ping.setText(ClientManager.getInstance().getReturnTime());
+        ping.setText("Ping: " + ClientManager.getInstance().getReturnTime());
 
         List<Entity> entities = EntityManager.getInstance().stream().map(Map.Entry::getValue).collect(Collectors.toList());
         if(entities.size() > 0) {
