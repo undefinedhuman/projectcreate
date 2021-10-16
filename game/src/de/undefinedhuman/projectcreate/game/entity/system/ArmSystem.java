@@ -14,7 +14,6 @@ import de.undefinedhuman.projectcreate.core.ecs.player.rightarm.RightArmComponen
 import de.undefinedhuman.projectcreate.core.ecs.player.shoulder.ShoulderComponent;
 import de.undefinedhuman.projectcreate.core.ecs.visual.animation.AnimationComponent;
 import de.undefinedhuman.projectcreate.core.ecs.visual.sprite.SpriteComponent;
-import de.undefinedhuman.projectcreate.core.ecs.visual.sprite.SpriteData;
 import de.undefinedhuman.projectcreate.core.inventory.InvItem;
 import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
@@ -52,21 +51,18 @@ public class ArmSystem extends IteratingSystem {
         InvItem selectedItem = InventoryUtils.getSelectedItemFromInventoryComponent(inventoryComponent, "Selector");
         if(selectedItem == null) return;
         boolean selected = !selectedItem.isEmpty();
-
         spriteComponent.getSpriteData(rightArmComponent.getTextureName()).setVisible(!selected);
         spriteComponent.getSpriteData(rightArmComponent.getSelectedTexture()).setVisible(selected);
+        if(!selected) return;
 
-        if(!selected)
-            return;
-
-        rightArmComponent.shakeAngle = calculateShake(rightArmComponent, true, selectedItem.getID());
+        /*rightArmComponent.shakeAngle = calculateShake(rightArmComponent, true, selectedItem.getID());
 
         mouseComponent.angle = angle + rightArmComponent.shakeAngle;
 
         SpriteData data = spriteComponent.getSpriteData(rightArmComponent.getSelectedTexture());
 
         data.setOrigin(TEMP_SHOULDER_POSITION);
-        data.setRotation(mouseComponent.angle);
+        data.setRotation(mouseComponent.angle);*/
 
     }
 

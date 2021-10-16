@@ -8,6 +8,7 @@ public class EquipComponent implements Component {
 
     private String defaultArmLayer, selectedArmLayer, itemLayer;
     private Vector2[] shoulderPositions, shoulderOffsets, itemPositions, itemOffsets;
+    public float shakeAngle = 0;
 
     public EquipComponent(
             String defaultArmLayer,
@@ -42,14 +43,14 @@ public class EquipComponent implements Component {
     public Vector2 getShoulderPosition(int index) {
         if(!Utils.isInRange(index, 0, shoulderPositions.length-1))
             return new Vector2();
-        return new Vector2(shoulderPositions[index]);
+        return shoulderPositions[index];
     }
 
     public Vector2 getCurrentPosition(int index) {
         return itemPositions[index];
     }
 
-    public Vector2 getCurrentOffset(int index) {
+    public Vector2 getWeaponOffset(int index) {
         if(!Utils.isInRange(index, 0, itemOffsets.length-1))
             return new Vector2();
         Vector2 vector = itemOffsets[index];

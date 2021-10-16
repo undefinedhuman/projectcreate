@@ -51,6 +51,9 @@ public class SpriteData {
     public void setRotation(float rotation) {
         this.sprite.setRotation(rotation);
     }
+    public void rotate(float rotation) {
+        this.sprite.rotate(rotation);
+    }
     public void setVisible(boolean visible) { this.isVisible = visible; }
     public void setSize(Vector2 size) { this.sprite.setSize(size.x, size.y); }
     public void setTurned(boolean turned) {
