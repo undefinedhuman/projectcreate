@@ -83,14 +83,8 @@ public class ClientPacketHandler implements PacketHandler {
         if(movementComponent.lastPositionPacketTimeLocal == 0)
             movementComponent.lastPositionPacketTimeLocal = System.nanoTime();
 
-        if(entity != GameManager.getInstance().player) {
-            // CHANGE FROM PREDICTED POSITION TO PREVIOUS POSITION SO TRANSFORM COMPONENT IS ALWAYS AT SERVER POSITION BUT RENDERSYSTEM IS AT INTERPOLATED POSITION
-            MovementComponent.MovementFrame frame = new MovementComponent.MovementFrame();
-            frame.position = new Vector2(packet.x, packet.y);
-            frame.velocity = new Vector2(packet.velX, packet.velY);
-            frame.delta = (System.nanoTime() - movementComponent.lastPositionPacketTimeLocal) * 0.000000001f;
-            movementComponent.movementHistory.add(frame);
-        } else {
+        if(entity != GameManager.getInstance().player) movementComponent.movementHistory.add(new MovementComponent.MovementFrame(packet, (System.nanoTime() - movementComponent.lastPositionPacketTimeLocal) * 0.000000001f));
+        else {
             float dt = Math.max(0.001f, (System.nanoTime() - movementComponent.lastPositionPacketTimeLocal) * 0.000000001f);
             movementComponent.historyLength -= dt;
 
@@ -117,8 +111,7 @@ public class ClientPacketHandler implements PacketHandler {
                 movementComponent.predictedPosition.set(TEMP_POSITION);
             }
 
-            if(movementComponent.predictedPosition.y <= 0)
-                movementComponent.predictedPosition.y = 0;
+            if(movementComponent.predictedPosition.y <= 0) movementComponent.predictedPosition.y = 0;
         }
         movementComponent.lastPositionPacketTimeLocal = System.nanoTime();
     }

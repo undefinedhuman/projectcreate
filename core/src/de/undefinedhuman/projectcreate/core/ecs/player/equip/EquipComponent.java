@@ -7,15 +7,13 @@ import de.undefinedhuman.projectcreate.engine.utils.Utils;
 public class EquipComponent implements Component {
 
     private String defaultArmLayer, selectedArmLayer, itemLayer;
-    private Vector2[] shoulderPositions, shoulderOffsets, itemPositions, itemOffsets;
-    public float shakeAngle = 0;
+    private Vector2[] shoulderPositions, itemPositions, itemOffsets;
 
     public EquipComponent(
             String defaultArmLayer,
             String selectedArmLayer,
             String itemLayer,
             Vector2[] shoulderPositions,
-            Vector2[] shoulderOffsets,
             Vector2[] itemPositions,
             Vector2[] itemOffsets
     ) {
@@ -23,7 +21,6 @@ public class EquipComponent implements Component {
         this.selectedArmLayer = selectedArmLayer;
         this.itemLayer = itemLayer;
         this.shoulderPositions = shoulderPositions;
-        this.shoulderOffsets = shoulderOffsets;
         this.itemPositions = itemPositions;
         this.itemOffsets = itemOffsets;
     }

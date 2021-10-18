@@ -83,8 +83,8 @@ public class GuiTextureManager extends Manager {
     }
 
     private void setKey(String textureName, int width, int height) {
-        this.TEMP_KEY.setT(textureName);
-        this.TEMP_KEY.getU().set(width, height);
+        this.TEMP_KEY.setKey(textureName);
+        this.TEMP_KEY.getValue().set(width, height);
     }
 
     public static GuiTextureManager getInstance() {

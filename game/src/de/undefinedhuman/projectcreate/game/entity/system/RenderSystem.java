@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.projectcreate.core.ecs.EntityFlag;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.stats.name.NameComponent;
 import de.undefinedhuman.projectcreate.core.ecs.visual.sprite.SpriteComponent;
@@ -80,10 +81,8 @@ public class RenderSystem extends SortedIteratingSystem {
         public int compare(Entity e1, Entity e2) {
             TypeComponent entity1TypeComponent = Mappers.TYPE.get(e1);
             TypeComponent entity2TypeComponent = Mappers.TYPE.get(e2);
-            if(entity1TypeComponent == null)
-                return -1;
-            if(entity2TypeComponent == null)
-                return 1;
+            if(entity1TypeComponent == null || EntityFlag.hasFlags(e2, EntityFlag.IS_MAIN_PLAYER)) return -1;
+            if(entity2TypeComponent == null || EntityFlag.hasFlags(e1, EntityFlag.IS_MAIN_PLAYER)) return 1;
             return Integer.compare(entity1TypeComponent.getType().ordinal(), entity2TypeComponent.getType().ordinal());
         }
     }

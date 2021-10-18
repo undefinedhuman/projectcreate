@@ -22,11 +22,11 @@ public abstract class ItemSelectionPanel extends SelectionPanel<Integer> {
 
     public ItemSelectionPanel() {
         super("Items", key -> {
-            if(key.getT().matches("^[0-9]+-[0-9]+$")) {
-                String[] ids = key.getT().split("-");
+            if(key.getKey().matches("^[0-9]+-[0-9]+$")) {
+                String[] ids = key.getKey().split("-");
                 Integer lower = Utils.isInteger(ids[0]), upper = Utils.isInteger(ids[1]);
                 if(lower != null && upper != null && lower <= upper)
-                    return Arrays.stream(key.getU()).filter(itemID -> Utils.isInRange(itemID, lower, upper)).toArray(Integer[]::new);
+                    return Arrays.stream(key.getValue()).filter(itemID -> Utils.isInRange(itemID, lower, upper)).toArray(Integer[]::new);
             }
             return new Integer[0];
         });

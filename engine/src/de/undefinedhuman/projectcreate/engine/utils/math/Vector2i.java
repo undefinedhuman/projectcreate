@@ -88,6 +88,12 @@ public class Vector2i {
         return this;
     }
 
+    public Vector2i setZero() {
+        this.x = 0;
+        this.y = 0;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

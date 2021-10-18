@@ -16,8 +16,8 @@ import de.undefinedhuman.projectcreate.game.utils.Tools;
 public class MovementSystem extends IteratingSystem {
 
     private static final float CONVERGE_MULTIPLIER = 0.05f;
-
     private static final float LATENCY_OFFSET = 60f/1000f-Variables.SERVER_TICK_RATE/1000f;
+    private static final Vector2 EXTRAPOLATED_POSITION = new Vector2();
 
     public MovementSystem() {
         super(Family.all(TransformComponent.class, MovementComponent.class, AnimationComponent.class).get(), 4);
@@ -45,19 +45,21 @@ public class MovementSystem extends IteratingSystem {
                 movementComponent.setCanJump();
             }
 
-            MovementComponent.MovementFrame frame = new MovementComponent.MovementFrame();
-            frame.delta = delta;
-            frame.position = new Vector2(currentPosition).sub(movementComponent.predictedPosition);
-            frame.velocity = new Vector2(movementComponent.velocity).scl(delta);
+            MovementComponent.MovementFrame frame = new MovementComponent.MovementFrame(
+                    currentPosition.x - movementComponent.predictedPosition.x,
+                    currentPosition.y - movementComponent.predictedPosition.y,
+                    movementComponent.velocity.x * delta,
+                    movementComponent.velocity.y * delta,
+                    delta
+            );
 
             movementComponent.movementHistory.add(frame);
             movementComponent.historyLength += delta;
 
-            float latency = Math.max(0.001f, ClientManager.getInstance().getLatency()) + LATENCY_OFFSET; // Math.max(0.001f, getLatency()) * 1000f;
-
-            Vector2 extrapolatedPosition = new Vector2(movementComponent.predictedPosition).mulAdd(frame.velocity, latency * (1f + CONVERGE_MULTIPLIER));
-            float t = delta / (latency * (1f + CONVERGE_MULTIPLIER));
-            transformComponent.addPosition((extrapolatedPosition.x - transformComponent.getPosition().x) * t, (extrapolatedPosition.y - transformComponent.getPosition().y) * t);
+            float latency = (Math.max(0.001f, ClientManager.getInstance().getLatency()) + LATENCY_OFFSET) * (1f + CONVERGE_MULTIPLIER); // Math.max(0.001f, getLatency()) * 1000f;
+            float t = delta / latency;
+            EXTRAPOLATED_POSITION.set(movementComponent.predictedPosition).mulAdd(frame.velocity, latency).sub(transformComponent.getPosition()).scl(t);
+            transformComponent.addPosition(EXTRAPOLATED_POSITION.x, EXTRAPOLATED_POSITION.y);
 
             movementComponent.predictedPosition = currentPosition;
             velocity = movementComponent.velocity;
@@ -68,22 +70,22 @@ public class MovementSystem extends IteratingSystem {
                 movementComponent.delta = 0;
                 return;
             }
-            MovementComponent.MovementFrame frame = movementComponent.movementHistory.get(0);
-            MovementComponent.MovementFrame frame1 = movementComponent.movementHistory.get(1);
-            float f = movementComponent.delta / frame1.delta;
+            MovementComponent.MovementFrame current = movementComponent.movementHistory.get(0);
+            MovementComponent.MovementFrame next = movementComponent.movementHistory.get(1);
+            float f = movementComponent.delta / next.delta;
             transformComponent.setPosition(
-                    Tools.lerp(frame.position.x, frame1.position.x, f),
-                    Tools.lerp(frame.position.y, frame1.position.y, f)
+                    Tools.lerp(current.position.x, next.position.x, f),
+                    Tools.lerp(current.position.y, next.position.y, f)
             );
             movementComponent.delta += delta;
-            if(movementComponent.delta >= frame1.delta) {
+            if(movementComponent.delta >= next.delta) {
                 movementComponent.movementHistory.remove(0);
-                movementComponent.delta = movementComponent.delta - frame1.delta;
+                movementComponent.delta = movementComponent.delta - next.delta;
             }
-            velocity = frame1.velocity;
+            velocity = next.velocity;
         }
 
-        animate(entity, velocity);
+        animate(entity, movementComponent, velocity);
     }
 
     public static Vector2 moveEntity(Vector2 position, Vector2 velocity, float delta) {
@@ -92,10 +94,10 @@ public class MovementSystem extends IteratingSystem {
         return new Vector2(position).mulAdd(velocity, delta);
     }
 
-    public static void animate(Entity entity, Vector2 velocity) {
+    public static void animate(Entity entity, MovementComponent movementComponent, Vector2 velocity) {
         AnimationComponent animationComponent = Mappers.ANIMATION.get(entity);
-        if(velocity.y != 0) animationComponent.setAnimation(velocity.y > 75f ? "Jump" : velocity.y < -75f ? "Fall" : "Transition");
-        else animationComponent.setAnimation(velocity.x != 0 ? "Run" : "Idle");
+        if(velocity.y != 0) animationComponent.setAnimation(velocity.y > 75f ? movementComponent.getJumpAnimation() : velocity.y < -75f ? movementComponent.getFallAnimation() : movementComponent.getTransitionAnimation());
+        else animationComponent.setAnimation(velocity.x != 0 ? movementComponent.getRunAnimation() : movementComponent.getIdleAnimation());
     }
 
 }

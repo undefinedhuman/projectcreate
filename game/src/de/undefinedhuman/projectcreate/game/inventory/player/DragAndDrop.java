@@ -1,34 +1,37 @@
 package de.undefinedhuman.projectcreate.game.inventory.player;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import de.undefinedhuman.projectcreate.engine.utils.Mouse;
+import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 import de.undefinedhuman.projectcreate.game.inventory.InvTarget;
 import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
 import de.undefinedhuman.projectcreate.game.inventory.slot.InvSlot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class DragAndDrop {
 
     private ArrayList<InvTarget> targets;
 
     private boolean half = false, moving = false, isLeft = false, alreadyClicked = false;
+    private Vector2i currentItem = new Vector2i();
 
-    public DragAndDrop(OrthographicCamera camera) {
+    public DragAndDrop() {
         targets = new ArrayList<>();
     }
 
     public void update(OrthographicCamera camera) {
 
-        boolean leftMouse = Gdx.input.isButtonPressed(0), rightMouse = Gdx.input.isButtonPressed(1), isClicked = false;
+        boolean isClicked = false;
 
         if (InventoryManager.getInstance().isInventoryOpened()) {
 
             if (moving) {
 
                 isClicked = true;
-                if (!alreadyClicked && ((leftMouse && (!isLeft) || (isLeft && rightMouse)))) {
+                if (!alreadyClicked && ((Mouse.isLeftClicked() && (!isLeft) || (isLeft && Mouse.isRightClicked())))) {
                     placeOneItem(camera);
                     alreadyClicked = true;
                 }
@@ -36,19 +39,19 @@ public class DragAndDrop {
             }
 
             if (!isClicked) {
-                if (leftMouse) {
+                if (Mouse.isLeftClicked()) {
                     startMoving(false, camera);
                     isLeft = true;
                 }
-                if (rightMouse) {
+                if (Mouse.isRightClicked()) {
                     startMoving(true, camera);
                     isLeft = false;
                 }
             }
 
-            if ((!rightMouse && isLeft) || (!isLeft && !leftMouse)) alreadyClicked = false;
+            if ((!Mouse.isRightClicked() && isLeft) || (!isLeft && !Mouse.isLeftClicked())) alreadyClicked = false;
 
-            if (moving && ((isLeft && !leftMouse) || (!isLeft && !rightMouse))) {
+            if (moving && ((isLeft && !Mouse.isLeftClicked()) || (!isLeft && !Mouse.isRightClicked()))) {
 
                 InvSlot clickedSlot = null;
                 for (InvTarget inventory : targets) if ((clickedSlot = inventory.getClickedSlot(camera)) != null) break;
@@ -95,13 +98,13 @@ public class DragAndDrop {
     private void placeOneItem(OrthographicCamera camera) {
 
         InvSlot clickedSlot = null;
-        /*for (InvTarget inventory : targets) if ((clickedSlot = inventory.getClickedSlot(camera)) != null) break;
-        if (clickedSlot != null && clickedSlot.isTypeCompatible(currentItem)) {
+        for (InvTarget inventory : targets) if ((clickedSlot = inventory.getClickedSlot(camera)) != null) break;
+        if (clickedSlot != null && clickedSlot.isTypeCompatible(currentItem.x)) {
 
-            if (clickedSlot.addItem(currentItem.getID(), 1) == 0) currentItem.setAmount(currentItem.getAmount() - 1);
-            if (currentItem.getAmount() < 1) cancelMoving();
+            if (clickedSlot.addItem(currentItem.x, 1) == 0) currentItem.y--;
+            if (currentItem.y < 1) cancelMoving();
 
-        }*/
+        }
 
     }
 
@@ -140,11 +143,10 @@ public class DragAndDrop {
         //
         // lastSlot.addItem(currentItem);
         removeTempItem();
-
     }
 
     private void removeTempItem() {
-        //currentItem.setStats(0, 0);
+        currentItem.setZero();
         moving = false;
         half = false;
     }
@@ -156,12 +158,11 @@ public class DragAndDrop {
     }
 
     public void resize(int width, int height) {
-        //currentItem.resize(width, height);
+        // currentItem.resize(width, height);
     }
 
-    public void addTarget(InvTarget... targets) {
-        for (InvTarget target : targets)
-            if (!hasTarget(target)) this.targets.add(target);
+    public void addTargets(InvTarget... targets) {
+        Arrays.stream(targets).filter(invTarget -> !hasTarget(invTarget)).forEach(invTarget -> this.targets.add(invTarget));
     }
 
     public boolean hasTarget(InvTarget inventory) {

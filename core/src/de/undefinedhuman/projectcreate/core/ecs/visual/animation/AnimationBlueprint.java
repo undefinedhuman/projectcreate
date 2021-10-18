@@ -15,7 +15,7 @@ public class AnimationBlueprint extends ComponentBlueprint {
             return animations.getValue().keySet().toArray(new String[0]);
         }
     }, value -> value, value -> value);
-    private final AnimationPanel animations = new AnimationPanel("Animation");
+    public final AnimationPanel animations = new AnimationPanel("Animation");
 
     public AnimationBlueprint() {
         addSettings(defaultAnimation, animations);

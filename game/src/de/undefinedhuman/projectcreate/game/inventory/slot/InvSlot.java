@@ -99,11 +99,11 @@ public class InvSlot extends Slot implements Poolable {
         setVisible(false);
     }
 
-    public void updateSlot() {
+    private void updateSlot() {
         this.updateSlot(localID, localAmount);
     }
 
-    public void updateSlot(int id, int amount) {
+    private void updateSlot(int id, int amount) {
         updateID(id);
         updateAmount(amount);
     }
@@ -117,6 +117,16 @@ public class InvSlot extends Slot implements Poolable {
     private void updateAmount(int amount) {
         this.localAmount = amount;
         amountText.setText(localAmount).setVisible(this.localAmount > 1);
+    }
+
+    public int addItem(int id, int amount) {
+        if(linkedItem == null)
+            return amount;
+        return linkedItem.addItem(id, amount);
+    }
+
+    public boolean isTypeCompatible(int id) {
+        return linkedItem != null && linkedItem.isTypeCompatible(id);
     }
 
     public boolean isEmpty() {

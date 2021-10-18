@@ -6,28 +6,27 @@ import de.undefinedhuman.projectcreate.core.ecs.visual.sprite.SpriteBlueprint;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.ecs.component.ComponentBlueprint;
 import de.undefinedhuman.projectcreate.engine.settings.types.TextureOffsetSetting;
-import de.undefinedhuman.projectcreate.engine.settings.types.selection.DynamicSelectionSetting;
+import de.undefinedhuman.projectcreate.engine.settings.types.selection.DynamicStringSelectionSetting;
 
 public class EquipBlueprint extends ComponentBlueprint {
 
-    private DynamicSelectionSetting<String>
-            defaultArmLayer = new DynamicSelectionSetting<>("Arm Layer", this::getSpriteLayerNames, value -> value, value -> value),
-            selectedArmLayer = new DynamicSelectionSetting<>("Selected Arm Layer", this::getSpriteLayerNames, value -> value, value -> value),
-            itemLayer = new DynamicSelectionSetting<>("Item Layer", this::getSpriteLayerNames, value -> value, value -> value);
+    private DynamicStringSelectionSetting
+            defaultArmLayer = new DynamicStringSelectionSetting("Arm Layer", this::getSpriteLayerNames),
+            selectedArmLayer = new DynamicStringSelectionSetting("Selected Arm Layer", this::getSpriteLayerNames),
+            itemLayer = new DynamicStringSelectionSetting("Item Layer", this::getSpriteLayerNames);
 
     private TextureOffsetSetting
             shoulderPositions = new TextureOffsetSetting("Shoulder Positions", new Vector2[0], false),
-            shoulderOffsets = new TextureOffsetSetting("Shoulder Offsets", new Vector2[0], true),
             itemPositions = new TextureOffsetSetting("Item Positions", new Vector2[0], false),
             itemOffsets = new TextureOffsetSetting("Item Offsets", new Vector2[0], true);
 
     public EquipBlueprint() {
-        addSettings(defaultArmLayer, selectedArmLayer, itemLayer, shoulderPositions, shoulderOffsets, itemOffsets, itemPositions);
+        addSettings(defaultArmLayer, selectedArmLayer, itemLayer, shoulderPositions, itemOffsets, itemPositions);
     }
 
     @Override
     public Component createInstance() {
-        return new EquipComponent(defaultArmLayer.getValue(), selectedArmLayer.getValue(), itemLayer.getValue(), shoulderPositions.getValue(), shoulderOffsets.getValue(), itemPositions.getValue(), itemOffsets.getValue());
+        return new EquipComponent(defaultArmLayer.getValue(), selectedArmLayer.getValue(), itemLayer.getValue(), shoulderPositions.getValue(), itemPositions.getValue(), itemOffsets.getValue());
     }
 
     private String[] getSpriteLayerNames() {

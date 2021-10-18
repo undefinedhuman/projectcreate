@@ -36,7 +36,7 @@ public class InvItem {
     }
 
     public boolean isTypeCompatible(int id) {
-        return itemTypeFilter == Item.class || itemTypeFilter.isInstance(ItemManager.getInstance().getItem(id));
+        return ItemManager.getInstance().hasItem(id) && (itemTypeFilter == Item.class || itemTypeFilter.isInstance(ItemManager.getInstance().getItem(id)));
     }
 
     public int addItem(InvItem item) {

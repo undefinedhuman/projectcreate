@@ -37,7 +37,7 @@ public class MouseComponent implements Component {
             return;
         }
 
-        angle = (shakeDirection ? 1 : -1) * SHAKE_ANGLE_VELOCITY * delta;
+        shakeAngle += (shakeDirection ? 1 : -1) * SHAKE_ANGLE_VELOCITY * delta;
         shakeDirection = shakeDirection ? !(shakeAngle > 20f) : shakeAngle < -20f;
     }
 

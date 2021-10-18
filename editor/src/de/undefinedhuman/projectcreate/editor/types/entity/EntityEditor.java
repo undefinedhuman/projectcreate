@@ -81,7 +81,7 @@ public class EntityEditor extends Editor {
                 return;
             String removeBlueprintIDsMessage = Arrays.toString(removedIDs.stream().map(id -> {
                 Blueprint selectedBlueprint = BlueprintManager.getInstance().getBlueprint(id);
-                NameBlueprint nameBlueprint = (NameBlueprint) selectedBlueprint.getComponentBlueprint(NameBlueprint.class);
+                NameBlueprint nameBlueprint = selectedBlueprint.getComponentBlueprint(NameBlueprint.class);
                 return id + (nameBlueprint != null ? " " + nameBlueprint.name.getValue() : "");
             }).toArray(String[]::new));
             int result = JOptionPane.showConfirmDialog(null, "Delete Blueprint" + Utils.appendSToString(removedIDs.size()) + " " + removeBlueprintIDsMessage, "Are you sure you want to delete " + (removedIDs.size() > 1 ? "those" : "this") +  " blueprint" + Utils.appendSToString(removedIDs.size()) + "?", JOptionPane.YES_NO_OPTION);

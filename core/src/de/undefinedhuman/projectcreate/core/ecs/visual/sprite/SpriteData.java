@@ -51,16 +51,18 @@ public class SpriteData {
     public void setRotation(float rotation) {
         this.sprite.setRotation(rotation);
     }
-    public void rotate(float rotation) {
-        this.sprite.rotate(rotation);
-    }
     public void setVisible(boolean visible) { this.isVisible = visible; }
-    public void setSize(Vector2 size) { this.sprite.setSize(size.x, size.y); }
+    public void setSize(Vector2 size) { setSize(size.x, size.y); }
+    public void setSize(float width, float height) { this.sprite.setSize(width, height); }
     public void setTurned(boolean turned) {
         this.turned = turned;
     }
     public void setPositionOffset(float x, float y) {
         this.positionOffset.set(x, y);
+    }
+
+    public void setPositionOffset(Vector2 offset) {
+        this.setPositionOffset(offset.x, offset.y);
     }
     public void setColor(Color color) {
         this.color = color;

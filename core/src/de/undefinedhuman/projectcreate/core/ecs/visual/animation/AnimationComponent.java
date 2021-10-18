@@ -6,8 +6,6 @@ import java.util.HashMap;
 
 public class AnimationComponent implements Component {
 
-    // TODO Refactor so animation time can't go in infinity
-
     private HashMap<String, Animation> animations;
 
     private String currentAnimation;
@@ -52,7 +50,7 @@ public class AnimationComponent implements Component {
 
     public AnimationComponent addAnimationTime(float delta) {
         this.animationTime += delta * animationTimeMultiplier;
-        this.animationTime = animationTime % 100000;
+        this.animationTime %= 1000000;
         return this;
     }
 

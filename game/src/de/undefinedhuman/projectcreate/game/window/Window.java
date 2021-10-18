@@ -18,7 +18,7 @@ public class Window {
     private LwjglApplicationConfiguration createLWJGLConfig() {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = Variables.NAME;
-        config.foregroundFPS = 500;
+        config.foregroundFPS = 1000;
         config.backgroundFPS = 60;
         config.vSyncEnabled = false;
         config.addIcon("logo/32x32.png", Files.FileType.Internal);
