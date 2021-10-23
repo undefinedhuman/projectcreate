@@ -10,6 +10,8 @@ import de.undefinedhuman.projectcreate.core.network.packets.entity.components.Co
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.PositionPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.JumpPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.inventory.AddItemPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.inventory.SelectItemPacket;
 
 public interface PacketHandler {
     void handle(Connection connection, LoginPacket packet);
@@ -21,4 +23,6 @@ public interface PacketHandler {
     default void handle(Connection connection, JumpPacket packet) {}
     default void handle(Connection connection, MousePacket packet) {}
     default void handle(Connection connection, SelectorPacket packet) {}
+    void handle(Connection connection, AddItemPacket packet);
+    default void handle(Connection connection, SelectItemPacket packet) {}
 }

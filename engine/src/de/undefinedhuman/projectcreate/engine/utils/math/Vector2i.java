@@ -94,6 +94,11 @@ public class Vector2i {
         return this;
     }
 
+    public boolean isZero() {
+        return x == 0 && y == 0;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -2,28 +2,21 @@ package de.undefinedhuman.projectcreate.core.inventory;
 
 import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
+import de.undefinedhuman.projectcreate.engine.resources.RessourceUtils;
 import de.undefinedhuman.projectcreate.engine.utils.Utils;
+import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 
 import java.util.ArrayList;
 
 public class InvItem {
 
     private int id, amount;
-    private Class<? extends Item> itemTypeFilter = Item.class;
+    private Class<? extends Item> itemTypeFilter;
 
     private ArrayList<ItemChangeListener> listeners = new ArrayList<>();
 
     public InvItem() {
         this(0, 0, Item.class);
-    }
-
-    public InvItem(int id, int amount) {
-        updateItem(id, amount);
-    }
-
-    public InvItem(Class<? extends Item> itemTypeFilter) {
-        updateItem(0, 0);
-        this.itemTypeFilter = itemTypeFilter;
     }
 
     public InvItem(int id, int amount, Class<? extends Item> itemTypeFilter) {
@@ -36,7 +29,7 @@ public class InvItem {
     }
 
     public boolean isTypeCompatible(int id) {
-        return ItemManager.getInstance().hasItem(id) && (itemTypeFilter == Item.class || itemTypeFilter.isInstance(ItemManager.getInstance().getItem(id)));
+        return RessourceUtils.existItem(id) && (itemTypeFilter == Item.class || itemTypeFilter.isInstance(ItemManager.getInstance().getItem(id)));
     }
 
     public int addItem(InvItem item) {
@@ -64,17 +57,22 @@ public class InvItem {
         return 0;
     }
 
-    public void removeItem(int otherAmount) {
+    public int removeItem(int otherAmount) {
         int tempAmount = amount - otherAmount;
         if(tempAmount <= 0) {
             deleteItem();
-            return;
+            return Math.abs(tempAmount);
         }
         updateItem(id, tempAmount);
+        return 0;
     }
 
     public void deleteItem() {
         updateItem(0, -1);
+    }
+
+    public void setItem(Vector2i stats) {
+        this.setItem(stats.x, stats.y);
     }
 
     public void setItem(int id, int amount) {

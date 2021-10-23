@@ -4,19 +4,20 @@ import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.LineWriter;
 import de.undefinedhuman.projectcreate.engine.network.NetworkSerializable;
+import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 
 public class Inventory implements NetworkSerializable {
 
     protected InvItem[][] inventory;
-    private int row, col;
-    private String title;
+    private int rows, cols;
+    private String name;
 
-    public Inventory(int row, int col, String title) {
-        inventory = new InvItem[this.row = row][this.col = col];
+    public Inventory(int rows, int cols, String name) {
+        inventory = new InvItem[this.rows = rows][this.cols = cols];
+        this.name = name;
         for (int i = 0; i < inventory.length; i++)
             for (int j = 0; j < inventory[i].length; j++)
                 inventory[i][j] = new InvItem();
-        this.title = title;
     }
 
     public int addItem(int id, int amount) {
@@ -31,8 +32,8 @@ public class Inventory implements NetworkSerializable {
 
     public int removeItem(int id, int amountToBeRemoved) {
         if(id == 0) return 0;
-        for (int i = row - 1; i >= 0; i--)
-            for (int j = 0; j < col; j++) {
+        for (int i = rows - 1; i >= 0; i--)
+            for (int j = 0; j < cols; j++) {
                 InvItem currentItem = inventory[i][j];
                 if(currentItem == null || currentItem.getID() != id)
                     continue;
@@ -45,11 +46,18 @@ public class Inventory implements NetworkSerializable {
         return amountToBeRemoved;
     }
 
+    public Vector2i forceRemoveItem(int row, int col) {
+        InvItem item = inventory[row][col];
+        Vector2i itemStats = new Vector2i(item.getID(), item.getAmount());
+        inventory[row][col].removeItem(itemStats.y);
+        return itemStats;
+    }
+
     public boolean isFull(int id, int amount) {
         int currentAmount = 0, maxAmount = ItemManager.getInstance().getItem(id).maxAmount.getValue();
 
-        for (int i = row - 1; i >= 0; i--)
-            for (int j = 0; j < col; j++) {
+        for (int i = rows - 1; i >= 0; i--)
+            for (int j = 0; j < cols; j++) {
                 InvItem currentItem = inventory[i][j];
                 if(!currentItem.isTypeCompatible(id) || currentItem.getID() != id || currentItem.getAmount() == maxAmount)
                     continue;
@@ -64,8 +72,8 @@ public class Inventory implements NetworkSerializable {
     }
 
     public InvItem isFull(int id) {
-        for (int i = row - 1; i >= 0; i--)
-            for (int j = 0; j < col; j++) {
+        for (int i = rows - 1; i >= 0; i--)
+            for (int j = 0; j < cols; j++) {
                 InvItem invItem = inventory[i][j];
                 if(invItem.isEmpty() || (invItem.getID() == id && invItem.getAmount() < ItemManager.getInstance().getItem(id).maxAmount.getValue())) return invItem;
             }
@@ -74,8 +82,8 @@ public class Inventory implements NetworkSerializable {
 
     public int amountOf(int id) {
         int total = 0;
-        for (int i = row - 1; i >= 0; i--)
-            for (int j = 0; j < col; j++) {
+        for (int i = rows - 1; i >= 0; i--)
+            for (int j = 0; j < cols; j++) {
                 InvItem invItem = inventory[i][j];
                 if(invItem.isEmpty() && invItem.getID() == id)
                     total += invItem.getAmount();
@@ -88,8 +96,8 @@ public class Inventory implements NetworkSerializable {
     }
 
     public boolean contains(int id, int amount) {
-        outer: for (int i = row - 1; i >= 0; i--)
-            for (int j = 0; j < col; j++) {
+        outer: for (int i = rows - 1; i >= 0; i--)
+            for (int j = 0; j < cols; j++) {
                 InvItem invItem = inventory[i][j];
                 if(invItem.isEmpty() || invItem.getID() != id) continue;
                 amount -= invItem.getAmount();
@@ -98,8 +106,8 @@ public class Inventory implements NetworkSerializable {
         return amount <= 0;
     }
 
-    public InvItem getInvItem(int i, int j) {
-        return inventory[i][j];
+    public InvItem getInvItem(int row, int col) {
+        return inventory[row][col];
     }
 
     public InvItem[][] getInventory() {
@@ -107,30 +115,30 @@ public class Inventory implements NetworkSerializable {
     }
 
     public String getTitle() {
-        return title;
+        return name;
     }
 
     public int getRow() {
-        return row;
+        return rows;
     }
 
     public int getCol() {
-        return col;
+        return cols;
     }
 
     @Override
     public void serialize(LineWriter writer) {
-        writer.writeInt(row).writeInt(col);
-        for(int i = 0; i < row; i++)
-            for(int j = 0; j < col; j++)
+        writer.writeInt(rows).writeInt(cols);
+        for(int i = 0; i < rows; i++)
+            for(int j = 0; j < cols; j++)
                 writer.writeInt(inventory[i][j].getID()).writeInt(inventory[i][j].getAmount());
     }
 
     @Override
     public void parse(LineSplitter splitter) {
-        int row = splitter.getNextInt(), col = splitter.getNextInt();
-        for(int i = 0; i < row; i++)
-            for(int j = 0; j < col; j++)
+        int rows = splitter.getNextInt(), cols = splitter.getNextInt();
+        for(int i = 0; i < rows; i++)
+            for(int j = 0; j < cols; j++)
                 inventory[i][j].setItem(splitter.getNextInt(), splitter.getNextInt());
     }
 }

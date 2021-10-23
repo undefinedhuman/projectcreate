@@ -7,6 +7,7 @@ import de.undefinedhuman.projectcreate.core.ecs.inventory.InventoryComponent;
 import de.undefinedhuman.projectcreate.core.ecs.inventory.InventoryType;
 import de.undefinedhuman.projectcreate.core.inventory.Inventory;
 import de.undefinedhuman.projectcreate.core.inventory.SelectorInventory;
+import de.undefinedhuman.projectcreate.engine.ecs.component.IDComponent;
 import de.undefinedhuman.projectcreate.engine.gui.Gui;
 import de.undefinedhuman.projectcreate.engine.gui.texture.GuiTemplate;
 import de.undefinedhuman.projectcreate.engine.utils.Utils;
@@ -18,6 +19,7 @@ public class ClientInventory<T extends Inventory> extends Gui implements InvTarg
     protected InvSlot[][] inventory;
     protected T linkInventory;
     private InventoryType type;
+    private long linkedEntityID = 0;
     private String name;
 
     public ClientInventory(GuiTemplate template, InventoryType type, String name) {
@@ -27,24 +29,26 @@ public class ClientInventory<T extends Inventory> extends Gui implements InvTarg
     }
 
     public void linkInventory(Entity entity) {
-        InventoryComponent component = Mappers.INVENTORY.get(entity);
-        if(component == null || !component.hasInventory(name)) return;
-        T inventory = component.getInventory(type, name);
+        IDComponent idComponent = Mappers.ID.get(entity);
+        InventoryComponent inventoryComponent = Mappers.INVENTORY.get(entity);
+        if(idComponent == null || inventoryComponent == null || !inventoryComponent.hasInventory(name)) return;
+        T inventory = inventoryComponent.getInventory(type, name);
         if(inventory == null) return;
-        linkInventory(inventory);
+        linkInventory(idComponent.getWorldID(), inventory);
     }
 
-    public void linkInventory(T linkInventory) {
+    public void linkInventory(long linkedEntityID, T linkInventory) {
         unlink();
         if(linkInventory == null)
             return;
+        this.linkedEntityID = linkedEntityID;
         this.linkInventory = linkInventory;
         this.inventory = new InvSlot[linkInventory.getRow()][linkInventory.getCol()];
         setSize(Tools.getInventorySize(getBaseCornerSize(), linkInventory.getCol()), Tools.getInventorySize(getBaseCornerSize(), linkInventory.getRow()));
         for (int i = linkInventory.getRow() - 1; i >= 0; i--)
             for (int j = 0; j < linkInventory.getCol(); j++) {
                 InvSlot invSlot = InventoryManager.getInstance().getClientInvSlotPool().get();
-                invSlot.link(i, j, linkInventory.getInvItem(i, j));
+                invSlot.link(linkedEntityID, linkInventory.getTitle(), i, j, linkInventory.getInvItem(i, j));
                 inventory[i][j] = invSlot;
                 addChild(invSlot);
             }
@@ -68,6 +72,7 @@ public class ClientInventory<T extends Inventory> extends Gui implements InvTarg
                 InventoryManager.getInstance().getClientInvSlotPool().add(invSlot);
                 inventory[i][j] = null;
             }
+        linkedEntityID = -1;
         inventory = null;
         linkInventory = null;
         removeChildren();
@@ -98,6 +103,10 @@ public class ClientInventory<T extends Inventory> extends Gui implements InvTarg
 
     public String getName() {
         return name;
+    }
+
+    public long getLinkedEntityID() {
+        return linkedEntityID;
     }
 
     public int getCol() {

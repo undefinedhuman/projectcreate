@@ -8,6 +8,7 @@ import de.undefinedhuman.projectcreate.core.ecs.base.transform.TransformComponen
 import de.undefinedhuman.projectcreate.core.ecs.inventory.InventoryComponent;
 import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.core.ecs.stats.name.NameComponent;
+import de.undefinedhuman.projectcreate.core.inventory.Inventory;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.core.network.PacketHandler;
 import de.undefinedhuman.projectcreate.core.network.packets.LoginPacket;
@@ -17,9 +18,12 @@ import de.undefinedhuman.projectcreate.core.network.packets.entity.CreateEntityP
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.ComponentPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.JumpPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.inventory.AddItemPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.inventory.SelectItemPacket;
 import de.undefinedhuman.projectcreate.core.network.utils.PacketUtils;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 import de.undefinedhuman.projectcreate.server.ServerManager;
 import de.undefinedhuman.projectcreate.server.entity.MovementSystem;
 import de.undefinedhuman.projectcreate.server.utils.IDManager;
@@ -128,5 +132,31 @@ public class ServerPacketHandler implements PacketHandler {
         packet.worldID = playerConnection.worldID;
         ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), packet);
         SelectorPacket.parse(entity, packet);
+    }
+
+    @Override
+    public void handle(Connection connection, AddItemPacket packet) {
+        PlayerConnection playerConnection = (PlayerConnection) connection;
+        Entity entity = EntityManager.getInstance().getEntity(playerConnection.worldID);
+        if(entity == null) return;
+        packet.worldID = playerConnection.worldID;
+        Mappers.INVENTORY.get(entity).getInventory("Inventory").addItem(packet.itemID, packet.itemAmount);
+        ServerManager.getInstance().sendToTCP(connection.getID(), packet);
+    }
+
+    @Override
+    public void handle(Connection connection, SelectItemPacket packet) {
+        PlayerConnection playerConnection = (PlayerConnection) connection;
+        Entity player = EntityManager.getInstance().getEntity(playerConnection.worldID);
+        Entity interactedEntity = EntityManager.getInstance().getEntity(packet.interactedEntityID);
+        if(player == null || interactedEntity == null) return;
+        InventoryComponent playerInventory = Mappers.INVENTORY.get(player);
+        InventoryComponent interactedInventoryComponent = Mappers.INVENTORY.get(interactedEntity);
+        if(interactedInventoryComponent == null || playerInventory == null) return;
+        Inventory interactedInventory = interactedInventoryComponent.getInventory(packet.inventoryName);
+        if(interactedInventory == null || !Utils.isInRange(packet.row, 0, interactedInventory.getRow()-1) || !Utils.isInRange(packet.col, 0, interactedInventory.getCol()-1)) return;
+        playerInventory.currentlySelectedItem.setItem(interactedInventory.forceRemoveItem(packet.row, packet.col));
+        // TEMP
+        ServerManager.getInstance().sendToTCP(connection.getID(), packet);
     }
 }

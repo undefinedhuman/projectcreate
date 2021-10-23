@@ -16,6 +16,7 @@ import de.undefinedhuman.projectcreate.core.network.packets.entity.components.Co
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.PositionPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.JumpPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.inventory.AddItemPacket;
 import de.undefinedhuman.projectcreate.core.network.utils.PacketUtils;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
@@ -137,5 +138,12 @@ public class ClientPacketHandler implements PacketHandler {
         Entity entity = EntityManager.getInstance().getEntity(packet.worldID);
         if(entity == null) return;
         SelectorPacket.parse(entity, packet);
+    }
+
+    @Override
+    public void handle(Connection connection, AddItemPacket packet) {
+        Entity entity = EntityManager.getInstance().getEntity(packet.worldID);
+        if(entity == null) return;
+        Mappers.INVENTORY.get(entity).getInventory("Inventory").addItem(packet.itemID, packet.itemAmount);
     }
 }

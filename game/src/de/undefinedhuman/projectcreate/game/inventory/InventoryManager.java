@@ -46,7 +46,7 @@ public class InventoryManager extends Manager {
     private InventoryManager() {
         dragAndDrop = new DragAndDrop(CameraManager.guiCamera);
         GuiManager.getInstance().addGui(Selector.getInstance(), SidePanel.getInstance(), InspectScreen.getInstance(), EquipScreen.getInstance(), PlayerInventory.getInstance());
-        dragAndDrop.addTarget(PlayerInventory.getInstance());
+        dragAndDrop.addTarget(Selector.getInstance(), PlayerInventory.getInstance());
     }
 
     @Override

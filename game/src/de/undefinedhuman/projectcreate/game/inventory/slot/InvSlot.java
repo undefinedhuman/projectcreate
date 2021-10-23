@@ -25,6 +25,9 @@ public class InvSlot extends Slot implements Poolable {
     private Text amountText;
     private InvItem linkedItem;
     private ItemChangeListener itemChangeListener;
+    private long linkedEntityID;
+    private int row, col;
+    private String linkInventoryName;
 
     public InvSlot() {
         super(new PixelConstraint(0), new PixelConstraint(0));
@@ -82,8 +85,12 @@ public class InvSlot extends Slot implements Poolable {
         return super.setVisible(visible);
     }
 
-    public void link(int row, int col, InvItem linkedItem) {
+    public void link(long entityID, String inventoryName, int row, int col, InvItem linkedItem) {
         setVisible(true);
+        this.linkInventoryName = inventoryName;
+        this.linkedEntityID = entityID;
+        this.row = row;
+        this.col = col;
         this.linkedItem = linkedItem;
         this.linkedItem.addItemChangeListener(itemChangeListener);
         setValue(Axis.X, (Variables.SLOT_SIZE + Variables.SLOT_SPACE) * col);
@@ -125,6 +132,11 @@ public class InvSlot extends Slot implements Poolable {
         return linkedItem.addItem(id, amount);
     }
 
+    public void deleteItem() {
+        if(linkedItem != null)
+        linkedItem.deleteItem();
+    }
+
     public boolean isTypeCompatible(int id) {
         return linkedItem != null && linkedItem.isTypeCompatible(id);
     }
@@ -141,5 +153,29 @@ public class InvSlot extends Slot implements Poolable {
         return localID;
     }
 
+    public int removeItem(int amount) {
+        if(linkedItem == null)
+            return amount;
+        return linkedItem.removeItem(amount);
+    }
 
+    public int getRow() {
+        if(linkedItem == null) return -1;
+        return row;
+    }
+
+    public int getCol() {
+        if(linkedItem == null) return -1;
+        return col;
+    }
+
+    public long getLinkedEntityID() {
+        if(linkedItem == null) return -1;
+        return linkedEntityID;
+    }
+
+    public String getLinkInventoryName() {
+        if(linkedItem == null) return "";
+        return linkInventoryName;
+    }
 }

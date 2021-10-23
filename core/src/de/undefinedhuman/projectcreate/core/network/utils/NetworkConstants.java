@@ -12,6 +12,8 @@ import de.undefinedhuman.projectcreate.core.network.packets.entity.RemoveEntityP
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.JumpPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.PositionPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.inventory.AddItemPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.inventory.SelectItemPacket;
 
 public class NetworkConstants {
 
@@ -33,7 +35,9 @@ public class NetworkConstants {
                 PositionPacket.class,
                 JumpPacket.class,
                 MousePacket.class,
-                SelectorPacket.class
+                SelectorPacket.class,
+                AddItemPacket.class,
+                SelectItemPacket.class
         );
     }
 

@@ -1,6 +1,7 @@
 package de.undefinedhuman.projectcreate.core.ecs.inventory;
 
 import com.badlogic.ashley.core.Component;
+import de.undefinedhuman.projectcreate.core.inventory.InvItem;
 import de.undefinedhuman.projectcreate.core.inventory.Inventory;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.LineWriter;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 public class InventoryComponent implements Component, NetworkSerializable {
 
     private HashMap<String, Inventory> inventories;
+    public InvItem currentlySelectedItem = new InvItem();
 
     public InventoryComponent(HashMap<String, InventoryData> inventoryData) {
         this.inventories = new HashMap<>();
@@ -39,6 +41,8 @@ public class InventoryComponent implements Component, NetworkSerializable {
             return null;
         return (T) inventory;
     }
+
+    // SAVING MAKE SURE THE SELECTED INVENTORY ITEM GETS DROPPED INTO WORLD WITH UNLIMITED DESPAWN DURATION
 
     @Override
     public void serialize(LineWriter writer) {
