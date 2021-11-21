@@ -36,7 +36,7 @@ public class Tools extends Utils {
     public static boolean isWindows = System.getProperty("os.name").contains("Windows");
     public static boolean isLinux = System.getProperty("os.name").contains("Linux");
 
-    public static Random random = new Random();
+    public static final Random RANDOM = new Random();
 
     public static Vector2 getScreenPos(OrthographicCamera cam, Vector2 position) {
         return getScreenPos(cam, position.x, position.y);
@@ -272,7 +272,7 @@ public class Tools extends Utils {
             case SIN:
                 return y < (maxY + (int) (Math.sin(x * 50) * 5));
             case RANDOM:
-                return y < (maxY + random.nextInt(3) - 1);
+                return y < (maxY + RANDOM.nextInt(3) - 1);
             case CAVE:
                 int tempY = maxY - y;
                 return tempY < y;
@@ -318,7 +318,7 @@ public class Tools extends Utils {
     }
 
     public static int calculateRandomValue(int value) {
-        return Tools.random.nextInt(value) + value;
+        return Tools.RANDOM.nextInt(value) + value;
     }
 
 }

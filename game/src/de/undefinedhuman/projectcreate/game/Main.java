@@ -14,6 +14,7 @@ import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.gui.GuiManager;
 import de.undefinedhuman.projectcreate.engine.gui.texture.GuiTextureManager;
 import de.undefinedhuman.projectcreate.engine.language.LanguageManager;
+import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessage;
 import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessageDecorators;
@@ -49,7 +50,7 @@ public class Main extends Game {
                     new LogMessage()
                             .andThen(value -> LogMessageDecorators.withDate(value, Variables.LOG_DATE_FORMAT))
                             .andThen(value -> LogMessageDecorators.withModuleName(value, "Game"))
-                ),
+                ).setLogLevel(Level.INFO),
                 ConfigManager.getInstance().setConfigs(GameConfig.getInstance()),
                 LanguageManager.getInstance(),
                 TextureManager.getInstance(),

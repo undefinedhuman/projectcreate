@@ -3,17 +3,22 @@ package de.undefinedhuman.projectcreate.core.network.utils;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 import de.undefinedhuman.projectcreate.core.network.Packet;
-import de.undefinedhuman.projectcreate.core.network.packets.LoginPacket;
+import de.undefinedhuman.projectcreate.core.network.authentication.LoginResponse;
+import de.undefinedhuman.projectcreate.core.network.encryption.EncryptionRequest;
+import de.undefinedhuman.projectcreate.core.network.encryption.EncryptionResponse;
+import de.undefinedhuman.projectcreate.core.network.encryption.InitPacket;
+import de.undefinedhuman.projectcreate.core.network.authentication.LoginRequest;
+import de.undefinedhuman.projectcreate.core.network.encryption.SessionPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.MousePacket;
 import de.undefinedhuman.projectcreate.core.network.packets.SelectorPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.ComponentPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.CreateEntityPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.RemoveEntityPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.JumpPacket;
-import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementRequest;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.PositionPacket;
-import de.undefinedhuman.projectcreate.core.network.packets.inventory.AddItemPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.inventory.SelectItemPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.inventory.UpdateSlotsPacket;
 
 public class NetworkConstants {
 
@@ -27,17 +32,22 @@ public class NetworkConstants {
 
     public static void register(EndPoint endpoint) {
         registerPackets(endpoint.getKryo(),
-                LoginPacket.class,
+                LoginRequest.class,
+                LoginResponse.class,
                 CreateEntityPacket.class,
                 RemoveEntityPacket.class,
                 ComponentPacket.class,
-                MovementPacket.class,
+                MovementRequest.class,
                 PositionPacket.class,
                 JumpPacket.class,
                 MousePacket.class,
                 SelectorPacket.class,
-                AddItemPacket.class,
-                SelectItemPacket.class
+                SelectItemPacket.class,
+                UpdateSlotsPacket.class,
+                InitPacket.class,
+                EncryptionRequest.class,
+                EncryptionResponse.class,
+                SessionPacket.class
         );
     }
 

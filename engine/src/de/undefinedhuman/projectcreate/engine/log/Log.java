@@ -79,8 +79,9 @@ public class Log extends Manager implements ApplicationLogger, Serializable {
         return getInstance();
     }
 
-    public void setLogLevel(Level logLevel) {
+    public Log setLogLevel(Level logLevel) {
         this.logLevel = logLevel;
+        return getInstance();
     }
 
     public Level getLogLevel() {
@@ -124,6 +125,11 @@ public class Log extends Manager implements ApplicationLogger, Serializable {
 
     public static void debug(Object... messages) {
         Log.getInstance().createMessage(System.out, Level.DEBUG, messages);
+    }
+
+    public static <T> T debug(String errorMessage, Supplier<T> returnValue) {
+        Log.getInstance().createMessage(System.out, Level.DEBUG, errorMessage);
+        return returnValue.get();
     }
 
     public static void debug(Supplier<String> createMessages) {

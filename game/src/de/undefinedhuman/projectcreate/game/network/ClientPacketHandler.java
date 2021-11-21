@@ -5,9 +5,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Connection;
 import de.undefinedhuman.projectcreate.core.ecs.EntityFlag;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
+import de.undefinedhuman.projectcreate.core.ecs.inventory.InventoryComponent;
 import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.core.network.PacketHandler;
-import de.undefinedhuman.projectcreate.core.network.packets.LoginPacket;
+import de.undefinedhuman.projectcreate.core.network.authentication.LoginRequest;
+import de.undefinedhuman.projectcreate.core.network.authentication.LoginResponse;
+import de.undefinedhuman.projectcreate.core.network.encryption.EncryptionRequest;
+import de.undefinedhuman.projectcreate.core.network.encryption.EncryptionResponse;
+import de.undefinedhuman.projectcreate.core.network.encryption.EncryptionUtils;
+import de.undefinedhuman.projectcreate.core.network.encryption.SessionPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.MousePacket;
 import de.undefinedhuman.projectcreate.core.network.packets.SelectorPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.CreateEntityPacket;
@@ -15,32 +21,41 @@ import de.undefinedhuman.projectcreate.core.network.packets.entity.RemoveEntityP
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.ComponentPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.PositionPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.JumpPacket;
-import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementPacket;
-import de.undefinedhuman.projectcreate.core.network.packets.inventory.AddItemPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementRequest;
+import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementResponse;
+import de.undefinedhuman.projectcreate.core.network.packets.inventory.UpdateSlotsPacket;
 import de.undefinedhuman.projectcreate.core.network.utils.PacketUtils;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
+import de.undefinedhuman.projectcreate.engine.log.Log;
+import de.undefinedhuman.projectcreate.engine.utils.ds.Tuple;
 import de.undefinedhuman.projectcreate.game.Main;
 import de.undefinedhuman.projectcreate.game.inventory.ClientInventory;
+import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
 import de.undefinedhuman.projectcreate.game.inventory.player.PlayerInventory;
 import de.undefinedhuman.projectcreate.game.inventory.player.Selector;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameScreen;
+import de.undefinedhuman.projectcreate.game.utils.Tools;
 
 public class ClientPacketHandler implements PacketHandler {
     @Override
-    public void handle(Connection connection, LoginPacket packet) {
+    public void handle(Connection connection, LoginResponse packet) {
+        Log.info("HELLO?");
         Entity player = BlueprintManager.getInstance().createEntity(BlueprintManager.PLAYER_BLUEPRINT_ID, packet.worldID, EntityFlag.getBigMask(EntityFlag.IS_MAIN_PLAYER));
         PacketUtils.setComponentData(player, PacketUtils.parseComponentData(packet.componentData));
         Mappers.MOVEMENT.get(player).predictedPosition.set(Mappers.TRANSFORM.get(player).getPosition());
         EntityManager.getInstance().addEntity(packet.worldID, player);
         GameManager.getInstance().player = player;
         linkInventories(player, PlayerInventory.getInstance(), Selector.getInstance());
+        InventoryComponent component = Mappers.INVENTORY.get(player);
+        InventoryManager.getInstance().getDragAndDrop().getDraggableItem().link(component.currentlySelectedItem);
         Main.instance.setScreen(GameScreen.getInstance());
     }
 
     private void linkInventories(Entity entity, ClientInventory<?>... inventories) {
-        for(ClientInventory<?> inventory : inventories) inventory.linkInventory(entity);
+        for(ClientInventory<?> inventory : inventories)
+            inventory.linkInventory(entity);
     }
 
     @Override
@@ -63,10 +78,10 @@ public class ClientPacketHandler implements PacketHandler {
     }
 
     @Override
-    public void handle(Connection connection, MovementPacket packet) {
+    public void handle(Connection connection, MovementResponse packet) {
         Entity entity = EntityManager.getInstance().getEntity(packet.worldID);
         if(entity == null) return;
-        MovementPacket.parse(entity, packet);
+        MovementRequest.parse(entity, packet);
     }
 
     private Vector2 TEMP_POSITION = new Vector2();
@@ -141,9 +156,47 @@ public class ClientPacketHandler implements PacketHandler {
     }
 
     @Override
-    public void handle(Connection connection, AddItemPacket packet) {
-        Entity entity = EntityManager.getInstance().getEntity(packet.worldID);
-        if(entity == null) return;
-        Mappers.INVENTORY.get(entity).getInventory("Inventory").addItem(packet.itemID, packet.itemAmount);
+    public void handle(Connection connection, UpdateSlotsPacket packet) {
+        Entity entity1 = EntityManager.getInstance().getEntity(packet.entityID1);
+        if(entity1 == null) return;
+        InventoryComponent component1 = Mappers.INVENTORY.get(entity1);
+        component1.getInventory(packet.inventoryName1).getInvItem(packet.row1, packet.col1).setItem(packet.itemID1, packet.amount1);
+        InventoryComponent component2 = Mappers.INVENTORY.get(GameManager.getInstance().player);
+        component2.currentlySelectedItem.setItem(packet.itemID2, packet.amount2);
+    }
+
+    @Override
+    public void handle(Connection connection, EncryptionRequest packet) {
+        Tuple<byte[], byte[]> decryptedServerData = EncryptionRequest.parse(packet);
+        ClientEncryption.getInstance().init(decryptedServerData.getT());
+        ClientManager.getInstance().sendTCP(
+                EncryptionResponse.serialize(
+                        ClientEncryption.getInstance().getRSAEncryptionCipher(),
+                        ClientEncryption.getInstance().getAesKey().getEncoded(),
+                        decryptedServerData.getU()
+                )
+        );
+        String data = "456erf34:1";
+        long average = 0;
+        long highest = 0;
+        for(int i = 0; i < 10000; i++) {
+            long startTime = System.nanoTime();
+            EncryptionUtils.encryptData(ClientEncryption.getInstance().getAESEncryptionCipher(), data);
+            long endTime = System.nanoTime();
+            long time = (endTime-startTime);
+            if(i >= 3)
+                average += time;
+            if(time > highest)
+                highest = time;
+        }
+        average /= 10000;
+        Log.info("Average execution time: " + (average) + "ns");
+        Log.info("Highest execution time: " + (highest) + "ns");
+    }
+
+    @Override
+    public void handle(Connection connection, SessionPacket packet) {
+        ClientManager.getInstance().currentSessionID = SessionPacket.parse(ClientEncryption.getInstance().getRSADecryptionCipher(), packet);
+        ClientManager.getInstance().sendTCP(LoginRequest.serialize(ClientEncryption.getInstance().getAESEncryptionCipher(), "undefinedhuman " + Tools.RANDOM.nextInt(100), ClientManager.getInstance().currentSessionID));
     }
 }

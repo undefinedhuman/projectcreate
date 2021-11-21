@@ -1,6 +1,7 @@
 package de.undefinedhuman.projectcreate.core.network.packets.inventory;
 
 import com.esotericsoftware.kryonet.Connection;
+import de.undefinedhuman.projectcreate.core.inventory.SlotInfo;
 import de.undefinedhuman.projectcreate.core.network.Packet;
 import de.undefinedhuman.projectcreate.core.network.PacketHandler;
 
@@ -16,12 +17,12 @@ public class SelectItemPacket implements Packet {
         handler.handle(connection, this);
     }
 
-    public static SelectItemPacket serialize(long interactedEntityID, String inventoryName, int row, int col, boolean half) {
+    public static SelectItemPacket serialize(SlotInfo info, boolean half) {
         SelectItemPacket selectItemPacket = new SelectItemPacket();
-        selectItemPacket.interactedEntityID = interactedEntityID;
-        selectItemPacket.inventoryName = inventoryName;
-        selectItemPacket.row = row;
-        selectItemPacket.col = col;
+        selectItemPacket.interactedEntityID = info.getLinkedEntityID();
+        selectItemPacket.inventoryName = info.getLinkInventoryName();
+        selectItemPacket.row = info.getRow();
+        selectItemPacket.col = info.getCol();
         selectItemPacket.half = half;
         return selectItemPacket;
     }

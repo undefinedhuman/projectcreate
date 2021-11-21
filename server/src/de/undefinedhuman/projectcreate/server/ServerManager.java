@@ -4,8 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 import de.undefinedhuman.projectcreate.core.ecs.ComponentTypes;
-import de.undefinedhuman.projectcreate.core.ecs.visual.animation.AnimationBlueprint;
 import de.undefinedhuman.projectcreate.core.ecs.interaction.InteractionBlueprint;
+import de.undefinedhuman.projectcreate.core.ecs.visual.animation.AnimationBlueprint;
 import de.undefinedhuman.projectcreate.core.ecs.visual.sprite.SpriteBlueprint;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.core.network.log.NetworkLogger;
@@ -18,9 +18,9 @@ import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessage;
 import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessageDecorators;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.manager.ManagerList;
 import de.undefinedhuman.projectcreate.engine.utils.timer.Timer;
-import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.timer.TimerList;
 import de.undefinedhuman.projectcreate.server.config.ServerConfig;
 import de.undefinedhuman.projectcreate.server.entity.MovementSystem;
@@ -66,7 +66,6 @@ public class ServerManager extends Server {
                 new Timer(0.2f, () -> Arrays.stream(getConnections()).forEach(Connection::updateReturnTripTime)),
                 new Timer(900f, () -> Log.getInstance().save())
         );
-
         addListener(new ServerListener());
     }
 

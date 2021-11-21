@@ -22,6 +22,7 @@ public class ClientManager extends Manager {
     private static final int UDP_PORT = NetworkConstants.DEFAULT_UDP_PORT;
 
     private final Client client;
+    public String currentSessionID = "";
 
     private TimerList timers = new TimerList();
 

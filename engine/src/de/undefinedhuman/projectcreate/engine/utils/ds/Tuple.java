@@ -3,28 +3,28 @@ package de.undefinedhuman.projectcreate.engine.utils.ds;
 import java.util.Objects;
 
 public class Tuple<T, U> {
-    private T key;
-    private U value;
+    private T t;
+    private U u;
 
-    public Tuple(T key, U value) {
-        this.key = key;
-        this.value = value;
+    public Tuple(T t, U u) {
+        this.t = t;
+        this.u = u;
     }
 
-    public T getKey() {
-        return key;
+    public T getT() {
+        return t;
     }
 
-    public void setKey(T key) {
-        this.key = key;
+    public void setT(T t) {
+        this.t = t;
     }
 
-    public U getValue() {
-        return value;
+    public U getU() {
+        return u;
     }
 
-    public void setValue(U value) {
-        this.value = value;
+    public void setU(U u) {
+        this.u = u;
     }
 
     @Override
@@ -32,18 +32,18 @@ public class Tuple<T, U> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Tuple<?, ?> other = (Tuple<?, ?>) o;
-        return Objects.equals(key, other.key) && Objects.equals(value, other.value);
+        return Objects.equals(t, other.t) && Objects.equals(u, other.u);
     }
 
     @Override
     public int hashCode() {
-        int result = key != null ? key.hashCode() : 0;
-        result = 31 * result + (value != null ? value.hashCode() : 0);
+        int result = t != null ? t.hashCode() : 0;
+        result = 31 * result + (u != null ? u.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return "[" + key + ", " + value + "]";
+        return "[" + t + ", " + u + "]";
     }
 }

@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.game.screen;
 
 import com.badlogic.gdx.Gdx;
-import de.undefinedhuman.projectcreate.core.network.packets.LoginPacket;
+import de.undefinedhuman.projectcreate.core.network.encryption.InitPacket;
 import de.undefinedhuman.projectcreate.engine.utils.ScreenAdapter;
 import de.undefinedhuman.projectcreate.game.network.ClientManager;
 import de.undefinedhuman.projectcreate.game.world.WorldGenerator;
@@ -23,10 +23,7 @@ public class TestScreen extends ScreenAdapter {
         WorldGenerator.instance.generateTestWorld("Main", WorldSetting.DEV, BiomeSetting.DEV);
 
         ClientManager.getInstance().connect();
-
-        LoginPacket packet = new LoginPacket();
-        packet.name = "undefinedhuman " + RANDOM.nextInt(100);
-        ClientManager.getInstance().sendTCP(packet);
+        ClientManager.getInstance().sendTCP(new InitPacket());
 
         Gdx.graphics.setResizable(true);
 

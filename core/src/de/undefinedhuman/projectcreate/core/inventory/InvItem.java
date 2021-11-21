@@ -10,6 +10,9 @@ import java.util.ArrayList;
 
 public class InvItem {
 
+    public static final int ID_WHEN_EMPTY = -1;
+    public static final int AMOUNT_WHEN_EMPTY = -1;
+
     private int id, amount;
     private Class<? extends Item> itemTypeFilter;
 
@@ -17,6 +20,10 @@ public class InvItem {
 
     public InvItem() {
         this(0, 0, Item.class);
+    }
+
+    public InvItem(Class<? extends Item> itemTypeFilter) {
+        this(0, 0, itemTypeFilter);
     }
 
     public InvItem(int id, int amount, Class<? extends Item> itemTypeFilter) {
@@ -59,6 +66,7 @@ public class InvItem {
 
     public int removeItem(int otherAmount) {
         int tempAmount = amount - otherAmount;
+        this.amount = tempAmount;
         if(tempAmount <= 0) {
             deleteItem();
             return Math.abs(tempAmount);
@@ -68,7 +76,7 @@ public class InvItem {
     }
 
     public void deleteItem() {
-        updateItem(0, -1);
+        updateItem(ID_WHEN_EMPTY, AMOUNT_WHEN_EMPTY);
     }
 
     public void setItem(Vector2i stats) {

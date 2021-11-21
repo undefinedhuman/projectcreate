@@ -252,6 +252,10 @@ public class InventoryManager extends Manager {
         return clientInvSlotPool;
     }
 
+    public DragAndDrop getDragAndDrop() {
+        return dragAndDrop;
+    }
+
     public static InventoryManager getInstance() {
         if (instance == null) {
             synchronized (InventoryManager.class) {

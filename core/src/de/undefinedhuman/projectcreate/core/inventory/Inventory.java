@@ -4,7 +4,6 @@ import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.LineWriter;
 import de.undefinedhuman.projectcreate.engine.network.NetworkSerializable;
-import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 
 public class Inventory implements NetworkSerializable {
 
@@ -44,13 +43,6 @@ public class Inventory implements NetworkSerializable {
             }
 
         return amountToBeRemoved;
-    }
-
-    public Vector2i forceRemoveItem(int row, int col) {
-        InvItem item = inventory[row][col];
-        Vector2i itemStats = new Vector2i(item.getID(), item.getAmount());
-        inventory[row][col].removeItem(itemStats.y);
-        return itemStats;
     }
 
     public boolean isFull(int id, int amount) {

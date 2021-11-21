@@ -1,13 +1,10 @@
-package de.undefinedhuman.projectcreate.core.network.packets.inventory;
+package de.undefinedhuman.projectcreate.core.network.encryption;
 
 import com.esotericsoftware.kryonet.Connection;
 import de.undefinedhuman.projectcreate.core.network.Packet;
 import de.undefinedhuman.projectcreate.core.network.PacketHandler;
 
-public class AddItemPacket implements Packet {
-
-    public long worldID;
-    public int itemID, itemAmount;
+public class InitPacket implements Packet {
 
     @Override
     public void handle(Connection connection, PacketHandler handler) {

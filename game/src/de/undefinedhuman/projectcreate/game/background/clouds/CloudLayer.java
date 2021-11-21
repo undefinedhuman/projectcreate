@@ -28,8 +28,8 @@ public class CloudLayer extends Layer {
         int cloudCount = World.instance.pixelSize.x/200;
         for(int i = 0; i < cloudCount; i++) {
             clouds.add(new Cloud(
-                    BackgroundManager.getInstance().cloudTextures[Tools.random.nextInt(BackgroundManager.getInstance().cloudTextures.length)],
-                    new Vector2(Tools.random.nextInt(World.instance.pixelSize.x), World.instance.maxHeight + yOffset + Tools.random.nextInt(Variables.CLOUD_HEIGHT_OFFSET * 2) - Variables.CLOUD_HEIGHT_OFFSET),
+                    BackgroundManager.getInstance().cloudTextures[Tools.RANDOM.nextInt(BackgroundManager.getInstance().cloudTextures.length)],
+                    new Vector2(Tools.RANDOM.nextInt(World.instance.pixelSize.x), World.instance.maxHeight + yOffset + Tools.RANDOM.nextInt(Variables.CLOUD_HEIGHT_OFFSET * 2) - Variables.CLOUD_HEIGHT_OFFSET),
                     layerID));
         }
     }

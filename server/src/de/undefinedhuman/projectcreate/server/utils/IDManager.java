@@ -6,7 +6,7 @@ public class IDManager {
 
     private static volatile IDManager instance;
 
-    private AtomicLong currentMaxWorldID = new AtomicLong();
+    private AtomicLong currentMaxWorldID = new AtomicLong(1);
 
     private IDManager() {}
 

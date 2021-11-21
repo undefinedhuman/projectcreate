@@ -17,7 +17,7 @@ public class Bird extends GameObject {
     public Bird(Vector2 startPos, float speedMultiplier) {
         this.position.set(startPos);
         this.speedMultiplier = speedMultiplier;
-        currentIndex = Tools.random.nextInt(BackgroundManager.getInstance().birdTexture.length);
+        currentIndex = Tools.RANDOM.nextInt(BackgroundManager.getInstance().birdTexture.length);
     }
 
     @Override

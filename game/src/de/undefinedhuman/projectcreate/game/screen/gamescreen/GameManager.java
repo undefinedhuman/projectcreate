@@ -2,13 +2,11 @@ package de.undefinedhuman.projectcreate.game.screen.gamescreen;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.base.transform.TransformComponent;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
-import de.undefinedhuman.projectcreate.core.network.packets.inventory.AddItemPacket;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
 import de.undefinedhuman.projectcreate.engine.gui.GuiManager;
@@ -80,13 +78,6 @@ public class GameManager {
     public void update(float delta) {
         if (!ClientManager.getInstance().isConnected())
             Gdx.app.exit();
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.J)) {
-            AddItemPacket addItemPacket = new AddItemPacket();
-            addItemPacket.itemID = 2;
-            addItemPacket.itemAmount = 1;
-            ClientManager.getInstance().sendTCP(addItemPacket);
-        }
 
         ClientManager.getInstance().update(Main.delta);
 

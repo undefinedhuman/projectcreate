@@ -5,6 +5,7 @@ import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
 import de.undefinedhuman.projectcreate.engine.gl.HeadlessApplicationAdapter;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.server.network.ServerEncryption;
 
 public class Main {
 
@@ -14,6 +15,7 @@ public class Main {
         HeadlessApplicationConfiguration config = new HeadlessApplicationConfiguration();
         config.updatesPerSecond = Variables.SERVER_TICK_RATE;
         Variables.DONT_LOAD_TEXTURES = true;
+        ServerEncryption.getInstance();
         new HeadlessApplication(new HeadlessApplicationAdapter() {
             @Override
             public void create() {

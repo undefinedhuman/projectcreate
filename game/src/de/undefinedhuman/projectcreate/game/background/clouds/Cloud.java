@@ -15,7 +15,7 @@ public class Cloud extends BackgroundObject {
     private TextureRegion texture;
 
     public Cloud(String texture, Vector2 startPos, int layerID) {
-        super(Tools.getTextureSize(TextureManager.getInstance().getTexture(texture)), startPos, -(Tools.random.nextFloat() * 7f + 1), layerID);
+        super(Tools.getTextureSize(TextureManager.getInstance().getTexture(texture)), startPos, -(Tools.RANDOM.nextFloat() * 7f + 1), layerID);
         this.texture = TextureManager.getInstance().getTexture(texture);
         this.alpha = 1f - layerID * 0.2f;
     }
