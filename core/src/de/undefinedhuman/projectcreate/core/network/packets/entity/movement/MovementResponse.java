@@ -6,7 +6,6 @@ import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.core.network.Packet;
 import de.undefinedhuman.projectcreate.core.network.PacketHandler;
-import de.undefinedhuman.projectcreate.engine.ecs.component.IDComponent;
 import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 
@@ -22,14 +21,10 @@ public class MovementResponse implements Packet {
         handler.handle(connection, this);
     }
 
-    public static MovementResponse serialize(Entity entity) {
-        IDComponent idComponent = Mappers.ID.get(entity);
-        MovementComponent movementComponent = Mappers.MOVEMENT.get(entity);
-        if(idComponent == null || movementComponent == null)
-            return Log.debug("Error while retrieving id or movement component from entity!", () -> null);
+    public static MovementResponse serialize(long worldID, int direction) {
         MovementResponse response = new MovementResponse();
-        response.worldID = idComponent.getWorldID();
-        response.direction = movementComponent.getDirection();
+        response.worldID = worldID;
+        response.direction = direction;
         return response;
     }
 

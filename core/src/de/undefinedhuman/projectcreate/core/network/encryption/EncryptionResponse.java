@@ -22,8 +22,7 @@ public class EncryptionResponse implements Packet {
         EncryptionResponse packet = new EncryptionResponse();
         String base64SymmetricKey = EncryptionUtils.encodeBase64String(symmetricKey);
         String base64VerifyToken = EncryptionUtils.encodeBase64String(verifyToken);
-        byte[] encryptedData = EncryptionUtils.encryptData(cipher, base64SymmetricKey + ":" + base64VerifyToken);
-        packet.data = EncryptionUtils.encodeBase64String(encryptedData);
+        packet.data = EncryptionUtils.encodeBase64String(EncryptionUtils.encryptData(cipher, base64SymmetricKey + ":" + base64VerifyToken));
         return packet;
     }
 

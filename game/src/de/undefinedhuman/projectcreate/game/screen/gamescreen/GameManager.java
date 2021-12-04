@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.base.transform.TransformComponent;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
-import de.undefinedhuman.projectcreate.core.network.encryption.EncryptionPacket;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
 import de.undefinedhuman.projectcreate.engine.gui.GuiManager;
@@ -54,11 +53,6 @@ public class GameManager {
         BackgroundManager.getInstance();
         BackgroundManager.getInstance().init();
         loadManager();
-
-        EncryptionPacket packet = new EncryptionPacket();
-        packet.setData("wefwefwefwwef");
-
-        ClientManager.getInstance().sendTCP(packet);
 
         //GuiManager.getInstance().addGui(CraftingInventory.getInstance());
         GuiManager.getInstance().addGui(player1Text = new Text(""), player2Text = new Text(""), ping = new Text(""));

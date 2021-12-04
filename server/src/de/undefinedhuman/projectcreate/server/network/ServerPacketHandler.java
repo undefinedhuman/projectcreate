@@ -1,6 +1,7 @@
 package de.undefinedhuman.projectcreate.server.network;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Connection;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.base.transform.TransformComponent;
@@ -20,6 +21,7 @@ import de.undefinedhuman.projectcreate.core.network.packets.entity.CreateEntityP
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.ComponentPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.JumpPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementRequest;
+import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementResponse;
 import de.undefinedhuman.projectcreate.core.network.packets.inventory.SelectItemPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.inventory.UpdateSlotsPacket;
 import de.undefinedhuman.projectcreate.core.network.utils.PacketUtils;
@@ -29,6 +31,7 @@ import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.utils.Utils;
 import de.undefinedhuman.projectcreate.engine.utils.ds.Tuple;
 import de.undefinedhuman.projectcreate.server.ServerManager;
+import de.undefinedhuman.projectcreate.server.entity.MovementSystem;
 import de.undefinedhuman.projectcreate.server.utils.IDManager;
 
 import javax.crypto.Cipher;
@@ -51,8 +54,6 @@ public class ServerPacketHandler implements PacketHandler {
         Tuple<String, String> loginData;
         if(playerConnection.decryptionCipher == null || (loginData = LoginRequest.parse(playerConnection.decryptionCipher, packet)) == null)
             return;
-        Log.info(loginData);
-        Log.info(loginData.getT());
         long currentWorldID = sessionIDs.get(loginData.getT());
         if(currentWorldID >= 0)
             return;
@@ -92,10 +93,17 @@ public class ServerPacketHandler implements PacketHandler {
 
     @Override
     public void handle(Connection connection, MovementRequest packet) {
-        long worldID = ((PlayerConnection) connection).worldID;
+        if(!(connection instanceof PlayerConnection) || ((PlayerConnection) connection).decryptionCipher == null)
+            return;
+        PlayerConnection playerConnection = (PlayerConnection) connection;
+        Tuple<String, Integer> requestData = MovementRequest.parse(playerConnection.decryptionCipher, packet);
+        if(requestData == null)
+            return;
+        long worldID = sessionIDs.get(requestData.getT());
+        Log.info(worldID);
         Entity entity = EntityManager.getInstance().getEntity(worldID);
         if(entity == null || entity.isScheduledForRemoval() || entity.isRemoving()) return;
-        ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), packet);
+        ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), MovementResponse.serialize(worldID, requestData.getU()));
         long packetReceivedTime = System.nanoTime();
         ServerManager.getInstance().COMMAND_CACHE.add(() -> {
             if(!EntityManager.getInstance().hasEntity(worldID) || !connection.isConnected())
@@ -105,13 +113,13 @@ public class ServerPacketHandler implements PacketHandler {
             float delta = difference + latency;
             TransformComponent transformComponent = Mappers.TRANSFORM.get(entity);
             MovementComponent movementComponent = Mappers.MOVEMENT.get(entity);
-            /*if(packet.direction != 0) {
-                transformComponent.setPosition(MovementSystem.moveEntity(transformComponent.getPosition(), new Vector2(packet.direction * movementComponent.getSpeed(), 0), delta));
+            if(requestData.getU() != 0) {
+                transformComponent.setPosition(MovementSystem.moveEntity(transformComponent.getPosition(), new Vector2(requestData.getU() * movementComponent.getSpeed(), 0), delta));
             } else {
                 if(movementComponent.getDirection() != 0)
                     transformComponent.setPosition(MovementSystem.moveEntity(transformComponent.getPosition(), new Vector2(movementComponent.getDirection() * movementComponent.getSpeed(), 0), -1f * delta));
             }
-            MovementRequest.parse(entity, packet);*/
+            movementComponent.move(requestData.getU());
         });
     }
 
@@ -227,8 +235,4 @@ public class ServerPacketHandler implements PacketHandler {
         connection.sendTCP(SessionPacket.serialize(clientEncryptionCipher, sessionID));
     }
 
-    @Override
-    public void handle(Connection connection, EncryptionPacket packet) {
-        Log.info(packet.log());
-    }
 }

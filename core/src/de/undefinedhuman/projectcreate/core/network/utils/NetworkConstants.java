@@ -14,6 +14,7 @@ import de.undefinedhuman.projectcreate.core.network.packets.entity.RemoveEntityP
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.JumpPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementRequest;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.PositionPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementResponse;
 import de.undefinedhuman.projectcreate.core.network.packets.inventory.SelectItemPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.inventory.UpdateSlotsPacket;
 
@@ -45,7 +46,7 @@ public class NetworkConstants {
                 EncryptionRequest.class,
                 EncryptionResponse.class,
                 SessionPacket.class,
-                EncryptionPacket.class
+                MovementResponse.class
         );
     }
 

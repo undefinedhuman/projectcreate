@@ -10,7 +10,9 @@ import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponen
 import de.undefinedhuman.projectcreate.core.network.PacketHandler;
 import de.undefinedhuman.projectcreate.core.network.authentication.LoginRequest;
 import de.undefinedhuman.projectcreate.core.network.authentication.LoginResponse;
-import de.undefinedhuman.projectcreate.core.network.encryption.*;
+import de.undefinedhuman.projectcreate.core.network.encryption.EncryptionRequest;
+import de.undefinedhuman.projectcreate.core.network.encryption.EncryptionResponse;
+import de.undefinedhuman.projectcreate.core.network.encryption.SessionPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.MousePacket;
 import de.undefinedhuman.projectcreate.core.network.packets.SelectorPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.CreateEntityPacket;
@@ -23,7 +25,6 @@ import de.undefinedhuman.projectcreate.core.network.packets.inventory.UpdateSlot
 import de.undefinedhuman.projectcreate.core.network.utils.PacketUtils;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
-import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.utils.ds.Tuple;
 import de.undefinedhuman.projectcreate.game.Main;
 import de.undefinedhuman.projectcreate.game.inventory.ClientInventory;
@@ -171,32 +172,11 @@ public class ClientPacketHandler implements PacketHandler {
                         decryptedServerData.getU()
                 )
         );
-        String data = "456erf34:1";
-        long average = 0;
-        long highest = 0;
-        for(int i = 0; i < 10000; i++) {
-            long startTime = System.nanoTime();
-            EncryptionUtils.encryptData(ClientEncryption.getInstance().getAESEncryptionCipher(), data);
-            long endTime = System.nanoTime();
-            long time = (endTime-startTime);
-            if(i >= 3)
-                average += time;
-            if(time > highest)
-                highest = time;
-        }
-        average /= 10000;
-        Log.info("Average execution time: " + (average) + "ns");
-        Log.info("Highest execution time: " + (highest) + "ns");
     }
 
     @Override
     public void handle(Connection connection, SessionPacket packet) {
         ClientManager.getInstance().currentSessionID = SessionPacket.parse(ClientEncryption.getInstance().getDecryptionAESCipher(), packet);
         ClientManager.getInstance().sendTCP(LoginRequest.serialize(ClientEncryption.getInstance().getAESEncryptionCipher(), "undefinedhuman " + Tools.RANDOM.nextInt(100), ClientManager.getInstance().currentSessionID));
-    }
-
-    @Override
-    public void handle(Connection connection, EncryptionPacket packet) {
-
     }
 }

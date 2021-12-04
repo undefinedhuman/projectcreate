@@ -34,5 +34,4 @@ public interface PacketHandler {
     default void handle(Connection connection, EncryptionResponse packet) {}
     default void handle(Connection connection, SessionPacket packet) {}
     default void handle(Connection connection, LoginResponse packet) {}
-    void handle(Connection connection, EncryptionPacket packet);
 }
