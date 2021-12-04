@@ -226,4 +226,9 @@ public class ServerPacketHandler implements PacketHandler {
         sessionIDs.put(sessionID, -1L);
         connection.sendTCP(SessionPacket.serialize(clientEncryptionCipher, sessionID));
     }
+
+    @Override
+    public void handle(Connection connection, EncryptionPacket packet) {
+        Log.info(packet.log());
+    }
 }

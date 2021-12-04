@@ -4,11 +4,8 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 import de.undefinedhuman.projectcreate.core.network.Packet;
 import de.undefinedhuman.projectcreate.core.network.authentication.LoginResponse;
-import de.undefinedhuman.projectcreate.core.network.encryption.EncryptionRequest;
-import de.undefinedhuman.projectcreate.core.network.encryption.EncryptionResponse;
-import de.undefinedhuman.projectcreate.core.network.encryption.InitPacket;
+import de.undefinedhuman.projectcreate.core.network.encryption.*;
 import de.undefinedhuman.projectcreate.core.network.authentication.LoginRequest;
-import de.undefinedhuman.projectcreate.core.network.encryption.SessionPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.MousePacket;
 import de.undefinedhuman.projectcreate.core.network.packets.SelectorPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.ComponentPacket;
@@ -47,7 +44,8 @@ public class NetworkConstants {
                 InitPacket.class,
                 EncryptionRequest.class,
                 EncryptionResponse.class,
-                SessionPacket.class
+                SessionPacket.class,
+                EncryptionPacket.class
         );
     }
 

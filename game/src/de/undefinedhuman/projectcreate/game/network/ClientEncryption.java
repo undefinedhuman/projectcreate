@@ -62,12 +62,12 @@ public class ClientEncryption {
         return encryptionAESCipher;
     }
 
-    public Cipher getRSAEncryptionCipher() {
-        return encryptionRSACipher;
+    public Cipher getDecryptionAESCipher() {
+        return decryptionAESCipher;
     }
 
-    public Cipher getRSADecryptionCipher() {
-        return decryptionAESCipher;
+    public Cipher getRSAEncryptionCipher() {
+        return encryptionRSACipher;
     }
 
     public Key getAesKey() {

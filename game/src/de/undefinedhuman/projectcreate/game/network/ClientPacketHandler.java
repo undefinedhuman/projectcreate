@@ -10,10 +10,7 @@ import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponen
 import de.undefinedhuman.projectcreate.core.network.PacketHandler;
 import de.undefinedhuman.projectcreate.core.network.authentication.LoginRequest;
 import de.undefinedhuman.projectcreate.core.network.authentication.LoginResponse;
-import de.undefinedhuman.projectcreate.core.network.encryption.EncryptionRequest;
-import de.undefinedhuman.projectcreate.core.network.encryption.EncryptionResponse;
-import de.undefinedhuman.projectcreate.core.network.encryption.EncryptionUtils;
-import de.undefinedhuman.projectcreate.core.network.encryption.SessionPacket;
+import de.undefinedhuman.projectcreate.core.network.encryption.*;
 import de.undefinedhuman.projectcreate.core.network.packets.MousePacket;
 import de.undefinedhuman.projectcreate.core.network.packets.SelectorPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.CreateEntityPacket;
@@ -21,7 +18,6 @@ import de.undefinedhuman.projectcreate.core.network.packets.entity.RemoveEntityP
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.ComponentPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.PositionPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.JumpPacket;
-import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementRequest;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementResponse;
 import de.undefinedhuman.projectcreate.core.network.packets.inventory.UpdateSlotsPacket;
 import de.undefinedhuman.projectcreate.core.network.utils.PacketUtils;
@@ -41,7 +37,6 @@ import de.undefinedhuman.projectcreate.game.utils.Tools;
 public class ClientPacketHandler implements PacketHandler {
     @Override
     public void handle(Connection connection, LoginResponse packet) {
-        Log.info("HELLO?");
         Entity player = BlueprintManager.getInstance().createEntity(BlueprintManager.PLAYER_BLUEPRINT_ID, packet.worldID, EntityFlag.getBigMask(EntityFlag.IS_MAIN_PLAYER));
         PacketUtils.setComponentData(player, PacketUtils.parseComponentData(packet.componentData));
         Mappers.MOVEMENT.get(player).predictedPosition.set(Mappers.TRANSFORM.get(player).getPosition());
@@ -81,7 +76,7 @@ public class ClientPacketHandler implements PacketHandler {
     public void handle(Connection connection, MovementResponse packet) {
         Entity entity = EntityManager.getInstance().getEntity(packet.worldID);
         if(entity == null) return;
-        MovementRequest.parse(entity, packet);
+        MovementResponse.parse(packet);
     }
 
     private Vector2 TEMP_POSITION = new Vector2();
@@ -196,7 +191,12 @@ public class ClientPacketHandler implements PacketHandler {
 
     @Override
     public void handle(Connection connection, SessionPacket packet) {
-        ClientManager.getInstance().currentSessionID = SessionPacket.parse(ClientEncryption.getInstance().getRSADecryptionCipher(), packet);
+        ClientManager.getInstance().currentSessionID = SessionPacket.parse(ClientEncryption.getInstance().getDecryptionAESCipher(), packet);
         ClientManager.getInstance().sendTCP(LoginRequest.serialize(ClientEncryption.getInstance().getAESEncryptionCipher(), "undefinedhuman " + Tools.RANDOM.nextInt(100), ClientManager.getInstance().currentSessionID));
+    }
+
+    @Override
+    public void handle(Connection connection, EncryptionPacket packet) {
+
     }
 }
