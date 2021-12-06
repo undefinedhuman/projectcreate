@@ -16,4 +16,9 @@ public class NetworkLogger extends com.esotericsoftware.minlog.Log.Logger {
         if(level == com.esotericsoftware.minlog.Log.LEVEL_WARN && com.esotericsoftware.minlog.Log.WARN)
             Log.error(message);
     }
+
+    public static void setLogger() {
+        com.esotericsoftware.minlog.Log.setLogger(new NetworkLogger());
+    }
+
 }

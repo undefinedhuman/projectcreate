@@ -2,7 +2,6 @@ package de.undefinedhuman.projectcreate.game.inventory.player;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import de.undefinedhuman.projectcreate.core.network.packets.inventory.SelectItemPacket;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.MouseConstraint;
 import de.undefinedhuman.projectcreate.engine.utils.Mouse;
 import de.undefinedhuman.projectcreate.game.inventory.InvTarget;

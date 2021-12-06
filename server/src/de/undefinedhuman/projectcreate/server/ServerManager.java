@@ -8,8 +8,8 @@ import de.undefinedhuman.projectcreate.core.ecs.interaction.InteractionBlueprint
 import de.undefinedhuman.projectcreate.core.ecs.visual.animation.AnimationBlueprint;
 import de.undefinedhuman.projectcreate.core.ecs.visual.sprite.SpriteBlueprint;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
+import de.undefinedhuman.projectcreate.core.network.cache.NetworkCache;
 import de.undefinedhuman.projectcreate.core.network.log.NetworkLogger;
-import de.undefinedhuman.projectcreate.core.network.packets.CommandCache;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.PositionPacket;
 import de.undefinedhuman.projectcreate.core.network.utils.NetworkConstants;
 import de.undefinedhuman.projectcreate.engine.config.ConfigManager;
@@ -21,6 +21,7 @@ import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessageDecorators
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.manager.ManagerList;
 import de.undefinedhuman.projectcreate.engine.utils.timer.Timer;
+import de.undefinedhuman.projectcreate.engine.utils.timer.TimerAction;
 import de.undefinedhuman.projectcreate.engine.utils.timer.TimerList;
 import de.undefinedhuman.projectcreate.server.config.ServerConfig;
 import de.undefinedhuman.projectcreate.server.entity.MovementSystem;
@@ -28,7 +29,6 @@ import de.undefinedhuman.projectcreate.server.network.PlayerConnection;
 import de.undefinedhuman.projectcreate.server.network.ServerListener;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Scanner;
@@ -42,13 +42,21 @@ public class ServerManager extends Server {
 
     private Scanner consoleInput;
 
-    public ArrayList<CommandCache> COMMAND_CACHE = new ArrayList<>();
+    private NetworkCache cache;
 
     private ServerManager() {
         super(NetworkConstants.WRITE_BUFFER_SIZE, NetworkConstants.OBJECT_BUFFER_SIZE);
+        cache = new NetworkCache();
         NetworkConstants.register(this);
 
         consoleInput = new Scanner(System.in);
+
+        new Thread(() -> {
+            while(true) {
+                consoleInput.hasNext();
+                readInput();
+            }
+        }).start();
 
         managers.addManager(
                 Log.getInstance().setLogMessageDecorator(
@@ -62,10 +70,8 @@ public class ServerManager extends Server {
                 ItemManager.getInstance()
         );
 
-        timers.addTimers(
-                new Timer(0.2f, () -> Arrays.stream(getConnections()).forEach(Connection::updateReturnTripTime)),
-                new Timer(900f, () -> Log.getInstance().save())
-        );
+        initTimers();
+
         addListener(new ServerListener());
     }
 
@@ -85,8 +91,7 @@ public class ServerManager extends Server {
     public void update(float delta) {
         timers.update(delta);
         EntityManager.getInstance().update(delta);
-        COMMAND_CACHE.forEach(CommandCache::process);
-        COMMAND_CACHE.clear();
+        cache.process();
         EntityManager.getInstance().stream().map(Map.Entry::getValue).forEach(entity -> {
             PositionPacket packet = PositionPacket.serialize(entity);
             sendToAllUDP(packet);
@@ -94,6 +99,7 @@ public class ServerManager extends Server {
     }
 
     public void delete() {
+        cache.process();
         consoleInput.close();
         consoleInput = null;
         stop();
@@ -113,7 +119,16 @@ public class ServerManager extends Server {
     private void initGDX() {
         Gdx.app.setApplicationLogger(Log.getInstance());
         Gdx.app.setLogLevel(Variables.LOG_LEVEL.ordinal());
-        com.esotericsoftware.minlog.Log.setLogger(new NetworkLogger());
+        NetworkLogger.setLogger();
+    }
+
+    private void initTimers() {
+        addTimer(0.2f, () -> Arrays.stream(getConnections()).forEach(Connection::updateReturnTripTime));
+        addTimer(900f, () -> Log.getInstance().save());
+    }
+
+    private void addTimer(float time, TimerAction action) {
+        timers.addTimers(new Timer(time, action));
     }
 
     @Override

@@ -7,8 +7,6 @@ import com.badlogic.gdx.InputProcessor;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.core.network.packets.SelectorPacket;
-import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.JumpPacket;
-import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementRequest;
 import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
 import de.undefinedhuman.projectcreate.game.inventory.player.Selector;

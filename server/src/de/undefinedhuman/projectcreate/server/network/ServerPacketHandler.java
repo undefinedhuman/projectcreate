@@ -17,13 +17,7 @@ import de.undefinedhuman.projectcreate.core.network.authentication.LoginResponse
 import de.undefinedhuman.projectcreate.core.network.encryption.*;
 import de.undefinedhuman.projectcreate.core.network.packets.MousePacket;
 import de.undefinedhuman.projectcreate.core.network.packets.SelectorPacket;
-import de.undefinedhuman.projectcreate.core.network.packets.entity.CreateEntityPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.ComponentPacket;
-import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.JumpPacket;
-import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementRequest;
-import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementResponse;
-import de.undefinedhuman.projectcreate.core.network.packets.inventory.SelectItemPacket;
-import de.undefinedhuman.projectcreate.core.network.packets.inventory.UpdateSlotsPacket;
 import de.undefinedhuman.projectcreate.core.network.utils.PacketUtils;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;

@@ -12,8 +12,7 @@ import de.undefinedhuman.projectcreate.engine.log.Log;
 
 public class PositionPacket implements Packet {
 
-    public long timeStamp;
-    public long worldID;
+    public long timeStamp, worldID;
     public float x, y;
     public float velX, velY;
 
