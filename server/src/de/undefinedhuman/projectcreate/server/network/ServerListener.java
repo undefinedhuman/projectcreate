@@ -3,15 +3,22 @@ package de.undefinedhuman.projectcreate.server.network;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import de.undefinedhuman.projectcreate.core.network.Packet;
+import de.undefinedhuman.projectcreate.core.network.PacketHandler;
+import de.undefinedhuman.projectcreate.core.network.packets.ping.PingPacket;
 import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
 import de.undefinedhuman.projectcreate.server.ServerManager;
 
+import java.util.HashMap;
+
 public class ServerListener extends Listener {
 
-    private ServerPacketHandler packetHandler;
+    private static volatile ServerManager instance;
 
-    public ServerListener() {
-        packetHandler = new ServerPacketHandler();
+    private HashMap<Class<? extends Packet>, PacketHandler<?>> handlers;
+
+    private ServerListener() {
+        handlers = new HashMap<>();
+        handlers.put(PingPacket.class, new PingPacketHandler());
     }
 
     @Override
@@ -31,4 +38,15 @@ public class ServerListener extends Listener {
         ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), RemoveEntityPacket.serialize(playerConnection.worldID));
         EntityManager.getInstance().removeEntity(playerConnection.worldID);
     }
+
+    public static ServerManager getInstance() {
+        if(instance != null)
+            return instance;
+        synchronized (ServerManager.class) {
+            if (instance == null)
+                instance = new ServerManager();
+        }
+        return instance;
+    }
+
 }

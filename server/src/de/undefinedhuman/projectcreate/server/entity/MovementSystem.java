@@ -41,33 +41,4 @@ public class MovementSystem extends IteratingSystem {
         return new Vector2(position).mulAdd(velocity, delta);
     }
 
-            /*movementComponent.velocity.x += ((movementComponent.getDirection() * movementComponent.getSpeed()) - movementComponent.velocity.x) * 0.1f;
-        if(movementComponent.getDirection() == 0 && Tools.isInRange(movementComponent.velocity.x, -5, 5)) movementComponent.velocity.x = 0;
-        movementComponent.velocity.y -= movementComponent.getGravity() * deltaTime;
-
-        animationComponent.setAnimationTimeMultiplier(movementComponent.velocity.x != 0 ? Math.abs(movementComponent.velocity.x) / movementComponent.getSpeed() : 1);
-
-        currentPosition.set(transformComponent.getPosition());
-
-        float velX = Tools.clamp(movementComponent.velocity.x * deltaTime, -Variables.COLLISION_SIZE, Variables.COLLISION_SIZE);
-        float velY = Tools.clamp(movementComponent.velocity.y * deltaTime, -Variables.COLLISION_SIZE, Variables.COLLISION_SIZE);
-
-        collisionComponent.update(currentPosition.add(velX, 0));
-        Vector3 response = CollisionUtils.calculateCollisionX(collisionComponent);
-        currentPosition.add(response.x, response.y);
-
-        collisionComponent.update(currentPosition.add(0, velY));
-        response = CollisionUtils.calculateCollisionY(collisionComponent);
-        if(!response.isZero()) {
-            if(velY < 0 && collisionComponent.onSlope && movementComponent.canJump && movementComponent.velocity.x != 0 && (velX>0) == (response.x>0)) movementComponent.velocity.y = Math.max(Math.min(movementComponent.velocity.y, -50), -500f);
-            else movementComponent.velocity.y = 0;
-            if(response.y > 0) movementComponent.canJump = true;
-        }
-        currentPosition.add(0, response.y);
-
-        collisionComponent.update(currentPosition);
-        currentPosition.add(0, CollisionUtils.calculateSlopeCollisionY(collisionComponent).y);
-        collisionComponent.update(currentPosition);
-        currentPosition.add(CollisionUtils.calculateSlopeCollisionX(collisionComponent).x, 0);*/
-
 }

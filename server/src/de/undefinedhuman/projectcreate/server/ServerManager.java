@@ -8,7 +8,7 @@ import de.undefinedhuman.projectcreate.core.ecs.interaction.InteractionBlueprint
 import de.undefinedhuman.projectcreate.core.ecs.visual.animation.AnimationBlueprint;
 import de.undefinedhuman.projectcreate.core.ecs.visual.sprite.SpriteBlueprint;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
-import de.undefinedhuman.projectcreate.core.network.cache.NetworkCache;
+import de.undefinedhuman.projectcreate.core.network.buffer.NetworkBuffer;
 import de.undefinedhuman.projectcreate.core.network.log.NetworkLogger;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.PositionPacket;
 import de.undefinedhuman.projectcreate.core.network.utils.NetworkConstants;
@@ -27,11 +27,12 @@ import de.undefinedhuman.projectcreate.server.config.ServerConfig;
 import de.undefinedhuman.projectcreate.server.entity.MovementSystem;
 import de.undefinedhuman.projectcreate.server.network.PlayerConnection;
 import de.undefinedhuman.projectcreate.server.network.ServerListener;
+import de.undefinedhuman.projectcreate.server.utils.commands.CommandManager;
+import de.undefinedhuman.projectcreate.server.utils.console.Console;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Scanner;
 
 public class ServerManager extends Server {
 
@@ -40,23 +41,12 @@ public class ServerManager extends Server {
     private final ManagerList managers = new ManagerList();
     private final TimerList timers = new TimerList();
 
-    private Scanner consoleInput;
-
-    private NetworkCache cache;
+    private NetworkBuffer buffer;
 
     private ServerManager() {
         super(NetworkConstants.WRITE_BUFFER_SIZE, NetworkConstants.OBJECT_BUFFER_SIZE);
-        cache = new NetworkCache();
-        NetworkConstants.register(this);
-
-        consoleInput = new Scanner(System.in);
-
-        new Thread(() -> {
-            while(true) {
-                consoleInput.hasNext();
-                readInput();
-            }
-        }).start();
+        buffer = new NetworkBuffer();
+        NetworkConstants.registerPackets(this);
 
         managers.addManager(
                 Log.getInstance().setLogMessageDecorator(
@@ -67,7 +57,13 @@ public class ServerManager extends Server {
                 ConfigManager.getInstance().setConfigs(ServerConfig.getInstance()),
                 BlueprintManager.getInstance(),
                 EntityManager.getInstance(),
-                ItemManager.getInstance()
+                ItemManager.getInstance(),
+                CommandManager.getInstance()
+                        .addCommand("stop", (sender, label, args) -> {
+                            delete();
+                            return true;
+                        }),
+                Console.getInstance()
         );
 
         initTimers();
@@ -91,7 +87,7 @@ public class ServerManager extends Server {
     public void update(float delta) {
         timers.update(delta);
         EntityManager.getInstance().update(delta);
-        cache.process();
+        buffer.process();
         EntityManager.getInstance().stream().map(Map.Entry::getValue).forEach(entity -> {
             PositionPacket packet = PositionPacket.serialize(entity);
             sendToAllUDP(packet);
@@ -99,21 +95,11 @@ public class ServerManager extends Server {
     }
 
     public void delete() {
-        cache.process();
-        consoleInput.close();
-        consoleInput = null;
+        buffer.process();
         stop();
         timers.delete();
         managers.delete();
         System.exit(0);
-    }
-
-    private void readInput() {
-        if(consoleInput == null)
-            return;
-        String input = consoleInput.nextLine();
-        if (input.equalsIgnoreCase("exit") || input.equalsIgnoreCase("quit") || input.equalsIgnoreCase("stop"))
-            delete();
     }
 
     private void initGDX() {

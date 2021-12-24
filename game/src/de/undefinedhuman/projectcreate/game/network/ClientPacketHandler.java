@@ -8,8 +8,6 @@ import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.inventory.InventoryComponent;
 import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.core.network.PacketHandler;
-import de.undefinedhuman.projectcreate.core.network.authentication.LoginRequest;
-import de.undefinedhuman.projectcreate.core.network.authentication.LoginResponse;
 import de.undefinedhuman.projectcreate.core.network.encryption.EncryptionRequest;
 import de.undefinedhuman.projectcreate.core.network.encryption.EncryptionResponse;
 import de.undefinedhuman.projectcreate.core.network.encryption.SessionPacket;
@@ -50,29 +48,10 @@ public class ClientPacketHandler implements PacketHandler {
     }
 
     @Override
-    public void handle(Connection connection, CreateEntityPacket packet) {
-        Entity entity = CreateEntityPacket.parse(packet);
-        if(entity == null || entity.isScheduledForRemoval() || entity.isRemoving()) return;
-        EntityManager.getInstance().addEntity(packet.worldID, entity);
-    }
-
-    @Override
-    public void handle(Connection connection, RemoveEntityPacket packet) {
-        EntityManager.getInstance().removeEntity(packet.worldID);
-    }
-
-    @Override
     public void handle(Connection connection, ComponentPacket packet) {
         Entity entity = EntityManager.getInstance().getEntity(packet.worldID);
         if(entity == null || entity.isScheduledForRemoval() || entity.isRemoving()) return;
         ComponentPacket.parse(entity, packet);
-    }
-
-    @Override
-    public void handle(Connection connection, MovementResponse packet) {
-        Entity entity = EntityManager.getInstance().getEntity(packet.worldID);
-        if(entity == null) return;
-        MovementResponse.parse(packet);
     }
 
     private Vector2 TEMP_POSITION = new Vector2();

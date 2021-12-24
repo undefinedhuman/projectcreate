@@ -30,7 +30,7 @@ public class ClientManager extends Manager {
         client = new Client(NetworkConstants.WRITE_BUFFER_SIZE, NetworkConstants.OBJECT_BUFFER_SIZE);
         client.start();
 
-        NetworkConstants.register(client);
+        NetworkConstants.registerPackets(client);
 
         client.addListener(new Listener.QueuedListener(new ClientListener()) {
             @Override

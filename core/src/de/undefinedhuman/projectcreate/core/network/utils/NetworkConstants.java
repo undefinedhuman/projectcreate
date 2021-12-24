@@ -3,9 +3,7 @@ package de.undefinedhuman.projectcreate.core.network.utils;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 import de.undefinedhuman.projectcreate.core.network.Packet;
-import de.undefinedhuman.projectcreate.core.network.authentication.LoginResponse;
 import de.undefinedhuman.projectcreate.core.network.encryption.*;
-import de.undefinedhuman.projectcreate.core.network.authentication.LoginRequest;
 import de.undefinedhuman.projectcreate.core.network.packets.MousePacket;
 import de.undefinedhuman.projectcreate.core.network.packets.SelectorPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.ComponentPacket;
@@ -21,25 +19,16 @@ public class NetworkConstants {
 
     public static final int NETWORK_TIME_OUT = 5000;
 
-    public static void register(EndPoint endpoint) {
+    public static void registerPackets(EndPoint endpoint) {
         registerPackets(endpoint.getKryo(),
-                LoginRequest.class,
-                LoginResponse.class,
-                CreateEntityPacket.class,
-                RemoveEntityPacket.class,
                 ComponentPacket.class,
-                MovementRequest.class,
                 PositionPacket.class,
-                JumpPacket.class,
                 MousePacket.class,
                 SelectorPacket.class,
-                SelectItemPacket.class,
-                UpdateSlotsPacket.class,
                 InitPacket.class,
                 EncryptionRequest.class,
                 EncryptionResponse.class,
-                SessionPacket.class,
-                MovementResponse.class
+                SessionPacket.class
         );
     }
 

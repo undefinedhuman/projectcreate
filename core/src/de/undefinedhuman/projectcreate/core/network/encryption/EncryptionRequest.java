@@ -12,6 +12,8 @@ public class EncryptionRequest implements Packet {
     public String asymmetricPublicKey;
     public String verifyToken;
 
+    public String helloToken;
+
     private EncryptionRequest() {}
 
     @Override
