@@ -6,12 +6,9 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponent;
-import de.undefinedhuman.projectcreate.core.network.packets.SelectorPacket;
 import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
 import de.undefinedhuman.projectcreate.game.inventory.player.Selector;
-import de.undefinedhuman.projectcreate.game.network.ClientEncryption;
-import de.undefinedhuman.projectcreate.game.network.ClientManager;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 
 public class Inputs extends Manager implements InputProcessor {
@@ -32,16 +29,16 @@ public class Inputs extends Manager implements InputProcessor {
 
             case Input.Keys.A:
                 Mappers.MOVEMENT.get(player).move(true, false);
-                ClientManager.getInstance().sendTCP(MovementRequest.serialize(ClientEncryption.getInstance().getAESEncryptionCipher(), ClientManager.getInstance().currentSessionID, component.getDirection()));
+                // ClientManager.getInstance().sendTCP(MovementRequest.serialize(ClientEncryption.getInstance().getAESEncryptionCipher(), ClientManager.getInstance().currentSessionID, component.getDirection()));
                 break;
             case Input.Keys.D:
                 Mappers.MOVEMENT.get(player).move(false, true);
-                ClientManager.getInstance().sendTCP(MovementRequest.serialize(ClientEncryption.getInstance().getAESEncryptionCipher(), ClientManager.getInstance().currentSessionID, component.getDirection()));
+                // ClientManager.getInstance().sendTCP(MovementRequest.serialize(ClientEncryption.getInstance().getAESEncryptionCipher(), ClientManager.getInstance().currentSessionID, component.getDirection()));
                 break;
             case Input.Keys.SPACE:
                 if (!Mappers.MOVEMENT.get(player).jump())
                     break;
-                ClientManager.getInstance().sendTCP(JumpPacket.serialize(player));
+                // ClientManager.getInstance().sendTCP(JumpPacket.serialize(player));
                 break;
             case Input.Keys.NUM_0:
             case Input.Keys.NUM_1:
@@ -76,12 +73,12 @@ public class Inputs extends Manager implements InputProcessor {
             case Input.Keys.A:
                 boolean moveRight = Gdx.input.isKeyPressed(Input.Keys.D);
                 player.getComponent(MovementComponent.class).move(false, moveRight);
-                ClientManager.getInstance().sendTCP(MovementRequest.serialize(ClientEncryption.getInstance().getAESEncryptionCipher(), ClientManager.getInstance().currentSessionID, component.getDirection()));
+                // ClientManager.getInstance().sendTCP(MovementRequest.serialize(ClientEncryption.getInstance().getAESEncryptionCipher(), ClientManager.getInstance().currentSessionID, component.getDirection()));
                 break;
             case Input.Keys.D:
                 boolean moveLeft = Gdx.input.isKeyPressed(Input.Keys.A);
                 player.getComponent(MovementComponent.class).move(moveLeft, false);
-                ClientManager.getInstance().sendTCP(MovementRequest.serialize(ClientEncryption.getInstance().getAESEncryptionCipher(), ClientManager.getInstance().currentSessionID, component.getDirection()));
+                // ClientManager.getInstance().sendTCP(MovementRequest.serialize(ClientEncryption.getInstance().getAESEncryptionCipher(), ClientManager.getInstance().currentSessionID, component.getDirection()));
                 break;
 
         }
@@ -119,7 +116,7 @@ public class Inputs extends Manager implements InputProcessor {
             return false;
         int selected = (int) (Selector.getInstance().getCol() + Selector.getInstance().getSelectedIndex() + amountY) % Selector.getInstance().getCol();
         Selector.getInstance().setSelected(selected);
-        ClientManager.getInstance().sendTCP(SelectorPacket.serialize(Selector.getInstance().getName(), selected));
+        // ClientManager.getInstance().sendTCP(SelectorPacket.serialize(Selector.getInstance().getName(), selected));
         return true;
     }
 

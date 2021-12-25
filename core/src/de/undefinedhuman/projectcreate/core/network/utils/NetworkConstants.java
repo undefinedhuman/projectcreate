@@ -3,11 +3,7 @@ package de.undefinedhuman.projectcreate.core.network.utils;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 import de.undefinedhuman.projectcreate.core.network.Packet;
-import de.undefinedhuman.projectcreate.core.network.encryption.*;
-import de.undefinedhuman.projectcreate.core.network.packets.MousePacket;
-import de.undefinedhuman.projectcreate.core.network.packets.SelectorPacket;
-import de.undefinedhuman.projectcreate.core.network.packets.entity.components.ComponentPacket;
-import de.undefinedhuman.projectcreate.core.network.packets.entity.components.PositionPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.ping.PingPacket;
 
 public class NetworkConstants {
 
@@ -21,14 +17,7 @@ public class NetworkConstants {
 
     public static void registerPackets(EndPoint endpoint) {
         registerPackets(endpoint.getKryo(),
-                ComponentPacket.class,
-                PositionPacket.class,
-                MousePacket.class,
-                SelectorPacket.class,
-                InitPacket.class,
-                EncryptionRequest.class,
-                EncryptionResponse.class,
-                SessionPacket.class
+                PingPacket.class
         );
     }
 

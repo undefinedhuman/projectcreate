@@ -1,32 +1,21 @@
 package de.undefinedhuman.projectcreate.server.network;
 
 import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
-import de.undefinedhuman.projectcreate.core.network.Packet;
-import de.undefinedhuman.projectcreate.core.network.PacketHandler;
+import de.undefinedhuman.projectcreate.core.network.PacketListener;
+import de.undefinedhuman.projectcreate.core.network.packets.encryption.EncryptionPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.ping.PingPacket;
 import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
-import de.undefinedhuman.projectcreate.server.ServerManager;
+import de.undefinedhuman.projectcreate.server.network.handler.PingPacketHandler;
+import de.undefinedhuman.projectcreate.server.network.handler.ServerEncryptionPacketHandler;
 
-import java.util.HashMap;
+public class ServerListener extends PacketListener {
 
-public class ServerListener extends Listener {
-
-    private static volatile ServerManager instance;
-
-    private HashMap<Class<? extends Packet>, PacketHandler<?>> handlers;
+    private static volatile ServerListener instance;
 
     private ServerListener() {
-        handlers = new HashMap<>();
-        handlers.put(PingPacket.class, new PingPacketHandler());
-    }
-
-    @Override
-    public void received(Connection connection, Object object) {
-        if(!(object instanceof Packet))
-            return;
-        Packet packet = (Packet) object;
-        packet.handle(connection, packetHandler);
+        super();
+        registerPacketHandlers(PingPacket.class, new PingPacketHandler());
+        registerPacketHandlers(EncryptionPacket.class, new ServerEncryptionPacketHandler());
     }
 
     @Override
@@ -35,16 +24,16 @@ public class ServerListener extends Listener {
             return;
         PlayerConnection playerConnection = (PlayerConnection) connection;
         if(playerConnection.worldID == -1) return;
-        ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), RemoveEntityPacket.serialize(playerConnection.worldID));
+        // ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), RemoveEntityPacket.serialize(playerConnection.worldID));
         EntityManager.getInstance().removeEntity(playerConnection.worldID);
     }
 
-    public static ServerManager getInstance() {
+    public static ServerListener getInstance() {
         if(instance != null)
             return instance;
-        synchronized (ServerManager.class) {
+        synchronized (ServerListener.class) {
             if (instance == null)
-                instance = new ServerManager();
+                instance = new ServerListener();
         }
         return instance;
     }

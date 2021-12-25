@@ -35,15 +35,14 @@ import de.undefinedhuman.projectcreate.game.window.Window;
 
 public class Main extends Game {
 
-    public static Main instance;
+    private static volatile Main instance;
 
     public static float delta;
 
     private ManagerList managerList;
     private Timer timer;
 
-    public Main() {
-        instance = this;
+    private Main() {
         managerList = new ManagerList();
         managerList.addManager(
                 Log.getInstance().setLogMessageDecorator(
@@ -125,6 +124,16 @@ public class Main extends Game {
     private void TEMP() {
         GameScreen.getInstance();
         GameManager.getInstance();
+    }
+
+    public static Main getInstance() {
+        if(instance != null)
+            return instance;
+        synchronized (Main.class) {
+            if (instance == null)
+                instance = new Main();
+        }
+        return instance;
     }
 
 }

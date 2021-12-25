@@ -4,13 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Listener;
 import de.undefinedhuman.projectcreate.core.network.Packet;
-import de.undefinedhuman.projectcreate.core.network.packets.MousePacket;
+import de.undefinedhuman.projectcreate.core.network.packets.ping.PingPacket;
 import de.undefinedhuman.projectcreate.core.network.utils.NetworkConstants;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 import de.undefinedhuman.projectcreate.engine.utils.timer.Timer;
 import de.undefinedhuman.projectcreate.engine.utils.timer.TimerList;
-import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 
 import java.io.IOException;
 
@@ -32,7 +31,7 @@ public class ClientManager extends Manager {
 
         NetworkConstants.registerPackets(client);
 
-        client.addListener(new Listener.QueuedListener(new ClientListener()) {
+        client.addListener(new Listener.QueuedListener(ClientListener.getInstance()) {
             @Override
             protected void queue(Runnable runnable) {
                 Gdx.app.postRunnable(runnable);
@@ -41,7 +40,8 @@ public class ClientManager extends Manager {
 
         timers.addTimers(
                 new Timer(0.2f, client::updateReturnTripTime),
-                new Timer(0.03f, () -> client.sendUDP(MousePacket.serialize(GameManager.getInstance().player)))
+                new Timer(0.2f, () -> client.sendTCP(PingPacket.serialize(System.currentTimeMillis())))
+                // new Timer(0.03f, () -> client.sendUDP(MousePacket.serialize(GameManager.getInstance().player)))
         );
 
     }

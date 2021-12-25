@@ -1,22 +1,28 @@
 package de.undefinedhuman.projectcreate.game.network;
 
-import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
-import de.undefinedhuman.projectcreate.core.network.Packet;
+import de.undefinedhuman.projectcreate.core.network.PacketListener;
+import de.undefinedhuman.projectcreate.core.network.packets.encryption.EncryptionPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.ping.PingPacket;
+import de.undefinedhuman.projectcreate.game.network.handler.ClientEncryptionPacketHandler;
+import de.undefinedhuman.projectcreate.game.network.handler.PingPacketHandler;
 
-public class ClientListener extends Listener {
+public class ClientListener extends PacketListener {
 
-    private ClientPacketHandler packetHandler;
+    private static volatile ClientListener instance;
 
-    public ClientListener() {
-        this.packetHandler = new ClientPacketHandler();
+    private ClientListener() {
+        registerPacketHandlers(PingPacket.class, new PingPacketHandler());
+        registerPacketHandlers(EncryptionPacket.class, new ClientEncryptionPacketHandler());
     }
 
-    public void received(Connection connection, Object object) {
-        if(!(object instanceof Packet))
-            return;
-        Packet packet = (Packet) object;
-        packet.handle(connection, packetHandler);
+    public static ClientListener getInstance() {
+        if(instance != null)
+            return instance;
+        synchronized (ClientListener.class) {
+            if (instance == null)
+                instance = new ClientListener();
+        }
+        return instance;
     }
 
 }
