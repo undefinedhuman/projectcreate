@@ -1,6 +1,6 @@
 package de.undefinedhuman.projectcreate.game.network;
 
-import de.undefinedhuman.projectcreate.core.network.packets.encryption.EncryptionUtils;
+import de.undefinedhuman.projectcreate.core.network.packets.auth.EncryptionUtils;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 
 import javax.crypto.Cipher;

@@ -2,10 +2,10 @@ package de.undefinedhuman.projectcreate.server.network;
 
 import com.esotericsoftware.kryonet.Connection;
 import de.undefinedhuman.projectcreate.core.network.PacketListener;
-import de.undefinedhuman.projectcreate.core.network.packets.encryption.EncryptionPacket;
-import de.undefinedhuman.projectcreate.core.network.packets.ping.PingPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.auth.EncryptionPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.entity.RemoveEntityPacket;
 import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
-import de.undefinedhuman.projectcreate.server.network.handler.PingPacketHandler;
+import de.undefinedhuman.projectcreate.server.ServerManager;
 import de.undefinedhuman.projectcreate.server.network.handler.ServerEncryptionPacketHandler;
 
 public class ServerListener extends PacketListener {
@@ -14,7 +14,6 @@ public class ServerListener extends PacketListener {
 
     private ServerListener() {
         super();
-        registerPacketHandlers(PingPacket.class, new PingPacketHandler());
         registerPacketHandlers(EncryptionPacket.class, new ServerEncryptionPacketHandler());
     }
 
@@ -24,7 +23,7 @@ public class ServerListener extends PacketListener {
             return;
         PlayerConnection playerConnection = (PlayerConnection) connection;
         if(playerConnection.worldID == -1) return;
-        // ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), RemoveEntityPacket.serialize(playerConnection.worldID));
+        ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), RemoveEntityPacket.serialize(playerConnection.worldID));
         EntityManager.getInstance().removeEntity(playerConnection.worldID);
     }
 

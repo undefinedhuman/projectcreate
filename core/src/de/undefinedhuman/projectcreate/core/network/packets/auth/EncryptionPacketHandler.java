@@ -1,4 +1,4 @@
-package de.undefinedhuman.projectcreate.core.network.packets.encryption;
+package de.undefinedhuman.projectcreate.core.network.packets.auth;
 
 import com.esotericsoftware.kryonet.Connection;
 import de.undefinedhuman.projectcreate.core.network.Packet;
@@ -16,9 +16,9 @@ public class EncryptionPacketHandler implements PacketHandler {
     public boolean handle(Connection connection, Packet packet) {
         if(!(packet instanceof EncryptionPacket)) return false;
         EncryptionPacket encryptionPacket = (EncryptionPacket) packet;
-        PacketConsumer<EncryptionPacket> handlerFunction = encryptionStageHandlerFunctions.get(encryptionPacket.code);
+        PacketConsumer<EncryptionPacket> handlerFunction = encryptionStageHandlerFunctions.get(encryptionPacket.getCode());
         if(handlerFunction != null) handlerFunction.accept(connection, encryptionPacket);
-        else Log.error("No handler function for encryption stage " + encryptionPacket.code + " is defined!");
+        else Log.error("No handler function for encryption stage " + encryptionPacket.getCode() + " is defined!");
         return true;
     }
 

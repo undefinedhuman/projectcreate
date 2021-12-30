@@ -1,4 +1,4 @@
-package de.undefinedhuman.projectcreate.core.network.packets.encryption;
+package de.undefinedhuman.projectcreate.core.network.packets.auth;
 
 import com.badlogic.gdx.utils.Base64Coder;
 import de.undefinedhuman.projectcreate.engine.log.Log;

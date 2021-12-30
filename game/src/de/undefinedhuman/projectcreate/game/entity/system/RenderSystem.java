@@ -67,7 +67,7 @@ public class RenderSystem extends SortedIteratingSystem {
         if(nameComponent == null)
             return;
         Vector2 textPosition = Utils.calculateScreenFromWorldSpace(CameraManager.gameCamera, transformComponent.getCenterPosition().add(0, NAME_TEXT_Y_OFFSET));
-        nameComponent.getText().setPosition((int) (textPosition.x - nameComponent.getText().getCurrentValue(Axis.WIDTH)/2f), (int) textPosition.y);
+        nameComponent.getText().setPosition((textPosition.x - nameComponent.getText().getCurrentValue(Axis.WIDTH)/2f), textPosition.y);
         nameComponent.getText().resize();
     }
 

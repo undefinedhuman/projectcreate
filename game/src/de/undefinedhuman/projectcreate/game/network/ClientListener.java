@@ -1,18 +1,24 @@
 package de.undefinedhuman.projectcreate.game.network;
 
 import de.undefinedhuman.projectcreate.core.network.PacketListener;
-import de.undefinedhuman.projectcreate.core.network.packets.encryption.EncryptionPacket;
-import de.undefinedhuman.projectcreate.core.network.packets.ping.PingPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.auth.EncryptionPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.entity.CreateEntityPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.entity.RemoveEntityPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.entity.components.ComponentPacket;
 import de.undefinedhuman.projectcreate.game.network.handler.ClientEncryptionPacketHandler;
-import de.undefinedhuman.projectcreate.game.network.handler.PingPacketHandler;
+import de.undefinedhuman.projectcreate.game.network.handler.ComponentPacketHandler;
+import de.undefinedhuman.projectcreate.game.network.handler.CreateEntityPacketHandler;
+import de.undefinedhuman.projectcreate.game.network.handler.RemoveEntityPacketHandler;
 
 public class ClientListener extends PacketListener {
 
     private static volatile ClientListener instance;
 
     private ClientListener() {
-        registerPacketHandlers(PingPacket.class, new PingPacketHandler());
         registerPacketHandlers(EncryptionPacket.class, new ClientEncryptionPacketHandler());
+        registerPacketHandlers(CreateEntityPacket.class, new CreateEntityPacketHandler());
+        registerPacketHandlers(RemoveEntityPacket.class, new RemoveEntityPacketHandler());
+        registerPacketHandlers(ComponentPacket.class, new ComponentPacketHandler());
     }
 
     public static ClientListener getInstance() {

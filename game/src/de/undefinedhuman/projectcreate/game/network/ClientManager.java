@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Listener;
 import de.undefinedhuman.projectcreate.core.network.Packet;
-import de.undefinedhuman.projectcreate.core.network.packets.ping.PingPacket;
 import de.undefinedhuman.projectcreate.core.network.utils.NetworkConstants;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
@@ -39,8 +38,7 @@ public class ClientManager extends Manager {
         });
 
         timers.addTimers(
-                new Timer(0.2f, client::updateReturnTripTime),
-                new Timer(0.2f, () -> client.sendTCP(PingPacket.serialize(System.currentTimeMillis())))
+                new Timer(0.2f, client::updateReturnTripTime)
                 // new Timer(0.03f, () -> client.sendUDP(MousePacket.serialize(GameManager.getInstance().player)))
         );
 

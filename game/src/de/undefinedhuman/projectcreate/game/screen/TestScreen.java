@@ -1,10 +1,9 @@
 package de.undefinedhuman.projectcreate.game.screen;
 
 import com.badlogic.gdx.Gdx;
+import de.undefinedhuman.projectcreate.core.network.packets.auth.EncryptionPacket;
 import de.undefinedhuman.projectcreate.engine.utils.ScreenAdapter;
-import de.undefinedhuman.projectcreate.game.Main;
 import de.undefinedhuman.projectcreate.game.network.ClientManager;
-import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameScreen;
 import de.undefinedhuman.projectcreate.game.world.WorldGenerator;
 import de.undefinedhuman.projectcreate.game.world.settings.BiomeSetting;
 import de.undefinedhuman.projectcreate.game.world.settings.WorldSetting;
@@ -24,9 +23,7 @@ public class TestScreen extends ScreenAdapter {
         WorldGenerator.instance.generateTestWorld("Main", WorldSetting.DEV, BiomeSetting.DEV);
 
         ClientManager.getInstance().connect();
-        // ClientManager.getInstance().sendTCP(new InitPacket());
-
-        Main.getInstance().setScreen(GameScreen.getInstance());
+        ClientManager.getInstance().sendTCP(EncryptionPacket.serialize(null, EncryptionPacket.INIT, ""));
 
         Gdx.graphics.setResizable(true);
 

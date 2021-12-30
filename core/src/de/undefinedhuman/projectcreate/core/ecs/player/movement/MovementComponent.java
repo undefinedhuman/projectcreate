@@ -2,6 +2,7 @@ package de.undefinedhuman.projectcreate.core.ecs.player.movement;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.projectcreate.core.network.packets.entity.components.PositionPacket;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.LineWriter;
 import de.undefinedhuman.projectcreate.engine.network.NetworkSerializable;
@@ -117,11 +118,11 @@ public class MovementComponent implements Component, NetworkSerializable {
             this.delta = delta;
         }
 
-        /*public MovementFrame(PositionPacket packet, float delta) {
-            this.position.set(packet.x, packet.y);
+        public MovementFrame(PositionPacket packet, float delta) {
+            this.position.set(packet.getX(), packet.getY());
             this.velocity.set(packet.velX, packet.velY);
             this.delta = delta;
-        }*/
+        }
     }
 
 }
