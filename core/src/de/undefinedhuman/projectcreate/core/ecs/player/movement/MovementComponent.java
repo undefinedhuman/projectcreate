@@ -120,7 +120,7 @@ public class MovementComponent implements Component, NetworkSerializable {
 
         public MovementFrame(PositionPacket packet, float delta) {
             this.position.set(packet.getX(), packet.getY());
-            this.velocity.set(packet.velX, packet.velY);
+            this.velocity.set(packet.getVelX(), packet.getVelY());
             this.delta = delta;
         }
     }

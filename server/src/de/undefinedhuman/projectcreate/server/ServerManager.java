@@ -10,6 +10,7 @@ import de.undefinedhuman.projectcreate.core.ecs.visual.sprite.SpriteBlueprint;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.core.network.buffer.NetworkBuffer;
 import de.undefinedhuman.projectcreate.core.network.log.NetworkLogger;
+import de.undefinedhuman.projectcreate.core.network.packets.entity.components.PositionPacket;
 import de.undefinedhuman.projectcreate.core.network.utils.NetworkConstants;
 import de.undefinedhuman.projectcreate.engine.config.ConfigManager;
 import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
@@ -31,6 +32,7 @@ import de.undefinedhuman.projectcreate.server.utils.console.Console;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Map;
 
 public class ServerManager extends Server {
 
@@ -86,10 +88,10 @@ public class ServerManager extends Server {
         timers.update(delta);
         EntityManager.getInstance().update(delta);
         buffer.process();
-        /*EntityManager.getInstance().stream().map(Map.Entry::getValue).forEach(entity -> {
+        EntityManager.getInstance().stream().map(Map.Entry::getValue).forEach(entity -> {
             PositionPacket packet = PositionPacket.serialize(entity);
             sendToAllUDP(packet);
-        });*/
+        });
     }
 
     public void delete() {
@@ -118,6 +120,10 @@ public class ServerManager extends Server {
     @Override
     protected Connection newConnection() {
         return new PlayerConnection();
+    }
+
+    public NetworkBuffer getBuffer() {
+        return buffer;
     }
 
     public static ServerManager getInstance() {

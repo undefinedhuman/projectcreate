@@ -4,9 +4,11 @@ import com.esotericsoftware.kryonet.Connection;
 import de.undefinedhuman.projectcreate.core.network.PacketListener;
 import de.undefinedhuman.projectcreate.core.network.packets.auth.EncryptionPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.RemoveEntityPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.input.InputPacket;
 import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
 import de.undefinedhuman.projectcreate.server.ServerManager;
 import de.undefinedhuman.projectcreate.server.network.handler.ServerEncryptionPacketHandler;
+import de.undefinedhuman.projectcreate.server.network.handler.ServerInputPacketHandler;
 
 public class ServerListener extends PacketListener {
 
@@ -15,6 +17,7 @@ public class ServerListener extends PacketListener {
     private ServerListener() {
         super();
         registerPacketHandlers(EncryptionPacket.class, new ServerEncryptionPacketHandler());
+        registerPacketHandlers(InputPacket.class, new ServerInputPacketHandler());
     }
 
     @Override

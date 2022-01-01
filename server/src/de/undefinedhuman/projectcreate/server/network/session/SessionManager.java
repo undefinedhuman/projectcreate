@@ -8,7 +8,7 @@ public class SessionManager extends Manager {
 
     private static volatile SessionManager instance;
 
-    private HashMap<String, Long> worldIDs = new HashMap<>();
+    private final HashMap<String, Long> worldIDs = new HashMap<>();
 
     private SessionManager() {}
 
@@ -20,7 +20,7 @@ public class SessionManager extends Manager {
         this.worldIDs.put(sessionID, worldID);
     }
 
-    public long getWorldID(String sessionID) {
+    public Long getWorldID(String sessionID) {
         return worldIDs.get(sessionID);
     }
 

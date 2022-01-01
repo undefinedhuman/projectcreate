@@ -123,10 +123,6 @@ public class Utils {
         return length > 1 ? "s" : "";
     }
 
-    public static String appendSToString(long length) {
-        return length > 1 ? "s" : "";
-    }
-
     public static BufferedImage scaleNearest(BufferedImage before, double scale) {
         return scale(before, scale, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
     }

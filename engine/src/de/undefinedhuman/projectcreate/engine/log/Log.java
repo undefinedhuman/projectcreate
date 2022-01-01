@@ -113,6 +113,10 @@ public class Log extends Manager implements ApplicationLogger, Serializable {
         Log.getInstance().createMessage(System.err, Level.ERROR, messages);
     }
 
+    public static void warn(Object... messages) {
+        Log.getInstance().createMessage(System.out, Level.WARN, messages);
+    }
+
     public static void error(Object message, Exception ex) {
         if(ex != null)
             error(message, "\n", ex.getMessage());

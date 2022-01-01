@@ -5,10 +5,9 @@ import de.undefinedhuman.projectcreate.core.network.packets.auth.EncryptionPacke
 import de.undefinedhuman.projectcreate.core.network.packets.entity.CreateEntityPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.RemoveEntityPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.ComponentPacket;
-import de.undefinedhuman.projectcreate.game.network.handler.ClientEncryptionPacketHandler;
-import de.undefinedhuman.projectcreate.game.network.handler.ComponentPacketHandler;
-import de.undefinedhuman.projectcreate.game.network.handler.CreateEntityPacketHandler;
-import de.undefinedhuman.projectcreate.game.network.handler.RemoveEntityPacketHandler;
+import de.undefinedhuman.projectcreate.core.network.packets.entity.components.PositionPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementPacket;
+import de.undefinedhuman.projectcreate.game.network.handler.*;
 
 public class ClientListener extends PacketListener {
 
@@ -19,6 +18,8 @@ public class ClientListener extends PacketListener {
         registerPacketHandlers(CreateEntityPacket.class, new CreateEntityPacketHandler());
         registerPacketHandlers(RemoveEntityPacket.class, new RemoveEntityPacketHandler());
         registerPacketHandlers(ComponentPacket.class, new ComponentPacketHandler());
+        registerPacketHandlers(PositionPacket.class, new PositionPacketHandler());
+        registerPacketHandlers(MovementPacket.class, new MovementPacketHandler());
     }
 
     public static ClientListener getInstance() {
