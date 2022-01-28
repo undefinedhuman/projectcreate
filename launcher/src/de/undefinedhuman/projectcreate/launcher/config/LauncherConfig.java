@@ -13,8 +13,8 @@ import de.undefinedhuman.projectcreate.launcher.Launcher;
 import de.undefinedhuman.projectcreate.launcher.utils.Tools;
 import de.undefinedhuman.projectcreate.updater.utils.InstallationUtils;
 
-public class LauncherConfig extends Config
-{
+public class LauncherConfig extends Config {
+
     private static LauncherConfigValidator VALIDATOR = new LauncherConfigValidator();
 
     private static LauncherConfig instance;

@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.core.ecs.base.type;
 
-import com.badlogic.ashley.core.Component;
-import de.undefinedhuman.projectcreate.engine.ecs.component.ComponentBlueprint;
+import de.undefinedhuman.projectcreate.engine.ecs.Component;
+import de.undefinedhuman.projectcreate.engine.ecs.ComponentBlueprint;
 import de.undefinedhuman.projectcreate.engine.settings.types.selection.SelectionSetting;
 
 public class TypeBlueprint extends ComponentBlueprint {

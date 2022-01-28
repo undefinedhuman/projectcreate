@@ -6,8 +6,8 @@ import de.undefinedhuman.projectcreate.core.network.Packet;
 import de.undefinedhuman.projectcreate.core.network.PacketHandler;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.CreateEntityPacket;
 import de.undefinedhuman.projectcreate.core.network.utils.PacketUtils;
-import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
-import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
+import de.undefinedhuman.projectcreate.engine.ecs.BlueprintManager;
+import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.resources.RessourceUtils;
 

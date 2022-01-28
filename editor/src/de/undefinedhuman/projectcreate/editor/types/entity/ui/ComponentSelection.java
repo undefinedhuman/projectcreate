@@ -1,9 +1,9 @@
 package de.undefinedhuman.projectcreate.editor.types.entity.ui;
 
 import de.undefinedhuman.projectcreate.editor.ui.SelectionPanel;
-import de.undefinedhuman.projectcreate.engine.ecs.blueprint.Blueprint;
-import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
-import de.undefinedhuman.projectcreate.engine.ecs.component.ComponentBlueprint;
+import de.undefinedhuman.projectcreate.engine.ecs.Blueprint;
+import de.undefinedhuman.projectcreate.engine.ecs.BlueprintManager;
+import de.undefinedhuman.projectcreate.engine.ecs.ComponentBlueprint;
 import de.undefinedhuman.projectcreate.engine.resources.RessourceUtils;
 import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
 import de.undefinedhuman.projectcreate.engine.settings.ui.ui.SettingsUI;

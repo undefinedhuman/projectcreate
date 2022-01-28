@@ -5,7 +5,7 @@ import com.esotericsoftware.kryonet.Connection;
 import de.undefinedhuman.projectcreate.core.network.Packet;
 import de.undefinedhuman.projectcreate.core.network.PacketHandler;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.ComponentPacket;
-import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
+import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
 
 public class ComponentPacketHandler implements PacketHandler {
     @Override

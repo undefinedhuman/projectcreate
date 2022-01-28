@@ -9,8 +9,8 @@ import de.undefinedhuman.projectcreate.core.network.packets.auth.EncryptionPacke
 import de.undefinedhuman.projectcreate.core.network.packets.auth.EncryptionPacketHandler;
 import de.undefinedhuman.projectcreate.core.network.packets.auth.EncryptionUtils;
 import de.undefinedhuman.projectcreate.core.network.utils.PacketUtils;
-import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
-import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
+import de.undefinedhuman.projectcreate.engine.ecs.BlueprintManager;
+import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.game.Main;
 import de.undefinedhuman.projectcreate.game.inventory.ClientInventory;

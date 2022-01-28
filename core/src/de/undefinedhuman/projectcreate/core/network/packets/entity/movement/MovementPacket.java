@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.core.network.Packet;
-import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
+import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 
 public class MovementPacket implements Packet {

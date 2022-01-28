@@ -4,7 +4,7 @@ import com.esotericsoftware.kryonet.Connection;
 import de.undefinedhuman.projectcreate.core.network.Packet;
 import de.undefinedhuman.projectcreate.core.network.PacketHandler;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementPacket;
-import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
+import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
 
 public class MovementPacketHandler implements PacketHandler {
 

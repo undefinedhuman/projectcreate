@@ -36,4 +36,10 @@ task dist(type: Jar) {
     }
 }
 
+task publish(dependsOn: dist) {
+    exec {
+        commandLine '../server/scripts/deploy.sh'
+    }
+}
+
 dist.dependsOn classes

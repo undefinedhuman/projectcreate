@@ -1,8 +1,4 @@
-package de.undefinedhuman.projectcreate.engine.ecs.blueprint;
-
-import com.badlogic.ashley.core.Entity;
-import de.undefinedhuman.projectcreate.engine.ecs.component.ComponentBlueprint;
-import de.undefinedhuman.projectcreate.engine.ecs.component.IDComponent;
+package de.undefinedhuman.projectcreate.engine.ecs;
 
 import java.util.HashMap;
 
@@ -17,8 +13,7 @@ public class Blueprint {
     }
 
     public Entity createInstance(long worldID) {
-        Entity entity = new Entity();
-        entity.add(new IDComponent(worldID, blueprintID));
+        Entity entity = new Entity(blueprintID, worldID);
         for (ComponentBlueprint componentBlueprint : componentBlueprints.values())
             entity.add(componentBlueprint.createInstance());
         return entity;

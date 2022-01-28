@@ -1,4 +1,4 @@
-package de.undefinedhuman.projectcreate.engine.ecs.component;
+package de.undefinedhuman.projectcreate.engine.ecs;
 
 public enum ComponentPriority {
     HIGHEST,

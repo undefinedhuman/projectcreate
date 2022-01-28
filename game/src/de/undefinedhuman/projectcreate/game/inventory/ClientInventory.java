@@ -7,7 +7,6 @@ import de.undefinedhuman.projectcreate.core.ecs.inventory.InventoryComponent;
 import de.undefinedhuman.projectcreate.core.ecs.inventory.InventoryType;
 import de.undefinedhuman.projectcreate.core.inventory.Inventory;
 import de.undefinedhuman.projectcreate.core.inventory.SelectorInventory;
-import de.undefinedhuman.projectcreate.engine.ecs.component.IDComponent;
 import de.undefinedhuman.projectcreate.engine.gui.Gui;
 import de.undefinedhuman.projectcreate.engine.gui.texture.GuiTemplate;
 import de.undefinedhuman.projectcreate.engine.utils.Utils;

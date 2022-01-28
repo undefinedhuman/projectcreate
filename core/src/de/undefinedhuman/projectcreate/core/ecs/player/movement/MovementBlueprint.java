@@ -2,9 +2,9 @@ package de.undefinedhuman.projectcreate.core.ecs.player.movement;
 
 import com.badlogic.ashley.core.Component;
 import de.undefinedhuman.projectcreate.core.ecs.visual.animation.AnimationBlueprint;
-import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
-import de.undefinedhuman.projectcreate.engine.ecs.component.ComponentBlueprint;
-import de.undefinedhuman.projectcreate.engine.ecs.component.ComponentPriority;
+import de.undefinedhuman.projectcreate.engine.ecs.BlueprintManager;
+import de.undefinedhuman.projectcreate.engine.ecs.ComponentBlueprint;
+import de.undefinedhuman.projectcreate.engine.ecs.ComponentPriority;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.FloatSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.selection.DynamicStringSelectionSetting;
 

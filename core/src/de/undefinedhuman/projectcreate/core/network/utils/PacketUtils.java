@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.core.network.utils;
 
-import com.badlogic.ashley.core.Component;
-import com.badlogic.ashley.core.Entity;
+import de.undefinedhuman.projectcreate.engine.ecs.Component;
+import de.undefinedhuman.projectcreate.engine.ecs.Entity;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.LineWriter;
 import de.undefinedhuman.projectcreate.engine.network.NetworkSerializable;

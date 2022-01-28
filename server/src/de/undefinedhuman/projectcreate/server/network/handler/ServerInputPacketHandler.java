@@ -9,7 +9,7 @@ import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponen
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.input.InputPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.input.InputPacketHandler;
-import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
+import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
 import de.undefinedhuman.projectcreate.engine.utils.Utils;
 import de.undefinedhuman.projectcreate.server.ServerManager;
 import de.undefinedhuman.projectcreate.server.entity.MovementSystem;
@@ -30,9 +30,8 @@ public class ServerInputPacketHandler extends InputPacketHandler {
         String[] data = InputPacket.parse(playerConnection.getDecryptionCipher(), packet).split(":");
         Long worldID = SessionManager.getInstance().getWorldID(data[0]);
         final Integer direction;
-        if (worldID == null || (direction = Utils.isInteger(data[1])) == null)
+        if (worldID == null || ((direction = Utils.isInteger(data[1])) == null || !Utils.isInRange(direction, -1, 1)))
             return;
-        direction = Utils.clamp(direction, -1, 1);
         Entity entity = EntityManager.getInstance().getEntity(worldID);
         if(entity == null || entity.isScheduledForRemoval() || entity.isRemoving()) return;
         ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), MovementPacket.serialize(worldID, direction));
@@ -56,6 +55,26 @@ public class ServerInputPacketHandler extends InputPacketHandler {
 
     }
 
-    private void handleJump(Connection connection, InputPacket packet) {}
+    private void handleJump(Connection connection, InputPacket packet) {
+//        PlayerConnection playerConnection = (PlayerConnection) connection;
+//        Entity entity = EntityManager.getInstance().getEntity(playerConnection.worldID);
+//        if(entity == null) return;
+//        packet.worldID = playerConnection.worldID;
+//        ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), packet);
+//        long packetReceivedTime = System.nanoTime();
+//        ServerManager.getInstance().COMMAND_CACHE.add(() -> {
+//            if(!EntityManager.getInstance().hasEntity(playerConnection.worldID) || !connection.isConnected())
+//                return;
+//            JumpPacket.parse(entity, packet);
+//            float difference = (System.nanoTime() - packetReceivedTime) * 0.000000001f;
+//            float latency = connection.getReturnTripTime() * 0.0005f;
+//            float delta = difference + latency;
+//            TransformComponent transformComponent = Mappers.TRANSFORM.get(entity);
+//            MovementComponent movementComponent = Mappers.MOVEMENT.get(entity);
+//            movementComponent.velocity.y -= movementComponent.getGravity() * delta;
+//            transformComponent.addPosition(0, movementComponent.velocity.y * delta);
+//        });
+
+    }
 
 }

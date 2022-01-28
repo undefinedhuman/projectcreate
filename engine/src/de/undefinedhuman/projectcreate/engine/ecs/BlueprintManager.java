@@ -1,8 +1,6 @@
-package de.undefinedhuman.projectcreate.engine.ecs.blueprint;
+package de.undefinedhuman.projectcreate.engine.ecs;
 
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Files;
-import de.undefinedhuman.projectcreate.engine.ecs.component.ComponentBlueprint;
 import de.undefinedhuman.projectcreate.engine.file.FileReader;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;

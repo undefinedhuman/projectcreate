@@ -186,7 +186,7 @@ public class InventoryManager extends Manager {
     }
 
     private void notifyListeners(int id, int amount) {
-        for(ItemChangeListener listener : listeners.getValuesWithKey(id))
+        for(ItemChangeListener listener : listeners.getValuesForKey(id))
             listener.notify(amount);
     }
 

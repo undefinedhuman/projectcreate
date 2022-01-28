@@ -1,6 +1,5 @@
 package de.undefinedhuman.projectcreate.core.ecs;
 
-import com.badlogic.ashley.core.ComponentMapper;
 import de.undefinedhuman.projectcreate.core.ecs.base.transform.TransformComponent;
 import de.undefinedhuman.projectcreate.core.ecs.base.type.TypeComponent;
 import de.undefinedhuman.projectcreate.core.ecs.collision.CollisionComponent;
@@ -18,7 +17,7 @@ import de.undefinedhuman.projectcreate.core.ecs.stats.mana.ManaComponent;
 import de.undefinedhuman.projectcreate.core.ecs.stats.name.NameComponent;
 import de.undefinedhuman.projectcreate.core.ecs.visual.animation.AnimationComponent;
 import de.undefinedhuman.projectcreate.core.ecs.visual.sprite.SpriteComponent;
-import de.undefinedhuman.projectcreate.engine.ecs.component.IDComponent;
+import de.undefinedhuman.projectcreate.engine.ecs.ComponentMapper;
 
 public class Mappers {
     public static final ComponentMapper<IDComponent> ID = ComponentMapper.getFor(IDComponent.class);

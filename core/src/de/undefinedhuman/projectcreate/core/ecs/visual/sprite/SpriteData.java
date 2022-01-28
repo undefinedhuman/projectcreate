@@ -9,7 +9,7 @@ import de.undefinedhuman.projectcreate.engine.base.Transform;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
 import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
-public class SpriteData {
+public class SpriteData implements Comparable<SpriteData> {
 
     private Sprite sprite;
     private float alpha = 1;
@@ -92,4 +92,8 @@ public class SpriteData {
         textures = new TextureRegion[0];
     }
 
+    @Override
+    public int compareTo(SpriteData o) {
+        return Integer.compare(this.renderLevel, o.renderLevel);
+    }
 }

@@ -5,7 +5,7 @@ import de.undefinedhuman.projectcreate.core.network.PacketListener;
 import de.undefinedhuman.projectcreate.core.network.packets.auth.EncryptionPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.RemoveEntityPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.input.InputPacket;
-import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
+import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
 import de.undefinedhuman.projectcreate.server.ServerManager;
 import de.undefinedhuman.projectcreate.server.network.handler.ServerEncryptionPacketHandler;
 import de.undefinedhuman.projectcreate.server.network.handler.ServerInputPacketHandler;

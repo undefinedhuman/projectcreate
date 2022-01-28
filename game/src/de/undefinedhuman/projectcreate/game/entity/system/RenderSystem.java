@@ -12,7 +12,7 @@ import de.undefinedhuman.projectcreate.core.ecs.stats.name.NameComponent;
 import de.undefinedhuman.projectcreate.core.ecs.visual.sprite.SpriteComponent;
 import de.undefinedhuman.projectcreate.core.ecs.base.transform.TransformComponent;
 import de.undefinedhuman.projectcreate.core.ecs.base.type.TypeComponent;
-import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
+import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
 import de.undefinedhuman.projectcreate.engine.gui.GuiManager;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.Axis;
 import de.undefinedhuman.projectcreate.engine.utils.Utils;
@@ -32,9 +32,6 @@ public class RenderSystem extends SortedIteratingSystem {
         EntityManager.getInstance().addEntityListener(new EntityListener() {
             @Override
             public void entityAdded(Entity entity) {
-                SpriteComponent spriteComponent = Mappers.SPRITE.get(entity);
-                if(spriteComponent != null)
-                    spriteComponent.init();
                 NameComponent nameComponent = Mappers.NAME.get(entity);
                 if(nameComponent != null)
                     GuiManager.getInstance().addGui(nameComponent.getText());

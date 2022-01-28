@@ -1,10 +1,10 @@
 package de.undefinedhuman.projectcreate.engine.utils.ds;
 
 public interface Poolable {
-    void init();
+    default void init() {}
     default boolean validate() {
         return true;
     }
     default void freeUp() {}
-    void delete();
+    default void delete() {}
 }

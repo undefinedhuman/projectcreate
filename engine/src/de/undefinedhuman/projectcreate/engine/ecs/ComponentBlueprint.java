@@ -1,6 +1,5 @@
-package de.undefinedhuman.projectcreate.engine.ecs.component;
+package de.undefinedhuman.projectcreate.engine.ecs;
 
-import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.files.FileHandle;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;

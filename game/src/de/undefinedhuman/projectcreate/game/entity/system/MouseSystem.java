@@ -25,7 +25,7 @@ public class MouseSystem extends IteratingSystem {
 
         if(EntityFlag.hasFlags(entity, EntityFlag.IS_MAIN_PLAYER)) mouseComponent.mousePosition.set(Tools.getMouseCoordsInWorldSpace(CameraManager.gameCamera));
         mouseComponent.isTurned = mouseComponent.mousePosition.x >= transformComponent.getCenterPosition().x;
-        spriteComponent.getSpriteData().forEach(spriteData -> spriteData.setTurned(mouseComponent.isTurned));
+        spriteComponent.setTurned(mouseComponent.isTurned);
     }
 
 }

@@ -8,7 +8,7 @@ import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponen
 import de.undefinedhuman.projectcreate.core.network.Packet;
 import de.undefinedhuman.projectcreate.core.network.PacketHandler;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.PositionPacket;
-import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
+import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 
 public class PositionPacketHandler implements PacketHandler {
