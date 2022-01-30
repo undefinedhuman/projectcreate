@@ -1,20 +1,16 @@
 package de.undefinedhuman.projectcreate.game.screen.gamescreen;
 
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import de.undefinedhuman.projectcreate.core.ecs.Mappers;
-import de.undefinedhuman.projectcreate.core.ecs.base.transform.TransformComponent;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.engine.ecs.BlueprintManager;
+import de.undefinedhuman.projectcreate.engine.ecs.Entity;
 import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
 import de.undefinedhuman.projectcreate.engine.gui.GuiManager;
 import de.undefinedhuman.projectcreate.engine.gui.text.Text;
-import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.CenterConstraint;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.PixelConstraint;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.RelativeConstraint;
-import de.undefinedhuman.projectcreate.engine.gui.transforms.offset.CenterOffset;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.offset.PixelOffset;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.offset.RelativeOffset;
 import de.undefinedhuman.projectcreate.engine.utils.manager.ManagerList;
@@ -28,10 +24,6 @@ import de.undefinedhuman.projectcreate.game.projectiles.Projectile;
 import de.undefinedhuman.projectcreate.game.world.World;
 import de.undefinedhuman.projectcreate.game.world.WorldManager;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 public class GameManager {
 
     private static volatile GameManager instance;
@@ -41,7 +33,7 @@ public class GameManager {
 
     private ManagerList manager;
 
-    private Text ping, player1Text, player2Text;
+    private Text ping;
 
     private GameManager() {
         batch = new SpriteBatch();
@@ -55,11 +47,7 @@ public class GameManager {
         loadManager();
 
         //GuiManager.getInstance().addGui(CraftingInventory.getInstance());
-        GuiManager.getInstance().addGui(player1Text = new Text(""), player2Text = new Text(""), ping = new Text(""));
-        player1Text.setPosition(new CenterConstraint(), new CenterConstraint()).setOffset(new PixelOffset(-200), new CenterOffset());
-        player1Text.setColor(Color.GRAY);
-        player2Text.setPosition(new CenterConstraint(), new CenterConstraint()).setOffset(new PixelOffset(200), new CenterOffset());
-        player2Text.setColor(Color.GRAY);
+        GuiManager.getInstance().addGui(ping = new Text(""));
         ping.setPosition(new PixelConstraint(0), new RelativeConstraint(1f)).setOffset(new PixelOffset(10), new RelativeOffset(-1f));
         ping.setColor(Color.GRAY);
     }
@@ -82,19 +70,6 @@ public class GameManager {
         ClientManager.getInstance().update(Main.delta);
 
         ping.setText("Ping: " + ClientManager.getInstance().getReturnTime());
-
-        List<Entity> entities = EntityManager.getInstance().stream().map(Map.Entry::getValue).collect(Collectors.toList());
-        if(entities.size() > 0) {
-            Entity player1 = entities.get(0);
-            TransformComponent transformComponent = Mappers.TRANSFORM.get(player1);
-            player1Text.setText((int) (transformComponent.getPosition().x * 1000) / 1000f + ", " + (int) (transformComponent.getPosition().y * 1000) / 1000f);
-        }
-
-        if(entities.size() > 1) {
-            Entity player2 = entities.get(1);
-            TransformComponent transformComponent = Mappers.TRANSFORM.get(player2);
-            player2Text.setText((int) (transformComponent.getPosition().x * 1000) / 1000f + ", " + (int) (transformComponent.getPosition().y * 1000) / 1000f);
-        }
 
         if (projectile != null) projectile.update(delta);
 

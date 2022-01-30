@@ -1,23 +1,33 @@
 package de.undefinedhuman.projectcreate.engine.ecs;
 
-import com.badlogic.gdx.utils.Array;
+import de.undefinedhuman.projectcreate.engine.log.Log;
+import de.undefinedhuman.projectcreate.engine.observer.Event;
+import de.undefinedhuman.projectcreate.engine.observer.SynchronizedEventManager;
 import de.undefinedhuman.projectcreate.engine.utils.ds.ImmutableArray;
 import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 
+import java.util.Arrays;
 import java.util.Collection;
 
-public class EntityManager extends Manager {
+public class EntityManager extends SynchronizedEventManager implements Manager {
 
     private static volatile EntityManager instance;
 
     private final EntityList entityList = new EntityList();
+    private final FamilyManager familyManager = new FamilyManager(this);
     private final SystemManager systemManager = new SystemManager();
-    private final FamilyManager familyManager = new FamilyManager(entityList);
-    private final Array<EntityEvent> entityEvents = new Array<>(false, 16);
     private boolean updating = false;
 
     private EntityManager() {
-        // this.entityList.subscribe(new EntityListListener(familyManager));
+        subscribe(EntityEvent.class, EntityEvent.Type.ADD, entities -> {
+            entityList.addEntities(entities);
+            familyManager.addEntities(entities);
+        });
+        subscribe(EntityEvent.class, EntityEvent.Type.REMOVE, entities -> {
+            familyManager.removeEntities(entities);
+            entityList.removeEntities(entities);
+        });
+        subscribe(Entity.ComponentEvent.class, Entity.ComponentEvent.Type.COMPONENT, familyManager::updateFamiliesForEntity);
     }
 
     @Override
@@ -26,53 +36,85 @@ public class EntityManager extends Manager {
             throw new IllegalStateException("Error calling update method of entity manager twice.");
         updating = true;
         try {
-            processSystems(systemManager.getOrderedUnmodifiableSystems(), delta);
-            processEvents(entityEvents);
+            systemManager.update(delta);
+            processTemporaryObserverData();
         } finally {
-            entityEvents.clear();
             updating = false;
+            clearTemporaryObserverData();
         }
     }
 
     @Override
     public void delete() {
         systemManager.removeAllSystems();
+        familyManager.removeAllEntities();
         entityList.removeAllEntities();
     }
 
-    public void addEntity(Entity entity) {
-        this.addEntity(entity.getWorldID(), entity);
+    public Entity createEntity(int blueprintID, long worldID, int flags) {
+        Entity entity = this.createEntity(blueprintID, worldID);
+        entity.flags = flags;
+        return entity;
     }
 
-    public void addEntity(long worldID, Entity entity) {
-        entity.setWorldID(worldID);
-        if (updating)
-            entityEvents.add(() -> entityList.addEntity(entity));
-        else entityList.addEntity(entity);
+    public Entity createEntity(int blueprintID, long worldID) {
+        Blueprint blueprint = BlueprintManager.getInstance().getBlueprint(blueprintID);
+        if(blueprint == null) {
+            Log.warn("Blueprint with ID " + blueprintID + " does not exist!");
+            return null;
+        }
+        return createEntity(blueprint, worldID);
     }
 
-    public void removeEntity(long worldID) {
-        if (updating) entityEvents.add(() -> {
-            Entity entity = entityList.getEntity(worldID);
-            if(entity == null)
-                return;
+    public Entity createEntity(Blueprint blueprint, long worldID) {
+        if(worldID < 0) {
+            Log.warn("World ID must be larger or equal to 0!");
+            return null;
+        }
+        return blueprint.createInstance(worldID);
+    }
+
+    public void addEntity(Entity... entities) {
+        for(Entity entity : entities)
+            entity.setEventManager(this);
+        notify(EntityEvent.class, EntityEvent.Type.ADD, entities);
+    }
+
+    public void removeEntity(long... worldIDs) {
+        Entity[] entitiesToRemove = Arrays.stream(worldIDs).mapToObj(entityList::getEntity).filter(entity -> {
+            if(entity == null || entity.isScheduledForRemoval()) return false;
+            entity.setEventManager(null);
             entity.scheduledForRemoval = true;
-            entityList.removeEntity(worldID);
-        });
-        else entityList.removeEntity(worldID);
+            return true;
+        }).toArray(Entity[]::new);
+        notify(EntityEvent.class, EntityEvent.Type.REMOVE, entitiesToRemove);
+    }
+
+    public void removeAllEntities() {
+        removeEntity(entityList.getUnmodifiableEntities().stream().mapToLong(Entity::getWorldID).toArray());
+    }
+
+    public Entity getEntity(long worldID) {
+        return entityList.getEntity(worldID);
+    }
+
+    public boolean hasEntity(long worldID) {
+        return entityList.hasEntity(worldID);
     }
 
     public Collection<Entity> getEntities() {
         return entityList.getUnmodifiableEntities();
     }
 
-    public EntityManager addSystem(System... systems) {
+    public ImmutableArray<Entity> getEntitiesFor(Family family) {
+        return familyManager.getEntitiesFor(family);
+    }
+
+    public void addSystems(System... systems) {
         for(System system : systems) {
             systemManager.addSystem(system);
-            familyManager.addFamily(system.getFamily());
-            system.init(familyManager);
+            system.init(this);
         }
-        return this;
     }
 
     public void removeSystem(Class<? extends System> type) {
@@ -80,19 +122,7 @@ public class EntityManager extends Manager {
         if(system == null)
             return;
         systemManager.removeSystem(type);
-        familyManager.removeFamily(system.getFamily());
-    }
-
-    private void processSystems(ImmutableArray<System> orderedSystems, float delta) {
-        for(System system : orderedSystems)
-            if(system.checkProcessing())
-                system.update(delta);
-    }
-
-    private void processEvents(Array<EntityEvent> entityEvents) {
-        if (entityEvents.size == 0)
-            return;
-        entityEvents.forEach(EntityEvent::handle);
+        system.delete(this);
     }
 
     public static EntityManager getInstance() {
@@ -105,34 +135,18 @@ public class EntityManager extends Manager {
         return instance;
     }
 
-    @FunctionalInterface
-    interface EntityEvent {
-        void handle();
+    public static class EntityEvent extends Event<EntityEvent.Type, Entity[]> {
+        public EntityEvent() {
+            super(Type.class, Entity[].class);
+        }
+        public enum Type {
+            ADD,
+            REMOVE
+        }
     }
 
-/*    static class EntityListListener implements EntityListener {
-
-        private FamilyManager familyManager;
-        private Observer<Entity> componentListener;
-
-        EntityListListener(FamilyManager familyManager) {
-            this.familyManager = familyManager;
-            this.componentListener = familyManager::updateFamiliesForEntity;
-        }
-
-        @Override
-        public void handle(Type type, Entity... entities) {
-            switch (type) {
-                case ADD: familyManager.addEntities(entities);
-                case REMOVE: familyManager.removeEntities(entities);
-                case REMOVE_ALL: familyManager.removeAllEntities();
-            }
-            Arrays.stream(entities).forEach(entity -> {
-                Observable<Entity> observable = entity.getComponentObservable();
-                if(type == Type.ADD) observable.subscribe(componentListener);
-                else observable.unsubscribe(componentListener);
-            });
-        }
-    }*/
-
+    @Override
+    public <EventType, DataType> void notify(Class<? extends Event<EventType, DataType>> eventClass, EventType eventType, DataType data) {
+        super.notify(eventClass, eventType, data, updating);
+    }
 }

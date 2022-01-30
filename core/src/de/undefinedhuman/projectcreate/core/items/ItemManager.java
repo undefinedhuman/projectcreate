@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ItemManager extends Manager {
+public class ItemManager implements Manager {
 
     private static volatile ItemManager instance;
 

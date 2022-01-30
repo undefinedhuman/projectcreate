@@ -12,7 +12,7 @@ public class Blueprint {
         this.blueprintID = id;
     }
 
-    public Entity createInstance(long worldID) {
+    Entity createInstance(long worldID) {
         Entity entity = new Entity(blueprintID, worldID);
         for (ComponentBlueprint componentBlueprint : componentBlueprints.values())
             entity.add(componentBlueprint.createInstance());

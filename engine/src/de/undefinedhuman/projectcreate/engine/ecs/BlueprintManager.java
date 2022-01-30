@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
-public class BlueprintManager extends Manager {
+public class BlueprintManager implements Manager {
 
     public static final int PLAYER_BLUEPRINT_ID = 0;
 
@@ -33,7 +33,6 @@ public class BlueprintManager extends Manager {
 
     @Override
     public void init() {
-        super.init();
         loadBlueprints(0, 1);
     }
 
@@ -42,12 +41,6 @@ public class BlueprintManager extends Manager {
         for (Blueprint blueprint : blueprints.values())
             blueprint.delete();
         blueprints.clear();
-    }
-
-    public void addBlueprint(int id, Blueprint blueprint) {
-        if(hasBlueprint(id))
-            return;
-        blueprints.put(id, blueprint);
     }
 
     public boolean loadBlueprints(int... ids) {
@@ -98,28 +91,16 @@ public class BlueprintManager extends Manager {
 
     public void removeBlueprints(int... ids) {
         for (int id : ids) {
-            if (!hasBlueprint(id)) continue;
-            blueprints.get(id).delete();
+            Blueprint blueprint = blueprints.get(id);
+            if(blueprint == null) continue;
             blueprints.remove(id);
+            blueprint.delete();
         }
     }
 
     public Set<Integer> getBlueprintIDs() {
         return blueprints.keySet();
     }
-
-    public Entity createEntity(int blueprintID, long worldID) {
-        Blueprint blueprint = getBlueprint(blueprintID);
-        if(blueprint == null) return null;
-        return blueprint.createInstance(worldID);
-    }
-
-    public Entity createEntity(int blueprintID, long worldID, int entityFlagMask) {
-        Entity entity = createEntity(blueprintID, worldID);
-        entity.flags = entityFlagMask;
-        return entity;
-    }
-
 
     public Blueprint getBlueprint(int id) {
         if (hasBlueprint(id) || loadBlueprints(id)) return blueprints.get(id);
@@ -128,6 +109,12 @@ public class BlueprintManager extends Manager {
 
     public Set<String> getComponentBlueprintClassKeys() {
         return componentBlueprintClasses.keySet();
+    }
+
+    public void addBlueprint(int id, Blueprint blueprint) {
+        if(hasBlueprint(id))
+            return;
+        blueprints.put(id, blueprint);
     }
 
     private Blueprint loadBlueprint(int id) {

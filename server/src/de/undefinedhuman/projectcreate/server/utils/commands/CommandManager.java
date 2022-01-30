@@ -4,7 +4,7 @@ import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 
 import java.util.HashMap;
 
-public class CommandManager extends Manager {
+public class CommandManager implements Manager {
 
     private static volatile CommandManager instance;
 

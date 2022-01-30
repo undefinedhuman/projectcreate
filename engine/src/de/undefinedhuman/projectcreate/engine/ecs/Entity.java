@@ -2,17 +2,21 @@ package de.undefinedhuman.projectcreate.engine.ecs;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Bits;
+import de.undefinedhuman.projectcreate.engine.observer.Event;
+import de.undefinedhuman.projectcreate.engine.observer.EventManager;
 import de.undefinedhuman.projectcreate.engine.utils.ds.Bag;
 import de.undefinedhuman.projectcreate.engine.utils.ds.ImmutableArray;
 
 public class Entity {
 
-    public static final long DEFAULT_WORLD_ID = -1L;
+    public static final long UNDEFINED_WORLD_ID = -1L;
+    public static final int UNDEFINED_BLUEPRINT_ID = -1;
 
     public int flags;
 
     boolean scheduledForRemoval;
 
+    private EventManager eventManager;
     private long worldID;
     private int blueprintID;
     private Bag<Component> components = new Bag<>(16);
@@ -20,29 +24,27 @@ public class Entity {
     private ImmutableArray<Component> immutableComponents = new ImmutableArray<>(componentsArray);
 
     private Bits componentBits = new Bits(), familyBits = new Bits();
-//    private Observable<Entity> componentObservable = new Observable<>();
 
-    public Entity(int blueprintID) {
-        this(blueprintID, DEFAULT_WORLD_ID);
-    }
-
-    public Entity(int blueprintID, long worldID) {
+    Entity(int blueprintID, long worldID) {
         this.blueprintID = blueprintID;
         this.worldID = worldID;
     }
 
-    public Entity add (Component component) {
-        Class<? extends Component> componentClass = component.getClass();
-        Component oldComponent = getComponent(componentClass);
-        if (component == oldComponent)
-            return this;
-        if (oldComponent != null)
-            remove(componentClass);
-        int componentTypeIndex = ComponentType.indexOf(componentClass);
-        components.set(componentTypeIndex, component);
-        componentsArray.add(component);
-        componentBits.set(componentTypeIndex);
-        // componentObservable.notify(this);
+    public Entity add(Component... components) {
+        for(Component component : components) {
+            Class<? extends Component> componentClass = component.getClass();
+            Component oldComponent = getComponent(componentClass);
+            if (component == oldComponent)
+                return this;
+            if (oldComponent != null)
+                remove(componentClass);
+            int componentTypeIndex = ComponentType.indexOf(componentClass);
+            this.components.set(componentTypeIndex, component);
+            componentsArray.add(component);
+            componentBits.set(componentTypeIndex);
+            if(eventManager != null)
+                eventManager.notify(ComponentEvent.class, ComponentEvent.Type.COMPONENT, this);
+        }
         return this;
     }
 
@@ -56,7 +58,8 @@ public class Entity {
             components.set(componentTypeIndex, null);
             componentsArray.removeValue(removeComponent, true);
             componentBits.clear(componentTypeIndex);
-            // componentObservable.notify(this);
+            if(eventManager != null)
+                eventManager.notify(ComponentEvent.class, ComponentEvent.Type.COMPONENT, this);
             return (T) removeComponent;
         }
         return null;
@@ -78,10 +81,6 @@ public class Entity {
         return scheduledForRemoval;
     }
 
-    public void setWorldID(long worldID) {
-        this.worldID = worldID;
-    }
-
     public long getWorldID() {
         return worldID;
     }
@@ -98,12 +97,21 @@ public class Entity {
         return blueprintID;
     }
 
-//    public Observable<Entity> getComponentObservable() {
-//        return componentObservable;
-//    }
-
     public ImmutableArray<Component> getComponents() {
         return immutableComponents;
+    }
+
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
+
+    static class ComponentEvent extends Event<ComponentEvent.Type, Entity> {
+        protected ComponentEvent() {
+            super(Type.class, Entity.class);
+        }
+        enum Type {
+            COMPONENT
+        }
     }
 
 }

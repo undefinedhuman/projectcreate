@@ -1,8 +1,8 @@
 package de.undefinedhuman.projectcreate.core.ecs.inventory;
 
-import com.badlogic.ashley.core.Component;
 import de.undefinedhuman.projectcreate.core.inventory.InvItem;
 import de.undefinedhuman.projectcreate.core.inventory.Inventory;
+import de.undefinedhuman.projectcreate.engine.ecs.Component;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.LineWriter;
 import de.undefinedhuman.projectcreate.engine.network.NetworkSerializable;

@@ -1,6 +1,5 @@
 package de.undefinedhuman.projectcreate.game.network.handler;
 
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Connection;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
@@ -8,6 +7,7 @@ import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponen
 import de.undefinedhuman.projectcreate.core.network.Packet;
 import de.undefinedhuman.projectcreate.core.network.PacketHandler;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.PositionPacket;
+import de.undefinedhuman.projectcreate.engine.ecs.Entity;
 import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 
@@ -20,7 +20,7 @@ public class PositionPacketHandler implements PacketHandler {
         if(!(packet instanceof PositionPacket)) return false;
         PositionPacket positionPacket = (PositionPacket) packet;
         Entity entity = EntityManager.getInstance().getEntity(positionPacket.getWorldID());
-        if(entity == null || entity.isScheduledForRemoval() || entity.isRemoving()) return true;
+        if(entity == null || entity.isScheduledForRemoval()) return true;
         MovementComponent movementComponent = Mappers.MOVEMENT.get(entity);
 
         if(!(positionPacket.getTimeStamp() > movementComponent.latestPositionPacketTime))

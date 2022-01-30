@@ -1,9 +1,9 @@
 package de.undefinedhuman.projectcreate.core.network.packets.entity.movement;
 
-import com.badlogic.ashley.core.Entity;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.core.network.Packet;
+import de.undefinedhuman.projectcreate.engine.ecs.Entity;
 import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 
@@ -26,9 +26,6 @@ public class JumpPacket implements Packet {
             return;
         }
         MovementComponent movementComponent = Mappers.MOVEMENT.get(entity);
-        if(movementComponent == null) {
-
-        }
     }
 
 }

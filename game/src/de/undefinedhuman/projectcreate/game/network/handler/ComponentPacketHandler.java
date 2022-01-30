@@ -1,10 +1,10 @@
 package de.undefinedhuman.projectcreate.game.network.handler;
 
-import com.badlogic.ashley.core.Entity;
 import com.esotericsoftware.kryonet.Connection;
 import de.undefinedhuman.projectcreate.core.network.Packet;
 import de.undefinedhuman.projectcreate.core.network.PacketHandler;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.ComponentPacket;
+import de.undefinedhuman.projectcreate.engine.ecs.Entity;
 import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
 
 public class ComponentPacketHandler implements PacketHandler {
@@ -13,7 +13,7 @@ public class ComponentPacketHandler implements PacketHandler {
         if(!(packet instanceof ComponentPacket)) return false;
         ComponentPacket componentPacket = (ComponentPacket) packet;
         Entity entity = EntityManager.getInstance().getEntity(componentPacket.getWorldID());
-        if(entity == null || entity.isScheduledForRemoval() || entity.isRemoving()) return true;
+        if(entity == null || entity.isScheduledForRemoval()) return true;
         ComponentPacket.parse(entity, componentPacket);
         return true;
     }

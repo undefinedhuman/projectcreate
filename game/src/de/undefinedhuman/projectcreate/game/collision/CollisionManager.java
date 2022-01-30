@@ -1,9 +1,9 @@
 package de.undefinedhuman.projectcreate.game.collision;
 
-import com.badlogic.ashley.core.Entity;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.core.items.blocks.Block;
 import de.undefinedhuman.projectcreate.core.items.blocks.BlockType;
+import de.undefinedhuman.projectcreate.engine.ecs.Entity;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector4;
 
 public class CollisionManager {

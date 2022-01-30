@@ -3,7 +3,7 @@ package de.undefinedhuman.projectcreate.core.ecs;
 import de.undefinedhuman.projectcreate.engine.ecs.Entity;
 
 public enum EntityFlag {
-    IS_MAIN_PLAYER;
+    MAIN_PLAYER;
 
     public int value() {
         return 1 << ordinal();

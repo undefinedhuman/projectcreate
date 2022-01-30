@@ -3,6 +3,7 @@ package de.undefinedhuman.projectcreate.engine.test.ecs;
 import de.undefinedhuman.projectcreate.engine.ecs.System;
 import org.junit.jupiter.api.*;
 
+@DisplayName("ECS - System")
 @Tag("Unit")
 class SystemTest {
 

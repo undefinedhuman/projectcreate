@@ -1,6 +1,6 @@
 package de.undefinedhuman.projectcreate.core.ecs.stats.name;
 
-import com.badlogic.ashley.core.Component;
+import de.undefinedhuman.projectcreate.engine.ecs.Component;
 import de.undefinedhuman.projectcreate.engine.ecs.ComponentBlueprint;
 import de.undefinedhuman.projectcreate.engine.ecs.ComponentPriority;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.StringSetting;

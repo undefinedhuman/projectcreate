@@ -1,12 +1,11 @@
 package de.undefinedhuman.projectcreate.core.network.packets.entity.components;
 
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.base.transform.TransformComponent;
 import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.core.network.Packet;
-import de.undefinedhuman.projectcreate.engine.log.Log;
+import de.undefinedhuman.projectcreate.engine.ecs.Entity;
 
 public class PositionPacket implements Packet {
 
@@ -18,15 +17,10 @@ public class PositionPacket implements Packet {
     private PositionPacket() {}
 
     public static PositionPacket serialize(Entity entity) {
-        IDComponent idComponent = Mappers.ID.get(entity);
-        if(idComponent == null) {
-            Log.debug("Entity does not contain id component, cannot create component packet.");
-            return null;
-        }
         PositionPacket positionPacket = new PositionPacket();
         TransformComponent transformComponent = Mappers.TRANSFORM.get(entity);
         MovementComponent movementComponent = Mappers.MOVEMENT.get(entity);
-        positionPacket.worldID = idComponent.getWorldID();
+        positionPacket.worldID = entity.getWorldID();
         positionPacket.x = transformComponent.getX();
         positionPacket.y = transformComponent.getY();
         positionPacket.velX = movementComponent.velocity.x;

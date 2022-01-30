@@ -1,23 +1,24 @@
 package de.undefinedhuman.projectcreate.server.entity;
 
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
-import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.core.ecs.base.transform.TransformComponent;
+import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponent;
+import de.undefinedhuman.projectcreate.engine.ecs.Entity;
+import de.undefinedhuman.projectcreate.engine.ecs.annotations.All;
+import de.undefinedhuman.projectcreate.engine.ecs.systems.IteratingSystem;
 
+@All({TransformComponent.class, MovementComponent.class})
 public class MovementSystem extends IteratingSystem {
 
     private final Vector2 currentPosition = new Vector2();
 
      public MovementSystem() {
-         super(Family.all(TransformComponent.class, MovementComponent.class).get(), 5);
+         super(5);
      }
 
     @Override
-    public void processEntity(Entity entity, float delta) {
+    public void processEntity(float delta, Entity entity) {
         TransformComponent transformComponent = Mappers.TRANSFORM.get(entity);
         MovementComponent movementComponent = Mappers.MOVEMENT.get(entity);
 

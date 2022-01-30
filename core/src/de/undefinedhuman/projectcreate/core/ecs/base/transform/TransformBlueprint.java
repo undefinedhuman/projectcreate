@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.core.ecs.base.transform;
 
-import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.projectcreate.engine.ecs.Component;
 import de.undefinedhuman.projectcreate.engine.ecs.ComponentBlueprint;
 import de.undefinedhuman.projectcreate.engine.ecs.ComponentPriority;
 import de.undefinedhuman.projectcreate.engine.settings.types.Vector2Setting;

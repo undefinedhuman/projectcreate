@@ -2,20 +2,18 @@ package de.undefinedhuman.projectcreate.engine.observer;
 
 import de.undefinedhuman.projectcreate.engine.utils.ds.MultiMap;
 
-public class Observable<T extends Enum, E> {
+public class Observable<T, E> {
 
     private MultiMap<T, Observer<E>> events = new MultiMap<>();
 
-    public Observable<T, E> subscribe(T eventType, Observer<E> event) {
-        if(eventType == null || event == null) return this;
+    public void subscribe(T eventType, Observer<E> event) {
+        if(eventType == null || event == null) return;
         this.events.add(eventType, event);
-        return this;
     }
 
-    public Observable<T, E> unsubscribe(T eventType, Observer<E> event) {
-        if(eventType == null || event == null) return this;
+    public void unsubscribe(T eventType, Observer<E> event) {
+        if(eventType == null || event == null) return;
         this.events.removeValue(eventType, event);
-        return this;
     }
 
     public void notify(T eventType, E data) {

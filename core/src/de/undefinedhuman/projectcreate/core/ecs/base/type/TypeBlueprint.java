@@ -2,11 +2,11 @@ package de.undefinedhuman.projectcreate.core.ecs.base.type;
 
 import de.undefinedhuman.projectcreate.engine.ecs.Component;
 import de.undefinedhuman.projectcreate.engine.ecs.ComponentBlueprint;
-import de.undefinedhuman.projectcreate.engine.settings.types.selection.SelectionSetting;
+import de.undefinedhuman.projectcreate.engine.settings.types.selection.EnumSetting;
 
 public class TypeBlueprint extends ComponentBlueprint {
 
-    private SelectionSetting<EntityType> type = new SelectionSetting<>("Type", EntityType.values(), EntityType::valueOf, Enum::name);
+    private EnumSetting<EntityType> type = new EnumSetting<>("Type", EntityType.values(), EntityType::valueOf);
 
     public TypeBlueprint() {
         addSettings(type);

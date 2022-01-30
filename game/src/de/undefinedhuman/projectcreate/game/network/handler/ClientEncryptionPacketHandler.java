@@ -1,6 +1,5 @@
 package de.undefinedhuman.projectcreate.game.network.handler;
 
-import com.badlogic.ashley.core.Entity;
 import com.esotericsoftware.kryonet.Connection;
 import de.undefinedhuman.projectcreate.core.ecs.EntityFlag;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
@@ -10,6 +9,7 @@ import de.undefinedhuman.projectcreate.core.network.packets.auth.EncryptionPacke
 import de.undefinedhuman.projectcreate.core.network.packets.auth.EncryptionUtils;
 import de.undefinedhuman.projectcreate.core.network.utils.PacketUtils;
 import de.undefinedhuman.projectcreate.engine.ecs.BlueprintManager;
+import de.undefinedhuman.projectcreate.engine.ecs.Entity;
 import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.game.Main;
@@ -55,10 +55,10 @@ public class ClientEncryptionPacketHandler extends EncryptionPacketHandler {
         Long worldID;
         if(data.length != 2 || (worldID = Tools.isLong(data[0])) == null)
             return;
-        Entity player = BlueprintManager.getInstance().createEntity(BlueprintManager.PLAYER_BLUEPRINT_ID, worldID, EntityFlag.getBigMask(EntityFlag.IS_MAIN_PLAYER));
+        Entity player = EntityManager.getInstance().createEntity(BlueprintManager.PLAYER_BLUEPRINT_ID, worldID, EntityFlag.getBigMask(EntityFlag.MAIN_PLAYER));
         PacketUtils.setComponentData(player, PacketUtils.parseComponentData(data[1]));
         Mappers.MOVEMENT.get(player).predictedPosition.set(Mappers.TRANSFORM.get(player).getPosition());
-        EntityManager.getInstance().addEntity(worldID, player);
+        EntityManager.getInstance().addEntity(player);
         GameManager.getInstance().player = player;
         linkInventories(player, PlayerInventory.getInstance(), Selector.getInstance());
         InventoryComponent component = Mappers.INVENTORY.get(player);

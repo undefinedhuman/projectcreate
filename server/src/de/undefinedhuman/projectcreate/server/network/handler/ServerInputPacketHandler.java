@@ -1,6 +1,5 @@
 package de.undefinedhuman.projectcreate.server.network.handler;
 
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Connection;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
@@ -9,6 +8,7 @@ import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponen
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.input.InputPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.input.InputPacketHandler;
+import de.undefinedhuman.projectcreate.engine.ecs.Entity;
 import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
 import de.undefinedhuman.projectcreate.engine.utils.Utils;
 import de.undefinedhuman.projectcreate.server.ServerManager;
@@ -33,7 +33,7 @@ public class ServerInputPacketHandler extends InputPacketHandler {
         if (worldID == null || ((direction = Utils.isInteger(data[1])) == null || !Utils.isInRange(direction, -1, 1)))
             return;
         Entity entity = EntityManager.getInstance().getEntity(worldID);
-        if(entity == null || entity.isScheduledForRemoval() || entity.isRemoving()) return;
+        if(entity == null || entity.isScheduledForRemoval()) return;
         ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), MovementPacket.serialize(worldID, direction));
         long packetReceivedTime = System.nanoTime();
         ServerManager.getInstance().getBuffer().add(() -> {

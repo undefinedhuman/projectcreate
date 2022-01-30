@@ -1,12 +1,10 @@
 package de.undefinedhuman.projectcreate.core.network.packets.entity.components;
 
-import com.badlogic.ashley.core.Component;
-import com.badlogic.ashley.core.ComponentMapper;
-import com.badlogic.ashley.core.Entity;
-import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.network.Packet;
 import de.undefinedhuman.projectcreate.core.network.utils.PacketUtils;
-import de.undefinedhuman.projectcreate.engine.log.Log;
+import de.undefinedhuman.projectcreate.engine.ecs.Component;
+import de.undefinedhuman.projectcreate.engine.ecs.ComponentMapper;
+import de.undefinedhuman.projectcreate.engine.ecs.Entity;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -20,13 +18,8 @@ public class ComponentPacket implements Packet {
 
     @SafeVarargs
     public static ComponentPacket serialize(Entity entity, ComponentMapper<? extends Component>... components) {
-        IDComponent idComponent = Mappers.ID.get(entity);
-        if(idComponent == null) {
-            Log.debug("Entity does not contain id component, cannot create component packet.");
-            return null;
-        }
         ComponentPacket componentPacket = new ComponentPacket();
-        componentPacket.worldID = idComponent.getWorldID();
+        componentPacket.worldID = entity.getWorldID();
         componentPacket.componentData = PacketUtils.createComponentData(Arrays.stream(components).map(componentMapper -> componentMapper.get(entity)).collect(Collectors.toList()));
         return componentPacket;
     }

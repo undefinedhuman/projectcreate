@@ -8,7 +8,7 @@ import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 
 import java.util.HashMap;
 
-public class FontManager extends Manager {
+public class FontManager implements Manager {
 
     private static volatile FontManager instance;
 

@@ -68,7 +68,6 @@ public class Main extends Game {
     @Override
     public void create() {
         initGDX();
-        // EntityManager.getInstance().addSystems(new AngleSystem(), new AnimationSystem(), new ArmSystem(), new InteractionSystem(), new EquipSystem(), new MovementSystem(), new RenderSystem());
         EntityManager.getInstance().addSystems(new MouseSystem(), new AnimationSystem(), new InteractionSystem(), new EquipSystem(), new MovementSystem(), new CameraSystem(), new RenderSystem());
         ComponentTypes.registerComponentTypes(BlueprintManager.getInstance());
         managerList.init();

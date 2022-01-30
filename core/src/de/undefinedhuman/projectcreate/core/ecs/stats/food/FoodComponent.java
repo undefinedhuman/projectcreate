@@ -1,6 +1,6 @@
 package de.undefinedhuman.projectcreate.core.ecs.stats.food;
 
-import com.badlogic.ashley.core.Component;
+import de.undefinedhuman.projectcreate.engine.ecs.Component;
 
 public class FoodComponent implements Component {
 

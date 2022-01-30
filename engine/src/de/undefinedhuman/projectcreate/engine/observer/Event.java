@@ -1,6 +1,6 @@
 package de.undefinedhuman.projectcreate.engine.observer;
 
-public class Event<T extends Enum, E> {
+public class Event<T, E> {
 
     private Class<T> eventType;
     private Class<E> dataType;

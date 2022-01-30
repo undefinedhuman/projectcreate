@@ -1,16 +1,16 @@
 package de.undefinedhuman.projectcreate.game.background;
 
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.core.ecs.base.transform.TransformComponent;
+import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponent;
+import de.undefinedhuman.projectcreate.engine.ecs.Entity;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
-import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 import de.undefinedhuman.projectcreate.game.background.birds.BirdLayer;
 import de.undefinedhuman.projectcreate.game.background.clouds.CloudLayer;
 import de.undefinedhuman.projectcreate.game.background.layers.BackgroundLayer;
@@ -18,7 +18,7 @@ import de.undefinedhuman.projectcreate.game.background.layers.ForegroundLayer;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 
-public class BackgroundManager extends Manager {
+public class BackgroundManager implements Manager {
 
     private static volatile BackgroundManager instance;
 

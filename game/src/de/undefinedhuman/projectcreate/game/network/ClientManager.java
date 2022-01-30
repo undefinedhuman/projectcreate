@@ -12,7 +12,7 @@ import de.undefinedhuman.projectcreate.engine.utils.timer.TimerList;
 
 import java.io.IOException;
 
-public class ClientManager extends Manager {
+public class ClientManager implements Manager {
 
     private static volatile ClientManager instance;
     private static final String IP_ADDRESS = "127.0.0.1";

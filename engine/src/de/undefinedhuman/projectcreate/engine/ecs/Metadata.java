@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.reflect.ClassReflection;
 import de.undefinedhuman.projectcreate.engine.ecs.annotations.All;
 import de.undefinedhuman.projectcreate.engine.ecs.annotations.Exclude;
 import de.undefinedhuman.projectcreate.engine.ecs.annotations.One;
+import de.undefinedhuman.projectcreate.engine.ecs.annotations.Optional;
 
 public class Metadata {
 
@@ -13,6 +14,7 @@ public class Metadata {
                 .with(Family::all, getAnnotation(systemClass, All.class))
                 .with(Family::one, getAnnotation(systemClass, One.class))
                 .with(Family::exclude, getAnnotation(systemClass, Exclude.class))
+                .with(Family::optional, getAnnotation(systemClass, Optional.class))
                 .build();
     }
 

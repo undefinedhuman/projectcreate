@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ConfigManager extends Manager implements Serializable {
+public class ConfigManager implements Manager, Serializable {
 
     private static volatile ConfigManager instance;
 

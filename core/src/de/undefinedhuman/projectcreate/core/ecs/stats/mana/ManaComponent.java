@@ -1,6 +1,6 @@
 package de.undefinedhuman.projectcreate.core.ecs.stats.mana;
 
-import com.badlogic.ashley.core.Component;
+import de.undefinedhuman.projectcreate.engine.ecs.Component;
 
 public class ManaComponent implements Component {
 

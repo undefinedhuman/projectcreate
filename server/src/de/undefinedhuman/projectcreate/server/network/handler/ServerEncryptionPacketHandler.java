@@ -1,6 +1,5 @@
 package de.undefinedhuman.projectcreate.server.network.handler;
 
-import com.badlogic.ashley.core.Entity;
 import com.esotericsoftware.kryonet.Connection;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.inventory.InventoryComponent;
@@ -12,6 +11,7 @@ import de.undefinedhuman.projectcreate.core.network.packets.auth.EncryptionUtils
 import de.undefinedhuman.projectcreate.core.network.packets.entity.CreateEntityPacket;
 import de.undefinedhuman.projectcreate.core.network.utils.PacketUtils;
 import de.undefinedhuman.projectcreate.engine.ecs.BlueprintManager;
+import de.undefinedhuman.projectcreate.engine.ecs.Entity;
 import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.server.ServerManager;
@@ -22,7 +22,6 @@ import de.undefinedhuman.projectcreate.server.utils.IDManager;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 
 public class ServerEncryptionPacketHandler extends EncryptionPacketHandler {
 
@@ -85,7 +84,7 @@ public class ServerEncryptionPacketHandler extends EncryptionPacketHandler {
             return;
         }
         long worldID = IDManager.getInstance().createNewID();
-        Entity player = BlueprintManager.getInstance().createEntity(BlueprintManager.PLAYER_BLUEPRINT_ID, worldID);
+        Entity player = EntityManager.getInstance().createEntity(BlueprintManager.PLAYER_BLUEPRINT_ID, worldID);
         NameComponent nameComponent = Mappers.NAME.get(player);
         if(nameComponent != null)
             nameComponent.setName(name);
@@ -99,13 +98,12 @@ public class ServerEncryptionPacketHandler extends EncryptionPacketHandler {
         inventoryComponent.getInventory("Selector").addItem(2, ItemManager.getInstance().getItem(2).maxAmount.getValue());
         // TEMP END
         SessionManager.getInstance().setWorldID(sessionID, worldID);
-        EntityManager.getInstance().addEntity(worldID, player);
+        EntityManager.getInstance().addEntity(player);
         ((PlayerConnection) connection).worldID = worldID;
         connection.sendTCP(EncryptionPacket.serialize(null, EncryptionPacket.CHARACTER_RESPONSE, worldID + ":" + PacketUtils.createComponentData(player.getComponents())));
         ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), CreateEntityPacket.serialize(player));
-        EntityManager.getInstance().stream().map(Map.Entry::getValue).forEach(entity -> {
-            long otherEntityWorldID = Mappers.ID.get(entity).getWorldID();
-            if(EntityManager.getInstance().isRemoving(otherEntityWorldID) || entity.isRemoving() || entity.isScheduledForRemoval() || otherEntityWorldID == worldID)
+        EntityManager.getInstance().getEntities().forEach(entity -> {
+            if(entity.isScheduledForRemoval() || entity.getWorldID() == worldID)
                 return;
             connection.sendTCP(CreateEntityPacket.serialize(entity));
         });

@@ -6,7 +6,7 @@ import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector4i;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 
-public class CameraManager extends Manager {
+public class CameraManager implements Manager {
 
     private static volatile CameraManager instance;
 

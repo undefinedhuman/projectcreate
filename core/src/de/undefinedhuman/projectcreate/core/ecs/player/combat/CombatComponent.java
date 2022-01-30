@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.core.ecs.player.combat;
 
-import com.badlogic.ashley.core.Component;
 import de.undefinedhuman.projectcreate.engine.base.GameObject;
+import de.undefinedhuman.projectcreate.engine.ecs.Component;
 
 import java.util.ArrayList;
 

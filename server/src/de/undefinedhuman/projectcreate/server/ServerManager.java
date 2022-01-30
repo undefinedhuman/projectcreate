@@ -32,7 +32,6 @@ import de.undefinedhuman.projectcreate.server.utils.console.Console;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Map;
 
 public class ServerManager extends Server {
 
@@ -88,10 +87,7 @@ public class ServerManager extends Server {
         timers.update(delta);
         EntityManager.getInstance().update(delta);
         buffer.process();
-        EntityManager.getInstance().stream().map(Map.Entry::getValue).forEach(entity -> {
-            PositionPacket packet = PositionPacket.serialize(entity);
-            sendToAllUDP(packet);
-        });
+        EntityManager.getInstance().getEntities().forEach(entity -> sendToAllUDP(PositionPacket.serialize(entity)));
     }
 
     public void delete() {

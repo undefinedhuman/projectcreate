@@ -1,6 +1,8 @@
 package de.undefinedhuman.projectcreate.core.ecs.visual.sprite;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import de.undefinedhuman.projectcreate.engine.base.Transform;
 import de.undefinedhuman.projectcreate.engine.ecs.Component;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.utils.ds.ImmutableArray;
@@ -18,11 +20,16 @@ public class SpriteComponent implements Component {
         spriteLayers.forEach((key, spriteLayer) -> addSpriteData(key, spriteLayer.createSpriteData()));
     }
 
+    public void render(SpriteBatch batch, Transform transform, int renderOffset) {
+        getSortedSpriteData().forEach(data -> data.render(batch, transform, renderOffset));
+    }
+
     public void delete() {
         sortedSpriteData.clear();
         for(SpriteData data : spriteData.values())
             data.delete();
         spriteData.clear();
+        sorted = true;
     }
 
     public ImmutableArray<SpriteData> getSortedSpriteData() {

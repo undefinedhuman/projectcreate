@@ -4,7 +4,7 @@ import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 
 import java.util.HashMap;
 
-public class SessionManager extends Manager {
+public class SessionManager implements Manager {
 
     private static volatile SessionManager instance;
 

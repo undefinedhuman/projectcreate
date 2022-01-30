@@ -11,7 +11,7 @@ import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.ScreenC
 
 import java.util.ArrayList;
 
-public class GuiManager extends Manager {
+public class GuiManager implements Manager {
 
     public static int GUI_SCALE = 1;
     private static volatile GuiManager instance;

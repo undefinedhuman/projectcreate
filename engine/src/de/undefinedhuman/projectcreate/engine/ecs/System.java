@@ -23,8 +23,12 @@ public abstract class System {
         this.processing = processing;
     }
 
-    public void init(FamilyManager familyManager) {
-        this.entities = familyManager.getEntitiesFor(family);
+    public void init(EntityManager entityManager) {
+        this.entities = entityManager.getEntitiesFor(family);
+    }
+
+    public void delete(EntityManager entityManager) {
+        this.entities = null;
     }
 
     public final void update(float delta) {
@@ -34,8 +38,6 @@ public abstract class System {
         process(delta);
         end();
     }
-
-    protected void delete() {}
 
     public int getPriority() {
         return priority;
@@ -49,7 +51,7 @@ public abstract class System {
         this.processing = processing;
     }
 
-    Family getFamily() {
+    public Family getFamily() {
         return family;
     }
 

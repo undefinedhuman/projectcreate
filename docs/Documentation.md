@@ -16,7 +16,7 @@ Contains all code relevant for the game client, such as the camera system, scene
 
 Note: Most of the code currently implemented within the client will be moved to the server side in the near future.
 
-![screenshots/Game.png](screenshots/Game.png)
+![pictures/Game.png](pictures/Game.png)
 
 ### Server
 
@@ -26,21 +26,21 @@ In the current version so far only a very small program to test the CI/CD featur
 
 A graphical interface that provides the ability to dynamically create new entities and items for the game and export them as a text file so the game client and server can load them without me having to hard code them. 
 
-![screenshots/Editor.png](screenshots/Editor.png)
+![pictures/Editor.png](pictures/Editor.png)
 
 ### Updater & Website
 
 The updater is a small program that the user downloads which then automatically updates and launches the launcher. It comes with a bundled JRE and an operating system specific executable, therefore the user is not required to install anything except the updater. The user can download a zip file containing all the relevant files from a small website I programmed.
 
-![screenshots/Updater.png](screenshots/Updater.png)
+![pictures/Updater.png](pictures/Updater.png)
 
-![screenshots/Website.png](screenshots/Website.png)
+![pictures/Website.png](pictures/Website.png)
 
 ### Launcher
 
 Through the launcher, the user can download and handle different versions of the game, change settings (for example, currently the initial and maximum memory usage of the game). In order to start the launcher, the updater uses the bundled JRE and the launcher also uses it to start the game.
 
-![screenshots/Launcher.png](screenshots/Launcher.png)
+![screenshots/Launcher.png](pictures/Launcher.png)
 
 ### Gitflow
 
@@ -90,7 +90,7 @@ At that time, I was not able to send them a playable file of the game, which led
 
 **GitLab:** I've been wanting to try GitLab for a long time to see if there were any advantages over GitHub in my use cases. And to be 100% honest, I didn't like the first GitHub dark theme, which led me start looking for alternatives.
 
-![screenshots/GitLab.png](screenshots/GitLab.png)
+![pictures/GitLab.png](pictures/GitLab.png)
 
 **Jenkins:** I already used "Travis CI" in the past for a small blog I written for a STS module, which was the first project I tried to implement a really small CI/CD Pipeline:
 
@@ -100,11 +100,11 @@ At that time, I was not able to send them a playable file of the game, which led
 
 **Link(Production, completely broken):** [http://144.91.69.99:3000/index.html](http://144.91.69.99:3000/index.html)
 
-![screenshots/Travis.png](screenshots/Travis.png)
+![pictures/Travis.png](pictures/Travis.png)
 
 Travis CI is also fun and was straightforward to set up, though I also wanted to try different tools. Wanting something that doesn't cost anything (like GitLab CI, where you have to pay a monthly fee once you reach 400 CI/CD minutes), preferably an on-premise solution, fairly customizable, suitable for building a CI/CD pipeline for a game project, and that supports all the tools I intended to use - that's how I ended up with Jenkins.
 
-![screenshots/Jenkins.png](screenshots/Jenkins.png)
+![pictures/Jenkins.png](pictures/Jenkins.png)
 
 I use a variety of plugins to implement all my requirements. Most importantly, however, is the "GitLab Branch Source" plugin, which allows me to use a multi-branch repository from GitLab in my Jenkins instance. The plugin automatically detects newly created branches in the repository, creates a new pipeline for said branch, sets up webhooks in GitLab that notify the pipeline in case of new activity on the branch, and allows the pipeline status to be reported back to GitLab.
 
@@ -114,13 +114,13 @@ One thing I want to take a closer look at in the future is how to properly test 
 
 **SonarQube:** Is my choice to do static code analysis, it was my choice because it is a on-premise solution that is free for any amount of analysis time etc, it was integrated easily with my already in use software like Gradle, Java and Jenkins, and it is considered to be the best option for Java code analysis. I use custom quality gate settings which also include code test coverage (currently disabled, will be enabled once test coverage reaches a decent level).
 
-![screenshots/Quality_Gate.png](screenshots/Quality_Gate.png)
+![pictures/Quality_Gate.png](pictures/Quality_Gate.png)
 
 ### **Integration**
 
-When choosing all of the tools, it was important not only that they integrate well with each other, but also that they integrate flawlessly with my current IDE. I wanted as much feedback and automation without leaving my IDE as possible.
+When choosing all the tools, it was important not only that they integrate well with each other, but also that they integrate flawlessly with my current IDE. I wanted as much feedback and automation without leaving my IDE as possible.
 
-![screenshots/IDE.png](screenshots/IDE.png)
+![IDE.png](pictures/IDE.png)
 
 In addition, I use the SonarLint plugin, which is connected to my SonarQube instance, that generates instant feedback and lets me view all SonarQube issues.
 

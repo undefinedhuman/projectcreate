@@ -54,6 +54,6 @@ public class MultiMap<K, V> {
 
     @Override
     public String toString() {
-        return data.keySet().stream().map(key -> key.toString() + ": " + data.get(key).toString()).collect(Collectors.joining("\n"));
+        return super.toString() + data.keySet().stream().map(key -> key.toString() + ": " + data.get(key).toString()).collect(Collectors.joining("\n"));
     }
 }

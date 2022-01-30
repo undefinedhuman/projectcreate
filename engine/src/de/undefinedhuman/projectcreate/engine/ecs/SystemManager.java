@@ -1,20 +1,15 @@
 package de.undefinedhuman.projectcreate.engine.ecs;
 
 import com.badlogic.gdx.utils.Array;
-import de.undefinedhuman.projectcreate.engine.utils.ds.ImmutableArray;
 import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
-class SystemManager extends Manager {
+class SystemManager implements Manager {
 
     private final HashMap<Class<? extends System>, System> systems = new HashMap<>();
-    private final Collection<System> unmodifiableSystems = Collections.unmodifiableCollection(systems.values());
     private final Array<System> orderedSystems = new Array<>(true, 16);
-    private final ImmutableArray<System> orderedUnmodifiableSystems = new ImmutableArray<>(orderedSystems);
     private final SystemComparator systemComparator = new SystemComparator();
 
     public void addSystem(System system) {
@@ -25,6 +20,12 @@ class SystemManager extends Manager {
         systems.put(systemType, system);
         orderedSystems.add(system);
         orderedSystems.sort(systemComparator);
+    }
+
+    public void update(float delta) {
+        for(System system : orderedSystems)
+            if(system.checkProcessing())
+                system.update(delta);
     }
 
     public void removeSystem(Class<? extends System> type) {
@@ -38,14 +39,6 @@ class SystemManager extends Manager {
     public void removeAllSystems() {
         systems.clear();
         orderedSystems.clear();
-    }
-
-    public ImmutableArray<System> getOrderedUnmodifiableSystems() {
-        return orderedUnmodifiableSystems;
-    }
-
-    public Collection<System> getUnmodifiableSystems() {
-        return unmodifiableSystems;
     }
 
     public <T extends System> T getSystem(Class<T> systemType) {

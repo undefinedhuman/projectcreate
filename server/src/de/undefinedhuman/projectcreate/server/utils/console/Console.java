@@ -7,7 +7,7 @@ import de.undefinedhuman.projectcreate.server.utils.commands.CommandSender;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class Console extends Manager {
+public class Console implements Manager {
 
     private static volatile Console instance;
 

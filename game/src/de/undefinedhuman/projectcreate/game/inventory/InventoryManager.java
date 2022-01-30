@@ -27,7 +27,7 @@ import de.undefinedhuman.projectcreate.game.world.WorldManager;
 
 import java.util.Collection;
 
-public class InventoryManager extends Manager {
+public class InventoryManager implements Manager {
 
     private static volatile InventoryManager instance;
 
@@ -51,7 +51,6 @@ public class InventoryManager extends Manager {
 
     @Override
     public void init() {
-        super.init();
         Selector.getInstance().setSelected(0);
     }
 

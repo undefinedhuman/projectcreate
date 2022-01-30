@@ -1,12 +1,12 @@
 package de.undefinedhuman.projectcreate.game.inventory;
 
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.inventory.InventoryComponent;
 import de.undefinedhuman.projectcreate.core.ecs.inventory.InventoryType;
 import de.undefinedhuman.projectcreate.core.inventory.Inventory;
 import de.undefinedhuman.projectcreate.core.inventory.SelectorInventory;
+import de.undefinedhuman.projectcreate.engine.ecs.Entity;
 import de.undefinedhuman.projectcreate.engine.gui.Gui;
 import de.undefinedhuman.projectcreate.engine.gui.texture.GuiTemplate;
 import de.undefinedhuman.projectcreate.engine.utils.Utils;
@@ -28,12 +28,11 @@ public class ClientInventory<T extends Inventory> extends Gui implements InvTarg
     }
 
     public void linkInventory(Entity entity) {
-        IDComponent idComponent = Mappers.ID.get(entity);
         InventoryComponent inventoryComponent = Mappers.INVENTORY.get(entity);
-        if(idComponent == null || inventoryComponent == null || !inventoryComponent.hasInventory(name)) return;
+        if(inventoryComponent == null || !inventoryComponent.hasInventory(name)) return;
         T inventory = inventoryComponent.getInventory(type, name);
         if(inventory == null) return;
-        linkInventory(idComponent.getWorldID(), inventory);
+        linkInventory(entity.getWorldID(), inventory);
     }
 
     public void linkInventory(long linkedEntityID, T linkInventory) {

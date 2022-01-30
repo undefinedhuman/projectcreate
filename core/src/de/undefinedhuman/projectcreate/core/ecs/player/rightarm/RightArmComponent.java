@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.core.ecs.player.rightarm;
 
-import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.projectcreate.engine.ecs.Component;
 
 public class RightArmComponent implements Component {
 

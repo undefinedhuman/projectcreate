@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.Bits;
 import de.undefinedhuman.projectcreate.engine.ecs.annotations.All;
 import de.undefinedhuman.projectcreate.engine.ecs.annotations.Exclude;
 import de.undefinedhuman.projectcreate.engine.ecs.annotations.One;
+import de.undefinedhuman.projectcreate.engine.ecs.annotations.Optional;
 import de.undefinedhuman.projectcreate.engine.utils.GenericBuilder;
 
 import java.util.HashMap;
@@ -16,6 +17,7 @@ class Family {
     private Bits all = ZERO_BITS;
     private Bits one = ZERO_BITS;
     private Bits exclude = ZERO_BITS;
+    private Bits optional = ZERO_BITS;
     private int index = 0;
 
     private Family() {}
@@ -35,8 +37,17 @@ class Family {
         this.exclude = ComponentType.getBitsFor(exclude.value());
     }
 
+    final void optional(Optional optional) {
+        if(optional == null) return;
+        this.optional = ComponentType.getBitsFor(optional.value());
+    }
+
     public int getIndex() {
         return index;
+    }
+
+    public Bits getOptional() {
+        return optional;
     }
 
     public boolean matches(Entity entity) {
@@ -53,11 +64,7 @@ class Family {
 
     @Override
     public String toString() {
-        StringBuilder hash = new StringBuilder();
-        if (!all.isEmpty()) hash.append("{all:").append(getBitsString(all)).append("}");
-        if (!one.isEmpty()) hash.append("{one:").append(getBitsString(one)).append("}");
-        if (!exclude.isEmpty()) hash.append("{exclude:").append(getBitsString(exclude)).append("}");
-        return hash.toString();
+        return createFamilyHashFromBits(all, one, exclude, optional);
     }
 
     static class FamilyBuilder extends GenericBuilder<Family> {
@@ -78,6 +85,15 @@ class Family {
             return newFamily;
         }
 
+    }
+
+    public static String createFamilyHashFromBits(Bits all, Bits one, Bits exclude, Bits optional) {
+        StringBuilder hash = new StringBuilder();
+        if (!all.isEmpty()) hash.append("{all:").append(getBitsString(all)).append("}");
+        if (!one.isEmpty()) hash.append("{one:").append(getBitsString(one)).append("}");
+        if (!exclude.isEmpty()) hash.append("{exclude:").append(getBitsString(exclude)).append("}");
+        if (!optional.isEmpty()) hash.append("{optional:").append(getBitsString(optional)).append("}");
+        return hash.toString();
     }
 
     private static String getBitsString(Bits bits) {
