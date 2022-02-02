@@ -6,4 +6,7 @@ public class StringSetting extends TextFieldSetting<String> {
     public StringSetting(String key, String defaultValue) {
         super(key, defaultValue, value -> value, value -> value);
     }
+    public StringSetting(String key, String defaultValue, boolean canBeEmpty) {
+        super(key, defaultValue, value -> value, value -> value, canBeEmpty);
+    }
 }

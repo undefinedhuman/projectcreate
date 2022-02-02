@@ -15,26 +15,25 @@
 ## Technologies
 Project is created with:
 * Java JDK Version 8
-* Gradle 6.8.3 (wrapper files, are already included in the repository)
+* Gradle 6.8.3 (wrapper files already included in the repository)
 * Additional dependencies can be found in the root [build.gradle](http://gitlab.playprojectcreate.com/undefinedhuman/project-create/-/blob/main/build.gradle) file
 
 ## Installation
 > Required dependencies are automatically downloaded by Gradle.
-> Personally, I suggest using the Intellij IDE for easier installation and handling of the project.
+> Personally, I suggest using Intellij IDE for easier installation and handling of the project.
 
 ```sh
 # Clone repository
-git clone http://gitlab.playprojectcreate.com/undefinedhuman/project-create.git
+git clone https://gitlab.playprojectcreate.com/undefinedhuman/project-create.git
 cd project-create/
 ```
 
 ## Usage
 ```sh
-# Run either part of the project by replacing "NAME" with either "game, editor, server, updater or launcher" to launch the specific module
-./gradlew :NAME:run
+# Run either part of the project by replacing "SUB_PROJECT_NAME" with either "game, editor, server, updater or launcher" to launch the specific sub project
+./gradlew :SUB_PROJECT_NAME:run
 ```
-
 
 ## License
 
-Copyright © 2021 [Alexander Padberg](http://undefinedhuman.de)
+Copyright © 2014-2022 [Alexander Padberg](https://playprojectcreate.com)

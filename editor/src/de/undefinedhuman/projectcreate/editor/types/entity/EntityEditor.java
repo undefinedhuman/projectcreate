@@ -95,4 +95,9 @@ public class EntityEditor extends Editor {
         }));
     }
 
+    @Override
+    public void delete() {
+        super.delete();
+        entitySelectionPanel.delete();
+    }
 }

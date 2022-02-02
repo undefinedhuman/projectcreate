@@ -5,19 +5,18 @@ import de.undefinedhuman.projectcreate.engine.file.FileReader;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.log.Log;
+import de.undefinedhuman.projectcreate.engine.observer.Event;
+import de.undefinedhuman.projectcreate.engine.observer.SynchronizedEventManager;
 import de.undefinedhuman.projectcreate.engine.resources.RessourceUtils;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectFileReader;
 import de.undefinedhuman.projectcreate.engine.utils.Utils;
 import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
-public class BlueprintManager implements Manager {
+public class BlueprintManager extends SynchronizedEventManager implements Manager {
 
     public static final int PLAYER_BLUEPRINT_ID = 0;
 
@@ -48,7 +47,7 @@ public class BlueprintManager implements Manager {
                 .filter(id -> !hasBlueprint(id) && RessourceUtils.existBlueprint(id))
                 .peek(id -> {
                     Blueprint blueprint = loadBlueprint(id);
-                    addBlueprint(id, blueprint);
+                    addBlueprints(blueprint);
                     blueprint.validate();
                 })
                 .filter(this::hasBlueprint)
@@ -67,12 +66,40 @@ public class BlueprintManager implements Manager {
         return loadedBlueprintIDs.length == ids.length;
     }
 
+    public boolean hasBlueprint(Blueprint blueprint) {
+        return hasBlueprint(blueprint.getBlueprintID());
+    }
+
     public boolean hasBlueprint(int id) {
         return blueprints.containsKey(id);
     }
 
     public void registerComponentBlueprints(Stream<Class<? extends ComponentBlueprint>> componentBlueprintClasses) {
         componentBlueprintClasses.forEach(componentBlueprintClass -> this.componentBlueprintClasses.put(ComponentBlueprint.getName(componentBlueprintClass), componentBlueprintClass));
+    }
+
+    public void addBlueprints(Blueprint... blueprints) {
+        Blueprint[] blueprintsToAdd = Arrays.stream(blueprints)
+                .filter(blueprint -> {
+                    if(!hasBlueprint(blueprint.getBlueprintID()))
+                        return true;
+                    Log.warn("Blueprint with ID: " + blueprint.getBlueprintID() + " already registered, continue without override!");
+                    return false;
+                })
+                .toArray(Blueprint[]::new);
+        for(Blueprint blueprint : blueprintsToAdd)
+            this.blueprints.put(blueprint.getBlueprintID(), blueprint.setEventManager(this));
+        this.notify(BlueprintEvent.class, BlueprintEvent.Type.ADD, blueprintsToAdd);
+    }
+
+    public void removeBlueprints(int... ids) {
+        Blueprint[] blueprintsToRemove = Arrays.stream(ids)
+                .mapToObj(blueprints::get)
+                .filter(Objects::nonNull)
+                .toArray(Blueprint[]::new);
+        for(Blueprint blueprint : blueprintsToRemove)
+            blueprints.remove(blueprint.getBlueprintID()).setEventManager(null).delete();
+        this.notify(BlueprintEvent.class, BlueprintEvent.Type.REMOVE, blueprintsToRemove);
     }
 
     public ComponentBlueprint getComponentBlueprint(String name, int blueprintID) {
@@ -89,15 +116,6 @@ public class BlueprintManager implements Manager {
         return componentBlueprint;
     }
 
-    public void removeBlueprints(int... ids) {
-        for (int id : ids) {
-            Blueprint blueprint = blueprints.get(id);
-            if(blueprint == null) continue;
-            blueprints.remove(id);
-            blueprint.delete();
-        }
-    }
-
     public Set<Integer> getBlueprintIDs() {
         return blueprints.keySet();
     }
@@ -109,12 +127,6 @@ public class BlueprintManager implements Manager {
 
     public Set<String> getComponentBlueprintClassKeys() {
         return componentBlueprintClasses.keySet();
-    }
-
-    public void addBlueprint(int id, Blueprint blueprint) {
-        if(hasBlueprint(id))
-            return;
-        blueprints.put(id, blueprint);
     }
 
     private Blueprint loadBlueprint(int id) {
@@ -129,10 +141,22 @@ public class BlueprintManager implements Manager {
             ComponentBlueprint componentBlueprint = getComponentBlueprint(entry.getKey(), id);
             if(componentBlueprint == null) continue;
             componentBlueprint.load(reader.parent(), (SettingsObject) entry.getValue());
-            blueprint.addComponentBlueprint(componentBlueprint);
+            blueprint.addComponentBlueprints(componentBlueprint);
         }
         reader.close();
         return blueprint;
+    }
+
+    public static class BlueprintEvent extends Event<BlueprintEvent.Type, Blueprint[]> {
+
+        protected BlueprintEvent() {
+            super(Type.class, Blueprint[].class);
+        }
+
+        public enum Type {
+            ADD,
+            REMOVE
+        }
     }
 
     public static BlueprintManager getInstance() {

@@ -6,7 +6,9 @@ import de.undefinedhuman.projectcreate.core.network.packets.entity.CreateEntityP
 import de.undefinedhuman.projectcreate.core.network.packets.entity.RemoveEntityPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.ComponentPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.PositionPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.JumpPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementPacket;
+import de.undefinedhuman.projectcreate.core.network.packets.input.responses.MousePacket;
 import de.undefinedhuman.projectcreate.game.network.handler.*;
 
 public class ClientListener extends PacketListener {
@@ -20,6 +22,8 @@ public class ClientListener extends PacketListener {
         registerPacketHandlers(ComponentPacket.class, new ComponentPacketHandler());
         registerPacketHandlers(PositionPacket.class, new PositionPacketHandler());
         registerPacketHandlers(MovementPacket.class, new MovementPacketHandler());
+        registerPacketHandlers(JumpPacket.class, new JumpPacketHandler());
+        registerPacketHandlers(MousePacket.class, new MousePacketHandler());
     }
 
     public static ClientListener getInstance() {

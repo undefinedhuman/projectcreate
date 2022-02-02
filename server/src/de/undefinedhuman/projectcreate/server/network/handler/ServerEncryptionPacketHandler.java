@@ -103,7 +103,7 @@ public class ServerEncryptionPacketHandler extends EncryptionPacketHandler {
         connection.sendTCP(EncryptionPacket.serialize(null, EncryptionPacket.CHARACTER_RESPONSE, worldID + ":" + PacketUtils.createComponentData(player.getComponents())));
         ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), CreateEntityPacket.serialize(player));
         EntityManager.getInstance().getEntities().forEach(entity -> {
-            if(entity.isScheduledForRemoval() || entity.getWorldID() == worldID)
+            if(entity.getWorldID() == worldID || entity.isScheduledForRemoval())
                 return;
             connection.sendTCP(CreateEntityPacket.serialize(entity));
         });

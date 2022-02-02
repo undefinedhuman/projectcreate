@@ -2,9 +2,11 @@ package de.undefinedhuman.projectcreate.engine.ecs;
 
 import com.badlogic.gdx.files.FileHandle;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
+import de.undefinedhuman.projectcreate.engine.observer.EventManager;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
+import de.undefinedhuman.projectcreate.engine.settings.listener.ValueListener;
 import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
 import java.util.Locale;
@@ -13,9 +15,21 @@ public abstract class ComponentBlueprint extends SettingsList implements Compara
 
     public int blueprintID;
 
+    private EventManager eventManager;
+    private ValueListener valueListener = value -> notifyEventManager();
     protected ComponentPriority priority = ComponentPriority.LOWEST;
 
     public abstract Component createInstance();
+
+    @Override
+    protected void addSetting(Setting<?> setting) {
+        super.addSetting(setting.addValueListener(valueListener));
+    }
+
+    @Override
+    protected void removeSetting(Setting<?> setting) {
+        super.removeSetting(setting.removeValueListener(valueListener));
+    }
 
     public void load(FileHandle parentDir, SettingsObject settingsObject) {
         for(Setting<?> setting : this.getSettings())
@@ -48,6 +62,17 @@ public abstract class ComponentBlueprint extends SettingsList implements Compara
     @Override
     public String toString() {
         return getName(getClass());
+    }
+
+    public ComponentBlueprint setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+        return this;
+    }
+
+    private void notifyEventManager() {
+        if(eventManager == null)
+            return;
+        eventManager.notify(Blueprint.ComponentBlueprintEvent.class, Blueprint.ComponentBlueprintEvent.Type.UPDATE, new ComponentBlueprint[] { this });
     }
 
     public static String getName(Class<? extends ComponentBlueprint> componentBlueprint) {

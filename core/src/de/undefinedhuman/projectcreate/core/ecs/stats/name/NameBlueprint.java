@@ -7,7 +7,7 @@ import de.undefinedhuman.projectcreate.engine.settings.types.primitive.StringSet
 
 public class NameBlueprint extends ComponentBlueprint {
 
-    public StringSetting name = new StringSetting("Name", "");
+    public StringSetting name = new StringSetting("Name", "", false);
 
     public NameBlueprint() {
         addSettings(name);

@@ -12,6 +12,8 @@ public abstract class Editor extends JPanel {
 
     public void init() {}
 
+    public void delete() {}
+
     public abstract void createMenuButtonsPanel(JPanel menuButtonPanel);
 
 }

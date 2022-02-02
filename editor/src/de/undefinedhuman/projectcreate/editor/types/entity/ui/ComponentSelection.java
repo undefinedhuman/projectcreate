@@ -38,7 +38,7 @@ public abstract class ComponentSelection extends SelectionPanel<ComponentBluepri
             ComponentBlueprint componentBlueprint = BlueprintManager.getInstance().getComponentBlueprint(componentListModel.getElementAt(selectedIndices[i]), blueprint.getBlueprintID());
             if(componentBlueprint == null || blueprint.hasComponentBlueprints(componentBlueprint.getClass()))
                 continue;
-            blueprint.addComponentBlueprint(componentBlueprint);
+            blueprint.addComponentBlueprints(componentBlueprint);
         }
     }
 
@@ -48,7 +48,7 @@ public abstract class ComponentSelection extends SelectionPanel<ComponentBluepri
             return;
         List<ComponentBlueprint> removedComponents = removeSelected();
         for(ComponentBlueprint removedComponent : removedComponents)
-            blueprint.removeComponentBlueprint(removedComponent.getClass());
+            blueprint.removeComponentBlueprints(removedComponent.getClass());
     }
 
     @Override

@@ -31,6 +31,10 @@ public abstract class Setting<T> {
         return menuTitle;
     }
 
+    protected String getKey() {
+        return key;
+    }
+
     public T getValue() { return value; }
 
     public void setValue(T value) {
@@ -53,6 +57,11 @@ public abstract class Setting<T> {
     public Setting<T> addValueListener(ValueListener<T> listener) {
         if(!valueListeners.contains(listener))
             valueListeners.add(listener);
+        return this;
+    }
+
+    public Setting<T> removeValueListener(ValueListener<T> listener) {
+        valueListeners.remove(listener);
         return this;
     }
 

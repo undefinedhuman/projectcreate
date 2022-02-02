@@ -33,7 +33,7 @@ public class RenderSystem extends SortedIteratingSystem {
         super(new TypeComparator(), 6);
         batch = new SpriteBatch();
         EntityManager.getInstance().subscribe(EntityManager.EntityEvent.class, EntityManager.EntityEvent.Type.ADD, entities -> Arrays.stream(entities).filter(Mappers.NAME::has).map(Mappers.NAME::get).forEach(nameComponent -> GuiManager.getInstance().addGui(nameComponent.getText())));
-        EntityManager.getInstance().unsubscribe(EntityManager.EntityEvent.class, EntityManager.EntityEvent.Type.REMOVE, entities -> {
+        EntityManager.getInstance().subscribe(EntityManager.EntityEvent.class, EntityManager.EntityEvent.Type.REMOVE, entities -> {
             Arrays.stream(entities).filter(Mappers.SPRITE::has).map(Mappers.SPRITE::get).forEach(SpriteComponent::delete);
             Arrays.stream(entities).filter(Mappers.NAME::has).map(Mappers.NAME::get).forEach(nameComponent -> GuiManager.getInstance().removeGui(nameComponent.getText()));
         });

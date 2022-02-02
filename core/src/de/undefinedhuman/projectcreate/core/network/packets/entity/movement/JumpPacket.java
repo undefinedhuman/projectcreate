@@ -1,7 +1,6 @@
 package de.undefinedhuman.projectcreate.core.network.packets.entity.movement;
 
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
-import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.core.network.Packet;
 import de.undefinedhuman.projectcreate.engine.ecs.Entity;
 import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
@@ -21,11 +20,11 @@ public class JumpPacket implements Packet {
 
     public static void parse(EntityManager entityManager, JumpPacket packet) {
         Entity entity = entityManager.getEntity(packet.worldID);
-        if(entity == null) {
-            Log.warn("Entity with world id: " + packet.worldID + " does not exists!");
+        if(entity == null || !Mappers.MOVEMENT.has(entity)) {
+            Log.warn("Entity with world id " + packet.worldID + " does not exists!");
             return;
         }
-        MovementComponent movementComponent = Mappers.MOVEMENT.get(entity);
+        Mappers.MOVEMENT.get(entity).jump();
     }
 
 }

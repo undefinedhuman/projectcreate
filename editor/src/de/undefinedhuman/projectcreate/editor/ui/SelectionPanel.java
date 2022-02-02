@@ -20,7 +20,7 @@ public abstract class SelectionPanel<T> extends JPanel {
 
     protected T[] currentData;
     private DefaultListModel<T> listModel;
-    protected JList<T> itemList;
+    protected JList<T> selectionList;
     private JTextField filter;
     private Function<Tuple<String, T[]>, T[]>[] filters;
 
@@ -35,15 +35,17 @@ public abstract class SelectionPanel<T> extends JPanel {
         add(createTitleLabel(title), 0.4f);
         add(filter = createFilter(), 0.3f);
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setViewportView(itemList = createList(currentData = getListData(), this::select, this::renderCell));
-        listModel = (DefaultListModel<T>) itemList.getModel();
+        scrollPane.setViewportView(selectionList = createList(currentData = getListData(), this::select, this::renderCell));
+        listModel = (DefaultListModel<T>) selectionList.getModel();
         add(scrollPane, itemListHeight);
         createMenuPanels(this);
     }
 
     public void init() {
-        itemList.setSelectedIndex(0);
+        selectionList.setSelectedIndex(0);
     }
+
+    public void delete() {}
 
     private JLabel createTitleLabel(String title) {
         JLabel label = new JLabel(title);
@@ -132,23 +134,27 @@ public abstract class SelectionPanel<T> extends JPanel {
     }
 
     public int getSelectedIndex() {
-        return itemList.getSelectedIndex();
+        return selectionList.getSelectedIndex();
     }
 
     public List<T> getSelectedItems() {
-        return Arrays.stream(itemList.getSelectedIndices()).mapToObj(value -> listModel.getElementAt(value)).collect(Collectors.toList());
+        return Arrays.stream(selectionList.getSelectedIndices()).mapToObj(value -> listModel.getElementAt(value)).collect(Collectors.toList());
     }
 
     public List<T> removeSelected() {
-        int[] selectedIndices = itemList.getSelectedIndices();
+        int[] selectedIndices = selectionList.getSelectedIndices();
         List<T> removedElements = new ArrayList<>();
         for(int i = selectedIndices.length-1; i >= 0; i--)
             removedElements.add(listModel.remove(selectedIndices[i]));
         if(selectedIndices.length != 0) {
-            itemList.setSelectedIndex(selectedIndices[selectedIndices.length-1] >= listModel.size() ? 0 : selectedIndices[selectedIndices.length-1]-1);
-            select(itemList.getSelectedValue());
+            selectionList.setSelectedIndex(selectedIndices[selectedIndices.length-1] >= listModel.size() ? 0 : selectedIndices[selectedIndices.length-1]-1);
+            select(selectionList.getSelectedValue());
         }
         return removedElements;
+    }
+
+    public void update() {
+        selectionList.updateUI();
     }
 
     public abstract void createMenuPanels(JPanel parentPanel);
