@@ -5,9 +5,11 @@ import de.undefinedhuman.projectcreate.core.ecs.visual.sprite.SpriteBlueprint;
 import de.undefinedhuman.projectcreate.engine.ecs.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.ecs.Component;
 import de.undefinedhuman.projectcreate.engine.ecs.ComponentBlueprint;
+import de.undefinedhuman.projectcreate.engine.ecs.annotations.RequiredComponents;
 import de.undefinedhuman.projectcreate.engine.settings.types.TextureOffsetSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.selection.DynamicStringSelectionSetting;
 
+@RequiredComponents(SpriteBlueprint.class)
 public class EquipBlueprint extends ComponentBlueprint {
 
     private DynamicStringSelectionSetting

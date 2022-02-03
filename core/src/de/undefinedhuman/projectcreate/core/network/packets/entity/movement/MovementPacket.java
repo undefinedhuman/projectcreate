@@ -5,7 +5,6 @@ import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponen
 import de.undefinedhuman.projectcreate.core.network.Packet;
 import de.undefinedhuman.projectcreate.engine.ecs.Entity;
 import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
-import de.undefinedhuman.projectcreate.engine.log.Log;
 
 public class MovementPacket implements Packet {
 
@@ -23,15 +22,9 @@ public class MovementPacket implements Packet {
 
     public static void parse(EntityManager entityManager, MovementPacket packet) {
         Entity entity = entityManager.getEntity(packet.worldID);
-        if(entity == null) {
-            Log.error("No entity with world id " + packet.worldID + " found!");
-            return;
-        }
+        if(entity == null) return;
         MovementComponent movementComponent = Mappers.MOVEMENT.get(entity);
-        if(movementComponent == null) {
-            Log.error("Entity with world id: " + packet.worldID + " has no movement component!");
-            return;
-        }
+        if(movementComponent == null) return;
         movementComponent.move(packet.direction);
     }
 

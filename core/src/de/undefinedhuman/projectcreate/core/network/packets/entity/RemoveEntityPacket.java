@@ -1,6 +1,7 @@
 package de.undefinedhuman.projectcreate.core.network.packets.entity;
 
 import de.undefinedhuman.projectcreate.core.network.Packet;
+import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
 
 public class RemoveEntityPacket implements Packet {
 
@@ -14,8 +15,8 @@ public class RemoveEntityPacket implements Packet {
         return packet;
     }
 
-    public long getWorldID() {
-        return worldID;
+    public static void parse(EntityManager entityManager, RemoveEntityPacket packet) {
+        entityManager.removeEntity(packet.worldID);
     }
 
 }

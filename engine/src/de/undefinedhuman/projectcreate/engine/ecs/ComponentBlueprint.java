@@ -1,6 +1,7 @@
 package de.undefinedhuman.projectcreate.engine.ecs;
 
 import com.badlogic.gdx.files.FileHandle;
+import de.undefinedhuman.projectcreate.engine.ecs.annotations.RequiredComponents;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.observer.EventManager;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
@@ -11,15 +12,22 @@ import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
 import java.util.Locale;
 
-public abstract class ComponentBlueprint extends SettingsList implements Comparable<ComponentBlueprint> {
+public abstract class ComponentBlueprint<T extends Component> extends SettingsList implements Comparable<ComponentBlueprint> {
 
     public int blueprintID;
 
+    private Class<? extends ComponentBlueprint>[] requiredComponents;
     private EventManager eventManager;
     private ValueListener valueListener = value -> notifyEventManager();
+
     protected ComponentPriority priority = ComponentPriority.LOWEST;
 
-    public abstract Component createInstance();
+    public ComponentBlueprint() {
+        RequiredComponents requiredComponents = Metadata.getAnnotation(getClass(), RequiredComponents.class);
+        this.requiredComponents = requiredComponents != null ? requiredComponents.value() : null;
+    }
+
+    public abstract T createInstance();
 
     @Override
     protected void addSetting(Setting<?> setting) {
@@ -51,17 +59,8 @@ public abstract class ComponentBlueprint extends SettingsList implements Compara
         return priority;
     }
 
-    @Override
-    public int compareTo(ComponentBlueprint o) {
-        int priority = getPriority().compareTo(o.getPriority());
-        if(priority == 0)
-            priority = toString().toLowerCase().compareTo(o.toString().toLowerCase());
-        return priority;
-    }
-
-    @Override
-    public String toString() {
-        return getName(getClass());
+    public Class<? extends ComponentBlueprint>[] getRequiredComponents() {
+        return requiredComponents;
     }
 
     public ComponentBlueprint setEventManager(EventManager eventManager) {
@@ -73,6 +72,19 @@ public abstract class ComponentBlueprint extends SettingsList implements Compara
         if(eventManager == null)
             return;
         eventManager.notify(Blueprint.ComponentBlueprintEvent.class, Blueprint.ComponentBlueprintEvent.Type.UPDATE, new ComponentBlueprint[] { this });
+    }
+
+    @Override
+    public int compareTo(ComponentBlueprint o) {
+        int priority = getPriority().compareTo(o.getPriority());
+        if(priority == 0)
+            priority = toString().toLowerCase().compareTo(o.toString().toLowerCase());
+        return priority;
+    }
+
+    @Override
+    public String toString() {
+        return getName(getClass());
     }
 
     public static String getName(Class<? extends ComponentBlueprint> componentBlueprint) {

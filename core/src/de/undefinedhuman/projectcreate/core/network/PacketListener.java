@@ -20,11 +20,14 @@ public class PacketListener extends Listener {
             return;
         Packet packet = (Packet) object;
         PacketHandler handler = getHandlers().get(packet.getClass());
-        if(handler == null || !handler.handle(connection, packet))
+        if(handler == null) {
             Log.error("Packet handler for packet type " + packet.getClass().getSimpleName() + " not defined!");
+            return;
+        }
+        handler.handle(connection, packet);
     }
 
-    protected void registerPacketHandlers(Class<? extends Packet> packetClass, PacketHandler packetHandler) {
+    protected <T extends Packet> void registerPacketHandlers(Class<T> packetClass, PacketHandler<T> packetHandler) {
         handlers.put(packetClass, packetHandler);
     }
 

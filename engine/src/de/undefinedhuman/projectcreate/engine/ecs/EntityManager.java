@@ -95,7 +95,10 @@ public class EntityManager extends SynchronizedEventManager implements Manager {
     }
 
     public Entity getEntity(long worldID) {
-        return entityList.getEntity(worldID);
+        Entity entity = entityList.getEntity(worldID);
+        if(entity == null)
+            Log.warn("No entity with world id " + worldID + " was found!");
+        return entity;
     }
 
     public boolean hasEntity(long worldID) {

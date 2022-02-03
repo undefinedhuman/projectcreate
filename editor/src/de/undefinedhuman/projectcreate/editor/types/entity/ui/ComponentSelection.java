@@ -9,14 +9,12 @@ import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
 import de.undefinedhuman.projectcreate.engine.settings.ui.ui.SettingsUI;
 
 import javax.swing.*;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public abstract class ComponentSelection extends SelectionPanel<ComponentBlueprint> {
+public abstract class ComponentSelection extends SelectionPanel<Class<? extends ComponentBlueprint>> {
 
-    private DefaultListModel<String> componentListModel;
-    private JList<String> componentSelection;
+    private DefaultListModel<Class<? extends ComponentBlueprint>> componentListModel;
+    private JList<Class<? extends ComponentBlueprint>> componentSelection;
 
     public ComponentSelection() {
         super("Components", 4.15f);
@@ -34,28 +32,42 @@ public abstract class ComponentSelection extends SelectionPanel<ComponentBluepri
         int[] selectedIndices = componentSelection.getSelectedIndices();
         if(selectedIndices.length == 0 || blueprint == null)
             return;
-        for(int i = selectedIndices.length-1; i >= 0; i--) {
-            ComponentBlueprint componentBlueprint = BlueprintManager.getInstance().getComponentBlueprint(componentListModel.getElementAt(selectedIndices[i]), blueprint.getBlueprintID());
-            if(componentBlueprint == null || blueprint.hasComponentBlueprints(componentBlueprint.getClass()))
-                continue;
-            blueprint.addComponentBlueprints(componentBlueprint);
-        }
+        for(int i = selectedIndices.length-1; i >= 0; i--)
+            addComponentBlueprint(blueprint, componentListModel.getElementAt(selectedIndices[i]));
+    }
+
+    private void addComponentBlueprint(Blueprint blueprint, Class<? extends ComponentBlueprint> componentBlueprintType) {
+        if(blueprint.hasComponentBlueprints(componentBlueprintType)) return;
+        ComponentBlueprint componentBlueprint = BlueprintManager.getInstance().createComponentBlueprint(componentBlueprintType, blueprint.getBlueprintID());
+        if(componentBlueprint == null) return;
+        blueprint.addComponentBlueprints(componentBlueprint);
+        if(componentBlueprint.getRequiredComponents() != null)
+            for (Class<? extends ComponentBlueprint> requiredComponent : componentBlueprint.getRequiredComponents())
+                addComponentBlueprint(blueprint, requiredComponent);
     }
 
     public void remove() {
         Blueprint blueprint = BlueprintManager.getInstance().getBlueprint(getSelectedBlueprintID());
         if(blueprint == null)
             return;
-        List<ComponentBlueprint> removedComponents = removeSelected();
-        for(ComponentBlueprint removedComponent : removedComponents)
-            blueprint.removeComponentBlueprints(removedComponent.getClass());
+        List<Class<? extends ComponentBlueprint>> removedComponents = removeSelected();
+        for(Class<? extends ComponentBlueprint> removedComponent : removedComponents)
+            blueprint.removeComponentBlueprints(removedComponent);
     }
 
     @Override
     public void createMenuPanels(JPanel parentPanel) {
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setViewportView(componentSelection = createList(BlueprintManager.getInstance().getComponentBlueprintClassKeys().stream().sorted().toArray(String[]::new), s -> {}, JLabel::setText));
-        componentListModel = (DefaultListModel<String>) componentSelection.getModel();
+        scrollPane.setViewportView(
+                componentSelection = createList(
+                        BlueprintManager.getInstance().getComponentBlueprintClasses()
+                                .stream()
+                                .map(ComponentBlueprint::getName)
+                                .sorted()
+                                .map(name -> BlueprintManager.getInstance().getComponentBlueprintClass(name))
+                                .toArray(Class[]::new),
+                        s -> {}, (label, componentBlueprintClass) -> label.setText(ComponentBlueprint.getName(componentBlueprintClass))));
+        componentListModel = (DefaultListModel<Class<? extends ComponentBlueprint>>) componentSelection.getModel();
 
         JPanel buttonPanel = new JPanel(new RelativeLayout(RelativeLayout.Y_AXIS, 5).setFill(true));
         buttonPanel.add(SettingsUI.createButton("REMOVE", 0, e -> {
@@ -73,13 +85,20 @@ public abstract class ComponentSelection extends SelectionPanel<ComponentBluepri
     }
 
     @Override
-    public ComponentBlueprint[] getListData() {
+    public Class<? extends ComponentBlueprint>[] getListData() {
         if(!RessourceUtils.existBlueprint(getSelectedBlueprintID()))
-            return new ComponentBlueprint[0];
+            return new Class[0];
         Blueprint blueprint = BlueprintManager.getInstance().getBlueprint(getSelectedBlueprintID());
         if(blueprint == null)
-            return new ComponentBlueprint[0];
-        return blueprint.getComponentBlueprints().values().stream().sorted().toArray(ComponentBlueprint[]::new);
+            return new Class[0];
+        return blueprint
+                .getComponentBlueprints()
+                .keySet()
+                .stream()
+                .map(ComponentBlueprint::getName)
+                .sorted()
+                .map(name -> BlueprintManager.getInstance().getComponentBlueprintClass(name))
+                .toArray(Class[]::new);
     }
 
     @Override
@@ -87,20 +106,28 @@ public abstract class ComponentSelection extends SelectionPanel<ComponentBluepri
         super.updateData();
         int selectedIndex = componentSelection.getSelectedIndex();
         componentListModel.removeAllElements();
-        List<String> currentComponents = Arrays.stream(currentData).map(ComponentBlueprint::toString).collect(Collectors.toList());
-        BlueprintManager.getInstance().getComponentBlueprintClassKeys().stream().filter(name -> !currentComponents.contains(name)).sorted().forEach(componentListModel::addElement);
+        Blueprint blueprint = BlueprintManager.getInstance().getBlueprint(getSelectedBlueprintID());
+        BlueprintManager.getInstance().getComponentBlueprintClasses().stream()
+                .filter(componentBlueprintClass -> {
+                    if(blueprint == null) return true;
+                    return !blueprint.hasComponentBlueprints(componentBlueprintClass);
+                })
+                .map(ComponentBlueprint::getName)
+                .sorted()
+                .map(name -> BlueprintManager.getInstance().getComponentBlueprintClass(name))
+                .forEach(componentListModel::addElement);
         componentSelection.setSelectedIndex(selectedIndex >= componentListModel.size() ? 0 : selectedIndex);
     }
 
     @Override
-    public String getTitle(ComponentBlueprint componentBlueprint) {
-        return componentBlueprint.toString();
+    public String getTitle(Class<? extends ComponentBlueprint> componentBlueprint) {
+        return ComponentBlueprint.getName(componentBlueprint);
     }
 
     public abstract int getSelectedBlueprintID();
 
     @Override
-    public void renderCell(JLabel label, ComponentBlueprint componentBlueprint) {
+    public void renderCell(JLabel label, Class<? extends ComponentBlueprint> componentBlueprint) {
         label.setText(getTitle(componentBlueprint));
     }
 }

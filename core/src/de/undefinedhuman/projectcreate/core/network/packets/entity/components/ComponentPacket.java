@@ -5,6 +5,7 @@ import de.undefinedhuman.projectcreate.core.network.utils.PacketUtils;
 import de.undefinedhuman.projectcreate.engine.ecs.Component;
 import de.undefinedhuman.projectcreate.engine.ecs.ComponentMapper;
 import de.undefinedhuman.projectcreate.engine.ecs.Entity;
+import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -24,12 +25,11 @@ public class ComponentPacket implements Packet {
         return componentPacket;
     }
 
-    public static void parse(Entity entity, ComponentPacket packet) {
+    public static void parse(EntityManager entityManager, ComponentPacket packet) {
+        Entity entity = entityManager.getEntity(packet.worldID);
+        if(entity == null || entity.isScheduledForRemoval())
+            return;
         PacketUtils.setComponentData(entity, PacketUtils.parseComponentData(packet.componentData));
-    }
-
-    public long getWorldID() {
-        return worldID;
     }
 
 }

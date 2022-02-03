@@ -4,15 +4,18 @@ import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Connection;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.base.transform.TransformComponent;
+import de.undefinedhuman.projectcreate.core.ecs.inventory.InventoryComponent;
+import de.undefinedhuman.projectcreate.core.ecs.inventory.InventoryType;
 import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponent;
+import de.undefinedhuman.projectcreate.core.inventory.SelectorInventory;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.JumpPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.input.InputPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.input.InputPacketHandler;
 import de.undefinedhuman.projectcreate.core.network.packets.input.responses.MousePacket;
+import de.undefinedhuman.projectcreate.core.network.packets.input.responses.SelectorPacket;
 import de.undefinedhuman.projectcreate.engine.ecs.Entity;
 import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
-import de.undefinedhuman.projectcreate.engine.file.FileUtils;
 import de.undefinedhuman.projectcreate.engine.utils.Utils;
 import de.undefinedhuman.projectcreate.server.ServerManager;
 import de.undefinedhuman.projectcreate.server.entity.MovementSystem;
@@ -25,25 +28,26 @@ public class ServerInputPacketHandler extends InputPacketHandler {
         registerHandlerFunction(InputPacket.DIRECTION, this::handleDirection);
         registerHandlerFunction(InputPacket.JUMP, this::handleJump);
         registerHandlerFunction(InputPacket.MOUSE_POSITION, this::handleMouse);
+        registerHandlerFunction(InputPacket.SELECTOR, this::handleSelection);
     }
 
     private void handleDirection(Connection connection, InputPacket packet) {
         if(!(connection instanceof PlayerConnection) || ((PlayerConnection) connection).getDecryptionCipher() == null)
             return;
         PlayerConnection playerConnection = (PlayerConnection) connection;
-        String[] data = InputPacket.parse(playerConnection.getDecryptionCipher(), packet).split(":");
-        if(data.length != 2) return;
-        Long worldID = SessionManager.getInstance().getWorldID(data[0]);
-        final Integer direction;
-        if (worldID == null || ((direction = Utils.isInteger(data[1])) == null || !Utils.isInRange(direction, -1, 1)))
-            return;
+        String data = InputPacket.parse(playerConnection.getDecryptionCipher(), packet);
+        InputPacket.DirectionData directionData = InputPacket.DirectionData.parse(data);
+        if (directionData == null) return;
+        Long worldID = SessionManager.getInstance().getWorldID(directionData.sessionID);
+        if (worldID == null) return;
+        int direction = Utils.clamp(directionData.direction, -1, 1);
         Entity player = EntityManager.getInstance().getEntity(worldID);
         if(player == null || player.isScheduledForRemoval()) return;
         ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), MovementPacket.serialize(worldID, direction));
         long packetReceivedTime = System.nanoTime();
         ServerManager.getInstance().getBuffer().add(() -> {
             Entity entity = EntityManager.getInstance().getEntity(worldID);
-            if(entity == null || entity.isScheduledForRemoval() || !connection.isConnected())
+            if (entity == null || entity.isScheduledForRemoval() || !connection.isConnected())
                 return;
             float difference = (System.nanoTime() - packetReceivedTime) * 0.000000001f;
             float latency = connection.getReturnTripTime() * 0.0005f;
@@ -68,12 +72,12 @@ public class ServerInputPacketHandler extends InputPacketHandler {
         Long worldID = SessionManager.getInstance().getWorldID(sessionID);
         if (worldID == null) return;
         Entity player = EntityManager.getInstance().getEntity(worldID);
-        if(player == null || player.isScheduledForRemoval()) return;
+        if (player == null || player.isScheduledForRemoval()) return;
         ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), JumpPacket.serialize(worldID));
         long packetReceivedTime = System.nanoTime();
         ServerManager.getInstance().getBuffer().add(() -> {
             Entity entity = EntityManager.getInstance().getEntity(worldID);
-            if(entity == null || entity.isScheduledForRemoval() || !Mappers.MOVEMENT.has(entity) || !connection.isConnected())
+            if (entity == null || entity.isScheduledForRemoval() || !Mappers.MOVEMENT.has(entity) || !connection.isConnected())
                 return;
             Mappers.MOVEMENT.get(entity).jump();
             float difference = (System.nanoTime() - packetReceivedTime) * 0.000000001f;
@@ -90,17 +94,49 @@ public class ServerInputPacketHandler extends InputPacketHandler {
         if(!(connection instanceof PlayerConnection) || ((PlayerConnection) connection).getDecryptionCipher() == null)
             return;
         PlayerConnection playerConnection = (PlayerConnection) connection;
+        String data = InputPacket.parse(playerConnection.getDecryptionCipher(), packet);
+        InputPacket.MouseData mouseData = InputPacket.MouseData.parse(data);
+        if (mouseData == null) return;
+        Long worldID = SessionManager.getInstance().getWorldID(mouseData.sessionID);
+        if (worldID == null) return;
+        Entity entity = EntityManager.getInstance().getEntity(worldID);
+        if (entity == null || entity.isScheduledForRemoval() || !Mappers.MOUSE.has(entity) || !connection.isConnected()) return;
+        ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), MousePacket.serialize(worldID, mouseData.mouseX, mouseData.mouseY, mouseData.left, mouseData.right, mouseData.canShake));
+        MousePacket.setMouseComponentData(Mappers.MOUSE.get(entity), mouseData.mouseX, mouseData.mouseY, mouseData.left, mouseData.right, mouseData.canShake);
+    }
+
+    private void handleSelection(Connection connection, InputPacket packet) {
+        if (!(connection instanceof PlayerConnection) || ((PlayerConnection) connection).getDecryptionCipher() == null)
+            return;
+        PlayerConnection playerConnection = (PlayerConnection) connection;
         String[] data = InputPacket.parse(playerConnection.getDecryptionCipher(), packet).split(":");
-        if(data.length != 6) return;
+        if (data.length != 3) return;
         Long worldID = SessionManager.getInstance().getWorldID(data[0]);
         if (worldID == null) return;
         Entity entity = EntityManager.getInstance().getEntity(worldID);
-        if(entity == null || entity.isScheduledForRemoval() || !Mappers.MOUSE.has(entity)) return;
-        Float mouseX, mouseY;
-        boolean left = FileUtils.readBoolean(data[3]), right = FileUtils.readBoolean(data[4]), canShake = FileUtils.readBoolean(data[5]);
-        if((mouseX = Utils.isFloat(data[1])) == null || (mouseY = Utils.isFloat(data[2])) == null) return;
-        ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), MousePacket.serialize(worldID, mouseX, mouseY, left, right, canShake));
-        MousePacket.setMouseComponentData(Mappers.MOUSE.get(entity), mouseX, mouseY, left, right, canShake);
+        if (entity == null || entity.isScheduledForRemoval() || !Mappers.INVENTORY.has(entity) || !connection.isConnected()) return;
+        InventoryComponent inventoryComponent = Mappers.INVENTORY.get(entity);
+        String inventoryName = data[1];
+        SelectorInventory selectorInventory = inventoryComponent.getInventory(InventoryType.SELECTOR, inventoryName);
+        Integer selectedIndex = Utils.isInteger(data[2]);
+        if (selectedIndex == null || selectorInventory == null) return;
+        selectorInventory.selectedIndex = Utils.clamp(selectedIndex, 0, selectorInventory.getCol()-1);
+        ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), SelectorPacket.serialize(worldID, inventoryName, selectorInventory.selectedIndex));
+    }
+
+    private void handleInvSelection(Connection connection, InputPacket packet) {
+        if (!(connection instanceof PlayerConnection) || ((PlayerConnection) connection).getDecryptionCipher() == null)
+            return;
+        PlayerConnection playerConnection = (PlayerConnection) connection;
+        String data = InputPacket.parse(playerConnection.getDecryptionCipher(), packet);
+        InputPacket.InvSelectionData selectionData = InputPacket.InvSelectionData.parse(data);
+        if(selectionData == null) return;
+        Long worldID = SessionManager.getInstance().getWorldID(selectionData.sessionID);
+        if (worldID == null) return;
+        Entity entity = EntityManager.getInstance().getEntity(worldID);
+        if (entity == null || entity.isScheduledForRemoval() || !connection.isConnected()) return;
+        InventoryComponent inventoryComponent = Mappers.INVENTORY.get(entity);
+        if(inventoryComponent == null) return;
     }
 
 }

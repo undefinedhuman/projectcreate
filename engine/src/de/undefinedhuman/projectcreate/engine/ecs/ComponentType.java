@@ -10,9 +10,15 @@ public final class ComponentType {
     private static int GLOBAL_TYPE_INDEX = 0;
 
     private final int index;
+    private final Class<? extends Component> componentClass;
 
-    private ComponentType () {
+    private ComponentType (Class<? extends Component> componentClass) {
         index = GLOBAL_TYPE_INDEX++;
+        this.componentClass = componentClass;
+    }
+
+    public Class<? extends Component> getComponentClass() {
+        return componentClass;
     }
 
     public int getIndex () {
@@ -23,7 +29,7 @@ public final class ComponentType {
         ComponentType type = ASSIGNED_COMPONENT_TYPES.get(componentType);
         if(type != null)
             return type;
-        ASSIGNED_COMPONENT_TYPES.put(componentType, type = new ComponentType());
+        ASSIGNED_COMPONENT_TYPES.put(componentType, type = new ComponentType(componentType));
         return type;
     }
 

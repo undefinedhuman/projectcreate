@@ -1,5 +1,6 @@
 package de.undefinedhuman.projectcreate.server.network.session;
 
+import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 
 import java.util.HashMap;
@@ -21,6 +22,9 @@ public class SessionManager implements Manager {
     }
 
     public Long getWorldID(String sessionID) {
+        Long worldID = worldIDs.get(sessionID);
+        if(worldID == null)
+            Log.warn("No world id associated with session!");
         return worldIDs.get(sessionID);
     }
 

@@ -8,7 +8,7 @@ public enum InventoryType {
     SELECTOR(SelectorInventory.class),
     CRAFTING(Inventory.class);
 
-    private Class<? extends Inventory> inventoryClass;
+    private final Class<? extends Inventory> inventoryClass;
 
     InventoryType(Class<? extends Inventory> inventoryClass) {
         this.inventoryClass = inventoryClass;

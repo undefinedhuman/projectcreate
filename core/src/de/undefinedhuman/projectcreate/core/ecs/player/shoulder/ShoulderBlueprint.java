@@ -1,10 +1,13 @@
 package de.undefinedhuman.projectcreate.core.ecs.player.shoulder;
 
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.projectcreate.core.ecs.visual.sprite.SpriteBlueprint;
 import de.undefinedhuman.projectcreate.engine.ecs.Component;
 import de.undefinedhuman.projectcreate.engine.ecs.ComponentBlueprint;
+import de.undefinedhuman.projectcreate.engine.ecs.annotations.RequiredComponents;
 import de.undefinedhuman.projectcreate.engine.settings.types.TextureOffsetSetting;
 
+@RequiredComponents(SpriteBlueprint.class)
 public class ShoulderBlueprint extends ComponentBlueprint {
 
     private TextureOffsetSetting

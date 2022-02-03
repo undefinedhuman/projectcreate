@@ -9,7 +9,11 @@ import de.undefinedhuman.projectcreate.core.network.packets.entity.components.Po
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.JumpPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.input.responses.MousePacket;
-import de.undefinedhuman.projectcreate.game.network.handler.*;
+import de.undefinedhuman.projectcreate.core.network.packets.input.responses.SelectorPacket;
+import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
+import de.undefinedhuman.projectcreate.game.network.handler.ClientEncryptionPacketHandler;
+import de.undefinedhuman.projectcreate.game.network.handler.CreateEntityPacketHandler;
+import de.undefinedhuman.projectcreate.game.network.handler.PositionPacketHandler;
 
 public class ClientListener extends PacketListener {
 
@@ -18,12 +22,13 @@ public class ClientListener extends PacketListener {
     private ClientListener() {
         registerPacketHandlers(EncryptionPacket.class, new ClientEncryptionPacketHandler());
         registerPacketHandlers(CreateEntityPacket.class, new CreateEntityPacketHandler());
-        registerPacketHandlers(RemoveEntityPacket.class, new RemoveEntityPacketHandler());
-        registerPacketHandlers(ComponentPacket.class, new ComponentPacketHandler());
+        registerPacketHandlers(RemoveEntityPacket.class, (connection, removeEntityPacket) -> RemoveEntityPacket.parse(EntityManager.getInstance(), removeEntityPacket));
+        registerPacketHandlers(ComponentPacket.class, (connection, componentPacket) -> ComponentPacket.parse(EntityManager.getInstance(), componentPacket));
         registerPacketHandlers(PositionPacket.class, new PositionPacketHandler());
-        registerPacketHandlers(MovementPacket.class, new MovementPacketHandler());
-        registerPacketHandlers(JumpPacket.class, new JumpPacketHandler());
-        registerPacketHandlers(MousePacket.class, new MousePacketHandler());
+        registerPacketHandlers(MovementPacket.class, (connection, movementPacket) -> MovementPacket.parse(EntityManager.getInstance(), movementPacket));
+        registerPacketHandlers(JumpPacket.class, (connection, jumpPacket) -> JumpPacket.parse(EntityManager.getInstance(), jumpPacket));
+        registerPacketHandlers(MousePacket.class, (connection, mousePacket) -> MousePacket.parse(EntityManager.getInstance(), mousePacket));
+        registerPacketHandlers(SelectorPacket.class, (connection, selectorPacket) -> SelectorPacket.parse(EntityManager.getInstance(), selectorPacket));
     }
 
     public static ClientListener getInstance() {

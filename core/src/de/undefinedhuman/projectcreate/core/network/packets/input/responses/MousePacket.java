@@ -5,7 +5,6 @@ import de.undefinedhuman.projectcreate.core.ecs.mouse.MouseComponent;
 import de.undefinedhuman.projectcreate.core.network.Packet;
 import de.undefinedhuman.projectcreate.engine.ecs.Entity;
 import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
-import de.undefinedhuman.projectcreate.engine.log.Log;
 
 public class MousePacket implements Packet {
     private long worldID;
@@ -27,10 +26,7 @@ public class MousePacket implements Packet {
 
     public static void parse(EntityManager entityManager, MousePacket packet) {
         Entity entity = entityManager.getEntity(packet.worldID);
-        if(entity == null) {
-            Log.warn("No entity with world id " + packet.worldID + " found!");
-            return;
-        }
+        if(entity == null) return;
         MouseComponent mouseComponent = Mappers.MOUSE.get(entity);
         if(mouseComponent == null) return;
         setMouseComponentData(mouseComponent, packet.mouseX, packet.mouseY, packet.left, packet.right, packet.canShake);

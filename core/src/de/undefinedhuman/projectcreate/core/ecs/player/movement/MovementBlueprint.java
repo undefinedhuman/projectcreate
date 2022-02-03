@@ -1,13 +1,16 @@
 package de.undefinedhuman.projectcreate.core.ecs.player.movement;
 
+import de.undefinedhuman.projectcreate.core.ecs.base.transform.TransformBlueprint;
 import de.undefinedhuman.projectcreate.core.ecs.visual.animation.AnimationBlueprint;
 import de.undefinedhuman.projectcreate.engine.ecs.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.ecs.Component;
 import de.undefinedhuman.projectcreate.engine.ecs.ComponentBlueprint;
 import de.undefinedhuman.projectcreate.engine.ecs.ComponentPriority;
+import de.undefinedhuman.projectcreate.engine.ecs.annotations.RequiredComponents;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.FloatSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.selection.DynamicStringSelectionSetting;
 
+@RequiredComponents(TransformBlueprint.class)
 public class MovementBlueprint extends ComponentBlueprint {
 
     private FloatSetting

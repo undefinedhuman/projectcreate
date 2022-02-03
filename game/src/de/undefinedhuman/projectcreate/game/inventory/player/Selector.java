@@ -2,6 +2,7 @@ package de.undefinedhuman.projectcreate.game.inventory.player;
 
 import de.undefinedhuman.projectcreate.core.ecs.inventory.InventoryType;
 import de.undefinedhuman.projectcreate.core.inventory.SelectorInventory;
+import de.undefinedhuman.projectcreate.core.network.packets.input.InputPacket;
 import de.undefinedhuman.projectcreate.engine.gui.texture.GuiTemplate;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.CenterConstraint;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.RelativeConstraint;
@@ -10,6 +11,8 @@ import de.undefinedhuman.projectcreate.engine.gui.transforms.offset.PixelOffset;
 import de.undefinedhuman.projectcreate.game.inventory.ClientInventory;
 import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
 import de.undefinedhuman.projectcreate.game.inventory.slot.InvSlot;
+import de.undefinedhuman.projectcreate.game.network.ClientEncryption;
+import de.undefinedhuman.projectcreate.game.network.ClientManager;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 
 public class Selector extends ClientInventory<SelectorInventory> {
@@ -35,6 +38,15 @@ public class Selector extends ClientInventory<SelectorInventory> {
         inventory[0][getSelectedIndex()].setSelected(false);
         setSelectedIndex(index);
         inventory[0][getSelectedIndex()].setSelected(true);
+        ClientManager.getInstance()
+                .sendTCP(
+                        InputPacket.createSelectionPacket(
+                                ClientEncryption.getInstance().getAESEncryptionCipher(),
+                                ClientManager.getInstance().currentSessionID,
+                                getName(),
+                                getSelectedIndex()
+                        )
+                );
     }
 
     public static Selector getInstance() {

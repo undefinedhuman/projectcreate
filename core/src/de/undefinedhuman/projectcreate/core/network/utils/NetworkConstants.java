@@ -12,6 +12,7 @@ import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.Jump
 import de.undefinedhuman.projectcreate.core.network.packets.entity.movement.MovementPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.input.InputPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.input.responses.MousePacket;
+import de.undefinedhuman.projectcreate.core.network.packets.input.responses.SelectorPacket;
 
 public class NetworkConstants {
 
@@ -33,7 +34,8 @@ public class NetworkConstants {
                 InputPacket.class,
                 MovementPacket.class,
                 JumpPacket.class,
-                MousePacket.class
+                MousePacket.class,
+                SelectorPacket.class
         );
     }
 

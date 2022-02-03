@@ -18,8 +18,8 @@ public class Metadata {
                 .build();
     }
 
-    private static <T extends java.lang.annotation.Annotation> T getAnnotation(Class<? extends System> systemClass, Class<T> annotationClass) {
-        final Annotation annotation = ClassReflection.getAnnotation(systemClass, annotationClass);
+    static <T extends java.lang.annotation.Annotation> T getAnnotation(Class<?> objectClass, Class<T> annotationClass) {
+        final Annotation annotation = ClassReflection.getAnnotation(objectClass, annotationClass);
         if(annotation == null)
             return null;
         return annotation.getAnnotation(annotationClass);

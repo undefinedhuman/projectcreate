@@ -78,6 +78,10 @@ public class BlueprintManager extends SynchronizedEventManager implements Manage
         componentBlueprintClasses.forEach(componentBlueprintClass -> this.componentBlueprintClasses.put(ComponentBlueprint.getName(componentBlueprintClass), componentBlueprintClass));
     }
 
+    public Class<? extends ComponentBlueprint> getComponentBlueprintClass(String name) {
+        return componentBlueprintClasses.get(name);
+    }
+
     public void addBlueprints(Blueprint... blueprints) {
         Blueprint[] blueprintsToAdd = Arrays.stream(blueprints)
                 .filter(blueprint -> {
@@ -102,7 +106,7 @@ public class BlueprintManager extends SynchronizedEventManager implements Manage
         this.notify(BlueprintEvent.class, BlueprintEvent.Type.REMOVE, blueprintsToRemove);
     }
 
-    public ComponentBlueprint getComponentBlueprint(String name, int blueprintID) {
+    public ComponentBlueprint createComponentBlueprint(String name, int blueprintID) {
         if(!componentBlueprintClasses.containsKey(name))
             return null;
         ComponentBlueprint componentBlueprint;
@@ -116,6 +120,11 @@ public class BlueprintManager extends SynchronizedEventManager implements Manage
         return componentBlueprint;
     }
 
+    public ComponentBlueprint createComponentBlueprint(Class<? extends ComponentBlueprint> componentBlueprintType, int blueprintID) {
+        String name = ComponentBlueprint.getName(componentBlueprintType);
+        return this.createComponentBlueprint(name, blueprintID);
+    }
+
     public Set<Integer> getBlueprintIDs() {
         return blueprints.keySet();
     }
@@ -125,8 +134,8 @@ public class BlueprintManager extends SynchronizedEventManager implements Manage
         return hasBlueprint(0) ? getBlueprint(0) : null;
     }
 
-    public Set<String> getComponentBlueprintClassKeys() {
-        return componentBlueprintClasses.keySet();
+    public Collection<Class<? extends ComponentBlueprint>> getComponentBlueprintClasses() {
+        return componentBlueprintClasses.values();
     }
 
     private Blueprint loadBlueprint(int id) {
@@ -138,7 +147,7 @@ public class BlueprintManager extends SynchronizedEventManager implements Manage
         for(Map.Entry<String, Object> entry : object.getSettings().entrySet()) {
             if(!(entry.getValue() instanceof SettingsObject) || !componentBlueprintClasses.containsKey(entry.getKey()))
                 continue;
-            ComponentBlueprint componentBlueprint = getComponentBlueprint(entry.getKey(), id);
+            ComponentBlueprint componentBlueprint = createComponentBlueprint(entry.getKey(), id);
             if(componentBlueprint == null) continue;
             componentBlueprint.load(reader.parent(), (SettingsObject) entry.getValue());
             blueprint.addComponentBlueprints(componentBlueprint);

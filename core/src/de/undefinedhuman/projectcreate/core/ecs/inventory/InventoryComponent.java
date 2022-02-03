@@ -1,10 +1,13 @@
 package de.undefinedhuman.projectcreate.core.ecs.inventory;
 
+import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.inventory.InvItem;
 import de.undefinedhuman.projectcreate.core.inventory.Inventory;
 import de.undefinedhuman.projectcreate.engine.ecs.Component;
+import de.undefinedhuman.projectcreate.engine.ecs.Entity;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.LineWriter;
+import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.network.NetworkSerializable;
 
 import java.util.HashMap;
@@ -60,5 +63,13 @@ public class InventoryComponent implements Component, NetworkSerializable {
             if(inventory == null) continue;
             inventory.parse(splitter);
         }
+    }
+
+    public static <T extends Inventory> T getInventoryOfEntity(Entity entity, InventoryType type, String inventoryName) {
+        InventoryComponent component = Mappers.INVENTORY.get(entity);
+        if(component == null) return null;
+        T inventory = component.getInventory(type, inventoryName);
+        if(inventory == null) Log.warn("Entity with world id " + entity.getWorldID() + " does not contain inventory from type " + type.name() + " with name " + inventoryName);
+        return inventory;
     }
 }
