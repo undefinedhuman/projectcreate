@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import de.undefinedhuman.projectcreate.engine.file.FileReader;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
+import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
@@ -18,6 +19,8 @@ import de.undefinedhuman.projectcreate.engine.utils.math.Vector4;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
@@ -25,6 +28,7 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Utils {
@@ -42,39 +46,30 @@ public class Utils {
         }
     }
 
-    public static String convertArrayToString(String[] array) {
-        StringBuilder builder = new StringBuilder();
-        for (String s : array)
-            builder.append(s).append(Variables.SEPARATOR);
-        return builder.toString();
-    }
-
-    public static String convertArrayToString(Vector2[] array) {
-        StringBuilder builder = new StringBuilder();
-        for (Vector2 current : array)
-            builder.append(current.x).append(Variables.SEPARATOR).append(current.y).append(Variables.SEPARATOR);
-        return builder.toString();
-    }
-
-    public static String convertArrayToPrintableString(String[] messages) {
-        StringBuilder logMessage = new StringBuilder();
-        for (int i = 0; i < messages.length; i++) logMessage.append(messages[i]).append(i < messages.length - 1 ? ", " : "");
-        return logMessage.toString();
-    }
-
     public static String convertArrayToPrintableString(Object[] messages) {
         return Arrays.stream(messages).map(Object::toString).collect(Collectors.joining(", "));
     }
 
-    public static JTextField createTextField(String value, Consumer<String> keyReleaseEvent) {
+    public static JTextField createTextField(String key, String value, Consumer<String> keyReleaseEvent, boolean canBeEmpty, String defaultValue) {
         JTextField textField = new JTextField(value);
         textField.setFont(textField.getFont().deriveFont(16f).deriveFont(Font.BOLD));
         textField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                if(textField.getText() == null || textField.getText().equalsIgnoreCase(""))
+                if(textField.getText() == null || (!canBeEmpty && textField.getText().equalsIgnoreCase(""))) {
                     return;
+                }
                 keyReleaseEvent.accept(textField.getText());
+            }
+        });
+        textField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                if(canBeEmpty || !textField.getText().equalsIgnoreCase(""))
+                    return;
+                keyReleaseEvent.accept(defaultValue);
+                textField.setText(defaultValue);
+                Log.warn(key + " should not be empty!");
             }
         });
         return textField;
@@ -115,15 +110,7 @@ public class Utils {
         return region;
     }
 
-    public static int isEqual(int i, int j) {
-        return i == j ? 1 : 0;
-    }
-
     public static String appendSToString(int length) {
-        return length > 1 ? "s" : "";
-    }
-
-    public static String appendSToString(long length) {
         return length > 1 ? "s" : "";
     }
 
@@ -215,6 +202,14 @@ public class Utils {
         TEMP_VECTOR3.set(screenX, screenY, 0);
         camera.unproject(TEMP_VECTOR3);
         return new Vector2(TEMP_VECTOR3.x, TEMP_VECTOR3.y);
+    }
+
+    public static <T> boolean filterWithError(T t, Predicate<T> predicate, Consumer<T> error) {
+        if(!predicate.test(t)) {
+            error.accept(t);
+            return false;
+        }
+        return true;
     }
 
 }

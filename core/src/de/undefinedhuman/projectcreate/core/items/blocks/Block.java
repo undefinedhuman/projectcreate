@@ -50,7 +50,7 @@ public class Block extends Item {
     @Override
     public void delete() {
         super.delete();
-        if(!hasStates.getValue()) return;
+        if(!hasStates.getValue() || Variables.DONT_LOAD_TEXTURES) return;
         blockTextures = new AtlasRegion[0];
         blockTextureAtlas.dispose();
     }

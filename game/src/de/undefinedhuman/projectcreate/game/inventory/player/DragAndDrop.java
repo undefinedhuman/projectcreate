@@ -2,13 +2,11 @@ package de.undefinedhuman.projectcreate.game.inventory.player;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import de.undefinedhuman.projectcreate.core.network.packets.inventory.SelectItemPacket;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.constraints.MouseConstraint;
 import de.undefinedhuman.projectcreate.engine.utils.Mouse;
 import de.undefinedhuman.projectcreate.game.inventory.InvTarget;
 import de.undefinedhuman.projectcreate.game.inventory.slot.InvSlot;
 import de.undefinedhuman.projectcreate.game.inventory.slot.LinkedInvItem;
-import de.undefinedhuman.projectcreate.game.network.ClientManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -84,7 +82,7 @@ public class DragAndDrop {
         InvSlot clickedSlot = getClickedSlot(camera);
         if(clickedSlot == null || clickedSlot.isEmpty())
             return;
-        ClientManager.getInstance().sendTCP(SelectItemPacket.serialize(clickedSlot.getSlotInfo(), !isLeftClicked));
+        // ClientManager.getInstance().sendTCP(SelectItemPacket.serialize(clickedSlot.getSlotInfo(), !isLeftClicked));
         setMoving(clickedSlot);
     }
 

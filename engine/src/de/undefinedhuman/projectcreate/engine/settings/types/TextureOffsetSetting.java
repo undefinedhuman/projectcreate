@@ -85,7 +85,7 @@ public class TextureOffsetSetting extends Vector2ArraySetting {
 
         });
         panel.add(textureLabel);
-        valueField = Utils.createTextField(serializer.serialize(getValue()), s -> setValue(parser.parse(s)));
+        valueField = Utils.createTextField(getKey(), serializer.serialize(getValue()), s -> setValue(parser.parse(s)), false, DEFAULT_VALUE);
         valueField.setPreferredSize(new Dimension(0, Variables.DEFAULT_CONTENT_HEIGHT));
         valueField.setEditable(false);
         panel.add(valueField, 0.9f);

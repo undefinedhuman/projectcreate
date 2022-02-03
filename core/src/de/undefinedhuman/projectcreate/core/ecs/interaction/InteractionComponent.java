@@ -1,6 +1,6 @@
 package de.undefinedhuman.projectcreate.core.ecs.interaction;
 
-import com.badlogic.ashley.core.Component;
+import de.undefinedhuman.projectcreate.engine.ecs.Component;
 
 public class InteractionComponent implements Component {
 

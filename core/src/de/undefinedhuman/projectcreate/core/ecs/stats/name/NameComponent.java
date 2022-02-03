@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.core.ecs.stats.name;
 
-import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.Color;
+import de.undefinedhuman.projectcreate.engine.ecs.Component;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.LineWriter;
 import de.undefinedhuman.projectcreate.engine.gui.text.Text;

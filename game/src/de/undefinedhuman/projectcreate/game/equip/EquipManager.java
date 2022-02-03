@@ -1,6 +1,5 @@
 package de.undefinedhuman.projectcreate.game.equip;
 
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.core.ecs.player.equip.EquipComponent;
 import de.undefinedhuman.projectcreate.core.ecs.visual.sprite.SpriteComponent;
@@ -8,6 +7,7 @@ import de.undefinedhuman.projectcreate.core.ecs.visual.sprite.SpriteData;
 import de.undefinedhuman.projectcreate.core.items.Armor.Armor;
 import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
+import de.undefinedhuman.projectcreate.engine.ecs.Entity;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 
 public class EquipManager {

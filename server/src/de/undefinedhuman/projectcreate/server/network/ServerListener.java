@@ -1,26 +1,23 @@
 package de.undefinedhuman.projectcreate.server.network;
 
 import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
-import de.undefinedhuman.projectcreate.core.network.Packet;
+import de.undefinedhuman.projectcreate.core.network.PacketListener;
+import de.undefinedhuman.projectcreate.core.network.packets.auth.EncryptionPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.RemoveEntityPacket;
-import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
+import de.undefinedhuman.projectcreate.core.network.packets.input.InputPacket;
+import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
 import de.undefinedhuman.projectcreate.server.ServerManager;
+import de.undefinedhuman.projectcreate.server.network.handler.ServerEncryptionPacketHandler;
+import de.undefinedhuman.projectcreate.server.network.handler.ServerInputPacketHandler;
 
-public class ServerListener extends Listener {
+public class ServerListener extends PacketListener {
 
-    private ServerPacketHandler packetHandler;
+    private static volatile ServerListener instance;
 
-    public ServerListener() {
-        packetHandler = new ServerPacketHandler();
-    }
-
-    @Override
-    public void received(Connection connection, Object object) {
-        if(!(object instanceof Packet))
-            return;
-        Packet packet = (Packet) object;
-        packet.handle(connection, packetHandler);
+    private ServerListener() {
+        super();
+        registerPacketHandlers(EncryptionPacket.class, new ServerEncryptionPacketHandler());
+        registerPacketHandlers(InputPacket.class, new ServerInputPacketHandler());
     }
 
     @Override
@@ -32,4 +29,15 @@ public class ServerListener extends Listener {
         ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), RemoveEntityPacket.serialize(playerConnection.worldID));
         EntityManager.getInstance().removeEntity(playerConnection.worldID);
     }
+
+    public static ServerListener getInstance() {
+        if(instance != null)
+            return instance;
+        synchronized (ServerListener.class) {
+            if (instance == null)
+                instance = new ServerListener();
+        }
+        return instance;
+    }
+
 }

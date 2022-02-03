@@ -1,5 +1,6 @@
 package de.undefinedhuman.projectcreate.game.network;
 
+import de.undefinedhuman.projectcreate.core.network.packets.auth.EncryptionUtils;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 
 import javax.crypto.Cipher;
@@ -58,6 +59,14 @@ public class ClientEncryption {
         }
     }
 
+    public Key getAesKey() {
+        return aesKey;
+    }
+
+    public String getAESKeyAsString() {
+        return EncryptionUtils.encodeBase64String(getAesKey().getEncoded());
+    }
+
     public Cipher getAESEncryptionCipher() {
         return encryptionAESCipher;
     }
@@ -68,10 +77,6 @@ public class ClientEncryption {
 
     public Cipher getRSAEncryptionCipher() {
         return encryptionRSACipher;
-    }
-
-    public Key getAesKey() {
-        return aesKey;
     }
 
     private Key generateAESKey() {

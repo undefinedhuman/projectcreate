@@ -3,8 +3,10 @@ package de.undefinedhuman.projectcreate.editor.types.entity.ui;
 import de.undefinedhuman.projectcreate.core.ecs.stats.name.NameBlueprint;
 import de.undefinedhuman.projectcreate.editor.ui.SelectionPanel;
 import de.undefinedhuman.projectcreate.editor.utils.EditorUtils;
-import de.undefinedhuman.projectcreate.engine.ecs.blueprint.Blueprint;
-import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
+import de.undefinedhuman.projectcreate.engine.ecs.Blueprint;
+import de.undefinedhuman.projectcreate.engine.ecs.BlueprintManager;
+import de.undefinedhuman.projectcreate.engine.ecs.ComponentBlueprint;
+import de.undefinedhuman.projectcreate.engine.observer.Observer;
 import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
 import de.undefinedhuman.projectcreate.engine.settings.ui.listener.ResizeListener;
 import de.undefinedhuman.projectcreate.engine.utils.Utils;
@@ -12,8 +14,15 @@ import de.undefinedhuman.projectcreate.engine.utils.Utils;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
+import java.util.Optional;
 
 public abstract class EntitySelectionPanel extends SelectionPanel<Integer> {
+
+    private Observer<ComponentBlueprint[]> nameBlueprintObserver = componentBlueprints -> {
+        Optional<ComponentBlueprint> nameBlueprint = Arrays.stream(componentBlueprints).filter(componentBlueprint -> componentBlueprint instanceof NameBlueprint).findAny();
+        if(nameBlueprint.isPresent())
+            update();
+    };
 
     public EntitySelectionPanel() {
         super("Entities", key -> {
@@ -28,11 +37,23 @@ public abstract class EntitySelectionPanel extends SelectionPanel<Integer> {
     }
 
     @Override
+    public void init() {
+        super.init();
+        BlueprintManager.getInstance().subscribe(Blueprint.ComponentBlueprintEvent.class, Blueprint.ComponentBlueprintEvent.Type.UPDATE, nameBlueprintObserver);
+    }
+
+    @Override
+    public void delete() {
+        super.delete();
+        BlueprintManager.getInstance().unsubscribe(Blueprint.ComponentBlueprintEvent.class, Blueprint.ComponentBlueprintEvent.Type.UPDATE, nameBlueprintObserver);
+    }
+
+    @Override
     public void add() {
         Integer[] ids = BlueprintManager.getInstance().getBlueprintIDs().toArray(new Integer[0]);
         int newID = EditorUtils.findSmallestMissing(ids, 0, ids.length-1);
         Blueprint blueprint = new Blueprint(newID);
-        BlueprintManager.getInstance().addBlueprint(newID, blueprint);
+        BlueprintManager.getInstance().addBlueprints(blueprint);
         EditorUtils.saveBlueprints(newID);
     }
 
@@ -67,7 +88,7 @@ public abstract class EntitySelectionPanel extends SelectionPanel<Integer> {
         if(!BlueprintManager.getInstance().hasBlueprint(id))
             return "ERROR " + " TITLE NOT FOUND, ID: " + id;
         Blueprint blueprint = BlueprintManager.getInstance().getBlueprint(id);
-        NameBlueprint nameBlueprint = (NameBlueprint) blueprint.getComponentBlueprint(NameBlueprint.class);
+        NameBlueprint nameBlueprint = blueprint.getComponentBlueprint(NameBlueprint.class);
         return id + (nameBlueprint != null ?  " " + nameBlueprint.name.getValue() : "");
     }
 

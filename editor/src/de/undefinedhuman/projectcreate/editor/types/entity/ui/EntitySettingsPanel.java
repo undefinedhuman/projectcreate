@@ -1,9 +1,9 @@
 package de.undefinedhuman.projectcreate.editor.types.entity.ui;
 
 import de.undefinedhuman.projectcreate.editor.utils.EditorUtils;
-import de.undefinedhuman.projectcreate.engine.ecs.blueprint.Blueprint;
-import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
-import de.undefinedhuman.projectcreate.engine.ecs.component.ComponentBlueprint;
+import de.undefinedhuman.projectcreate.engine.ecs.Blueprint;
+import de.undefinedhuman.projectcreate.engine.ecs.BlueprintManager;
+import de.undefinedhuman.projectcreate.engine.ecs.ComponentBlueprint;
 import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
 import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
@@ -26,7 +26,7 @@ public class EntitySettingsPanel extends JPanel {
             }
 
             @Override
-            public void select(ComponentBlueprint selectedComponentBlueprint) {
+            public void select(Class<? extends ComponentBlueprint> selectedComponentBlueprint) {
                 clear();
                 Blueprint blueprint = BlueprintManager.getInstance().getBlueprint(blueprintID);
                 if(selectedComponentBlueprint == null || blueprint == null)
@@ -36,12 +36,12 @@ public class EntitySettingsPanel extends JPanel {
                         .getComponentBlueprints()
                         .entrySet()
                         .stream()
-                        .filter(entry -> entry.getKey() != selectedComponentBlueprint.getClass())
+                        .filter(entry -> entry.getKey() != selectedComponentBlueprint)
                         .map(Map.Entry::getValue)
                         .filter(componentBlueprint -> !componentBlueprint.isEmpty())
                         .sorted()
                         .toArray(ComponentBlueprint[]::new));
-                EditorUtils.addComponentBlueprintsToAccordion(selectedComponentSettings, selectedComponentBlueprint);
+                EditorUtils.addComponentBlueprintsToAccordion(selectedComponentSettings, blueprint.getComponentBlueprint(selectedComponentBlueprint));
             }
         }, 0.2f);
         add(componentSettings = new Accordion(Variables.BACKGROUND_COLOR), 0.25f);

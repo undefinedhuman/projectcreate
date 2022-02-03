@@ -6,7 +6,7 @@ import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 
 import java.util.HashMap;
 
-public class SoundManager extends Manager {
+public class SoundManager implements Manager {
 
     private static volatile SoundManager instance;
 
@@ -15,9 +15,6 @@ public class SoundManager extends Manager {
     private SoundManager() {
         sounds = new HashMap<>();
     }
-
-    @Override
-    public void init() {}
 
     public void addSound(String... names) {
         for (String s : names) if (!hasSound(s)) sounds.put(s, RessourceUtils.loadSound(s));

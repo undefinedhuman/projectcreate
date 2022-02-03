@@ -10,7 +10,7 @@ import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import java.util.HashMap;
 
-public class LanguageManager extends Manager {
+public class LanguageManager implements Manager {
 
     private static volatile LanguageManager instance;
 

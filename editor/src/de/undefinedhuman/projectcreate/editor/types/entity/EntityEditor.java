@@ -8,8 +8,8 @@ import de.undefinedhuman.projectcreate.editor.types.Editor;
 import de.undefinedhuman.projectcreate.editor.types.entity.ui.EntitySelectionPanel;
 import de.undefinedhuman.projectcreate.editor.types.entity.ui.EntitySettingsPanel;
 import de.undefinedhuman.projectcreate.editor.utils.EditorUtils;
-import de.undefinedhuman.projectcreate.engine.ecs.blueprint.Blueprint;
-import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
+import de.undefinedhuman.projectcreate.engine.ecs.Blueprint;
+import de.undefinedhuman.projectcreate.engine.ecs.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.file.FileUtils;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
@@ -95,4 +95,9 @@ public class EntityEditor extends Editor {
         }));
     }
 
+    @Override
+    public void delete() {
+        super.delete();
+        entitySelectionPanel.delete();
+    }
 }

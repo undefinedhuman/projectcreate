@@ -1,8 +1,5 @@
 package de.undefinedhuman.projectcreate.game.entity.system;
 
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.core.ecs.EntityFlag;
@@ -17,6 +14,9 @@ import de.undefinedhuman.projectcreate.core.ecs.visual.sprite.SpriteData;
 import de.undefinedhuman.projectcreate.core.inventory.InvItem;
 import de.undefinedhuman.projectcreate.core.items.Item;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
+import de.undefinedhuman.projectcreate.engine.ecs.Entity;
+import de.undefinedhuman.projectcreate.engine.ecs.annotations.All;
+import de.undefinedhuman.projectcreate.engine.ecs.systems.IteratingSystem;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
 import de.undefinedhuman.projectcreate.engine.utils.Mouse;
 import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
@@ -24,16 +24,17 @@ import de.undefinedhuman.projectcreate.game.inventory.utils.InventoryUtils;
 
 import java.util.Arrays;
 
+@All({TransformComponent.class, SpriteComponent.class, EquipComponent.class, MouseComponent.class, AnimationComponent.class, InventoryComponent.class})
 public class EquipSystem extends IteratingSystem {
 
     private final Vector2 SHOULDER_POSITION = new Vector2(), SHOULDER_POSITION_IN_WORLD_SPACE = new Vector2(), WEAPON_POSITION = new Vector2(), RESULT = new Vector2(), TEMP_RESULT = new Vector2();
 
     public EquipSystem() {
-        super(Family.all(TransformComponent.class, SpriteComponent.class, EquipComponent.class, MouseComponent.class, AnimationComponent.class, InventoryComponent.class).get(), 3);
+        super(3);
     }
 
     @Override
-    protected void processEntity(Entity entity, float delta) {
+    public void processEntity(float delta, Entity entity) {
         TransformComponent transformComponent = Mappers.TRANSFORM.get(entity);
         SpriteComponent spriteComponent = Mappers.SPRITE.get(entity);
         MouseComponent mouseComponent = Mappers.MOUSE.get(entity);
@@ -53,7 +54,7 @@ public class EquipSystem extends IteratingSystem {
         spriteComponent.getSpriteData(equipComponent.getSelectedArmLayer()).setVisible(selected);
         if(!selected) return;
         Item item = ItemManager.getInstance().getItem(selectedItem.getID());
-        if(EntityFlag.hasFlags(entity, EntityFlag.IS_MAIN_PLAYER)) {
+        if(EntityFlag.hasFlags(entity, EntityFlag.MAIN_PLAYER)) {
             mouseComponent.canShake = InventoryManager.getInstance().canUseItem() && item.canShake.getValue();
             mouseComponent.isLeftMouseButtonDown = Mouse.isLeftClicked();
             mouseComponent.isRightMouseButtonDown = Mouse.isRightClicked();

@@ -27,7 +27,7 @@ import de.undefinedhuman.projectcreate.game.world.WorldManager;
 
 import java.util.Collection;
 
-public class InventoryManager extends Manager {
+public class InventoryManager implements Manager {
 
     private static volatile InventoryManager instance;
 
@@ -51,7 +51,6 @@ public class InventoryManager extends Manager {
 
     @Override
     public void init() {
-        super.init();
         Selector.getInstance().setSelected(0);
     }
 
@@ -186,7 +185,7 @@ public class InventoryManager extends Manager {
     }
 
     private void notifyListeners(int id, int amount) {
-        for(ItemChangeListener listener : listeners.getValuesWithKey(id))
+        for(ItemChangeListener listener : listeners.getValuesForKey(id))
             listener.notify(amount);
     }
 

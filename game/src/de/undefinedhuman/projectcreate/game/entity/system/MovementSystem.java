@@ -1,18 +1,19 @@
 package de.undefinedhuman.projectcreate.game.entity.system;
 
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.ecs.base.transform.TransformComponent;
 import de.undefinedhuman.projectcreate.core.ecs.player.movement.MovementComponent;
 import de.undefinedhuman.projectcreate.core.ecs.visual.animation.AnimationComponent;
+import de.undefinedhuman.projectcreate.engine.ecs.Entity;
+import de.undefinedhuman.projectcreate.engine.ecs.annotations.All;
+import de.undefinedhuman.projectcreate.engine.ecs.systems.IteratingSystem;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.game.network.ClientManager;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 
+@All({TransformComponent.class, MovementComponent.class, AnimationComponent.class})
 public class MovementSystem extends IteratingSystem {
 
     private static final float CONVERGE_MULTIPLIER = 0.05f;
@@ -20,12 +21,12 @@ public class MovementSystem extends IteratingSystem {
     private static final Vector2 EXTRAPOLATED_POSITION = new Vector2();
 
     public MovementSystem() {
-        super(Family.all(TransformComponent.class, MovementComponent.class, AnimationComponent.class).get(), 4);
+        super(4);
     }
 
     @Override
-    protected void processEntity(Entity entity, float delta) {
-        if(entity.isScheduledForRemoval() || entity.isRemoving())
+    public void processEntity(float delta, Entity entity) {
+        if(entity.isScheduledForRemoval())
             return;
 
         TransformComponent transformComponent = Mappers.TRANSFORM.get(entity);

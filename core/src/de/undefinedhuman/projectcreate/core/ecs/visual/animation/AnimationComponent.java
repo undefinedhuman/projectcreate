@@ -1,6 +1,6 @@
 package de.undefinedhuman.projectcreate.core.ecs.visual.animation;
 
-import com.badlogic.ashley.core.Component;
+import de.undefinedhuman.projectcreate.engine.ecs.Component;
 
 import java.util.HashMap;
 

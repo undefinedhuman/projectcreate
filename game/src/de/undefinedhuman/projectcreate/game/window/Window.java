@@ -12,7 +12,7 @@ public class Window {
     public static Window instance;
 
     public Window() {
-        new LwjglApplication(new Main(), createLWJGLConfig());
+        new LwjglApplication(Main.getInstance(), createLWJGLConfig());
     }
 
     private LwjglApplicationConfiguration createLWJGLConfig() {

@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.core.ecs.player.equip;
 
-import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
+import de.undefinedhuman.projectcreate.engine.ecs.Component;
 import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
 public class EquipComponent implements Component {

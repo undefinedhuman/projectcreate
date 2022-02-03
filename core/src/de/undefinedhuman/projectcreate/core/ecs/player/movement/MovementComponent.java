@@ -1,8 +1,8 @@
 package de.undefinedhuman.projectcreate.core.ecs.player.movement;
 
-import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.PositionPacket;
+import de.undefinedhuman.projectcreate.engine.ecs.Component;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.LineWriter;
 import de.undefinedhuman.projectcreate.engine.network.NetworkSerializable;
@@ -17,7 +17,7 @@ public class MovementComponent implements Component, NetworkSerializable {
     private float jumpTans, speed, jumpSpeed, gravity;
     private int direction = 0;
 
-    private String idleAnimation = "", runAnimation = "", jumpAnimation = "", transitionAnimation = "", fallAnimation = "";
+    private String idleAnimation, runAnimation, jumpAnimation, transitionAnimation, fallAnimation;
 
     public long latestPositionPacketTime = 0;
     public long lastPositionPacketTimeLocal = 0;
@@ -119,8 +119,8 @@ public class MovementComponent implements Component, NetworkSerializable {
         }
 
         public MovementFrame(PositionPacket packet, float delta) {
-            this.position.set(packet.x, packet.y);
-            this.velocity.set(packet.velX, packet.velY);
+            this.position.set(packet.getX(), packet.getY());
+            this.velocity.set(packet.getVelX(), packet.getVelY());
             this.delta = delta;
         }
     }

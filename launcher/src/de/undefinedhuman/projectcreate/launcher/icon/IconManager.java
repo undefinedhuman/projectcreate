@@ -7,7 +7,7 @@ import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 
 import java.util.HashMap;
 
-public class IconManager extends Manager {
+public class IconManager implements Manager {
 
     private static IconManager instance;
 

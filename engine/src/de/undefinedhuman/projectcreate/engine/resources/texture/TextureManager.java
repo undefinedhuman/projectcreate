@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class TextureManager extends Manager {
+public class TextureManager implements Manager {
 
     private static final int MAX_ELEMENTS_DEBUG = 25;
 

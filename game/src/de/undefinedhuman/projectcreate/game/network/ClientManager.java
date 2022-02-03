@@ -3,8 +3,9 @@ package de.undefinedhuman.projectcreate.game.network;
 import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Listener;
+import de.undefinedhuman.projectcreate.core.ecs.Mappers;
 import de.undefinedhuman.projectcreate.core.network.Packet;
-import de.undefinedhuman.projectcreate.core.network.packets.MousePacket;
+import de.undefinedhuman.projectcreate.core.network.packets.input.InputPacket;
 import de.undefinedhuman.projectcreate.core.network.utils.NetworkConstants;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
@@ -14,7 +15,7 @@ import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 
 import java.io.IOException;
 
-public class ClientManager extends Manager {
+public class ClientManager implements Manager {
 
     private static volatile ClientManager instance;
     private static final String IP_ADDRESS = "127.0.0.1";
@@ -30,9 +31,9 @@ public class ClientManager extends Manager {
         client = new Client(NetworkConstants.WRITE_BUFFER_SIZE, NetworkConstants.OBJECT_BUFFER_SIZE);
         client.start();
 
-        NetworkConstants.register(client);
+        NetworkConstants.registerPackets(client);
 
-        client.addListener(new Listener.QueuedListener(new ClientListener()) {
+        client.addListener(new Listener.QueuedListener(ClientListener.getInstance()) {
             @Override
             protected void queue(Runnable runnable) {
                 Gdx.app.postRunnable(runnable);
@@ -41,7 +42,16 @@ public class ClientManager extends Manager {
 
         timers.addTimers(
                 new Timer(0.2f, client::updateReturnTripTime),
-                new Timer(0.03f, () -> client.sendUDP(MousePacket.serialize(GameManager.getInstance().player)))
+                new Timer(1f/60f, () -> {
+                    if(GameManager.getInstance().player == null)
+                        return;
+                    InputPacket packet = InputPacket.createMousePacket(
+                            ClientEncryption.getInstance().getAESEncryptionCipher(),
+                            ClientManager.getInstance().currentSessionID,
+                            Mappers.MOUSE.get(GameManager.getInstance().player)
+                    );
+                    client.sendUDP(packet);
+                })
         );
 
     }

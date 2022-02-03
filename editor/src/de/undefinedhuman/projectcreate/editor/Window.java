@@ -33,7 +33,6 @@ public class Window extends JFrame {
     private static final int WINDOW_HEIGHT = 720;
     public static final int MENU_HEIGHT = 40;
 
-    public Editor editor;
     public JLabel errorMessage;
 
     private float errorTime = 0;
@@ -66,9 +65,7 @@ public class Window extends JFrame {
         editorMenu.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT - MENU_HEIGHT));
         editorMenu.setFont(editorMenu.getFont().deriveFont(Font.BOLD));
         createEditorMenuTabs(editorMenu);
-        editorMenu.addChangeListener(e -> {
-            createEditorMenuButtons(editorMenu.getSelectedIndex(), menuButtons);
-        });
+        editorMenu.addChangeListener(e -> createEditorMenuButtons(editorMenu.getSelectedIndex(), menuButtons));
 
         JPanel menuPanel = new JPanel(new BorderLayout());
         menuPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, MENU_HEIGHT));
@@ -89,6 +86,7 @@ public class Window extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
+                EDITOR_INSTANCES.forEach(Editor::delete);
                 Log.getInstance().save();
                 Gdx.app.exit();
                 System.exit(0);
@@ -104,7 +102,7 @@ public class Window extends JFrame {
                         new LogMessage().andThen(value -> LogMessageDecorators.withDate(value, Variables.LOG_DATE_FORMAT)).andThen(value -> LogMessageDecorators.withModuleName(value, "Editor"))
                 )
                 .addLogEvent((level, decoratedMessage, message) -> {
-                    if(level != Level.ERROR)
+                    if(level != Level.ERROR && level != Level.WARN)
                         return;
                     errorMessage.setText("  " + message);
                     hasError = true;

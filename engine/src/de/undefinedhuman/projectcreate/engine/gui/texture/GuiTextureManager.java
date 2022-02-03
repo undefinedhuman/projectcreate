@@ -8,7 +8,7 @@ import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GuiTextureManager extends Manager {
+public class GuiTextureManager implements Manager {
 
     private static volatile GuiTextureManager instance;
 

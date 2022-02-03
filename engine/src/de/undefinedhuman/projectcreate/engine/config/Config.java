@@ -17,6 +17,7 @@ public abstract class Config extends SettingsList implements Serializable {
 
     public void init() {
         configFile = new FsFile(Paths.CONFIG_PATH, fileName + ".config", Files.FileType.External);
+        save();
     }
 
     @Override

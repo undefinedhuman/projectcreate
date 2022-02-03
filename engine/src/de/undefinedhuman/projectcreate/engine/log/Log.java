@@ -22,7 +22,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-public class Log extends Manager implements ApplicationLogger, Serializable {
+public class Log implements Manager, ApplicationLogger, Serializable {
 
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat(Variables.LOG_DATE_FORMAT);
 
@@ -111,6 +111,10 @@ public class Log extends Manager implements ApplicationLogger, Serializable {
 
     public static void error(Object... messages) {
         Log.getInstance().createMessage(System.err, Level.ERROR, messages);
+    }
+
+    public static void warn(Object... messages) {
+        Log.getInstance().createMessage(System.out, Level.WARN, messages);
     }
 
     public static void error(Object message, Exception ex) {

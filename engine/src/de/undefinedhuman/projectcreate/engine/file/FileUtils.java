@@ -54,7 +54,7 @@ public class FileUtils {
             if (files.length != 0) for (File file1 : files) deleteFile(deletedFileNames, file1);
         }
         if(fileToDelete.delete())
-            deletedFileNames.add(fileToDelete.getName());
+            deletedFileNames.add(fileToDelete.getName() + (fileToDelete.isDirectory() ? " (Dir)" : ""));
     }
 
     public static void deleteFile(FsFile... filesToDelete) {
@@ -68,8 +68,9 @@ public class FileUtils {
     }
 
     public static boolean readBoolean(String value) {
+        Integer parsedInteger;
         if (value.equalsIgnoreCase("false") || value.equalsIgnoreCase("true")) return Boolean.parseBoolean(value);
-        else if(Utils.isInteger(value) != null) return Integer.parseInt(value) == 1;
+        else if((parsedInteger = Utils.isInteger(value)) != null) return parsedInteger == 1;
         else return false;
     }
 

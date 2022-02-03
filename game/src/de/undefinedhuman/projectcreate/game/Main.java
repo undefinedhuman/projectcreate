@@ -8,8 +8,8 @@ import de.undefinedhuman.projectcreate.core.ecs.ComponentTypes;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.core.network.log.NetworkLogger;
 import de.undefinedhuman.projectcreate.engine.config.ConfigManager;
-import de.undefinedhuman.projectcreate.engine.ecs.blueprint.BlueprintManager;
-import de.undefinedhuman.projectcreate.engine.ecs.entity.EntityManager;
+import de.undefinedhuman.projectcreate.engine.ecs.BlueprintManager;
+import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.gui.GuiManager;
 import de.undefinedhuman.projectcreate.engine.gui.texture.GuiTextureManager;
@@ -35,15 +35,14 @@ import de.undefinedhuman.projectcreate.game.window.Window;
 
 public class Main extends Game {
 
-    public static Main instance;
+    private static volatile Main instance;
 
     public static float delta;
 
     private ManagerList managerList;
     private Timer timer;
 
-    public Main() {
-        instance = this;
+    private Main() {
         managerList = new ManagerList();
         managerList.addManager(
                 Log.getInstance().setLogMessageDecorator(
@@ -69,7 +68,6 @@ public class Main extends Game {
     @Override
     public void create() {
         initGDX();
-        // EntityManager.getInstance().addSystems(new AngleSystem(), new AnimationSystem(), new ArmSystem(), new InteractionSystem(), new EquipSystem(), new MovementSystem(), new RenderSystem());
         EntityManager.getInstance().addSystems(new MouseSystem(), new AnimationSystem(), new InteractionSystem(), new EquipSystem(), new MovementSystem(), new CameraSystem(), new RenderSystem());
         ComponentTypes.registerComponentTypes(BlueprintManager.getInstance());
         managerList.init();
@@ -125,6 +123,16 @@ public class Main extends Game {
     private void TEMP() {
         GameScreen.getInstance();
         GameManager.getInstance();
+    }
+
+    public static Main getInstance() {
+        if(instance != null)
+            return instance;
+        synchronized (Main.class) {
+            if (instance == null)
+                instance = new Main();
+        }
+        return instance;
     }
 
 }

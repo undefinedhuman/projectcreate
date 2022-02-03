@@ -1,13 +1,13 @@
 package de.undefinedhuman.projectcreate.core.ecs.stats.name;
 
-import com.badlogic.ashley.core.Component;
-import de.undefinedhuman.projectcreate.engine.ecs.component.ComponentBlueprint;
-import de.undefinedhuman.projectcreate.engine.ecs.component.ComponentPriority;
+import de.undefinedhuman.projectcreate.engine.ecs.Component;
+import de.undefinedhuman.projectcreate.engine.ecs.ComponentBlueprint;
+import de.undefinedhuman.projectcreate.engine.ecs.ComponentPriority;
 import de.undefinedhuman.projectcreate.engine.settings.types.primitive.StringSetting;
 
 public class NameBlueprint extends ComponentBlueprint {
 
-    public StringSetting name = new StringSetting("Name", "");
+    public StringSetting name = new StringSetting("Name", "", false);
 
     public NameBlueprint() {
         addSettings(name);

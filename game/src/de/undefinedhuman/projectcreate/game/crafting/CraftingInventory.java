@@ -91,7 +91,7 @@ public class CraftingInventory extends Gui {
 
     public void updateRecipes() {
         recipesScrollPanel.clear();
-        List<Integer> recipeIDs = recipes.getValuesWithKey(currentRecipeType);
+        List<Integer> recipeIDs = recipes.getValuesForKey(currentRecipeType);
         for(int i = recipeIDs.size()-1; i >= 0; i--)
             recipesScrollPanel.addContent().update(recipeIDs.get(i));
     }
