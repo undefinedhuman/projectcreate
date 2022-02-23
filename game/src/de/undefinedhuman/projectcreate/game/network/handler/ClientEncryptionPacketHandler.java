@@ -3,7 +3,6 @@ package de.undefinedhuman.projectcreate.game.network.handler;
 import com.esotericsoftware.kryonet.Connection;
 import de.undefinedhuman.projectcreate.core.ecs.EntityFlag;
 import de.undefinedhuman.projectcreate.core.ecs.Mappers;
-import de.undefinedhuman.projectcreate.core.ecs.inventory.InventoryComponent;
 import de.undefinedhuman.projectcreate.core.network.packets.auth.EncryptionPacket;
 import de.undefinedhuman.projectcreate.core.network.packets.auth.EncryptionPacketHandler;
 import de.undefinedhuman.projectcreate.core.network.packets.auth.EncryptionUtils;
@@ -14,7 +13,6 @@ import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.game.Main;
 import de.undefinedhuman.projectcreate.game.inventory.ClientInventory;
-import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
 import de.undefinedhuman.projectcreate.game.inventory.player.PlayerInventory;
 import de.undefinedhuman.projectcreate.game.inventory.player.Selector;
 import de.undefinedhuman.projectcreate.game.network.ClientEncryption;
@@ -61,8 +59,6 @@ public class ClientEncryptionPacketHandler extends EncryptionPacketHandler {
         EntityManager.getInstance().addEntity(player);
         GameManager.getInstance().player = player;
         linkInventories(player, PlayerInventory.getInstance(), Selector.getInstance());
-        InventoryComponent component = Mappers.INVENTORY.get(player);
-        InventoryManager.getInstance().getDragAndDrop().getDraggableItem().link(component.currentlySelectedItem);
         Main.getInstance().setScreen(GameScreen.getInstance());
     }
 

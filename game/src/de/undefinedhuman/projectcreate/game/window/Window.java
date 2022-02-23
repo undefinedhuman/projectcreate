@@ -2,29 +2,33 @@ package de.undefinedhuman.projectcreate.game.window;
 
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.game.Main;
 
 public class Window {
 
-    public static Window instance;
+    private static volatile Window instance;
+    private boolean running = false;
 
-    public Window() {
-        new LwjglApplication(Main.getInstance(), createLWJGLConfig());
+    public Window() {}
+
+    public void createNewApplication() {
+        if(running) return;
+        new Lwjgl3Application(Main.getInstance(), createLWJGLConfig());
+        running = true;
     }
 
-    private LwjglApplicationConfiguration createLWJGLConfig() {
-        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.title = Variables.NAME;
-        config.foregroundFPS = 1000;
-        config.backgroundFPS = 60;
-        config.vSyncEnabled = false;
-        config.addIcon("logo/32x32.png", Files.FileType.Internal);
-        config.addIcon("logo/64x64.png", Files.FileType.Internal);
-        config.width = Variables.BASE_WINDOW_WIDTH;
-        config.height = Variables.BASE_WINDOW_HEIGHT;
+    private Lwjgl3ApplicationConfiguration createLWJGLConfig() {
+        Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+        config.setTitle(Variables.NAME);
+        config.setForegroundFPS(0);
+        config.setIdleFPS(60);
+        config.setMaxNetThreads(0);
+        config.useVsync(false);
+        config.setWindowIcon(Files.FileType.Internal, "logo/32x32.png", "logo/64x64.png");
+        config.setWindowSizeLimits(Variables.BASE_WINDOW_WIDTH, Variables.BASE_WINDOW_HEIGHT, -1, -1);
         return config;
     }
 
@@ -34,6 +38,16 @@ public class Window {
 
     public void delete() {
         Gdx.app.exit();
+    }
+
+    public static Window getInstance() {
+        if(instance != null)
+            return instance;
+        synchronized (Window.class) {
+            if (instance == null)
+                instance = new Window();
+        }
+        return instance;
     }
 
 }

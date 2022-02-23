@@ -25,6 +25,10 @@ public class Blueprint {
     }
 
     Entity createInstance(long worldID) {
+        if(worldID < 0) {
+            Log.error("World ID of entity must be greater or equal to null");
+            return null;
+        }
         Entity entity = new Entity(blueprintID, worldID);
         for (ComponentBlueprint componentBlueprint : componentBlueprints.values())
             entity.add(componentBlueprint.createInstance());

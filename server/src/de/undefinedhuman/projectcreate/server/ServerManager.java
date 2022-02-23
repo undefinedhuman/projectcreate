@@ -87,7 +87,9 @@ public class ServerManager extends Server {
         timers.update(delta);
         EntityManager.getInstance().update(delta);
         buffer.process();
+        EntityManager.getInstance().setUpdating(true);
         EntityManager.getInstance().getEntities().forEach(entity -> sendToAllUDP(PositionPacket.serialize(entity)));
+        EntityManager.getInstance().setUpdating(false);
     }
 
     public void delete() {

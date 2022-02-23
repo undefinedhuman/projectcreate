@@ -16,10 +16,14 @@ import de.undefinedhuman.projectcreate.game.world.World;
 
 public class DropItem {
 
+    private static final float LIFE_LENGTH = 300;
+    private static final float SPEED = 120;
+    private static final float GRAVITY = 1200;
+
     public boolean isDead = false;
     private int id, amount;
     private Vector2 position, velocity = new Vector2();
-    private float lifeLength = 300, time = 0, speed = 2 * 60, gravity = 200 * 6f;
+    private float lifeLength, time;
     private Entity target;
     private Sprite sprite;
 
@@ -47,7 +51,7 @@ public class DropItem {
 
             if (newTarget != null) target = newTarget;
             else {
-                velocity.set(0, Tools.clamp(collide(position, 0, 8) ? 120 : !collide(position, 0, 7) ? velocity.y - gravity * delta : 0, -speed * 2, speed * 2));
+                velocity.set(0, Tools.clamp(collide(position, 0, 8) ? 120 : !collide(position, 0, 7) ? velocity.y - GRAVITY * delta : 0, -SPEED * 2, SPEED * 2));
                 velocity.scl(1 - delta);
                 position.mulAdd(velocity, delta);
                 position.y = Math.max(position.y, 0);

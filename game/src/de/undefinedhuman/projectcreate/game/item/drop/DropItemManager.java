@@ -7,15 +7,13 @@ import java.util.ArrayList;
 
 public class DropItemManager {
 
-    public static DropItemManager instance;
+    private static volatile DropItemManager instance;
 
     private ArrayList<DropItem> dropItems, dropItemsToRemove;
 
-    public DropItemManager() {
-
+    private DropItemManager() {
         this.dropItems = new ArrayList<>();
         this.dropItemsToRemove = new ArrayList<>();
-
     }
 
     public void addDropItem(int itemID, int amount, Vector2 position) {

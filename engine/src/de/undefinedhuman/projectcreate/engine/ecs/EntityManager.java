@@ -51,6 +51,10 @@ public class EntityManager extends SynchronizedEventManager implements Manager {
         entityList.removeAllEntities();
     }
 
+    public void setUpdating(boolean updating) {
+        this.updating = updating;
+    }
+
     public Entity createEntity(int blueprintID, long worldID, int flags) {
         Entity entity = this.createEntity(blueprintID, worldID);
         entity.flags = flags;
@@ -67,10 +71,6 @@ public class EntityManager extends SynchronizedEventManager implements Manager {
     }
 
     public Entity createEntity(Blueprint blueprint, long worldID) {
-        if(worldID < 0) {
-            Log.warn("World ID must be larger or equal to 0!");
-            return null;
-        }
         return blueprint.createInstance(worldID);
     }
 

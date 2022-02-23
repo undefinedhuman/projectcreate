@@ -18,7 +18,6 @@ import de.undefinedhuman.projectcreate.game.Main;
 import de.undefinedhuman.projectcreate.game.background.BackgroundManager;
 import de.undefinedhuman.projectcreate.game.camera.CameraManager;
 import de.undefinedhuman.projectcreate.game.inventory.InventoryManager;
-import de.undefinedhuman.projectcreate.game.item.drop.DropItemManager;
 import de.undefinedhuman.projectcreate.game.network.ClientManager;
 import de.undefinedhuman.projectcreate.game.projectiles.Projectile;
 import de.undefinedhuman.projectcreate.game.world.World;
@@ -75,7 +74,7 @@ public class GameManager {
 
         GuiManager.getInstance().update(delta);
         InventoryManager.getInstance().update(delta);
-        DropItemManager.instance.update(delta);
+        // DropItemManager.instance.update(delta);
         WorldManager.getInstance().update(delta);
 
         BackgroundManager.getInstance().update(delta);
@@ -90,7 +89,7 @@ public class GameManager {
         // World.instance.renderBackLayer(gameBatch);
         batch.setProjectionMatrix(CameraManager.gameCamera.combined);
         batch.begin();
-        DropItemManager.instance.render(batch);
+        // DropItemManager.instance.render(batch);
         batch.end();
 
         EntityManager.getInstance().update(Main.delta);
@@ -113,7 +112,7 @@ public class GameManager {
         manager.delete();
         BackgroundManager.getInstance().delete();
         BlueprintManager.getInstance().delete();
-        DropItemManager.instance.delete();
+        // DropItemManager.instance.delete();
         EntityManager.getInstance().delete();
         ItemManager.getInstance().delete();
         batch.dispose();
@@ -122,7 +121,7 @@ public class GameManager {
     private void loadManager() {
         ItemManager.getInstance().init();
         InventoryManager.getInstance().init();
-        DropItemManager.instance = new DropItemManager();
+        // DropItemManager.instance = new DropItemManager();
     }
 
     public static GameManager getInstance() {

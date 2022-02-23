@@ -2,7 +2,6 @@ package de.undefinedhuman.projectcreate.engine.ecs;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Bits;
-import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.observer.Event;
 import de.undefinedhuman.projectcreate.engine.observer.EventManager;
 import de.undefinedhuman.projectcreate.engine.utils.ds.Bag;
@@ -71,9 +70,6 @@ public class Entity {
     }
 
     <T extends Component> T getComponent (ComponentType componentType) {
-        T component = componentType.getIndex() < components.size() ? (T) components.get(componentType.getIndex()) : null;
-        if(component == null)
-            Log.warn("Entity with world id " + worldID + " does not contain component of type " + componentType.getComponentClass().getSimpleName());
         return componentType.getIndex() < components.size() ? (T) components.get(componentType.getIndex()) : null;
     }
 

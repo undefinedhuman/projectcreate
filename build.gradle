@@ -53,25 +53,24 @@ subprojects {
 
 project(":game") {
     dependencies {
-        compile project(":engine")
-        compile project(":core")
+        implementation project(":engine")
+        implementation project(":core")
 
-        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-        compile group: 'com.esotericsoftware', name: 'kryonet', version: "$kryoVersion"
+        implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+        implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+        implementation group: 'com.esotericsoftware', name: 'kryonet', version: "$kryoVersion"
     }
 }
 
 project(":core") {
     dependencies {
-        compile project(":engine")
+        implementation project(":engine")
 
-        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile group: 'com.esotericsoftware', name: 'kryonet', version: "$kryoVersion"
+        implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+        implementation group: 'com.esotericsoftware', name: 'kryonet', version: "$kryoVersion"
 
         testImplementation("org.assertj:assertj-core:3.19.0")
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
@@ -81,25 +80,36 @@ project(":core") {
 
 project(":server") {
     dependencies {
-        compile project(":engine")
-        compile project(":core")
+        implementation project(":engine")
+        implementation project(":core")
 
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile group: 'com.esotericsoftware', name: 'kryonet', version: "$kryoVersion"
+        implementation 'org.lz4:lz4-pure-java:1.8.0'
+        implementation 'com.google.code.gson:gson:2.9.0'
+        implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        implementation group: 'com.esotericsoftware', name: 'kryonet', version: "$kryoVersion"
+    }
+}
+
+project(":kamino") {
+    dependencies {
+        implementation project(":engine")
+
+        implementation 'org.lz4:lz4-pure-java:1.8.0'
+        implementation 'com.google.code.gson:gson:2.9.0'
+        implementation 'com.couchbase.client:java-client:3.2.5'
     }
 }
 
 project(":engine") {
     dependencies {
-        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-        compile group: 'com.esotericsoftware', name: 'kryonet', version: "$kryoVersion"
-        compile group: 'com.github.kerner1000', name: 'javapng', version: '2.1.2'
+        implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+        implementation group: 'com.esotericsoftware', name: 'kryonet', version: "$kryoVersion"
+        implementation group: 'com.github.kerner1000', name: 'javapng', version: '2.1.2'
 
-        compile "com.formdev:flatlaf:$flatLafVersion"
+        implementation "com.formdev:flatlaf:$flatLafVersion"
 
         testImplementation("org.assertj:assertj-core:3.19.0")
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
@@ -109,37 +119,37 @@ project(":engine") {
 
 project(":editor") {
     dependencies {
-        compile project(":engine")
-        compile project(":core")
+        implementation project(":engine")
+        implementation project(":core")
 
-        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile "com.formdev:flatlaf:$flatLafVersion"
+        implementation "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+        implementation "com.formdev:flatlaf:$flatLafVersion"
         implementation 'com.formdev:flatlaf-intellij-themes:1.2'
     }
 }
 
 project(":updater") {
     dependencies {
-        compile project(":engine")
+        implementation project(":engine")
 
-        compile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
-        compile 'org.jsoup:jsoup:1.13.1'
-        compile "com.formdev:flatlaf:$flatLafVersion"
+        implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        implementation 'org.jsoup:jsoup:1.13.1'
+        implementation "com.formdev:flatlaf:$flatLafVersion"
     }
 }
 
 project(":launcher") {
     dependencies {
-        compile project(":engine")
-        compile project(":updater")
+        implementation project(":engine")
+        implementation project(":updater")
 
-        compile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
-        compile "com.formdev:flatlaf:$flatLafVersion"
-        compile 'com.formdev:flatlaf-extras:1.1.1'
-        compile 'com.formdev:svgSalamander:1.1.2.4'
-        compile 'com.github.oshi:oshi-core:5.7.1'
+        implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        implementation "com.formdev:flatlaf:$flatLafVersion"
+        implementation 'com.formdev:flatlaf-extras:1.1.1'
+        implementation 'com.formdev:svgSalamander:1.1.2.4'
+        implementation 'com.github.oshi:oshi-core:5.7.1'
     }
 }

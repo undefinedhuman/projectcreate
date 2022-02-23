@@ -62,7 +62,7 @@ public class Main extends Game {
                 EntityManager.getInstance(),
                 ItemManager.getInstance(),
                 ClientManager.getInstance());
-        timer = new Timer(1, () -> Window.instance.update());
+        timer = new Timer(1, () -> Window.getInstance().update());
     }
 
     @Override
@@ -103,7 +103,7 @@ public class Main extends Game {
     public void dispose() {
         super.dispose();
         managerList.delete();
-        Window.instance.delete();
+        Window.getInstance().delete();
     }
 
     private void clear() {

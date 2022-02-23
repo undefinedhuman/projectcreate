@@ -1,0 +1,45 @@
+sourceCompatibility = JavaVersion.VERSION_17
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+project.ext.mainClassName = "de.undefinedhuman.projectcreate.kamino.Main"
+
+sourceSets.main.java.srcDirs = ["src/"]
+project.ext.assetsDir = new File("../assets")
+
+jar {
+    manifest {
+        attributes 'Main-Class': project.mainClassName
+    }
+}
+
+task run(dependsOn: classes, type: JavaExec) {
+    main = project.mainClassName
+    classpath = sourceSets.main.runtimeClasspath
+    standardInput = System.in
+    workingDir = project.assetsDir
+    setIgnoreExitValue(true)
+}
+
+task debug(dependsOn: classes, type: JavaExec) {
+    main = project.mainClassName
+    classpath = sourceSets.main.runtimeClasspath
+    standardInput = System.in
+    workingDir = project.assetsDir
+    setIgnoreExitValue(true)
+    debug = true
+}
+
+task dist(type: Jar) {
+    archiveFileName = "launcher.jar"
+
+    from files(sourceSets.main.output.classesDirs)
+    from files(sourceSets.main.output.resourcesDir)
+    from { configurations.compile.collect { zipTree(it) } }
+    from files(project.assetsDir)
+
+    manifest {
+        attributes 'Main-Class': project.mainClassName
+    }
+}
+
+dist.dependsOn classes

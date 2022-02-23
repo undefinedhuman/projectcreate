@@ -12,7 +12,6 @@ import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 import de.undefinedhuman.projectcreate.game.camera.CameraManager;
 import de.undefinedhuman.projectcreate.game.inventory.player.Selector;
-import de.undefinedhuman.projectcreate.game.item.drop.DropItemManager;
 import de.undefinedhuman.projectcreate.game.screen.gamescreen.GameManager;
 import de.undefinedhuman.projectcreate.game.utils.Tools;
 
@@ -125,7 +124,7 @@ public class WorldManager {
 
     public void destroyBlock(int x, int y, byte worldLayer, boolean send) {
         if(World.instance.getBlock(x, y, worldLayer) == 0) return;
-        DropItemManager.instance.addDropItem(World.instance.getBlock(x, y, worldLayer), 1, new Vector2(x, y).scl(Variables.BLOCK_SIZE).add(Variables.BLOCK_SIZE*0.5f, Variables.BLOCK_SIZE*0.5f));
+        // DropItemManager..addDropItem(World.instance.getBlock(x, y, worldLayer), 1, new Vector2(x, y).scl(Variables.BLOCK_SIZE).add(Variables.BLOCK_SIZE*0.5f, Variables.BLOCK_SIZE*0.5f));
         World.instance.setBlock(x, y, worldLayer, (byte) 0);
         checkCells(x, y, worldLayer);
         // if(send) ClientManager.getInstance().sendTCP(PacketUtils.createBlockPacket(x, y, worldLayer, (byte) -1));
