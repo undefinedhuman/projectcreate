@@ -53,6 +53,8 @@ publishing {
             artifact(tasks["jar"])
         }
         mavenJava(MavenPublication) {
+            group = 'com.playprojectcreate'
+            version = '0.0.1'
             versionMapping {
                 usage('java-api') {
                     fromResolutionOf('runtimeClasspath')
