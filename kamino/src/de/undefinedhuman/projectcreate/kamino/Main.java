@@ -1,22 +1,26 @@
 package de.undefinedhuman.projectcreate.kamino;
 
-import com.couchbase.client.java.Bucket;
-import com.couchbase.client.java.Cluster;
-import com.couchbase.client.java.Collection;
-import com.couchbase.client.java.Scope;
-import com.couchbase.client.java.codec.RawBinaryTranscoder;
-import com.couchbase.client.java.kv.UpsertOptions;
-import net.jpountz.lz4.LZ4Compressor;
-import net.jpountz.lz4.LZ4Factory;
+import de.undefinedhuman.projectcreate.engine.log.Log;
+import de.undefinedhuman.projectcreate.server.plugin.Plugin;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.util.*;
+public class Main extends Plugin {
 
-public class Main {
+    @Override
+    public void load() {
+        Log.info("Hello");
+    }
 
-    public static void main(String[] args) throws IOException {
+    @Override
+    public void init() {
+
+    }
+
+    @Override
+    public void delete() {
+
+    }
+
+/*    public static void main(String[] args) throws IOException {
         Cluster cluster = Cluster.connect("127.0.0.1", "undefinedhuman", "VrHsWZQbeKwDkBCJv8ARKebaAGEKNy3k");
         Bucket bucket = cluster.bucket("server_name");
         Scope scope = bucket.scope("projectcreate-kamino");
@@ -585,6 +589,6 @@ public class Main {
                 "  \"minute\": \"" + seconds / 60 + "\",\n" +
                 "  \"seconds\": \"" + seconds % 60 + "\"\n" +
                 "}";
-    }
+    }*/
 
 }
