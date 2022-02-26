@@ -7,9 +7,9 @@ pages:
     - export PATH="$CARGO_HOME:$PATH"
     - mkdir -p $CARGO_HOME
     - echo $MDBOOK_VERSION
-    - $CARGO_HOME/mdbook --version || curl -s https://api.github.com/repos/atom/atom/releases | grep browser_download_url | grep 'x86_64-unknown-linux-gnu[.]tar.gz' | head -n 1 | cut -d '"' -f 4 | tar -xz --directory=$CARGO_HOME
+    - $CARGO_HOMEmdbook --version || curl -s https://api.github.com/repos/atom/atom/releases | grep browser_download_url | grep 'x86_64-unknown-linux-gnu[.]tar.gz' | head -n 1 | cut -d '"' -f 4 | tar -xz --directory=$CARGO_HOME
   script:
-    - $CARGO_HOME/mdbook build -d public
+    - $CARGO_HOMEmdbook build -d public
   cache:
     key: $MDBOOK_VERSION
     paths:
