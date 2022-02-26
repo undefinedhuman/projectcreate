@@ -2,15 +2,17 @@ pages:
   image: rust:latest
   variables:
     CARGO_HOME: $CI_PROJECT_DIR/cargo/bin/
-  cache:
-    paths:
-      - $CARGO_HOME/
   before_script:
     - export PATH="$CARGO_HOME:$PATH"
     - mkdir -p $CARGO_HOME
-    - $CARGO_HOME/mdbook --version || curl -SSL https://github.com/rust-lang/mdBook/releases/download/v0.4.15/mdbook-v0.4.15-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=$CARGO_HOME
+    - $CARGO_HOME/mdbook --version || curl -s https://api.github.com/repos/atom/atom/releases | grep browser_download_url | grep 'x86_64-unknown-linux-gnu[.]tar.gz' | head -n 1 | cut -d '"' -f 4 | tar -xz --directory=$CARGO_HOME
   script:
+    - MDBOOK_VERSION=$(curl -s https://api.github.com/repos/rust-lang/mdbook/releases/latest | grep 'browser_download_url.*tar.gz' | grep 'x86_64-unknown-linux-gnu[.]tar.gz' | cut -d : -f 2,3 | tr -d \" | cut -d'/' -f8)
     - $CARGO_HOME/mdbook build -d public
+  cache:
+    key: $MDBOOK_VERSION
+    paths:
+      - $CARGO_HOME/
   artifacts:
     paths:
       - public
