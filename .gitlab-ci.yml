@@ -15,6 +15,6 @@ pages:
     paths:
       - public
   cache:
-    key: mdbook
+    key: "mdbook"
     paths:
       - $CARGO_HOME/bin
