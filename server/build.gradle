@@ -6,6 +6,9 @@ sourceSets.main.java.srcDirs = ["src/"]
 project.ext.mainClassName = "de.undefinedhuman.projectcreate.server.Main"
 project.ext.assetsDir = new File("../assets/");
 
+group = 'com.playprojectcreate'
+version = '0.0.2'
+
 task run(dependsOn: classes, type: JavaExec) {
     main = project.mainClassName
     classpath = sourceSets.main.runtimeClasspath
@@ -53,8 +56,6 @@ publishing {
             artifact(tasks["jar"])
         }
         mavenJava(MavenPublication) {
-            group = 'com.playprojectcreate'
-            version = '0.0.1'
             versionMapping {
                 usage('java-api') {
                     fromResolutionOf('runtimeClasspath')
