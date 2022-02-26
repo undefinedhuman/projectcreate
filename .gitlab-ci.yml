@@ -11,7 +11,7 @@ stages:
 
 pages:
   stage: deploy
-  image: rust
+  image: hatembt/rust-ci:latest
   <<: *caching_rust
   before_script:
     - export CARGO_HOME="${PWD}/.cargo"
