@@ -23,23 +23,34 @@ task debug(dependsOn: classes, type: JavaExec) {
     debug = true
 }
 
-task dist(type: Jar) {
-    archiveFileName = "server.jar"
+jar {
+    archiveBaseName.set("server")
 
-    from files(sourceSets.main.output.classesDirs)
-    from files(sourceSets.main.output.resourcesDir)
-    from { configurations.compile.collect { zipTree(it) } }
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+    dependsOn configurations.runtimeClasspath
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     from files(project.assetsDir)
+
+    exclude('META-INF/INDEX.LIST', 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA')
+    dependencies {
+        exclude('META-INF/INDEX.LIST', 'META-INF/maven/**')
+    }
 
     manifest {
         attributes 'Main-Class': project.mainClassName
     }
+
+    doLast {
+        file(archiveFile).setExecutable(true, false)
+    }
 }
+
+task dist(dependsOn: [jar]) {}
 
 publishing {
     publications {
         library(MavenPublication) {
-            artifact(tasks["dist"])
+            artifact(tasks["jar"])
         }
         mavenJava(MavenPublication) {
             versionMapping {
@@ -65,5 +76,3 @@ publishing {
         }
     }
 }
-
-dist.dependsOn classes
