@@ -39,7 +39,17 @@ task dist(type: Jar) {
 publishing {
     publications {
         library(MavenPublication) {
-            from components.java
+            artifact(tasks["dist"])
+        }
+        mavenJava(MavenPublication) {
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
         }
     }
     repositories {
