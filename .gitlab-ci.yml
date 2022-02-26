@@ -4,8 +4,6 @@ pages:
     CARGO_HOME: $CI_PROJECT_DIR/cargo/bin/
   cache:
     paths:
-      - .cargo/
-      - .cargo/bin/
       - $CARGO_HOME/
   before_script:
     - export PATH="$CARGO_HOME:$PATH"
