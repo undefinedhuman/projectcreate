@@ -1,18 +1,18 @@
 pages:
   image: rust:latest
   variables:
-    CARGO_HOME: $CI_PROJECT_DIR/.cargo
+    CARGO_HOME: $CI_PROJECT_DIR/cargo/bin
   cache:
     paths:
       - .cargo/
       - .cargo/bin/
       - $CARGO_HOME/
   before_script:
-    - export CARGO_HOME="$CARGO_HOME"
-    - export PATH="$CARGO_HOME/bin:$PATH"
-    - mdbook --version || cargo install mdbook
+    - export PATH="$CARGO_HOME:$PATH"
+    - mkdir $CARGO_HOME
+    - $CARGO_HOME/mdbook --version || curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.15/mdbook-v0.4.15-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=$CARGO_HOME
   script:
-    - mdbook build -d public
+    - $CARGO_HOME/mdbook build -d public
   artifacts:
     paths:
       - public
