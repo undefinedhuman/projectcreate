@@ -26,8 +26,9 @@ task setVersion {
 
 allprojects {
     apply plugin: 'jacoco'
-    apply plugin: "org.sonarqube"
-    apply plugin: "idea"
+    apply plugin: 'org.sonarqube'
+    apply plugin: 'idea'
+    apply plugin: 'maven-publish'
 
     ext {
         appName = "Project Create"

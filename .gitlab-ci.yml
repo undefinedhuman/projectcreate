@@ -6,6 +6,11 @@ stages:
   - deploy
   - loadtest
 
+deploy:
+  image: gradle:7.4-jdk17
+  script:
+    - 'gradle publish'
+
 pages:
   stage: documentation
   image: rust:latest

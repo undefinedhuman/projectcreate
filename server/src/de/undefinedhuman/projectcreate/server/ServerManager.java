@@ -12,6 +12,7 @@ import de.undefinedhuman.projectcreate.core.network.buffer.NetworkBuffer;
 import de.undefinedhuman.projectcreate.core.network.log.NetworkLogger;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.PositionPacket;
 import de.undefinedhuman.projectcreate.core.network.utils.NetworkConstants;
+import de.undefinedhuman.projectcreate.core.utils.ApplicationLoggerAdapter;
 import de.undefinedhuman.projectcreate.engine.config.ConfigManager;
 import de.undefinedhuman.projectcreate.engine.ecs.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
@@ -101,7 +102,7 @@ public class ServerManager extends Server {
     }
 
     private void initGDX() {
-        Gdx.app.setApplicationLogger(Log.getInstance());
+        Gdx.app.setApplicationLogger(ApplicationLoggerAdapter.getInstance());
         Gdx.app.setLogLevel(Variables.LOG_LEVEL.ordinal());
         NetworkLogger.setLogger();
     }
