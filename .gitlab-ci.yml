@@ -1,46 +1,18 @@
-#.caching_rust: &caching_rust
-#  cache:
-#    paths:
-#      - .cargo/
-#      - .cache/sccache
-#      - .cargo/bin/mdbook
-#      - .cargo/bin/
-#
-#stages:
-#  - deploy
-#
-#pages:
-#  stage: deploy
-#  image: hatembt/rust-ci:latest
-#  variables:
-#    CARGO_HOME: $CI_PROJECT_DIR/cargo
-#  <<: *caching_rust
-#  before_script:
-#    - export CARGO_HOME="${PWD}/.cargo"
-#    - export SCCACHE_DIR="${PWD}/.cache/sccache"
-#    - export PATH="$CI_PROJECT_DIR/.cargo/bin:$PATH"
-#    - mdbook --version || cargo install mdbook
-#  script:
-#    - mdbook build -d public
-#  artifacts:
-#    paths:
-#      - public
-#  cache:
-#    key: $CI_JOB_NAME
-#    paths:
-#      - .cargo/
-#      - .cache/sccache
-
-image: "scorpil/rust:stable"
-
-variables:
-  CARGO_HOME: $CI_PROJECT_DIR/cargo
-
-test:cargo:
-  script:
-    - rustc --version && cargo --version      # Print version info for debugging
-    - time cargo test --verbose --jobs 1 --release # Don't paralize to make errors more readable
+pages:
+  image: rust:latest
+  variables:
+    CARGO_HOME: $CI_PROJECT_DIR/.cargo
   cache:
     paths:
-      - target/
-      - cargo/
+      - .cargo/
+      - .cargo/bin/
+      - $CARGO_HOME/
+  before_script:
+    - export CARGO_HOME="$CARGO_HOME"
+    - export PATH="$CARGO_HOME/bin:$PATH"
+    - mdbook --version || cargo install mdbook
+  script:
+    - mdbook build -d public
+  artifacts:
+    paths:
+      - public
