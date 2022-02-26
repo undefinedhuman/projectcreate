@@ -13,7 +13,7 @@ pages:
     - mdbook build docs -d public
   artifacts:
     paths:
-      - public
+      - docs/public
   cache:
     paths:
       - $CARGO_HOME/bin
