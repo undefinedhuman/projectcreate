@@ -10,7 +10,7 @@ deploy:
   stage: deploy
   image: gradle:7.4-jdk17
   script:
-    - 'gradle publish'
+    - 'gradle :server:publish'
 
 pages:
   stage: documentation
