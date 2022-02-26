@@ -1,6 +1,5 @@
 package de.undefinedhuman.projectcreate.engine.log;
 
-import com.badlogic.gdx.ApplicationLogger;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -9,8 +8,8 @@ import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.file.Serializable;
 import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessage;
-import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 
 import javax.swing.*;
 import java.io.PrintStream;
@@ -22,7 +21,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-public class Log implements Manager, ApplicationLogger, Serializable {
+public class Log implements Manager, Serializable {
 
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat(Variables.LOG_DATE_FORMAT);
 
@@ -184,35 +183,5 @@ public class Log implements Manager, ApplicationLogger, Serializable {
                 instance = new Log();
         }
         return instance;
-    }
-
-    @Override
-    public void log(String tag, String message) {
-        info(message);
-    }
-
-    @Override
-    public void log(String tag, String message, Throwable exception) {
-        error(message, exception);
-    }
-
-    @Override
-    public void error(String tag, String message) {
-        error(message);
-    }
-
-    @Override
-    public void error(String tag, String message, Throwable exception) {
-        error(message, exception);
-    }
-
-    @Override
-    public void debug(String tag, String message) {
-        debug(message);
-    }
-
-    @Override
-    public void debug(String tag, String message, Throwable exception) {
-        error(message, exception);
     }
 }

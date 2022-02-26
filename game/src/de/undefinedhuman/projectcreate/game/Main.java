@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import de.undefinedhuman.projectcreate.core.ecs.ComponentTypes;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
 import de.undefinedhuman.projectcreate.core.network.log.NetworkLogger;
+import de.undefinedhuman.projectcreate.core.utils.ApplicationLoggerAdapter;
 import de.undefinedhuman.projectcreate.engine.config.ConfigManager;
 import de.undefinedhuman.projectcreate.engine.ecs.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
@@ -112,7 +113,7 @@ public class Main extends Game {
     }
 
     private void initGDX() {
-        Gdx.app.setApplicationLogger(Log.getInstance());
+        Gdx.app.setApplicationLogger(ApplicationLoggerAdapter.getInstance());
         Gdx.app.setLogLevel(Variables.LOG_LEVEL.ordinal());
         com.esotericsoftware.minlog.Log.setLogger(new NetworkLogger());
         Pixmap cursor = new Pixmap(Gdx.files.internal(Paths.GUI_PATH + "Cursor.png"));

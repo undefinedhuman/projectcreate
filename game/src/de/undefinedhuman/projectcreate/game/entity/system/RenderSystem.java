@@ -52,8 +52,6 @@ public class RenderSystem extends SortedIteratingSystem {
         int renderOffset = 0;
         Mappers.SPRITE.get(entity).render(batch, Mappers.TRANSFORM.get(entity), renderOffset);
         NameComponent nameComponent = Mappers.NAME.get(entity);
-        if(nameComponent == null)
-            return;
         Vector2 textPosition = Utils.calculateScreenFromWorldSpace(CameraManager.gameCamera, transformComponent.getCenterPosition().add(0, NAME_TEXT_Y_OFFSET));
         nameComponent.getText().setPosition((textPosition.x - nameComponent.getText().getCurrentValue(Axis.WIDTH)/2f), textPosition.y);
         nameComponent.getText().resize();
