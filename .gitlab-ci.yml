@@ -8,6 +8,8 @@ pages:
     CARGO_HOME: $CI_PROJECT_DIR/.cargo
   before_script:
     - export PATH="$PATH:$CARGO_HOME/bin"
+    - print $PATH
+    - print $CARGO_HOME
     - mdbook --version || cargo install mdbook
   script:
     - mdbook build -d public
