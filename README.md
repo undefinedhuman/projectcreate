@@ -21,6 +21,14 @@ Project is created with:
 * npm >= 7
 * cz-cli
 
+## Prerequisites
+
+> Create a personal access token (GitLab, scope: api) to allow gradle to download dependencies from the project's private package repository.
+
+> Tutorial: https://docs.gitlab.com/ee/user/packages/maven_repository/#authenticate-with-a-personal-access-token-in-gradle
+
+> IMPORTANT! Insert the token into your local gradle directory located in the home folder and never commit it to the repository!
+
 ## Installation
 > Required dependencies are automatically downloaded by Gradle.
 > Personally, I suggest using Intellij IDE for easier installation and handling of the project.
@@ -43,7 +51,7 @@ cd project-create/
 
 ## Author 
 
-> undefinedhuman <Alexander Padberg>
+undefinedhuman <Alexander Padberg>
 
 ## License
 
