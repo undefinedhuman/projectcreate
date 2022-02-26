@@ -1,15 +1,25 @@
+.caching_rust: &caching_rust
+  cache:
+    paths:
+      - .cargo/
+      - .cache/sccache
+      - target/x86_64-unknown-linux-musl/release/material
+
 stages:
   - deploy
 
 pages:
   stage: deploy
   image: rust
-  variables:
-    CARGO_HOME: $CI_PROJECT_DIR/.cargo
+  <<: *caching_rust
   before_script:
-    - export PATH="$PATH:$CARGO_HOME/bin"
-    - echo $PATH
+    - export CARGO_HOME="${PWD}/.cargo"
     - echo $CARGO_HOME
+    - export SCCACHE_DIR="${PWD}/.cache/sccache"
+    - echo $SCCACHE_DIR
+    - export PATH="$CI_PROJECT_DIR/.cargo/bin:$PATH"
+    - export RUSTC_WRAPPER="$CARGO_HOME/bin/sccache"
+    - echo $RUSTC_WRAPPER
     - mdbook --version || cargo install mdbook
   script:
     - mdbook build -d public
@@ -18,4 +28,5 @@ pages:
       - public
   cache:
     paths:
-      - $CARGO_HOME/bin/
+      - .cargo/
+      - .cache/sccache
