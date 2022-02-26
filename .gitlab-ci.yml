@@ -7,7 +7,7 @@ pages:
   variables:
     CARGO_HOME: $CI_PROJECT_DIR/cargo
   before_script:
-    - export PATH="$PATH:$CARGO_HOME/bin"
+    - export PATH="$CARGO_HOME/bin"
     - mdbook --version || cargo install mdbook
   script:
     - mdbook build docs -d ../public
@@ -15,5 +15,6 @@ pages:
     paths:
       - public
   cache:
+    key: mdbook
     paths:
       - $CARGO_HOME/bin
