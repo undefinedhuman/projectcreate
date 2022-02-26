@@ -7,7 +7,7 @@ stages:
   - loadtest
 
 pages:
-  stage: postdeploy
+  stage: documentation
   image: rust:latest
   variables:
     CARGO_HOME: $CI_PROJECT_DIR/cargo/bin
