@@ -54,6 +54,16 @@ allprojects {
         }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        exclusiveContent {
+            forRepository {
+                maven {
+                    url = uri("https://jitpack.io")
+                }
+            }
+            filter {
+                includeModule("com.github.Marcono1234", "gson-record-type-adapter-factory")
+            }
+        }
     }
 
 }
@@ -94,17 +104,20 @@ project(":server") {
         implementation project(":engine")
         implementation project(":core")
 
+        implementation 'com.github.Marcono1234:gson-record-type-adapter-factory:0.2.0'
         implementation 'org.lz4:lz4-pure-java:1.8.0'
         implementation 'com.google.code.gson:gson:2.9.0'
         implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         implementation group: 'com.esotericsoftware', name: 'kryonet', version: "$kryoVersion"
+        implementation 'com.couchbase.client:java-client:3.2.5'
     }
 }
 
 project(":kamino") {
+    apply plugin: "java-library"
     dependencies {
-        implementation 'com.playprojectcreate:server:0.0.2'
+        compileOnly 'com.playprojectcreate:server:0.0.2'
         implementation 'org.lz4:lz4-pure-java:1.8.0'
         implementation 'com.google.code.gson:gson:2.9.0'
         implementation 'com.couchbase.client:java-client:3.2.5'

@@ -2,8 +2,6 @@ package de.undefinedhuman.projectcreate.engine.utils;
 
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.log.Level;
-import de.undefinedhuman.projectcreate.engine.utils.version.Stage;
-import de.undefinedhuman.projectcreate.engine.utils.version.Version;
 
 import java.awt.*;
 import java.io.File;
@@ -11,7 +9,6 @@ import java.io.File;
 public class Variables {
     // General
     public static String NAME = "ProjectCreate";
-    public static Version VERSION = new Version(Stage.INDEV, 0, 0, 0, 0);
 
     // Engine
     public static final float GAME_CAMERA_ZOOM = 3f;
@@ -31,8 +28,7 @@ public class Variables {
 
     // Log
     public static final int LOG_DELETION_TIME_DAYS = 14;
-    public static final Level LOG_LEVEL = Level.DEBUG;
-    public static final String LOG_MESSAGE_FORMAT = "[%prefix% - %time%] %message%";
+    public static Level LOG_LEVEL = Level.INFO;
     public static final String LOG_DATE_FORMAT = "dd-MM-yyyy - HH-mm-ss";
 
     public static final boolean DEBUG = false;
@@ -76,4 +72,5 @@ public class Variables {
 
     // Player
     public static final int BLOCK_PLACEMENT_RANGE = 6;
+
 }

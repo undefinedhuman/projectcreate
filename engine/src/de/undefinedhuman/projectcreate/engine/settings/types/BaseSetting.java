@@ -20,9 +20,8 @@ public abstract class BaseSetting<T> extends Setting<T> {
 
     @Override
     protected void loadValue(FileHandle parentDir, Object value) {
-        if(!(value instanceof LineSplitter))
+        if(!(value instanceof LineSplitter splitter))
             return;
-        LineSplitter splitter = (LineSplitter) value;
         setValue(parser.parse(splitter.getNextString()));
     }
 

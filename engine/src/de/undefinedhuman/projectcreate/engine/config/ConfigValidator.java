@@ -15,7 +15,9 @@ public class ConfigValidator<T extends Config> extends Validator<T> {
         for(ValidationRule<T> rule : rules) {
             if(rule.isValid(t))
                 continue;
-            Log.error(rule.getErrorMessage());
+            Log.error(rule.getErrorMessage(t));
+            if(rule.shouldCrash())
+                Log.crash();
             rule.correct(t);
         }
     }

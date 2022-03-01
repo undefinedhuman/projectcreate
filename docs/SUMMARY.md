@@ -1,4 +1,8 @@
 # Summary
 
-[Introduction](README.md)
-[Documentation](Documentation.md)
+- [Introduction](README.md)
+- [Documentation](documentation.md)
+
+- [Server](server.md)
+  - [Plugins](server/plugin.md)
+  - [Commands](server/plugin.md)

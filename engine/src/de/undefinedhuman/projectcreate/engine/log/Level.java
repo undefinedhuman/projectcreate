@@ -2,10 +2,9 @@ package de.undefinedhuman.projectcreate.engine.log;
 
 public enum Level {
     NONE(""),
-    INFO("Info"),
     ERROR("Error"),
     WARN("Warn"),
-    CRASH("Crash"),
+    INFO("Info"),
     DEBUG("Debug");
 
     private final String prefix;

@@ -27,7 +27,7 @@ task debug(dependsOn: classes, type: JavaExec) {
 }
 
 jar {
-    archiveBaseName.set("server")
+    archiveName("server.jar")
 
     duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     dependsOn configurations.runtimeClasspath

@@ -19,7 +19,7 @@ public enum FileError implements Predicate<FsFile> {
     private final Predicate<FsFile> condition;
     private final int errorCode;
     private final String errorMessage;
-    private boolean canContinueWithCheck;
+    private final boolean canContinueWithCheck;
 
     FileError(int errorCode, Predicate<FsFile> condition, String errorMessage, boolean canContinueWithCheck) {
         this.condition = condition;

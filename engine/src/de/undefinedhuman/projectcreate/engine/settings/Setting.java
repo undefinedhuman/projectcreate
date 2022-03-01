@@ -13,7 +13,7 @@ public abstract class Setting<T> {
     private String menuTitle;
     protected T value;
 
-    private ArrayList<ValueListener<T>> valueListeners = new ArrayList<>();
+    private final ArrayList<ValueListener<T>> valueListeners = new ArrayList<>();
 
     public Setting(String key, T defaultValue) {
         this.key = key;

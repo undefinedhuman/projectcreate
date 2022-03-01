@@ -8,6 +8,7 @@ import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.file.Serializable;
 import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessage;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 
@@ -31,10 +32,8 @@ public class Log implements Manager, Serializable {
     private String fileName;
     private FsFile file;
 
-    private List<String> logMessages;
-    private List<LogEvent> logEvents;
-
-    public Files.FileType fileLocation = Files.FileType.External;
+    private final List<String> logMessages;
+    private final List<LogEvent> logEvents;
 
     private Function<String, String> logMessage = new LogMessage();
 
@@ -57,7 +56,7 @@ public class Log implements Manager, Serializable {
     @Override
     public void load() {
         checkLogs();
-        file = new FsFile(Paths.LOG_PATH, fileName, fileLocation);
+        file = new FsFile(Paths.getInstance().getDirectory(), Paths.LOG_PATH + fileName);
         if (file.exists())
             info("Log file successfully created!");
     }
@@ -101,8 +100,13 @@ public class Log implements Manager, Serializable {
         crash(message);
     }
 
+    public static void crash() {
+        crash(null);
+    }
+
     public static void crash(String message) {
-        Log.getInstance().createMessage(System.out, Level.CRASH, message);
+        if(message != null)
+            Log.getInstance().createMessage(System.out, Level.ERROR, message);
         Log.getInstance().save();
         Gdx.app.exit();
         System.exit(0);
@@ -117,9 +121,15 @@ public class Log implements Manager, Serializable {
     }
 
     public static void error(Object message, Exception ex) {
-        if(ex != null)
-            error(message, "\n", ex.getMessage());
-        else error(message);
+        StringBuilder builder = new StringBuilder(message.toString());
+        if(ex == null) {
+            error(builder.toString());
+            return;
+        }
+        builder.append(" Exception:").append("\n").append(ex);
+        if(getInstance().getLogLevel() == Level.DEBUG)
+            builder.append("\n").append("Value: ").append(ex.getCause()).append("\n").append("Stacktrace:").append("\n").append(Utils.getStackTrace(ex));
+        error(builder.toString());
     }
 
     public static void info(Object... messages) {
@@ -144,10 +154,23 @@ public class Log implements Manager, Serializable {
         Log.getInstance().createMessage(System.out, Level.DEBUG, message);
     }
 
+    public static void log(Level level, Object... messages) {
+        Log.getInstance().createMessage(System.out, level, messages);
+    }
+
+    public static void log(Level level, String category, Object... messages) {
+        Log.getInstance().createMessage(System.out, level, category, messages);
+    }
+
     private void createMessage(PrintStream console, Level logLevel, Object... messages) {
-        if(logLevel.ordinal() > this.logLevel.ordinal())
-            return;
+        this.createMessage(console, logLevel, "", messages);
+    }
+
+    private void createMessage(PrintStream console, Level logLevel, String category, Object... messages) {
+        if(logLevel.ordinal() > this.logLevel.ordinal()) return;
         StringBuilder logMessage = new StringBuilder();
+        if(!category.equals(""))
+            logMessage.append("[").append(category).append("]").append(" ");
         for (int i = 0; i < messages.length; i++) logMessage.append(messages[i]).append(i < messages.length - 1 ? ", " : "");
 
         String fullMessage = logLevel.getPrefix() + this.logMessage.apply(logMessage.toString());

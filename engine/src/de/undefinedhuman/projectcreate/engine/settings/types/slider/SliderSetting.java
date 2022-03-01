@@ -121,7 +121,7 @@ public class SliderSetting extends BaseSetting<Float> {
             return new SliderSetting(key, relativeWidth, isLabelVisible, bounds, defaultValue, tickSpeed, scale, numberOfDecimals);
         }
 
-        private static List<ValidationRule<Builder>> VALIDATION_RULES = Arrays.asList(
+        private static final List<ValidationRule<Builder>> VALIDATION_RULES = Arrays.asList(
                 new ValidationRule<>(
                         builder -> builder.bounds.x <= builder.bounds.y,
                         builder -> "Builder (" + builder.key + "): Slider lower bounds must be smaller or equal to upper",

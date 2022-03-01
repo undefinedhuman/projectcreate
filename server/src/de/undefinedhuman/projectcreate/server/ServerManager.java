@@ -16,6 +16,9 @@ import de.undefinedhuman.projectcreate.core.utils.ApplicationLoggerAdapter;
 import de.undefinedhuman.projectcreate.engine.config.ConfigManager;
 import de.undefinedhuman.projectcreate.engine.ecs.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
+import de.undefinedhuman.projectcreate.engine.file.FsFile;
+import de.undefinedhuman.projectcreate.engine.file.Paths;
+import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessage;
 import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessageDecorators;
@@ -28,6 +31,7 @@ import de.undefinedhuman.projectcreate.server.config.ServerConfig;
 import de.undefinedhuman.projectcreate.server.entity.MovementSystem;
 import de.undefinedhuman.projectcreate.server.network.PlayerConnection;
 import de.undefinedhuman.projectcreate.server.network.ServerListener;
+import de.undefinedhuman.projectcreate.server.plugin.PluginManager;
 import de.undefinedhuman.projectcreate.server.utils.commands.CommandManager;
 import de.undefinedhuman.projectcreate.server.utils.console.Console;
 
@@ -72,7 +76,7 @@ public class ServerManager extends Server {
     }
 
     public void init() {
-        initGDX();
+        setLogLevel(Variables.LOG_LEVEL);
         ComponentTypes.registerComponentTypes(BlueprintManager.getInstance(), AnimationBlueprint.class, SpriteBlueprint.class, InteractionBlueprint.class);
         EntityManager.getInstance().addSystems(new MovementSystem());
         managers.init();
@@ -82,6 +86,10 @@ public class ServerManager extends Server {
             Log.error("Error while opening the tcp and udp port", ex);
         }
         start();
+
+        FsFile file = new FsFile(Paths.getInstance().getDirectory(), "plugins/");
+        file.mkdirs();
+        PluginManager.loadPlugin(file);
     }
 
     public void update(float delta) {
@@ -101,10 +109,11 @@ public class ServerManager extends Server {
         System.exit(0);
     }
 
-    private void initGDX() {
+    public void setLogLevel(Level level) {
+        Log.getInstance().setLogLevel(level);
         Gdx.app.setApplicationLogger(ApplicationLoggerAdapter.getInstance());
-        Gdx.app.setLogLevel(Variables.LOG_LEVEL.ordinal());
-        NetworkLogger.setLogger();
+        Gdx.app.setLogLevel(level.ordinal());
+        NetworkLogger.setLogger(level, Log::log);
     }
 
     private void initTimers() {

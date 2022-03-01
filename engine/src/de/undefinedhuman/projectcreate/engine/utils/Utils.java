@@ -26,9 +26,10 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Utils {
@@ -204,12 +205,19 @@ public class Utils {
         return new Vector2(TEMP_VECTOR3.x, TEMP_VECTOR3.y);
     }
 
-    public static <T> boolean filterWithError(T t, Predicate<T> predicate, Consumer<T> error) {
-        if(!predicate.test(t)) {
-            error.accept(t);
-            return false;
-        }
-        return true;
+    public static int countChar(String input, char c) {
+        int count = 0;
+        for(int i = 0; i < input.length(); i++)
+            if(input.charAt(i) == c)
+                count++;
+        return count;
+    }
+
+    public static String getStackTrace(final Throwable throwable) {
+        final StringWriter sw = new StringWriter();
+        final PrintWriter pw = new PrintWriter(sw, true);
+        throwable.printStackTrace(pw);
+        return sw.getBuffer().toString();
     }
 
 }

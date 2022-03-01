@@ -8,4 +8,8 @@ public class EnumSetting<T extends Enum<T>> extends SelectionSetting<T> {
         super(key, values, parser, Enum::name);
     }
 
+    public EnumSetting(String key, T defaultValue, T[] values, Parser<T> parser) {
+        super(key, defaultValue, values, parser, Enum::name);
+    }
+
 }

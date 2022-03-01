@@ -14,7 +14,11 @@ public class SelectionSetting<T> extends BaseSetting<T> {
     private T[] values;
 
     public SelectionSetting(String key, T[] values, Parser<T> parser, Serializer<T> serializer) {
-        super(key, values[0], parser, serializer);
+        this(key, values[0], values, parser, serializer);
+    }
+
+    public SelectionSetting(String key, T defaultValue, T[] values, Parser<T> parser, Serializer<T> serializer) {
+        super(key, defaultValue, parser, serializer);
         this.values = values;
     }
 

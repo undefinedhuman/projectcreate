@@ -11,7 +11,7 @@ public class ConfigManager implements Manager, Serializable {
 
     private static volatile ConfigManager instance;
 
-    private List<Config> configs = new ArrayList<>();
+    private final List<Config> configs = new ArrayList<>();
 
     private ConfigManager() {}
 
@@ -32,7 +32,10 @@ public class ConfigManager implements Manager, Serializable {
 
     @Override
     public void load() {
-        configs.forEach(Config::load);
+        configs.forEach(config -> {
+            config.load();
+            config.validate();
+        });
     }
 
     public ConfigManager setConfigs(Config... configs) {

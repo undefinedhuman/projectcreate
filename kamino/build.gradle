@@ -4,42 +4,29 @@ sourceCompatibility = JavaVersion.VERSION_17
 project.ext.mainClassName = "de.undefinedhuman.projectcreate.kamino.Main"
 
 sourceSets.main.java.srcDirs = ["src/"]
-project.ext.assetsDir = new File("../assets")
 
 jar {
-    manifest {
-        attributes 'Main-Class': project.mainClassName
+    archiveBaseName.set("kamino")
+
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+    dependsOn configurations.runtimeClasspath
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    from 'src/plugin.json'
+
+    exclude('META-INF/INDEX.LIST', 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA')
+    dependencies {
+        exclude('META-INF/INDEX.LIST', 'META-INF/maven/**')
     }
-}
-
-task run(dependsOn: classes, type: JavaExec) {
-    main = project.mainClassName
-    classpath = sourceSets.main.runtimeClasspath
-    standardInput = System.in
-    workingDir = project.assetsDir
-    setIgnoreExitValue(true)
-}
-
-task debug(dependsOn: classes, type: JavaExec) {
-    main = project.mainClassName
-    classpath = sourceSets.main.runtimeClasspath
-    standardInput = System.in
-    workingDir = project.assetsDir
-    setIgnoreExitValue(true)
-    debug = true
-}
-
-task dist(type: Jar) {
-    archiveFileName = "launcher.jar"
-
-    from files(sourceSets.main.output.classesDirs)
-    from files(sourceSets.main.output.resourcesDir)
-    from { configurations.compile.collect { zipTree(it) } }
-    from files(project.assetsDir)
 
     manifest {
         attributes 'Main-Class': project.mainClassName
     }
+
+    doLast {
+        file(archiveFile).setExecutable(true, false)
+    }
 }
+
+task dist(dependsOn: [jar]) {}
 
 dist.dependsOn classes
