@@ -3,9 +3,10 @@ package de.undefinedhuman.projectcreate.server.plugin;
 import java.io.File;
 
 public abstract class Plugin {
-
     private File pluginFile;
+    private PluginConfig pluginConfig;
     private boolean isEnabled = false;
+    private Plugin plugin;
 
     public Plugin() {
 
@@ -19,8 +20,11 @@ public abstract class Plugin {
         return isEnabled;
     }
 
+    public void setEnabled(boolean enabled) {
+        this.isEnabled = enabled;
+    }
+
     public abstract void load();
     public abstract void init();
     public abstract void delete();
-
 }

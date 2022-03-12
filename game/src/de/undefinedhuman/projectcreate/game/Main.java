@@ -115,7 +115,7 @@ public class Main extends Game {
     private void initGDX() {
         Gdx.app.setApplicationLogger(ApplicationLoggerAdapter.getInstance());
         Gdx.app.setLogLevel(Variables.LOG_LEVEL.ordinal());
-        com.esotericsoftware.minlog.Log.setLogger(new NetworkLogger());
+        NetworkLogger.setLogger(Variables.LOG_LEVEL, Log::log);
         Pixmap cursor = new Pixmap(Gdx.files.internal(Paths.GUI_PATH + "Cursor.png"));
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(cursor, 0, 0));
         cursor.dispose();

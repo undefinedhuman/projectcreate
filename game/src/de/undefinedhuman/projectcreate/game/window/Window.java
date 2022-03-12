@@ -33,7 +33,7 @@ public class Window {
     }
 
     public void update() {
-        Gdx.graphics.setTitle(Variables.NAME + ", " + Variables.VERSION + " FPS: " + Gdx.graphics.getFramesPerSecond());
+        Gdx.graphics.setTitle(Variables.NAME + " FPS: " + Gdx.graphics.getFramesPerSecond());
     }
 
     public void delete() {

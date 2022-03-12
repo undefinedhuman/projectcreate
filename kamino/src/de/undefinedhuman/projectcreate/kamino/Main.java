@@ -1,26 +1,42 @@
 package de.undefinedhuman.projectcreate.kamino;
 
-import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.server.plugin.Plugin;
 
 public class Main extends Plugin {
 
     @Override
     public void load() {
-        Log.info("TEST LOAD kamino");
-//        Cluster cluster = Cluster.connect("127.0.0.1", "undefinedhuman", "VrHsWZQbeKwDkBCJv8ARKebaAGEKNy3k");
-//        Log.info(cluster.ping());
     }
 
     @Override
     public void init() {
-        Log.info("TEST INIT kamino");
+
     }
 
     @Override
     public void delete() {
-        Log.info("TEST DELETE kamino");
+
     }
+
+//    public Main() {
+//    }
+//
+//    @Override
+//    public void load() {
+//        Log.info("TEST LOAD kamino");
+////        Cluster cluster = Cluster.connect("127.0.0.1", "undefinedhuman", "VrHsWZQbeKwDkBCJv8ARKebaAGEKNy3k");
+////        Log.info(cluster.ping());
+//    }
+//
+//    @Override
+//    public void init() {
+//        Log.info("TEST INIT kamino");
+//    }
+//
+//    @Override
+//    public void delete() {
+//        Log.info("TEST DELETE kamino");
+//    }
 
 /*    public static void main(String[] args) throws IOException {
         Cluster cluster = Cluster.connect("127.0.0.1", "undefinedhuman", "VrHsWZQbeKwDkBCJv8ARKebaAGEKNy3k");

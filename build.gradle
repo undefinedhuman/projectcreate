@@ -117,7 +117,9 @@ project(":server") {
 project(":kamino") {
     apply plugin: "java-library"
     dependencies {
-        compileOnly 'com.playprojectcreate:server:0.0.2'
+        implementation project(":server")
+
+        // compileOnly 'com.playprojectcreate:server:0.0.2'
         implementation 'org.lz4:lz4-pure-java:1.8.0'
         implementation 'com.google.code.gson:gson:2.9.0'
         implementation 'com.couchbase.client:java-client:3.2.5'

@@ -2,6 +2,7 @@ package de.undefinedhuman.projectcreate.core.network.log;
 
 import com.esotericsoftware.minlog.Log;
 import de.undefinedhuman.projectcreate.engine.log.Level;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.engine.utils.ds.TriConsumer;
 
 public abstract class NetworkLogger extends Log.Logger {
@@ -23,7 +24,10 @@ public abstract class NetworkLogger extends Log.Logger {
             case INFO -> Log.set(Log.LEVEL_INFO);
             case ERROR -> Log.set(Log.LEVEL_ERROR);
             case WARN -> Log.set(Log.LEVEL_WARN);
-            case DEBUG -> Log.set(Log.LEVEL_DEBUG);
+            case DEBUG -> {
+                if(Variables.DEBUG) Log.set(Log.LEVEL_DEBUG);
+                else Log.set(Log.LEVEL_INFO);
+            }
         }
         Log.setLogger(new NetworkLogger() {
             @Override

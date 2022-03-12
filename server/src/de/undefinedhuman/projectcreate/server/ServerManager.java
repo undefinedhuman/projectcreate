@@ -32,7 +32,6 @@ import de.undefinedhuman.projectcreate.server.entity.MovementSystem;
 import de.undefinedhuman.projectcreate.server.network.PlayerConnection;
 import de.undefinedhuman.projectcreate.server.network.ServerListener;
 import de.undefinedhuman.projectcreate.server.plugin.PluginManager;
-import de.undefinedhuman.projectcreate.server.utils.commands.CommandManager;
 import de.undefinedhuman.projectcreate.server.utils.console.Console;
 
 import java.io.IOException;
@@ -62,11 +61,11 @@ public class ServerManager extends Server {
                 BlueprintManager.getInstance(),
                 EntityManager.getInstance(),
                 ItemManager.getInstance(),
-                CommandManager.getInstance()
-                        .addCommand("stop", (sender, label, args) -> {
-                            delete();
-                            return true;
-                        }),
+//                CommandManager.getInstance()
+//                        .addCommand("stop", (sender, label, args) -> {
+//                            delete();
+//                            return true;
+//                        }),
                 Console.getInstance()
         );
 

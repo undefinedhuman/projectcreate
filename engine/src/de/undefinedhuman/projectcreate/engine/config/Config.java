@@ -9,6 +9,7 @@ public abstract class Config extends SettingsList implements Serializable {
 
     private String fileName;
     private FsFile configFile;
+    private String splitter;
     private boolean base;
 
     public Config(String fileName) {
@@ -16,7 +17,12 @@ public abstract class Config extends SettingsList implements Serializable {
     }
 
     public Config(String fileName, boolean base) {
+        this(fileName, base, ";");
+    }
+
+    public Config(String fileName, boolean base, String splitter) {
         this.fileName = fileName;
+        this.splitter = splitter;
         this.base = base;
     }
 
@@ -31,7 +37,7 @@ public abstract class Config extends SettingsList implements Serializable {
     public void save() {
         if(FileError.checkFileForErrors("saving Config (" + fileName + ")", configFile, FileError.NULL))
             return;
-        FileWriter writer = configFile.getFileWriter(base, ":");
+        FileWriter writer = configFile.getFileWriter(base, splitter);
         if(writer == null)
             return;
         Utils.saveSettings(writer, this);
@@ -42,7 +48,7 @@ public abstract class Config extends SettingsList implements Serializable {
     public void load() {
         if(FileError.checkFileForErrors("loading Config (" + fileName + ")", configFile, FileError.NULL, FileError.NON_EXISTENT, FileError.EMPTY))
             return;
-        FileReader reader = configFile.getFileReader(base, ":");
+        FileReader reader = configFile.getFileReader(base, splitter);
         if(reader == null)
             return;
         Utils.loadSettings(reader, this);

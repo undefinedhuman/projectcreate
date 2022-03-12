@@ -169,7 +169,7 @@ public class Log implements Manager, Serializable {
     private void createMessage(PrintStream console, Level logLevel, String category, Object... messages) {
         if(logLevel.ordinal() > this.logLevel.ordinal()) return;
         StringBuilder logMessage = new StringBuilder();
-        if(!category.equals(""))
+        if(category!= null && !category.equals(""))
             logMessage.append("[").append(category).append("]").append(" ");
         for (int i = 0; i < messages.length; i++) logMessage.append(messages[i]).append(i < messages.length - 1 ? ", " : "");
 

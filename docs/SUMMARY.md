@@ -5,4 +5,4 @@
 
 - [Server](server.md)
   - [Plugins](server/plugin.md)
-  - [Commands](server/plugin.md)
+  - [Commands](server/commands.md)
