@@ -24,7 +24,6 @@ public class Window {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle(Variables.NAME);
         config.setForegroundFPS(0);
-        config.setIdleFPS(60);
         config.setMaxNetThreads(0);
         config.useVsync(false);
         config.setWindowIcon(Files.FileType.Internal, "logo/32x32.png", "logo/64x64.png");

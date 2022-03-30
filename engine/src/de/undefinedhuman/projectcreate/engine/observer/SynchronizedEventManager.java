@@ -2,8 +2,8 @@ package de.undefinedhuman.projectcreate.engine.observer;
 
 import de.undefinedhuman.projectcreate.engine.utils.ds.MultiMap;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class SynchronizedEventManager extends EventManager {
 
@@ -14,11 +14,11 @@ public class SynchronizedEventManager extends EventManager {
         else super.notify(eventClass, eventType, data);
     }
 
-    private <EventType, Datatype> ArrayList<Datatype> add(Class<? extends Event<EventType, Datatype>> eventClass, EventType eventType) {
+    private <EventType, Datatype> List<Datatype> add(Class<? extends Event<EventType, Datatype>> eventClass, EventType eventType) {
         MultiMap<EventType, Datatype> eventMap = (MultiMap<EventType, Datatype>) temporaryData.get(eventClass);
         if(eventMap == null)
             temporaryData.put(eventClass, eventMap = new MultiMap<>());
-        ArrayList<Datatype> dataList = eventMap.getValuesForKey(eventType);
+        List<Datatype> dataList = eventMap.getDataForKey(eventType);
         if(dataList == null)
             dataList = eventMap.add(eventType);
         return dataList;
@@ -40,12 +40,12 @@ public class SynchronizedEventManager extends EventManager {
 
     private <EventType, Datatype> void processMultiMap(Class<? extends Event<?, ?>> eventClass) {
         MultiMap<EventType, Datatype> map = getMultiMapFor(eventClass);
-        map.keySet().forEach(eventType -> map.getValuesForKey(eventType).forEach(data -> super.notify((Class<? extends Event<EventType, Datatype>>) eventClass, (EventType) eventType, (Datatype) data)));
+        map.keySet().forEach(eventType -> map.getDataForKey(eventType).forEach(data -> super.notify((Class<? extends Event<EventType, Datatype>>) eventClass, (EventType) eventType, (Datatype) data)));
     }
 
     private <EventType, Datatype> void clearMultiMap(Class<? extends Event<?, ?>> eventClass) {
         MultiMap<EventType, Datatype> map = getMultiMapFor(eventClass);
-        map.keySet().forEach(eventType -> map.getValuesForKey(eventType).clear());
+        map.keySet().forEach(eventType -> map.getDataForKey(eventType).clear());
     }
 
 }

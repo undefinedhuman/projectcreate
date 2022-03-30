@@ -17,7 +17,7 @@ public class Observable<T, E> {
     }
 
     public void notify(T eventType, E data) {
-        for(Observer<E> observer : events.getValuesForKey(eventType))
+        for(Observer<E> observer : events.getDataForKey(eventType))
             observer.notify(data);
     }
 

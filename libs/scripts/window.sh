@@ -1,1 +1,0 @@
-wmctrl -r "ProjectCreate" -e 0,6000,0,1280,1024
