@@ -35,7 +35,7 @@ class FamilyManager {
             entitiesListForFamily.add(entity);
             entity.getFamilyBits().set(family.getIndex());
         }
-        entityManager.notify(FamilyEvent.class, FamilyEvent.createEventID(family, FamilyEvent.Type.ADD), entitiesMatchingFamily);
+        entityManager.notify(new FamilyEvent(FamilyEvent.Type.ADD, family.getIndex(), entitiesMatchingFamily));
     }
 
     public void removeEntities(Entity... entities) {
@@ -50,18 +50,14 @@ class FamilyManager {
             entitiesListForFamily.removeValue(entity, true);
             entity.getFamilyBits().clear(family.getIndex());
         }
-        entityManager.notify(FamilyEvent.class, FamilyEvent.createEventID(family, FamilyEvent.Type.REMOVE), entitiesInFamily);
+        entityManager.notify(new FamilyEvent(FamilyEvent.Type.REMOVE, family, entitiesInFamily));
     }
 
     public void removeAllEntities() {
         entitiesInFamilies.keySet().forEach(
                 family -> {
                     Entity[] entitiesToRemove = entitiesInFamilies.get(family).toArray(Entity.class);
-                    entityManager.notify(
-                            FamilyEvent.class,
-                            FamilyEvent.createEventID(family, FamilyEvent.Type.REMOVE),
-                            entitiesToRemove
-                    );
+                    entityManager.notify(new FamilyEvent(FamilyEvent.Type.REMOVE, family, entitiesToRemove));
                 }
         );
         entitiesInFamilies.values().forEach(Array::clear);
@@ -78,7 +74,7 @@ class FamilyManager {
         entitiesInFamilies.keySet().forEach(family -> {
             boolean matches = family.matches(entity) && !entity.isScheduledForRemoval();
             if(matches && !family.getOptional().isEmpty())
-                entityManager.notify(FamilyEvent.class, FamilyEvent.createEventID(family, FamilyEvent.Type.UPDATE), EMPTY_ENTITIES);
+                entityManager.notify(new FamilyEvent(FamilyEvent.Type.UPDATE, family, EMPTY_ENTITIES));
             if(matches == entity.getFamilyBits().get(family.getIndex()))
                 return;
             if(matches) addEntitiesToFamily(family, entity);

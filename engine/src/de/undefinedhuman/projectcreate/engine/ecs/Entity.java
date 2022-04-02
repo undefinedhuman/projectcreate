@@ -2,8 +2,8 @@ package de.undefinedhuman.projectcreate.engine.ecs;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Bits;
-import de.undefinedhuman.projectcreate.engine.observer.Event;
-import de.undefinedhuman.projectcreate.engine.observer.EventManager;
+import de.undefinedhuman.projectcreate.engine.ecs.events.ComponentEvent;
+import de.undefinedhuman.projectcreate.engine.event.EventManager;
 import de.undefinedhuman.projectcreate.engine.utils.ds.Bag;
 import de.undefinedhuman.projectcreate.engine.utils.ds.ImmutableArray;
 
@@ -17,13 +17,13 @@ public class Entity {
     boolean scheduledForRemoval;
 
     private EventManager eventManager;
-    private long worldID;
-    private int blueprintID;
-    private Bag<Component> components = new Bag<>(16);
-    private Array<Component> componentsArray = new Array<>(false, 16);
-    private ImmutableArray<Component> immutableComponents = new ImmutableArray<>(componentsArray);
+    private final long worldID;
+    private final int blueprintID;
+    private final Bag<Component> components = new Bag<>(16);
+    private final Array<Component> componentsArray = new Array<>(false, 16);
+    private final ImmutableArray<Component> immutableComponents = new ImmutableArray<>(componentsArray);
 
-    private Bits componentBits = new Bits(), familyBits = new Bits();
+    private final Bits componentBits = new Bits(), familyBits = new Bits();
 
     Entity(int blueprintID, long worldID) {
         this.blueprintID = blueprintID;
@@ -43,7 +43,7 @@ public class Entity {
             componentsArray.add(component);
             componentBits.set(componentTypeIndex);
             if(eventManager != null)
-                eventManager.notify(ComponentEvent.class, ComponentEvent.Type.COMPONENT, this);
+                eventManager.notify(new ComponentEvent(this));
         }
         return this;
     }
@@ -59,7 +59,7 @@ public class Entity {
             componentsArray.removeValue(removeComponent, true);
             componentBits.clear(componentTypeIndex);
             if(eventManager != null)
-                eventManager.notify(ComponentEvent.class, ComponentEvent.Type.COMPONENT, this);
+                eventManager.notify(new ComponentEvent(this));
             return (T) removeComponent;
         }
         return null;
@@ -103,15 +103,6 @@ public class Entity {
 
     public void setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;
-    }
-
-    static class ComponentEvent extends Event<ComponentEvent.Type, Entity> {
-        protected ComponentEvent() {
-            super(Type.class, Entity.class);
-        }
-        enum Type {
-            COMPONENT
-        }
     }
 
 }

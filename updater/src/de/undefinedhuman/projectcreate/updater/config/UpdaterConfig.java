@@ -33,7 +33,7 @@ public class UpdaterConfig extends Config {
     };
 
     private UpdaterConfig() {
-        super("updater");
+        super("updater", true);
         if(instance == null)
             instance = this;
         addSettings(installationPath, firstRun);

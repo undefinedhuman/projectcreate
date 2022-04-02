@@ -1,8 +1,10 @@
 package de.undefinedhuman.projectcreate.engine.ecs;
 
+import de.undefinedhuman.projectcreate.engine.ecs.events.ComponentEvent;
+import de.undefinedhuman.projectcreate.engine.ecs.events.EntityEvent;
+import de.undefinedhuman.projectcreate.engine.event.Event;
+import de.undefinedhuman.projectcreate.engine.event.SynchronizedEventManager;
 import de.undefinedhuman.projectcreate.engine.log.Log;
-import de.undefinedhuman.projectcreate.engine.observer.Event;
-import de.undefinedhuman.projectcreate.engine.observer.SynchronizedEventManager;
 import de.undefinedhuman.projectcreate.engine.utils.ds.ImmutableArray;
 import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 
@@ -19,15 +21,19 @@ public class EntityManager extends SynchronizedEventManager implements Manager {
     private boolean updating = false;
 
     private EntityManager() {
-        subscribe(EntityEvent.class, EntityEvent.Type.ADD, entities -> {
-            entityList.addEntities(entities);
-            familyManager.addEntities(entities);
+        subscribe(EntityEvent.class, entityEvent -> {
+            switch (entityEvent.type) {
+                case ADD -> {
+                    entityList.addEntities(entityEvent.entities);
+                    familyManager.addEntities(entityEvent.entities);
+                }
+                case REMOVE -> {
+                    familyManager.removeEntities(entityEvent.entities);
+                    entityList.removeEntities(entityEvent.entities);
+                }
+            }
         });
-        subscribe(EntityEvent.class, EntityEvent.Type.REMOVE, entities -> {
-            familyManager.removeEntities(entities);
-            entityList.removeEntities(entities);
-        });
-        subscribe(Entity.ComponentEvent.class, Entity.ComponentEvent.Type.COMPONENT, familyManager::updateFamiliesForEntity);
+        subscribe(ComponentEvent.class, componentEvent -> familyManager.updateFamiliesForEntity(componentEvent.entity));
     }
 
     @Override
@@ -37,10 +43,10 @@ public class EntityManager extends SynchronizedEventManager implements Manager {
         updating = true;
         try {
             systemManager.update(delta);
-            processTemporaryObserverData();
+            processEventQueue();
         } finally {
             updating = false;
-            clearTemporaryObserverData();
+            processEventQueue();
         }
     }
 
@@ -77,7 +83,7 @@ public class EntityManager extends SynchronizedEventManager implements Manager {
     public void addEntity(Entity... entities) {
         for(Entity entity : entities)
             entity.setEventManager(this);
-        notify(EntityEvent.class, EntityEvent.Type.ADD, entities);
+        notify(new EntityEvent(EntityEvent.Type.ADD, entities));
     }
 
     public void removeEntity(long... worldIDs) {
@@ -87,7 +93,7 @@ public class EntityManager extends SynchronizedEventManager implements Manager {
             entity.scheduledForRemoval = true;
             return true;
         }).toArray(Entity[]::new);
-        notify(EntityEvent.class, EntityEvent.Type.REMOVE, entitiesToRemove);
+        notify(new EntityEvent(EntityEvent.Type.REMOVE, entitiesToRemove));
     }
 
     public void removeAllEntities() {
@@ -138,18 +144,8 @@ public class EntityManager extends SynchronizedEventManager implements Manager {
         return instance;
     }
 
-    public static class EntityEvent extends Event<EntityEvent.Type, Entity[]> {
-        public EntityEvent() {
-            super(Type.class, Entity[].class);
-        }
-        public enum Type {
-            ADD,
-            REMOVE
-        }
-    }
-
     @Override
-    public <EventType, DataType> void notify(Class<? extends Event<EventType, DataType>> eventClass, EventType eventType, DataType data) {
-        super.notify(eventClass, eventType, data, updating);
+    public <E extends Event> void notify(E event) {
+        super.notify(event, updating);
     }
 }

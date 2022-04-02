@@ -1,20 +1,20 @@
 package de.undefinedhuman.projectcreate.engine.ecs.systems;
 
 import com.badlogic.gdx.utils.Array;
-import de.undefinedhuman.projectcreate.engine.ecs.System;
 import de.undefinedhuman.projectcreate.engine.ecs.*;
-import de.undefinedhuman.projectcreate.engine.observer.Observer;
+import de.undefinedhuman.projectcreate.engine.ecs.System;
+import de.undefinedhuman.projectcreate.engine.event.Observer;
 import de.undefinedhuman.projectcreate.engine.utils.ds.ImmutableArray;
 
 import java.util.Comparator;
 
 public abstract class SortedIteratingSystem extends System {
 
-    private Array<Entity> sortedEntities;
+    private final Array<Entity> sortedEntities;
     private boolean sorted = true;
-    private Comparator<Entity> comparator;
+    private final Comparator<Entity> comparator;
 
-    private Observer<Entity[]> addEntitiesToSystem, removeEntitiesFromSystem, updateEntitiesOfSystem;
+    private Observer<FamilyEvent> familyUpdates;
 
     public SortedIteratingSystem (Comparator<Entity> comparator) {
         this(comparator, 0);
@@ -25,16 +25,22 @@ public abstract class SortedIteratingSystem extends System {
         this.comparator = comparator;
         sortedEntities = new Array<>(false, 16);
         entities = new ImmutableArray<>(sortedEntities);
-        addEntitiesToSystem = entities -> {
-            sortedEntities.addAll(entities);
-            sorted = false;
+
+        familyUpdates = familyEvent -> {
+            if(familyEvent.familyIndex != getFamily().getIndex()) return;
+            switch (familyEvent.type) {
+                case ADD -> {
+                    sortedEntities.addAll(familyEvent.entities);
+                    sorted = false;
+                }
+                case REMOVE -> {
+                    for(Entity entity : familyEvent.entities)
+                        sortedEntities.removeValue(entity, true);
+                    sorted = false;
+                }
+                case UPDATE -> sorted = false;
+            }
         };
-        removeEntitiesFromSystem = entities -> {
-            for (Entity entity : entities)
-                sortedEntities.removeValue(entity, true);
-            sorted = false;
-        };
-        updateEntitiesOfSystem = entities -> sorted = false;
     }
 
     @Override
@@ -46,16 +52,12 @@ public abstract class SortedIteratingSystem extends System {
                 sortedEntities.add(entity);
             sortedEntities.sort(comparator);
         }
-        FamilyEvent.subscribe(entityManager, getFamily(), FamilyEvent.Type.ADD, addEntitiesToSystem);
-        FamilyEvent.subscribe(entityManager, getFamily(), FamilyEvent.Type.REMOVE, removeEntitiesFromSystem);
-        FamilyEvent.subscribe(entityManager, getFamily(), FamilyEvent.Type.UPDATE, updateEntitiesOfSystem);
+        entityManager.subscribe(FamilyEvent.class, familyUpdates);
     }
 
     @Override
     public void delete(EntityManager entityManager) {
-        FamilyEvent.unsubscribe(entityManager, getFamily(), FamilyEvent.Type.ADD, addEntitiesToSystem);
-        FamilyEvent.unsubscribe(entityManager, getFamily(), FamilyEvent.Type.REMOVE, removeEntitiesFromSystem);
-        FamilyEvent.unsubscribe(entityManager, getFamily(), FamilyEvent.Type.UPDATE, updateEntitiesOfSystem);
+        entityManager.unsubscribe(FamilyEvent.class, familyUpdates);
         sortedEntities.clear();
         sorted = true;
     }

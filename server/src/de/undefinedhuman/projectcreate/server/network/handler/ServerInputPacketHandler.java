@@ -32,9 +32,8 @@ public class ServerInputPacketHandler extends InputPacketHandler {
     }
 
     private void handleDirection(Connection connection, InputPacket packet) {
-        if(!(connection instanceof PlayerConnection) || ((PlayerConnection) connection).getDecryptionCipher() == null)
+        if(!(connection instanceof PlayerConnection playerConnection) || ((PlayerConnection) connection).getDecryptionCipher() == null)
             return;
-        PlayerConnection playerConnection = (PlayerConnection) connection;
         String data = InputPacket.parse(playerConnection.getDecryptionCipher(), packet);
         InputPacket.DirectionData directionData = InputPacket.DirectionData.parse(data);
         if (directionData == null) return;
@@ -65,9 +64,8 @@ public class ServerInputPacketHandler extends InputPacketHandler {
     }
 
     private void handleJump(Connection connection, InputPacket packet) {
-        if(!(connection instanceof PlayerConnection) || ((PlayerConnection) connection).getDecryptionCipher() == null)
+        if(!(connection instanceof PlayerConnection playerConnection) || ((PlayerConnection) connection).getDecryptionCipher() == null)
             return;
-        PlayerConnection playerConnection = (PlayerConnection) connection;
         String sessionID = InputPacket.parse(playerConnection.getDecryptionCipher(), packet);
         Long worldID = SessionManager.getInstance().getWorldID(sessionID);
         if (worldID == null) return;

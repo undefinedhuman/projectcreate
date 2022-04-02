@@ -1,8 +1,8 @@
 package de.undefinedhuman.projectcreate.engine.ecs;
 
+import de.undefinedhuman.projectcreate.engine.ecs.events.ComponentBlueprintEvent;
+import de.undefinedhuman.projectcreate.engine.event.EventManager;
 import de.undefinedhuman.projectcreate.engine.log.Log;
-import de.undefinedhuman.projectcreate.engine.observer.Event;
-import de.undefinedhuman.projectcreate.engine.observer.EventManager;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -53,7 +53,8 @@ public class Blueprint {
             this.componentBlueprints.put(componentBlueprint.getClass(), componentBlueprint);
             if(eventManager != null) componentBlueprint.setEventManager(eventManager);
         }
-        if(eventManager != null) eventManager.notify(ComponentBlueprintEvent.class, ComponentBlueprintEvent.Type.ADD, componentBlueprintsToAdd);
+        if(eventManager != null)
+            eventManager.notify(new ComponentBlueprintEvent(ComponentBlueprintEvent.Type.ADD, componentBlueprintsToAdd));
     }
 
     public <T extends ComponentBlueprint> T getComponentBlueprint(Class<T> type) {
@@ -74,7 +75,7 @@ public class Blueprint {
             this.componentBlueprints.remove(componentBlueprint.getClass());
             componentBlueprint.setEventManager(null);
         }
-        if(eventManager != null) eventManager.notify(ComponentBlueprintEvent.class, ComponentBlueprintEvent.Type.REMOVE, componentBlueprintsToRemove);
+        if(eventManager != null) eventManager.notify(new ComponentBlueprintEvent(ComponentBlueprintEvent.Type.REMOVE, componentBlueprintsToRemove));
     }
 
     public HashMap<Class<? extends ComponentBlueprint>, ComponentBlueprint> getComponentBlueprints() {
@@ -88,19 +89,6 @@ public class Blueprint {
     public void delete() {
         for (ComponentBlueprint blueprint : componentBlueprints.values())
             blueprint.delete();
-    }
-
-    public static class ComponentBlueprintEvent extends Event<ComponentBlueprintEvent.Type, ComponentBlueprint[]> {
-
-        protected ComponentBlueprintEvent() {
-            super(Type.class, ComponentBlueprint[].class);
-        }
-
-        public enum Type {
-            ADD,
-            REMOVE,
-            UPDATE
-        }
     }
 
 }

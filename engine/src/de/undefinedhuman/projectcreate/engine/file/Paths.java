@@ -7,7 +7,7 @@ public class Paths {
     public static final String LOG_PATH = "log/";
     public static final String CONFIG_PATH = "config/";
     public static final String SCREENSHOT_PATH = "screenshots/";
-    public static final String PLUGIN_PATH = "plugin/";
+    public static final String PLUGIN_PATH = "plugins/";
 
     public static final String ENTITY_PATH = "entity/";
     public static final String SOUND_PATH = "sound/";

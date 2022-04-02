@@ -44,12 +44,16 @@ public class ServerManager extends Server {
     private final ManagerList managers = new ManagerList();
     private final TimerList timers = new TimerList();
 
-    private NetworkBuffer buffer;
+    private final NetworkBuffer buffer;
+
+    private final PluginManager pluginManager;
 
     private ServerManager() {
         super(NetworkConstants.WRITE_BUFFER_SIZE, NetworkConstants.OBJECT_BUFFER_SIZE);
         buffer = new NetworkBuffer();
         NetworkConstants.registerPackets(this);
+
+        Log.warn("Refactor Log so each plugin can use an altered Version");
 
         managers.addManager(
                 Log.getInstance().setLogMessageDecorator(
@@ -57,7 +61,7 @@ public class ServerManager extends Server {
                                 .andThen(value -> LogMessageDecorators.withDate(value, Variables.LOG_DATE_FORMAT))
                                 .andThen(value -> LogMessageDecorators.withModuleName(value, "Server"))
                 ),
-                ConfigManager.getInstance().setConfigs(ServerConfig.getInstance()),
+                ConfigManager.getInstance(),
                 BlueprintManager.getInstance(),
                 EntityManager.getInstance(),
                 ItemManager.getInstance(),
@@ -72,9 +76,13 @@ public class ServerManager extends Server {
         initTimers();
 
         addListener(ServerListener.getInstance());
+        FsFile file = new FsFile(Paths.getInstance().getDirectory(), "plugins/");
+        file.mkdirs();
+        pluginManager = new PluginManager(file);
     }
 
     public void init() {
+        ConfigManager.getInstance().addConfigs(ServerConfig.getInstance());
         setLogLevel(Variables.LOG_LEVEL);
         ComponentTypes.registerComponentTypes(BlueprintManager.getInstance(), AnimationBlueprint.class, SpriteBlueprint.class, InteractionBlueprint.class);
         EntityManager.getInstance().addSystems(new MovementSystem());
@@ -88,7 +96,8 @@ public class ServerManager extends Server {
 
         FsFile file = new FsFile(Paths.getInstance().getDirectory(), "plugins/");
         file.mkdirs();
-        PluginManager.loadPlugin(file);
+
+        pluginManager.init();
     }
 
     public void update(float delta) {
@@ -104,6 +113,7 @@ public class ServerManager extends Server {
         buffer.process();
         stop();
         timers.delete();
+        pluginManager.delete();
         managers.delete();
         System.exit(0);
     }

@@ -1,0 +1,13 @@
+TLS Encryption
+Couchbase Custom Logger
+
+
+# NAMING CONVENTIONS
+name every new variable you want as new metadata pluginname-variablename // For plugins only so no event naming collisions occur
+basic metadata that can be used with other events?
+ -> entityIDs
+ -> playerIDs
+ -> itemIDs
+ -> etc.
+
+Store available user ids in different table?

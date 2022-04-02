@@ -11,7 +11,7 @@ public class SynchronizedEventManager extends EventManager {
         else super.notify(event);
     }
 
-    public void process() {
+    public void processEventQueue() {
         eventQueue.keySet()
                 .forEach(eventClass -> {
                     eventQueue.getDataForKey(eventClass)

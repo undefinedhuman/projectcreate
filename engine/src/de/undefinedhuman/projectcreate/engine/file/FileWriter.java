@@ -11,10 +11,11 @@ import java.io.IOException;
 
 public class FileWriter {
 
-    private FsFile file;
-    private String separator;
-    private BufferedWriter writer;
-    private boolean base;
+    private final FsFile file;
+    private final String separator;
+    private final BufferedWriter writer;
+    private final boolean base;
+    private boolean startOfLine = true;
 
     public FileWriter(FsFile file, boolean base) {
         this(file, base, Variables.SEPARATOR);
@@ -57,12 +58,14 @@ public class FileWriter {
     }
 
     public FileWriter writeValue(Object v) {
-        try { writer.write(base ? Base64Coder.encodeString(String.valueOf(v)) + this.separator : v + this.separator);
+        try {writer.write((startOfLine ? "" : this.separator) + (base ? Base64Coder.encodeString(String.valueOf(v)) : v));
         } catch (IOException ex) { Log.showErrorDialog("Can't write new value: \n" + ex.getMessage(), true); }
+        startOfLine = false;
         return this;
     }
 
     public FileWriter nextLine() {
+        startOfLine = true;
         try { writer.newLine();
         } catch (IOException ex) { Log.showErrorDialog("Can't write new line: \n" + ex.getMessage(), true); }
         return this;

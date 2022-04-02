@@ -9,7 +9,7 @@ import de.undefinedhuman.projectcreate.engine.utils.GenericBuilder;
 
 import java.util.HashMap;
 
-class Family {
+public class Family {
     private static final HashMap<String, Family> FAMILIES = new HashMap<>();
     private static int FAMILY_INDEX = 0;
     private static final Bits ZERO_BITS = new Bits();

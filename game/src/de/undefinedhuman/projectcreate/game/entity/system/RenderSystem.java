@@ -12,6 +12,7 @@ import de.undefinedhuman.projectcreate.engine.ecs.Entity;
 import de.undefinedhuman.projectcreate.engine.ecs.EntityManager;
 import de.undefinedhuman.projectcreate.engine.ecs.annotations.All;
 import de.undefinedhuman.projectcreate.engine.ecs.annotations.Optional;
+import de.undefinedhuman.projectcreate.engine.ecs.events.EntityEvent;
 import de.undefinedhuman.projectcreate.engine.ecs.systems.SortedIteratingSystem;
 import de.undefinedhuman.projectcreate.engine.gui.GuiManager;
 import de.undefinedhuman.projectcreate.engine.gui.transforms.Axis;
@@ -32,10 +33,14 @@ public class RenderSystem extends SortedIteratingSystem {
     public RenderSystem() {
         super(new TypeComparator(), 6);
         batch = new SpriteBatch();
-        EntityManager.getInstance().subscribe(EntityManager.EntityEvent.class, EntityManager.EntityEvent.Type.ADD, entities -> Arrays.stream(entities).filter(Mappers.NAME::has).map(Mappers.NAME::get).forEach(nameComponent -> GuiManager.getInstance().addGui(nameComponent.getText())));
-        EntityManager.getInstance().subscribe(EntityManager.EntityEvent.class, EntityManager.EntityEvent.Type.REMOVE, entities -> {
-            Arrays.stream(entities).filter(Mappers.SPRITE::has).map(Mappers.SPRITE::get).forEach(SpriteComponent::delete);
-            Arrays.stream(entities).filter(Mappers.NAME::has).map(Mappers.NAME::get).forEach(nameComponent -> GuiManager.getInstance().removeGui(nameComponent.getText()));
+        EntityManager.getInstance().subscribe(EntityEvent.class, entityEvent -> {
+            switch (entityEvent.type) {
+                case ADD -> Arrays.stream(entityEvent.entities).filter(Mappers.NAME::has).map(Mappers.NAME::get).forEach(nameComponent -> GuiManager.getInstance().addGui(nameComponent.getText()));
+                case REMOVE -> {
+                    Arrays.stream(entityEvent.entities).map(Mappers.SPRITE::get).forEach(SpriteComponent::delete);
+                    Arrays.stream(entityEvent.entities).map(Mappers.NAME::get).forEach(nameComponent -> GuiManager.getInstance().removeGui(nameComponent.getText()));
+                }
+            }
         });
     }
 

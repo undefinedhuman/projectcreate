@@ -51,7 +51,7 @@ public abstract class System {
         this.processing = processing;
     }
 
-    public Family getFamily() {
+    protected Family getFamily() {
         return family;
     }
 

@@ -1,4 +1,4 @@
-package de.undefinedhuman.projectcreate.kamino.annotations;
+package de.undefinedhuman.kaminotypes;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.FIELD })
+@Target(ElementType.FIELD)
 public @interface Metadata {
-    String name();
+    String name() default "NOT_DEFINED";
 }

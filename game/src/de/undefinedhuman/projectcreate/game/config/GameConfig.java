@@ -23,7 +23,7 @@ public class GameConfig extends Config {
             language = new StringSetting("language", "eu_DE");
 
     private GameConfig() {
-        super("game");
+        super("game", true);
         addSettings(displayWidth, displayHeight, vSync, maxFps, fullScreen, language, renderHitboxes, firstRun, guiScale);
     }
 

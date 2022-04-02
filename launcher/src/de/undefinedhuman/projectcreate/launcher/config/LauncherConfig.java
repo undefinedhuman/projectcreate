@@ -57,7 +57,7 @@ public class LauncherConfig extends Config {
 
 
     private LauncherConfig() {
-        super("launcher");
+        super("launcher", true);
         addSettings(gameInstallationPath, includeSnapshots,closeLauncherAfterGameStart);
     }
 

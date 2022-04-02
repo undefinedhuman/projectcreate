@@ -2,5 +2,6 @@
   "name": "kamino",
   "main": "de.undefinedhuman.projectcreate.kamino.Main",
   "author": "Alexander Padberg",
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "dependencies": []
 }

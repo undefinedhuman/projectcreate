@@ -2,8 +2,9 @@ package de.undefinedhuman.projectcreate.engine.ecs;
 
 import com.badlogic.gdx.files.FileHandle;
 import de.undefinedhuman.projectcreate.engine.ecs.annotations.RequiredComponents;
+import de.undefinedhuman.projectcreate.engine.ecs.events.ComponentBlueprintEvent;
+import de.undefinedhuman.projectcreate.engine.event.EventManager;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
-import de.undefinedhuman.projectcreate.engine.observer.EventManager;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsList;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
@@ -63,7 +64,7 @@ public abstract class ComponentBlueprint<T extends Component> extends SettingsLi
         return requiredComponents;
     }
 
-    public ComponentBlueprint setEventManager(EventManager eventManager) {
+    public ComponentBlueprint<?> setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;
         return this;
     }
@@ -71,7 +72,7 @@ public abstract class ComponentBlueprint<T extends Component> extends SettingsLi
     private void notifyEventManager() {
         if(eventManager == null)
             return;
-        eventManager.notify(Blueprint.ComponentBlueprintEvent.class, Blueprint.ComponentBlueprintEvent.Type.UPDATE, new ComponentBlueprint[] { this });
+        eventManager.notify(new ComponentBlueprintEvent(ComponentBlueprintEvent.Type.UPDATE, this));
     }
 
     @Override

@@ -1,21 +1,60 @@
 package de.undefinedhuman.projectcreate.kamino;
 
+import com.badlogic.gdx.math.Vector2;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import de.undefinedhuman.projectcreate.engine.config.ConfigManager;
+import de.undefinedhuman.projectcreate.engine.log.Log;
+import de.undefinedhuman.projectcreate.kamino.config.KaminoConfig;
+import de.undefinedhuman.projectcreate.kamino.database.Couchbase;
+import de.undefinedhuman.projectcreate.kamino.event.MetadataBucket;
+import de.undefinedhuman.projectcreate.kamino.event.events.BlockBreakEvent;
+import de.undefinedhuman.projectcreate.kamino.event.events.PlayerJoinEvent;
+import de.undefinedhuman.projectcreate.kamino.event.events.PlayerQuitEvent;
+import de.undefinedhuman.projectcreate.kamino.event.events.TestEvent;
 import de.undefinedhuman.projectcreate.server.plugin.Plugin;
 
 public class Main extends Plugin {
 
-    @Override
-    public void load() {
-    }
+    private Couchbase couchbase;
 
     @Override
     public void init() {
+        Log.info("[kamino] Initialized successfully!");
+        ConfigManager.getInstance().addConfigs(KaminoConfig.getInstance());
+        couchbase = new Couchbase.Builder(
+                KaminoConfig.getInstance().databaseUrl.getValue(),
+                KaminoConfig.getInstance().databaseUser.getValue(),
+                KaminoConfig.getInstance().databasePassword.getValue(),
+                KaminoConfig.getInstance().tableName.getValue())
+                .build();
+        couchbase.init();
+        couchbase.ping();
+        MetadataBucket metadata = new MetadataBucket();
+        metadata.parseEvent(new TestEvent(0));
+        metadata.parseEvent(new TestEvent(2));
+        metadata.parseEvent(new TestEvent(1));
+        metadata.parseEvent(new TestEvent(3));
+        for(int i = 0; i < 10; i++)
+            metadata.parseEvent(new BlockBreakEvent(i, "Main", new Vector2(i, i)));
+        for(int i = 0; i < 10; i++)
+            metadata.parseEvent(new PlayerJoinEvent(String.valueOf(i)));
+        for(int i = 9; i >= 0; i--)
+            metadata.parseEvent(new PlayerQuitEvent(String.valueOf(i)));
+        metadata.print();
+
+        Gson gson = new GsonBuilder().create();
+        Log.info(gson.toJson(new TestEvent(0)));
+        Log.info(gson.toJson(new BlockBreakEvent(0, "Main", new Vector2(100, 200))));
+        Log.info(gson.toJson(new PlayerJoinEvent("TEST_PLAYER")));
+        Log.info(gson.toJson(new PlayerQuitEvent("TEST_PLAYER")));
 
     }
 
     @Override
     public void delete() {
-
+        couchbase.close();
+        Log.info("[kamino] Deleted successfully!");
     }
 
 //    public Main() {

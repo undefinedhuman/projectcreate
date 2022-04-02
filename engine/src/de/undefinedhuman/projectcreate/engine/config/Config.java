@@ -13,7 +13,7 @@ public abstract class Config extends SettingsList implements Serializable {
     private boolean base;
 
     public Config(String fileName) {
-        this(fileName, true);
+        this(fileName, false, "=");
     }
 
     public Config(String fileName, boolean base) {

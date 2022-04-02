@@ -103,6 +103,7 @@ project(":server") {
     dependencies {
         implementation project(":engine")
         implementation project(":core")
+        implementation project(":kamino-types")
 
         implementation 'com.github.Marcono1234:gson-record-type-adapter-factory:0.2.0'
         implementation 'org.lz4:lz4-pure-java:1.8.0'
@@ -117,13 +118,18 @@ project(":server") {
 project(":kamino") {
     apply plugin: "java-library"
     dependencies {
-        implementation project(":server")
+        compileOnly project(":engine")
+        compileOnly project(":server")
+        implementation project(":kamino-types")
 
-        // compileOnly 'com.playprojectcreate:server:0.0.2'
         implementation 'org.lz4:lz4-pure-java:1.8.0'
         implementation 'com.google.code.gson:gson:2.9.0'
         implementation 'com.couchbase.client:java-client:3.2.5'
     }
+}
+
+project(":kamino-types") {
+    apply plugin: "java-library"
 }
 
 project(":engine") {

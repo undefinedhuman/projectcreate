@@ -1,2 +1,2 @@
-include 'game', 'engine', 'core', 'server', 'editor', 'launcher', 'updater', 'kamino'
+include 'game', 'engine', 'core', 'server', 'editor', 'launcher', 'updater', 'kamino', 'kamino-types'
 

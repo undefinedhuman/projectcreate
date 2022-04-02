@@ -1,12 +1,11 @@
 package de.undefinedhuman.projectcreate.engine.ecs;
 
 import com.badlogic.gdx.Files;
+import de.undefinedhuman.projectcreate.engine.event.SynchronizedEventManager;
 import de.undefinedhuman.projectcreate.engine.file.FileReader;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.log.Log;
-import de.undefinedhuman.projectcreate.engine.observer.Event;
-import de.undefinedhuman.projectcreate.engine.observer.SynchronizedEventManager;
 import de.undefinedhuman.projectcreate.engine.resources.RessourceUtils;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObject;
 import de.undefinedhuman.projectcreate.engine.settings.SettingsObjectFileReader;
@@ -93,7 +92,7 @@ public class BlueprintManager extends SynchronizedEventManager implements Manage
                 .toArray(Blueprint[]::new);
         for(Blueprint blueprint : blueprintsToAdd)
             this.blueprints.put(blueprint.getBlueprintID(), blueprint.setEventManager(this));
-        this.notify(BlueprintEvent.class, BlueprintEvent.Type.ADD, blueprintsToAdd);
+        this.notify(new BlueprintEvent(BlueprintEvent.Type.ADD, blueprintsToAdd));
     }
 
     public void removeBlueprints(int... ids) {
@@ -103,7 +102,7 @@ public class BlueprintManager extends SynchronizedEventManager implements Manage
                 .toArray(Blueprint[]::new);
         for(Blueprint blueprint : blueprintsToRemove)
             blueprints.remove(blueprint.getBlueprintID()).setEventManager(null).delete();
-        this.notify(BlueprintEvent.class, BlueprintEvent.Type.REMOVE, blueprintsToRemove);
+        this.notify(new BlueprintEvent(BlueprintEvent.Type.REMOVE, blueprintsToRemove));
     }
 
     public ComponentBlueprint createComponentBlueprint(String name, int blueprintID) {
@@ -154,18 +153,6 @@ public class BlueprintManager extends SynchronizedEventManager implements Manage
         }
         reader.close();
         return blueprint;
-    }
-
-    public static class BlueprintEvent extends Event<BlueprintEvent.Type, Blueprint[]> {
-
-        protected BlueprintEvent() {
-            super(Type.class, Blueprint[].class);
-        }
-
-        public enum Type {
-            ADD,
-            REMOVE
-        }
     }
 
     public static BlueprintManager getInstance() {
