@@ -25,6 +25,11 @@ public class Entity {
 
     private final Bits componentBits = new Bits(), familyBits = new Bits();
 
+    public Entity(long worldID) {
+        this.blueprintID = UNDEFINED_BLUEPRINT_ID;
+        this.worldID = worldID;
+    }
+
     Entity(int blueprintID, long worldID) {
         this.blueprintID = blueprintID;
         this.worldID = worldID;

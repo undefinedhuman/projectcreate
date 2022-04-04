@@ -77,6 +77,10 @@ public class Log implements Manager, Serializable {
         return getInstance();
     }
 
+    public boolean isLevelEnabled(Level logLevel) {
+        return this.logLevel.ordinal() >= logLevel.ordinal();
+    }
+
     public Log setLogLevel(Level logLevel) {
         this.logLevel = logLevel;
         return getInstance();
@@ -134,6 +138,10 @@ public class Log implements Manager, Serializable {
 
     public static void info(Object... messages) {
         Log.getInstance().createMessage(System.out, Level.INFO, messages);
+    }
+
+    public static void trace(Object... messages) {
+        Log.getInstance().createMessage(System.out, Level.TRACE, messages);
     }
 
     public static void debug(Object... messages) {

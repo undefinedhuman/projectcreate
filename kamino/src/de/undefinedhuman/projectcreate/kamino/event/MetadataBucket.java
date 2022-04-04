@@ -1,22 +1,25 @@
 package de.undefinedhuman.projectcreate.kamino.event;
 
+import com.google.gson.Gson;
+import de.undefinedhuman.projectcreate.kamino.annotations.Metadata;
 import de.undefinedhuman.projectcreate.engine.event.Event;
-import de.undefinedhuman.projectcreate.engine.event.annotations.Metadata;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
+import java.util.List;
 
 public class MetadataBucket {
 
-    private final HashSet<Class<? extends Event>> eventClasses = new HashSet<>();
     private final HashMap<String, HashSet<Object>> data = new HashMap<>();
 
-    public <E extends Event> void parseEvent(E event) {
-        eventClasses.add(event.getClass());
+    public MetadataBucket(List<Event> events) {
+        events.forEach(this::parseEvent);
+    }
+
+    private <E extends Event> void parseEvent(E event) {
         Field[] fields = event.getClass().getFields();
         Arrays.stream(fields)
                 .filter(field -> field.isAnnotationPresent(Metadata.class))
@@ -36,15 +39,8 @@ public class MetadataBucket {
                 });
     }
 
-    public void exportJSON() {
-    }
-
     public void print() {
-        Log.info("Events: " + eventClasses);
-        Log.info("Data: ");
-        for (Map.Entry<String, HashSet<Object>> stringHashSetEntry : data.entrySet()) {
-            Log.info(stringHashSetEntry.getKey() + ": " + stringHashSetEntry.getValue().toString());
-        }
+        Log.info(new Gson().toJson(data));
     }
 
 }

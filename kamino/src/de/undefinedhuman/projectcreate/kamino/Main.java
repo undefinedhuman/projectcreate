@@ -2,53 +2,118 @@ package de.undefinedhuman.projectcreate.kamino;
 
 import com.badlogic.gdx.math.Vector2;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import de.undefinedhuman.projectcreate.engine.config.ConfigManager;
 import de.undefinedhuman.projectcreate.engine.log.Log;
-import de.undefinedhuman.projectcreate.kamino.config.KaminoConfig;
 import de.undefinedhuman.projectcreate.kamino.database.Couchbase;
-import de.undefinedhuman.projectcreate.kamino.event.MetadataBucket;
 import de.undefinedhuman.projectcreate.kamino.event.events.BlockBreakEvent;
-import de.undefinedhuman.projectcreate.kamino.event.events.PlayerJoinEvent;
-import de.undefinedhuman.projectcreate.kamino.event.events.PlayerQuitEvent;
-import de.undefinedhuman.projectcreate.kamino.event.events.TestEvent;
+import de.undefinedhuman.projectcreate.kamino.event.metadata.AreaMetadataContainer;
+import de.undefinedhuman.projectcreate.kamino.event.metadata.BasicMetadataContainer;
 import de.undefinedhuman.projectcreate.server.plugin.Plugin;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+
 public class Main extends Plugin {
+
+    private static final Gson GSON = new Gson();
 
     private Couchbase couchbase;
 
     @Override
     public void init() {
         Log.info("[kamino] Initialized successfully!");
-        ConfigManager.getInstance().addConfigs(KaminoConfig.getInstance());
-        couchbase = new Couchbase.Builder(
-                KaminoConfig.getInstance().databaseUrl.getValue(),
-                KaminoConfig.getInstance().databaseUser.getValue(),
-                KaminoConfig.getInstance().databasePassword.getValue(),
-                KaminoConfig.getInstance().tableName.getValue())
-                .build();
-        couchbase.init();
-        couchbase.ping();
-        MetadataBucket metadata = new MetadataBucket();
-        metadata.parseEvent(new TestEvent(0));
-        metadata.parseEvent(new TestEvent(2));
-        metadata.parseEvent(new TestEvent(1));
-        metadata.parseEvent(new TestEvent(3));
-        for(int i = 0; i < 10; i++)
-            metadata.parseEvent(new BlockBreakEvent(i, "Main", new Vector2(i, i)));
-        for(int i = 0; i < 10; i++)
-            metadata.parseEvent(new PlayerJoinEvent(String.valueOf(i)));
-        for(int i = 9; i >= 0; i--)
-            metadata.parseEvent(new PlayerQuitEvent(String.valueOf(i)));
-        metadata.print();
+//        ConfigManager.getInstance().addConfigs(KaminoConfig.getInstance());
+//        couchbase = new Couchbase.Builder(
+//                KaminoConfig.getInstance().databaseUrl.getValue(),
+//                KaminoConfig.getInstance().databaseUser.getValue(),
+//                KaminoConfig.getInstance().databasePassword.getValue(),
+//                KaminoConfig.getInstance().tableName.getValue())
+//                .build();
+//        couchbase.init();
+//
+//        new Timer().schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                couchbase.ping();
+//            }
+//        }, 0, 5000);
 
-        Gson gson = new GsonBuilder().create();
-        Log.info(gson.toJson(new TestEvent(0)));
-        Log.info(gson.toJson(new BlockBreakEvent(0, "Main", new Vector2(100, 200))));
-        Log.info(gson.toJson(new PlayerJoinEvent("TEST_PLAYER")));
-        Log.info(gson.toJson(new PlayerQuitEvent("TEST_PLAYER")));
+//        couchbase.ping();
+//        MetadataBucket metadata = new MetadataBucket();
+//        for(int i = 0; i < 10; i++)
+//            metadata.parseEvent(new BlockBreakEvent(i, "Main", new Vector2(i, i)));
+//        metadata.print();
+//
+//        Gson gson = new GsonBuilder().create();
+//        Log.info(gson.toJson(new BlockBreakEvent(0, "Main", new Vector2(100, 200))));
 
+//        EventBucket bucket = new EventBucket();
+//        for(int i = 0; i < 10; i++)
+//            bucket.addEvent(new BlockBreakEvent(i, "Main", new Vector2(i, i)));
+////        Log.info(bucket.toString());
+//        new MetadataBucket(bucket.getEvents()).print();
+
+        ArrayList<BlockBreakEvent> blockBreakEvents = new ArrayList<>();
+        for(int i = 0; i < 10; i++)
+            blockBreakEvents.add(new BlockBreakEvent(i, "Main", new Vector2(i, i)));
+
+        BasicMetadataContainer<String> worldNameContainer = new BasicMetadataContainer<>(String.class);
+        for(BlockBreakEvent blockBreakEvent : blockBreakEvents) {
+            Field worldName;
+            try {
+                worldName = blockBreakEvent.getClass().getField("worldName");
+                if(!worldNameContainer.verifyField(worldName)) continue;
+                worldNameContainer.addValue((String) worldName.get(blockBreakEvent));
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        BasicMetadataContainer<Integer> blockIDContainer = new BasicMetadataContainer<>(Integer.class);
+        for(BlockBreakEvent blockBreakEvent : blockBreakEvents) {
+            Field blockID;
+            try {
+                blockID = blockBreakEvent.getClass().getField("blockID");
+                if(!blockIDContainer.verifyField(blockID)) continue;
+                blockIDContainer.addValue((Integer) blockID.get(blockBreakEvent));
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        AreaMetadataContainer positionArea = new AreaMetadataContainer();
+        for(BlockBreakEvent blockBreakEvent : blockBreakEvents) {
+            Field position;
+            try {
+                position = blockBreakEvent.getClass().getField("position");
+                if(!positionArea.verifyField(position)) continue;
+                positionArea.addValue((Vector2) position.get(blockBreakEvent));
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Log.info(worldNameContainer.toJSON(), blockIDContainer.toJSON(), positionArea.toJSON());
+
+    }
+
+    private void metadataContainerTest() {
+        BlockBreakEvent event = new BlockBreakEvent(0, "Main", new Vector2());
+        BasicMetadataContainer<String> basicString = new BasicMetadataContainer<>(String.class);
+
+        try {
+            Log.info(basicString.verifyField(event.getClass().getField("worldName")));
+            Log.info(basicString.verifyField(event.getClass().getField("position")));
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+
+        BasicMetadataContainer<Vector2> basicVector = new BasicMetadataContainer<>(Vector2.class);
+        try {
+            Log.info(basicVector.verifyField(event.getClass().getField("worldName")));
+            Log.info(basicVector.verifyField(event.getClass().getField("position")));
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

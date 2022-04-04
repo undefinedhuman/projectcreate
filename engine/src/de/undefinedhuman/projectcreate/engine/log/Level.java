@@ -5,7 +5,8 @@ public enum Level {
     ERROR("Error"),
     WARN("Warn"),
     INFO("Info"),
-    DEBUG("Debug");
+    DEBUG("Debug"),
+    TRACE("Trace");
 
     private final String prefix;
 

@@ -1,21 +1,24 @@
 package de.undefinedhuman.projectcreate.kamino.event;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import de.undefinedhuman.projectcreate.engine.event.Event;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-class EventBucket {
+public class EventBucket {
 
+    private static final Gson GSON = new GsonBuilder().create();
     private static final int EVENT_THRESHOLD = 5000;
 
     private final ArrayList<Event> events = new ArrayList<>();
-    private final List<Event> unmodifiableEvents = Collections.unmodifiableList(events);
+    private final List<Event> immutableEvents = Collections.unmodifiableList(events);
     private long minTime = Long.MAX_VALUE, maxTime = Long.MIN_VALUE;
     private boolean isFull = false;
 
-    void addEvent(Event event) {
+    public void addEvent(Event event) {
         if(events.contains(event)) return;
         if(event.timestamp > minTime) minTime = event.timestamp;
         if(event.timestamp < maxTime) maxTime = event.timestamp;
@@ -24,11 +27,15 @@ class EventBucket {
     }
 
     public List<Event> getEvents() {
-        return unmodifiableEvents;
+        return immutableEvents;
     }
 
     public boolean isFull() {
         return isFull;
+    }
+
+    public String toString() {
+        return GSON.toJson(events);
     }
 
 }
