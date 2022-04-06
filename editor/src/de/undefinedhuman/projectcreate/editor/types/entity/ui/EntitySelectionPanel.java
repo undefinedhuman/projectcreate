@@ -6,7 +6,8 @@ import de.undefinedhuman.projectcreate.editor.utils.EditorUtils;
 import de.undefinedhuman.projectcreate.engine.ecs.Blueprint;
 import de.undefinedhuman.projectcreate.engine.ecs.BlueprintManager;
 import de.undefinedhuman.projectcreate.engine.ecs.ComponentBlueprint;
-import de.undefinedhuman.projectcreate.engine.observer.Observer;
+import de.undefinedhuman.projectcreate.engine.ecs.events.ComponentBlueprintEvent;
+import de.undefinedhuman.projectcreate.engine.event.Observer;
 import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
 import de.undefinedhuman.projectcreate.engine.settings.ui.listener.ResizeListener;
 import de.undefinedhuman.projectcreate.engine.utils.Utils;
@@ -14,14 +15,14 @@ import de.undefinedhuman.projectcreate.engine.utils.Utils;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
-import java.util.Optional;
 
 public abstract class EntitySelectionPanel extends SelectionPanel<Integer> {
 
-    private Observer<ComponentBlueprint[]> nameBlueprintObserver = componentBlueprints -> {
-        Optional<ComponentBlueprint> nameBlueprint = Arrays.stream(componentBlueprints).filter(componentBlueprint -> componentBlueprint instanceof NameBlueprint).findAny();
-        if(nameBlueprint.isPresent())
+    private final Observer<ComponentBlueprintEvent> nameBlueprintObserver = event -> {
+        for(ComponentBlueprint<?> componentBlueprint : event.componentBlueprints) {
+            if(!(componentBlueprint instanceof NameBlueprint)) continue;
             update();
+        }
     };
 
     public EntitySelectionPanel() {
@@ -39,13 +40,13 @@ public abstract class EntitySelectionPanel extends SelectionPanel<Integer> {
     @Override
     public void init() {
         super.init();
-        BlueprintManager.getInstance().subscribe(Blueprint.ComponentBlueprintEvent.class, Blueprint.ComponentBlueprintEvent.Type.UPDATE, nameBlueprintObserver);
+        BlueprintManager.getInstance().subscribe(ComponentBlueprintEvent.class, nameBlueprintObserver);
     }
 
     @Override
     public void delete() {
         super.delete();
-        BlueprintManager.getInstance().unsubscribe(Blueprint.ComponentBlueprintEvent.class, Blueprint.ComponentBlueprintEvent.Type.UPDATE, nameBlueprintObserver);
+        BlueprintManager.getInstance().unsubscribe(ComponentBlueprintEvent.class, nameBlueprintObserver);
     }
 
     @Override

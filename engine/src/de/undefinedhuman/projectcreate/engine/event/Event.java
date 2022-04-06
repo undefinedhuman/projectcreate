@@ -1,6 +1,13 @@
 package de.undefinedhuman.projectcreate.engine.event;
 
+import de.undefinedhuman.projectcreate.kamino.annotations.Metadata;
+
+import java.util.Date;
+
 public class Event {
-    public final String eventType = this.getClass().getName();
-    public final long timestamp = System.currentTimeMillis();
+    public static final Date DATE = new Date();
+
+    @Metadata
+    public final String eventType = this.getClass().toString();
+    public final long timestamp = DATE.getTime();
 }

@@ -1,20 +1,19 @@
 package de.undefinedhuman.projectcreate.kamino;
 
 import com.badlogic.gdx.math.Vector2;
-import com.google.gson.Gson;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.kamino.database.Couchbase;
+import de.undefinedhuman.projectcreate.kamino.event.EventBucket;
 import de.undefinedhuman.projectcreate.kamino.event.events.BlockBreakEvent;
-import de.undefinedhuman.projectcreate.kamino.event.metadata.AreaMetadataContainer;
-import de.undefinedhuman.projectcreate.kamino.event.metadata.BasicMetadataContainer;
+import de.undefinedhuman.projectcreate.kamino.event.events.PlayerJoinEvent;
+import de.undefinedhuman.projectcreate.kamino.event.events.PlayerQuitEvent;
+import de.undefinedhuman.projectcreate.kamino.event.metadata.MetadataBucket;
+import de.undefinedhuman.projectcreate.kamino.event.metadata.container.BasicMetadataContainer;
 import de.undefinedhuman.projectcreate.server.plugin.Plugin;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.Random;
 
 public class Main extends Plugin {
-
-    private static final Gson GSON = new Gson();
 
     private Couchbase couchbase;
 
@@ -52,47 +51,60 @@ public class Main extends Plugin {
 ////        Log.info(bucket.toString());
 //        new MetadataBucket(bucket.getEvents()).print();
 
-        ArrayList<BlockBreakEvent> blockBreakEvents = new ArrayList<>();
-        for(int i = 0; i < 10; i++)
-            blockBreakEvents.add(new BlockBreakEvent(i, "Main", new Vector2(i, i)));
-
-        BasicMetadataContainer<String> worldNameContainer = new BasicMetadataContainer<>(String.class);
-        for(BlockBreakEvent blockBreakEvent : blockBreakEvents) {
-            Field worldName;
-            try {
-                worldName = blockBreakEvent.getClass().getField("worldName");
-                if(!worldNameContainer.verifyField(worldName)) continue;
-                worldNameContainer.addValue((String) worldName.get(blockBreakEvent));
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
+        EventBucket eventBucket = new EventBucket();
+        for(int i = 0; i < 1500; i++) {
+            eventBucket.add(new BlockBreakEvent(new Random().nextInt(1000), "Main", new Vector2(i, i)));
+            eventBucket.add(new PlayerJoinEvent("UUID" + new Random().nextInt(100)));
+            eventBucket.add(new PlayerQuitEvent("UUID" + new Random().nextInt(100)));
         }
 
-        BasicMetadataContainer<Integer> blockIDContainer = new BasicMetadataContainer<>(Integer.class);
-        for(BlockBreakEvent blockBreakEvent : blockBreakEvents) {
-            Field blockID;
-            try {
-                blockID = blockBreakEvent.getClass().getField("blockID");
-                if(!blockIDContainer.verifyField(blockID)) continue;
-                blockIDContainer.addValue((Integer) blockID.get(blockBreakEvent));
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
+        Log.info(eventBucket.toJSON());
 
-        AreaMetadataContainer positionArea = new AreaMetadataContainer();
-        for(BlockBreakEvent blockBreakEvent : blockBreakEvents) {
-            Field position;
-            try {
-                position = blockBreakEvent.getClass().getField("position");
-                if(!positionArea.verifyField(position)) continue;
-                positionArea.addValue((Vector2) position.get(blockBreakEvent));
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
+        MetadataBucket metadataBucket = new MetadataBucket(eventBucket.getEvents());
+        Log.info(metadataBucket.toJSON());
 
-        Log.info(worldNameContainer.toJSON(), blockIDContainer.toJSON(), positionArea.toJSON());
+//        ArrayList<BlockBreakEvent> blockBreakEvents = new ArrayList<>();
+//        for(int i = 0; i < 10; i++) {
+//            blockBreakEvents.add(new BlockBreakEvent(i, "Main", new Vector2(i, i)));
+//        }
+//
+//        StringMetadataContainer worldNameContainer = new StringMetadataContainer();
+//        for(BlockBreakEvent blockBreakEvent : blockBreakEvents) {
+//            Field worldName;
+//            try {
+//                worldName = blockBreakEvent.getClass().getField("worldName");
+//                if(!worldNameContainer.verifyField(worldName)) continue;
+//                worldNameContainer.addValue((String) worldName.get(blockBreakEvent));
+//            } catch (NoSuchFieldException | IllegalAccessException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        IntegerMetadataContainer blockIDContainer = new IntegerMetadataContainer();
+//        for(BlockBreakEvent blockBreakEvent : blockBreakEvents) {
+//            Field blockID;
+//            try {
+//                blockID = blockBreakEvent.getClass().getField("blockID");
+//                if(!blockIDContainer.verifyField(blockID)) continue;
+//                blockIDContainer.addValue((Integer) blockID.get(blockBreakEvent));
+//            } catch (NoSuchFieldException | IllegalAccessException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        AreaMetadataContainer positionArea = new AreaMetadataContainer();
+//        for(BlockBreakEvent blockBreakEvent : blockBreakEvents) {
+//            Field position;
+//            try {
+//                position = blockBreakEvent.getClass().getField("position");
+//                if(!positionArea.verifyField(position)) continue;
+//                positionArea.addValue((Vector2) position.get(blockBreakEvent));
+//            } catch (NoSuchFieldException | IllegalAccessException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        Log.info(worldNameContainer.toJSON(), blockIDContainer.toJSON(), positionArea.toJSON());
 
     }
 

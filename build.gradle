@@ -74,6 +74,8 @@ subprojects {
 
 project(":engine") {
     dependencies {
+        compileOnly project(":kamino")
+
         implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
@@ -119,6 +121,7 @@ project(":server") {
     dependencies {
         implementation project(":engine")
         implementation project(":core")
+        compileOnly project(":kamino")
 
         implementation 'com.github.Marcono1234:gson-record-type-adapter-factory:0.2.0'
         implementation 'org.lz4:lz4-pure-java:1.8.0'
@@ -132,8 +135,7 @@ project(":server") {
 
 project(":kamino") {
     dependencies {
-        compileOnly project(":engine")
-        compileOnly project(":server")
+        implementation 'com.playprojectcreate:server:0.0.2'
 
         compileOnly "com.badlogicgames.gdx:gdx:$gdxVersion"
 

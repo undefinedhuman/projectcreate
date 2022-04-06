@@ -1,11 +1,11 @@
 package de.undefinedhuman.projectcreate.kamino.event.events;
 
-import de.undefinedhuman.projectcreate.kamino.annotations.Metadata;
 import de.undefinedhuman.projectcreate.engine.event.Event;
+import de.undefinedhuman.projectcreate.kamino.annotations.Metadata;
 
 public class PlayerQuitEvent extends Event {
 
-    @Metadata
+    @Metadata()
     public final String playerID;
 
     public PlayerQuitEvent(String playerID) {

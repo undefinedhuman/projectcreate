@@ -1,6 +1,7 @@
-package de.undefinedhuman.projectcreate.kamino.event.metadata;
+package de.undefinedhuman.projectcreate.kamino.event.metadata.container;
 
 import com.google.gson.JsonElement;
+import de.undefinedhuman.projectcreate.kamino.event.metadata.MetadataContainer;
 
 import java.util.HashSet;
 

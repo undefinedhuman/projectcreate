@@ -12,7 +12,7 @@ public class EventBucketManager {
     private int currentTime = 0;
 
     public void addEvent(Event event) {
-        this.currentBucket.addEvent(event);
+        this.currentBucket.add(event);
     }
 
     public void update(float delta) {

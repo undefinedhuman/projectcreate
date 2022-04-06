@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.kamino.event.events;
 
-import de.undefinedhuman.projectcreate.kamino.annotations.Metadata;
 import de.undefinedhuman.projectcreate.engine.event.Event;
+import de.undefinedhuman.projectcreate.kamino.annotations.Metadata;
 
 public class TestEvent extends Event {
 

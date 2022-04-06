@@ -6,6 +6,9 @@ stages:
   - deploy
   - loadtest
 
+variables:
+  DOCKER_DRIVER: overlay2
+
 deploy:
   stage: deploy
   image: gradle:7.4-jdk17

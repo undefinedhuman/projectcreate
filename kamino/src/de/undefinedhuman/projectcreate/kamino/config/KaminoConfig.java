@@ -10,11 +10,11 @@ public class KaminoConfig extends Config {
     public final StringSetting databaseUrl = new StringSetting("DATABASE_URL", "127.0.0.1");
     public final StringSetting databaseUser = new StringSetting("DATABASE_USER", "couchbaseUser");
     public final StringSetting databasePassword = new StringSetting("DATABASE_PASSWORD", "V3ryS3cur3P4ssw0rd");
-    public final StringSetting tableName = new StringSetting("DATABASE_TABLE_NAME", "kamino");
+    public final StringSetting bucketName = new StringSetting("DATABASE_TABLE_NAME", "kamino");
 
     private KaminoConfig() {
         super("kamino/kamino");
-        addSettings(databaseUrl, databaseUser, databasePassword, tableName);
+        addSettings(databaseUrl, databaseUser, databasePassword, bucketName);
     }
 
     @Override

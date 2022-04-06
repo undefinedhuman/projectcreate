@@ -51,7 +51,7 @@ public class Main extends Game {
                             .andThen(value -> LogMessageDecorators.withDate(value, Variables.LOG_DATE_FORMAT))
                             .andThen(value -> LogMessageDecorators.withModuleName(value, "Game"))
                 ).setLogLevel(Level.INFO),
-                ConfigManager.getInstance().setConfigs(GameConfig.getInstance()),
+                ConfigManager.getInstance().addConfigs(GameConfig.getInstance()),
                 LanguageManager.getInstance(),
                 TextureManager.getInstance(),
                 SoundManager.getInstance(),

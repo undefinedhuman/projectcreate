@@ -15,13 +15,10 @@ public class EventBucket {
 
     private final ArrayList<Event> events = new ArrayList<>();
     private final List<Event> immutableEvents = Collections.unmodifiableList(events);
-    private long minTime = Long.MAX_VALUE, maxTime = Long.MIN_VALUE;
     private boolean isFull = false;
 
-    public void addEvent(Event event) {
+    public void add(Event event) {
         if(events.contains(event)) return;
-        if(event.timestamp > minTime) minTime = event.timestamp;
-        if(event.timestamp < maxTime) maxTime = event.timestamp;
         this.events.add(event);
         if(events.size() >= EVENT_THRESHOLD) isFull = true;
     }
@@ -34,7 +31,7 @@ public class EventBucket {
         return isFull;
     }
 
-    public String toString() {
+    public String toJSON() {
         return GSON.toJson(events);
     }
 
