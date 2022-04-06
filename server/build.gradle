@@ -7,7 +7,7 @@ project.ext.mainClassName = "de.undefinedhuman.projectcreate.server.Main"
 project.ext.assetsDir = new File("../assets/");
 
 group = 'com.playprojectcreate'
-version = '0.0.2'
+version = '0.0.3'
 
 task run(dependsOn: classes, type: JavaExec) {
     main = project.mainClassName
