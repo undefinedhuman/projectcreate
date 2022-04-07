@@ -108,6 +108,11 @@ public class Main extends Plugin {
 
     }
 
+    @Override
+    public void update(float delta) {
+
+    }
+
     private void metadataContainerTest() {
         BlockBreakEvent event = new BlockBreakEvent(0, "Main", new Vector2());
         BasicMetadataContainer<String> basicString = new BasicMetadataContainer<>(String.class);
