@@ -48,6 +48,10 @@ allprojects {
                 name = 'Private-Token'
                 value = gitLabPrivateToken
             }
+            credentials(HttpHeaderCredentials) {
+                name = 'Job-Token'
+                value = System.getenv("CI_JOB_TOKEN")
+            }
             authentication {
                 header(HttpHeaderAuthentication)
             }
@@ -55,14 +59,8 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
         exclusiveContent {
-            forRepository {
-                maven {
-                    url = uri("https://jitpack.io")
-                }
-            }
-            filter {
-                includeModule("com.github.Marcono1234", "gson-record-type-adapter-factory")
-            }
+            forRepository { maven { url = uri("https://jitpack.io") } }
+            filter { includeModule("com.github.Marcono1234", "gson-record-type-adapter-factory") }
         }
     }
 
