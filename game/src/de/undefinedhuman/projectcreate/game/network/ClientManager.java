@@ -20,7 +20,7 @@ public class ClientManager implements Manager {
     private static volatile ClientManager instance;
     private static final String IP_ADDRESS = "127.0.0.1";
     private static final int TCP_PORT = NetworkConstants.DEFAULT_TCP_PORT;
-    private static final int UDP_PORT = NetworkConstants.DEFAULT_UDP_PORT;
+    private static final int UDP_PORT = NetworkConstants.DEFAULT_TCP_PORT;
 
     private final Client client;
     public String currentSessionID = "";

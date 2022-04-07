@@ -117,7 +117,7 @@ public class Log implements Manager, Serializable {
     }
 
     public static void error(Object... messages) {
-        Log.getInstance().createMessage(System.err, Level.ERROR, messages);
+        Log.getInstance().createMessage(System.out, Level.ERROR, messages);
     }
 
     public static void warn(Object... messages) {

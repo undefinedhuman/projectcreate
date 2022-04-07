@@ -58,10 +58,10 @@ public class Main extends Plugin {
             eventBucket.add(new PlayerQuitEvent("UUID" + new Random().nextInt(100)));
         }
 
-        Log.info(eventBucket.toJSON());
+//        Log.info(eventBucket.toJSON());
 
         MetadataBucket metadataBucket = new MetadataBucket(eventBucket.getEvents());
-        Log.info(metadataBucket.toJSON());
+//        Log.info(metadataBucket.toJSON());
 
 //        ArrayList<BlockBreakEvent> blockBreakEvents = new ArrayList<>();
 //        for(int i = 0; i < 10; i++) {

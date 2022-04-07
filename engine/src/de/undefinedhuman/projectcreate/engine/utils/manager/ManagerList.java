@@ -1,7 +1,5 @@
 package de.undefinedhuman.projectcreate.engine.utils.manager;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.undefinedhuman.projectcreate.engine.file.Serializable;
 
 import java.util.ArrayList;
@@ -31,8 +29,8 @@ public class ManagerList {
         managers.forEach(manager -> manager.resize(width, height));
     }
 
-    public void renderGui(SpriteBatch batch, OrthographicCamera camera) {
-        managers.forEach(manager -> manager.renderGui(batch, camera));
+    public void update(float delta) {
+        managers.forEach(manager -> manager.update(delta));
     }
 
     public void save() {

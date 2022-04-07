@@ -88,9 +88,10 @@ public class ServerManager extends Server {
         EntityManager.getInstance().addSystems(new MovementSystem());
         managers.init();
         try {
-            bind(ServerConfig.getInstance().TCP_PORT.getValue(), NetworkConstants.DEFAULT_UDP_PORT);
+            bind(ServerConfig.getInstance().TCP_PORT.getValue(), ServerConfig.getInstance().TCP_PORT.getValue());
         } catch (IOException ex) {
             Log.error("Error while opening the tcp and udp port", ex);
+            delete();
         }
         start();
 
@@ -102,7 +103,7 @@ public class ServerManager extends Server {
 
     public void update(float delta) {
         timers.update(delta);
-        EntityManager.getInstance().update(delta);
+        managers.update(delta);
         buffer.process();
         EntityManager.getInstance().setUpdating(true);
         EntityManager.getInstance().getEntities().forEach(entity -> sendToAllUDP(PositionPacket.serialize(entity)));
@@ -110,11 +111,13 @@ public class ServerManager extends Server {
     }
 
     public void delete() {
+        Log.info("Server shutting down...");
         buffer.process();
         stop();
         timers.delete();
         pluginManager.delete();
         managers.delete();
+        Gdx.app.exit();
         System.exit(0);
     }
 

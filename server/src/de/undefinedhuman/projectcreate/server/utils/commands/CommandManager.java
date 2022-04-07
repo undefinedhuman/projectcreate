@@ -14,8 +14,8 @@ public class CommandManager implements Manager {
         this.commands = new HashMap<>();
     }
 
-    public CommandManager addCommand(String name, Command executor) {
-        this.commands.put(name, executor);
+    public CommandManager addCommand(String name, Command command) {
+        this.commands.put(name, command);
         return instance;
     }
 

@@ -4,42 +4,41 @@ import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 import de.undefinedhuman.projectcreate.server.utils.commands.CommandManager;
 import de.undefinedhuman.projectcreate.server.utils.commands.CommandSender;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Scanner;
 
 public class Console implements Manager {
 
     private static volatile Console instance;
 
-    private Scanner input;
-    private Thread consoleListener;
+    private final BufferedReader consoleReader;
 
     private Console() {
-        input = new Scanner(System.in);
-        consoleListener = new Thread(() -> {
-            while(true) {
-                input.hasNext();
-                processInput();
-            }
-        });
+        consoleReader = new BufferedReader(new InputStreamReader(System.in));
     }
 
     @Override
-    public void init() {
-        this.consoleListener.start();
+    public void update(float delta) {
+        try {
+            if(!consoleReader.ready()) return;
+            processInput(consoleReader.readLine());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void delete() {
-        consoleListener.interrupt();
-        input.close();
-        input = null;
+        try {
+            consoleReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void processInput() {
-        if(input == null)
-            return;
-        String input = this.input.nextLine();
+    private void processInput(String input) {
         String[] commandData = input.split(" ");
         CommandManager.getInstance().executeCommand(CommandSender.CONSOLE, commandData[0], Arrays.copyOfRange(commandData, 1, commandData.length));
     }
