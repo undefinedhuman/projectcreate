@@ -56,7 +56,7 @@ public class Couchbase implements Database {
 
     @Override
     public void close() {
-        if(cluster != null) cluster.disconnect();
+        if(cluster != null) cluster.disconnect(Duration.ofSeconds(30));
         if(environment != null) environment.shutdown();
     }
 

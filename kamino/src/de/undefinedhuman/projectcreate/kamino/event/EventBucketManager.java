@@ -5,11 +5,11 @@ import de.undefinedhuman.projectcreate.engine.event.Event;
 
 public class EventBucketManager {
 
-    private static final long BUCKET_TIME_UNTIL_SERIALIZATION = 60 * 60 * 5;
+    private static final float BUCKET_TIME_UNTIL_SAVE = 60f * 5f;
 
     private EventBucket currentBucket = new EventBucket();
     private final Queue<EventBucket> bucketsToSerialize = new Queue<>();
-    private int currentTime = 0;
+    private float currentTime = 0;
 
     public void addEvent(Event event) {
         this.currentBucket.add(event);
@@ -17,11 +17,11 @@ public class EventBucketManager {
 
     public void update(float delta) {
         this.currentTime += delta;
-        if(currentTime >= BUCKET_TIME_UNTIL_SERIALIZATION) {
-            bucketsToSerialize.addLast(currentBucket);
-            currentBucket = new EventBucket();
-        }
-
+        if(currentTime < BUCKET_TIME_UNTIL_SAVE)
+            return;
+        EventBucket oldBucket = currentBucket;
+        currentBucket = new EventBucket();
+        bucketsToSerialize.addLast(oldBucket);
     }
 
     private void serializeBucket(EventBucket bucket) {

@@ -45,18 +45,12 @@ allprojects {
         maven {
             url "https://gitlab.playprojectcreate.com/api/v4/projects/2/packages/maven"
             credentials(HttpHeaderCredentials) {
-                name = 'Private-Token'
-                value = gitLabPrivateToken
-            }
-            authentication {
-                header(HttpHeaderAuthentication)
-            }
-        }
-        maven {
-            url "https://gitlab.playprojectcreate.com/api/v4/projects/2/packages/maven"
-            credentials(HttpHeaderCredentials) {
                 name = 'Job-Token'
                 value = System.getenv("CI_JOB_TOKEN")
+            }
+            credentials(HttpHeaderCredentials) {
+                name = 'Private-Token'
+                value = gitLabPrivateToken
             }
             authentication {
                 header(HttpHeaderAuthentication)
@@ -136,7 +130,7 @@ project(":server") {
 
 project(":kamino") {
     dependencies {
-        implementation 'com.playprojectcreate:server:0.0.4'
+        compileOnly 'com.playprojectcreate:server:0.0.5'
 
         compileOnly "com.badlogicgames.gdx:gdx:$gdxVersion"
 

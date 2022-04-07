@@ -13,7 +13,7 @@ import de.undefinedhuman.projectcreate.server.plugin.Plugin;
 
 import java.util.Random;
 
-public class Main extends Plugin {
+public class Main implements Plugin {
 
     private Couchbase couchbase;
 
@@ -58,10 +58,15 @@ public class Main extends Plugin {
             eventBucket.add(new PlayerQuitEvent("UUID" + new Random().nextInt(100)));
         }
 
-//        Log.info(eventBucket.toJSON());
+        long currentMillis = System.currentTimeMillis();
+        Log.info(eventBucket.toJSON());
+        Log.info(System.currentTimeMillis() - currentMillis);
 
         MetadataBucket metadataBucket = new MetadataBucket(eventBucket.getEvents());
 //        Log.info(metadataBucket.toJSON());
+        currentMillis = System.currentTimeMillis();
+        Log.info(metadataBucket.toJSON());
+        Log.info(System.currentTimeMillis() - currentMillis);
 
 //        ArrayList<BlockBreakEvent> blockBreakEvents = new ArrayList<>();
 //        for(int i = 0; i < 10; i++) {
