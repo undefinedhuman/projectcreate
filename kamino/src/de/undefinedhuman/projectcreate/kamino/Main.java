@@ -1,6 +1,7 @@
 package de.undefinedhuman.projectcreate.kamino;
 
 import com.badlogic.gdx.math.Vector2;
+import com.couchbase.client.core.deps.io.netty.handler.codec.compression.Lz4FrameEncoder;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.kamino.database.Couchbase;
 import de.undefinedhuman.projectcreate.kamino.event.EventBucket;
@@ -60,6 +61,7 @@ public class Main implements Plugin {
 
         long currentMillis = System.currentTimeMillis();
         Log.info(eventBucket.toJSON());
+        Lz4FrameEncoder lz4 = new Lz4FrameEncoder();
         Log.info(System.currentTimeMillis() - currentMillis);
 
         MetadataBucket metadataBucket = new MetadataBucket(eventBucket.getEvents());
