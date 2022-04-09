@@ -4,6 +4,7 @@ sourceCompatibility = JavaVersion.VERSION_17
 project.ext.mainClassName = "de.undefinedhuman.projectcreate.kamino.Main"
 
 sourceSets.main.java.srcDirs = ["src/"]
+sourceSets.test.java.srcDirs = ["test/"]
 
 jar {
     archiveBaseName.set("kamino")

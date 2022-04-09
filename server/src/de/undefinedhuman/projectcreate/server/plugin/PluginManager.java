@@ -41,6 +41,11 @@ public class PluginManager implements Manager {
     }
 
     @Override
+    public void update(float delta) {
+        unmodifiablePlugins.forEach(pluginWrapper -> pluginWrapper.getPlugin().update(delta));
+    }
+
+    @Override
     public void delete() {
         deletePlugins();
         plugins.clear();

@@ -22,11 +22,10 @@ public class ServerListener extends PacketListener {
 
     @Override
     public void disconnected(Connection connection) {
-        if(!(connection instanceof PlayerConnection))
+        if(!(connection instanceof PlayerConnection playerConnection))
             return;
-        PlayerConnection playerConnection = (PlayerConnection) connection;
         if(playerConnection.worldID == -1) return;
-        ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), RemoveEntityPacket.serialize(playerConnection.worldID));
+        ServerManager.getInstance().sendToAllExceptTCP(connection, RemoveEntityPacket.serialize(playerConnection.worldID));
         EntityManager.getInstance().removeEntity(playerConnection.worldID);
     }
 

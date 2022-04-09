@@ -42,7 +42,7 @@ public class ServerInputPacketHandler extends InputPacketHandler {
         int direction = Utils.clamp(directionData.direction, -1, 1);
         Entity player = EntityManager.getInstance().getEntity(worldID);
         if(player == null || player.isScheduledForRemoval()) return;
-        ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), MovementPacket.serialize(worldID, direction));
+        ServerManager.getInstance().sendToAllExceptTCP(connection, MovementPacket.serialize(worldID, direction));
         long packetReceivedTime = System.nanoTime();
         ServerManager.getInstance().getBuffer().add(() -> {
             Entity entity = EntityManager.getInstance().getEntity(worldID);
@@ -71,7 +71,7 @@ public class ServerInputPacketHandler extends InputPacketHandler {
         if (worldID == null) return;
         Entity player = EntityManager.getInstance().getEntity(worldID);
         if (player == null || player.isScheduledForRemoval()) return;
-        ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), JumpPacket.serialize(worldID));
+        ServerManager.getInstance().sendToAllExceptTCP(connection, JumpPacket.serialize(worldID));
         long packetReceivedTime = System.nanoTime();
         ServerManager.getInstance().getBuffer().add(() -> {
             Entity entity = EntityManager.getInstance().getEntity(worldID);
@@ -89,9 +89,8 @@ public class ServerInputPacketHandler extends InputPacketHandler {
     }
 
     private void handleMouse(Connection connection, InputPacket packet) {
-        if(!(connection instanceof PlayerConnection) || ((PlayerConnection) connection).getDecryptionCipher() == null)
+        if(!(connection instanceof PlayerConnection playerConnection) || ((PlayerConnection) connection).getDecryptionCipher() == null)
             return;
-        PlayerConnection playerConnection = (PlayerConnection) connection;
         String data = InputPacket.parse(playerConnection.getDecryptionCipher(), packet);
         InputPacket.MouseData mouseData = InputPacket.MouseData.parse(data);
         if (mouseData == null) return;
@@ -99,14 +98,13 @@ public class ServerInputPacketHandler extends InputPacketHandler {
         if (worldID == null) return;
         Entity entity = EntityManager.getInstance().getEntity(worldID);
         if (entity == null || entity.isScheduledForRemoval() || !Mappers.MOUSE.has(entity) || !connection.isConnected()) return;
-        ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), MousePacket.serialize(worldID, mouseData.mouseX, mouseData.mouseY, mouseData.left, mouseData.right, mouseData.canShake));
+        ServerManager.getInstance().sendToAllExceptTCP(connection, MousePacket.serialize(worldID, mouseData.mouseX, mouseData.mouseY, mouseData.left, mouseData.right, mouseData.canShake));
         MousePacket.setMouseComponentData(Mappers.MOUSE.get(entity), mouseData.mouseX, mouseData.mouseY, mouseData.left, mouseData.right, mouseData.canShake);
     }
 
     private void handleSelection(Connection connection, InputPacket packet) {
-        if (!(connection instanceof PlayerConnection) || ((PlayerConnection) connection).getDecryptionCipher() == null)
+        if (!(connection instanceof PlayerConnection playerConnection) || ((PlayerConnection) connection).getDecryptionCipher() == null)
             return;
-        PlayerConnection playerConnection = (PlayerConnection) connection;
         String[] data = InputPacket.parse(playerConnection.getDecryptionCipher(), packet).split(":");
         if (data.length != 3) return;
         Long worldID = SessionManager.getInstance().getWorldID(data[0]);
@@ -119,7 +117,7 @@ public class ServerInputPacketHandler extends InputPacketHandler {
         Integer selectedIndex = Utils.isInteger(data[2]);
         if (selectedIndex == null || selectorInventory == null) return;
         selectorInventory.selectedIndex = Utils.clamp(selectedIndex, 0, selectorInventory.getCol()-1);
-        ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), SelectorPacket.serialize(worldID, inventoryName, selectorInventory.selectedIndex));
+        ServerManager.getInstance().sendToAllExceptTCP(connection, SelectorPacket.serialize(worldID, inventoryName, selectorInventory.selectedIndex));
     }
 
     private void handleInvSelection(Connection connection, InputPacket packet) {

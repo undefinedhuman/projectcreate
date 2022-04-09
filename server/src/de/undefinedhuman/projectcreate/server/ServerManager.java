@@ -8,6 +8,7 @@ import de.undefinedhuman.projectcreate.core.ecs.interaction.InteractionBlueprint
 import de.undefinedhuman.projectcreate.core.ecs.visual.animation.AnimationBlueprint;
 import de.undefinedhuman.projectcreate.core.ecs.visual.sprite.SpriteBlueprint;
 import de.undefinedhuman.projectcreate.core.items.ItemManager;
+import de.undefinedhuman.projectcreate.core.network.Packet;
 import de.undefinedhuman.projectcreate.core.network.buffer.NetworkBuffer;
 import de.undefinedhuman.projectcreate.core.network.log.NetworkLogger;
 import de.undefinedhuman.projectcreate.core.network.packets.entity.components.PositionPacket;
@@ -37,10 +38,13 @@ import de.undefinedhuman.projectcreate.server.utils.console.Console;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class ServerManager extends Server {
+public class ServerManager {
+
+    // TODO Buffer might result in unfair advantage actually as for example player movement gets caluclated by System.currentTimeMillis() and the millis could be higher for one then the other
 
     private static volatile ServerManager instance;
 
+    private final Server server;
     private final ManagerList managers = new ManagerList();
     private final TimerList timers = new TimerList();
 
@@ -49,9 +53,14 @@ public class ServerManager extends Server {
     private final PluginManager pluginManager;
 
     private ServerManager() {
-        super(NetworkConstants.WRITE_BUFFER_SIZE, NetworkConstants.OBJECT_BUFFER_SIZE);
+        this.server = new Server(NetworkConstants.WRITE_BUFFER_SIZE, NetworkConstants.OBJECT_BUFFER_SIZE) {
+            @Override
+            protected Connection newConnection() {
+                return new PlayerConnection();
+            }
+        };
         buffer = new NetworkBuffer();
-        NetworkConstants.registerPackets(this);
+        NetworkConstants.registerPackets(server);
 
         Log.warn("Refactor Log so each plugin can use an altered Version");
 
@@ -75,7 +84,7 @@ public class ServerManager extends Server {
 
         initTimers();
 
-        addListener(ServerListener.getInstance());
+        this.server.addListener(ServerListener.getInstance());
         FsFile file = new FsFile(Paths.getInstance().getDirectory(), "plugins/");
         file.mkdirs();
         pluginManager = new PluginManager(file);
@@ -88,12 +97,12 @@ public class ServerManager extends Server {
         EntityManager.getInstance().addSystems(new MovementSystem());
         managers.init();
         try {
-            bind(ServerConfig.getInstance().TCP_PORT.getValue(), ServerConfig.getInstance().TCP_PORT.getValue());
+            this.server.bind(ServerConfig.getInstance().TCP_PORT.getValue(), ServerConfig.getInstance().TCP_PORT.getValue());
         } catch (IOException ex) {
             Log.error("Error while opening the tcp and udp port", ex);
             delete();
         }
-        start();
+        this.server.start();
 
         FsFile file = new FsFile(Paths.getInstance().getDirectory(), "plugins/");
         file.mkdirs();
@@ -104,6 +113,7 @@ public class ServerManager extends Server {
     public void update(float delta) {
         timers.update(delta);
         managers.update(delta);
+        pluginManager.update(delta);
         buffer.process();
         EntityManager.getInstance().setUpdating(true);
         EntityManager.getInstance().getEntities().forEach(entity -> sendToAllUDP(PositionPacket.serialize(entity)));
@@ -113,12 +123,20 @@ public class ServerManager extends Server {
     public void delete() {
         Log.info("Server shutting down...");
         buffer.process();
-        stop();
+        this.server.stop();
         timers.delete();
         pluginManager.delete();
         managers.delete();
         Gdx.app.exit();
         System.exit(0);
+    }
+
+    public void sendToAllUDP(Packet packet) {
+        this.server.sendToAllUDP(packet);
+    }
+
+    public void sendToAllExceptTCP(Connection connection, Packet packet) {
+        this.server.sendToAllExceptTCP(connection.getID(), packet);
     }
 
     public void setLogLevel(Level level) {
@@ -129,17 +147,12 @@ public class ServerManager extends Server {
     }
 
     private void initTimers() {
-        addTimer(0.2f, () -> Arrays.stream(getConnections()).forEach(Connection::updateReturnTripTime));
+        addTimer(0.2f, () -> Arrays.stream(this.server.getConnections()).forEach(Connection::updateReturnTripTime));
         addTimer(900f, () -> Log.getInstance().save());
     }
 
     private void addTimer(float time, TimerAction action) {
         timers.addTimers(new Timer(time, action));
-    }
-
-    @Override
-    protected Connection newConnection() {
-        return new PlayerConnection();
     }
 
     public NetworkBuffer getBuffer() {

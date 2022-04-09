@@ -1,143 +1,53 @@
 package de.undefinedhuman.projectcreate.kamino;
 
-import com.badlogic.gdx.math.Vector2;
-import com.couchbase.client.core.deps.io.netty.handler.codec.compression.Lz4FrameEncoder;
+import de.undefinedhuman.projectcreate.engine.config.ConfigManager;
 import de.undefinedhuman.projectcreate.engine.log.Log;
+import de.undefinedhuman.projectcreate.kamino.config.KaminoConfig;
 import de.undefinedhuman.projectcreate.kamino.database.Couchbase;
-import de.undefinedhuman.projectcreate.kamino.event.EventBucket;
-import de.undefinedhuman.projectcreate.kamino.event.events.BlockBreakEvent;
-import de.undefinedhuman.projectcreate.kamino.event.events.PlayerJoinEvent;
-import de.undefinedhuman.projectcreate.kamino.event.events.PlayerQuitEvent;
-import de.undefinedhuman.projectcreate.kamino.event.metadata.MetadataBucket;
-import de.undefinedhuman.projectcreate.kamino.event.metadata.container.BasicMetadataContainer;
+import de.undefinedhuman.projectcreate.kamino.event.manager.EventBucketManager;
 import de.undefinedhuman.projectcreate.server.plugin.Plugin;
-
-import java.util.Random;
+import net.jpountz.lz4.LZ4Compressor;
+import net.jpountz.lz4.LZ4Factory;
 
 public class Main implements Plugin {
 
     private Couchbase couchbase;
 
+    private EventBucketManager eventBucketManager;
+
+    private static final LZ4Compressor HIGH_COMPRESSOR = LZ4Factory.fastestInstance().highCompressor();
+
     @Override
     public void init() {
         Log.info("[kamino] Initialized successfully!");
-//        ConfigManager.getInstance().addConfigs(KaminoConfig.getInstance());
-//        couchbase = new Couchbase.Builder(
-//                KaminoConfig.getInstance().databaseUrl.getValue(),
-//                KaminoConfig.getInstance().databaseUser.getValue(),
-//                KaminoConfig.getInstance().databasePassword.getValue(),
-//                KaminoConfig.getInstance().tableName.getValue())
-//                .build();
-//        couchbase.init();
-//
-//        new Timer().schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                couchbase.ping();
-//            }
-//        }, 0, 5000);
+        ConfigManager.getInstance().addConfigs(KaminoConfig.getInstance());
+        couchbase = new Couchbase.Builder(
+                KaminoConfig.getInstance().databaseUrl.getValue(),
+                KaminoConfig.getInstance().databaseUser.getValue(),
+                KaminoConfig.getInstance().databasePassword.getValue(),
+                KaminoConfig.getInstance().bucketName.getValue())
+                .build();
+        couchbase.init();
 
-//        couchbase.ping();
-//        MetadataBucket metadata = new MetadataBucket();
-//        for(int i = 0; i < 10; i++)
-//            metadata.parseEvent(new BlockBreakEvent(i, "Main", new Vector2(i, i)));
-//        metadata.print();
-//
-//        Gson gson = new GsonBuilder().create();
-//        Log.info(gson.toJson(new BlockBreakEvent(0, "Main", new Vector2(100, 200))));
+        couchbase.search();
 
-//        EventBucket bucket = new EventBucket();
-//        for(int i = 0; i < 10; i++)
-//            bucket.addEvent(new BlockBreakEvent(i, "Main", new Vector2(i, i)));
-////        Log.info(bucket.toString());
-//        new MetadataBucket(bucket.getEvents()).print();
+        eventBucketManager = EventBucketManager.newInstance(couchbase)
+                .withSaveProcessor(new EventBucketManager.AsyncSaveProcessor(KaminoConfig.getInstance().numberOfThreads.getValue()))
+                .withCompressor(HIGH_COMPRESSOR::compress)
+                .withTimeUntilBucketIsSaved(10)
+                .build();
 
-        EventBucket eventBucket = new EventBucket();
-        for(int i = 0; i < 1500; i++) {
-            eventBucket.add(new BlockBreakEvent(new Random().nextInt(1000), "Main", new Vector2(i, i)));
-            eventBucket.add(new PlayerJoinEvent("UUID" + new Random().nextInt(100)));
-            eventBucket.add(new PlayerQuitEvent("UUID" + new Random().nextInt(100)));
-        }
-
-        long currentMillis = System.currentTimeMillis();
-        Log.info(eventBucket.toJSON());
-        Lz4FrameEncoder lz4 = new Lz4FrameEncoder();
-        Log.info(System.currentTimeMillis() - currentMillis);
-
-        MetadataBucket metadataBucket = new MetadataBucket(eventBucket.getEvents());
-//        Log.info(metadataBucket.toJSON());
-        currentMillis = System.currentTimeMillis();
-        Log.info(metadataBucket.toJSON());
-        Log.info(System.currentTimeMillis() - currentMillis);
-
-//        ArrayList<BlockBreakEvent> blockBreakEvents = new ArrayList<>();
-//        for(int i = 0; i < 10; i++) {
-//            blockBreakEvents.add(new BlockBreakEvent(i, "Main", new Vector2(i, i)));
+//        for(int i = 0; i < 1500; i++) {
+//            eventBucketManager.addEvent(new BlockBreakEvent(new Random().nextInt(1000), "Main", new Vector2(i, i)));
+//            eventBucketManager.addEvent(new PlayerJoinEvent("UUID" + new Random().nextInt(100)));
+//            eventBucketManager.addEvent(new PlayerQuitEvent("UUID" + new Random().nextInt(100)));
 //        }
-//
-//        StringMetadataContainer worldNameContainer = new StringMetadataContainer();
-//        for(BlockBreakEvent blockBreakEvent : blockBreakEvents) {
-//            Field worldName;
-//            try {
-//                worldName = blockBreakEvent.getClass().getField("worldName");
-//                if(!worldNameContainer.verifyField(worldName)) continue;
-//                worldNameContainer.addValue((String) worldName.get(blockBreakEvent));
-//            } catch (NoSuchFieldException | IllegalAccessException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        IntegerMetadataContainer blockIDContainer = new IntegerMetadataContainer();
-//        for(BlockBreakEvent blockBreakEvent : blockBreakEvents) {
-//            Field blockID;
-//            try {
-//                blockID = blockBreakEvent.getClass().getField("blockID");
-//                if(!blockIDContainer.verifyField(blockID)) continue;
-//                blockIDContainer.addValue((Integer) blockID.get(blockBreakEvent));
-//            } catch (NoSuchFieldException | IllegalAccessException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        AreaMetadataContainer positionArea = new AreaMetadataContainer();
-//        for(BlockBreakEvent blockBreakEvent : blockBreakEvents) {
-//            Field position;
-//            try {
-//                position = blockBreakEvent.getClass().getField("position");
-//                if(!positionArea.verifyField(position)) continue;
-//                positionArea.addValue((Vector2) position.get(blockBreakEvent));
-//            } catch (NoSuchFieldException | IllegalAccessException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        Log.info(worldNameContainer.toJSON(), blockIDContainer.toJSON(), positionArea.toJSON());
 
     }
 
     @Override
     public void update(float delta) {
-
-    }
-
-    private void metadataContainerTest() {
-        BlockBreakEvent event = new BlockBreakEvent(0, "Main", new Vector2());
-        BasicMetadataContainer<String> basicString = new BasicMetadataContainer<>(String.class);
-
-        try {
-            Log.info(basicString.verifyField(event.getClass().getField("worldName")));
-            Log.info(basicString.verifyField(event.getClass().getField("position")));
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-
-        BasicMetadataContainer<Vector2> basicVector = new BasicMetadataContainer<>(Vector2.class);
-        try {
-            Log.info(basicVector.verifyField(event.getClass().getField("worldName")));
-            Log.info(basicVector.verifyField(event.getClass().getField("position")));
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
+        eventBucketManager.update(delta);
     }
 
     @Override
@@ -145,26 +55,6 @@ public class Main implements Plugin {
         couchbase.close();
         Log.info("[kamino] Deleted successfully!");
     }
-
-//    public Main() {
-//    }
-//
-//    @Override
-//    public void load() {
-//        Log.info("TEST LOAD kamino");
-////        Cluster cluster = Cluster.connect("127.0.0.1", "undefinedhuman", "VrHsWZQbeKwDkBCJv8ARKebaAGEKNy3k");
-////        Log.info(cluster.ping());
-//    }
-//
-//    @Override
-//    public void init() {
-//        Log.info("TEST INIT kamino");
-//    }
-//
-//    @Override
-//    public void delete() {
-//        Log.info("TEST DELETE kamino");
-//    }
 
 /*    public static void main(String[] args) throws IOException {
         Cluster cluster = Cluster.connect("127.0.0.1", "undefinedhuman", "VrHsWZQbeKwDkBCJv8ARKebaAGEKNy3k");

@@ -57,8 +57,7 @@ public class ServerEncryptionPacketHandler extends EncryptionPacketHandler {
             Log.error("Received verify token does not match the one generated earlier!");
             return;
         } else verifyTokens.remove(connection);
-        if(!(connection instanceof PlayerConnection)) return;
-        PlayerConnection playerConnection = (PlayerConnection) connection;
+        if(!(connection instanceof PlayerConnection playerConnection)) return;
         playerConnection.init(clientKey);
 
         String sessionID = EncryptionUtils.encodeBase64String(ServerEncryption.getInstance().generateSessionID());
@@ -67,9 +66,8 @@ public class ServerEncryptionPacketHandler extends EncryptionPacketHandler {
     }
 
     private void handleCharacterSelection(Connection connection, EncryptionPacket packet) {
-        if(!(connection instanceof PlayerConnection))
+        if(!(connection instanceof PlayerConnection playerConnection))
             return;
-        PlayerConnection playerConnection = (PlayerConnection) connection;
         if(playerConnection.getDecryptionCipher() == null)
             return;
         String[] data = EncryptionPacket.parse(playerConnection.getDecryptionCipher(), packet).split(":");
@@ -101,7 +99,7 @@ public class ServerEncryptionPacketHandler extends EncryptionPacketHandler {
         EntityManager.getInstance().addEntity(player);
         ((PlayerConnection) connection).worldID = worldID;
         connection.sendTCP(EncryptionPacket.serialize(null, EncryptionPacket.CHARACTER_RESPONSE, worldID + ":" + PacketUtils.createComponentData(player.getComponents())));
-        ServerManager.getInstance().sendToAllExceptTCP(connection.getID(), CreateEntityPacket.serialize(player));
+        ServerManager.getInstance().sendToAllExceptTCP(connection, CreateEntityPacket.serialize(player));
         EntityManager.getInstance().getEntities().forEach(entity -> {
             if(entity.getWorldID() == worldID || entity.isScheduledForRemoval())
                 return;

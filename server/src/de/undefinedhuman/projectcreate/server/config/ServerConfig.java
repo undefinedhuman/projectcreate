@@ -16,7 +16,7 @@ public class ServerConfig extends Config {
     public final EnumSetting<Level> LOG_LEVEL = new EnumSetting<>("loglevel", Level.INFO, Level.values(), Level::valueOf);
 
     private ServerConfig() {
-        super("server", false, ":");
+        super("server", false, "=");
         addSettings(TCP_PORT, LOG_LEVEL);
         LOG_LEVEL.addValueListener(value -> ServerManager.getInstance().setLogLevel(value));
     }

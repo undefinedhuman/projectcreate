@@ -35,11 +35,15 @@ Required: No Args Constructor, extend MetadataContainer
 
 # Bucket
 
+# Metadata Container
+
 {
-    serverID/IP: 168.0.1.67,
-    time_frame: 4.4.2022:16.17.23, 4.4.2022:16:22:23, // MAXIMUM OF 5 MINUTES? OR 5000 EVENTS
+    "serverIP": "168.0.1.67",
+    "amountOfEvents":4500,
+    "timestamp-min":1649359692802,
+    "timestamp-max":1649359692802, // MAXIMUM OF 5 MINUTES OR 5000 EVENTS ?
     metadata: {
-        eventClasses: [ BlockBreakEvent, PlayerJoinEvent, PlayerQuitEvent ]     // UUID1 BlockBreakEvent
+        eventClasses: [ BlockBreakEvent, PlayerJoinEvent, PlayerQuitEvent ]
         playerIDs: [ "UUID1", "UUID2", "UUID3" ]
         blockIDs: [ 1, 2, 67, 34, 90 ]
         area: { min: { 0, 10 }, max: { 10, 90 } }

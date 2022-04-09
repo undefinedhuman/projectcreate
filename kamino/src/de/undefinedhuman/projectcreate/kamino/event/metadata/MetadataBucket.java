@@ -16,9 +16,11 @@ public class MetadataBucket {
     private final HashMap<String, MetadataContainer<?>> data = new HashMap<>();
     private final int amountOfEvents;
 
+    private final String eventDataID;
     private long minTime = Long.MAX_VALUE, maxTime = Long.MIN_VALUE;
 
-    public MetadataBucket(List<Event> events) {
+    public MetadataBucket(String eventDataID, List<Event> events) {
+        this.eventDataID = eventDataID;
         this.amountOfEvents = events.size();
         events.forEach(this::parseEvent);
     }
@@ -36,15 +38,16 @@ public class MetadataBucket {
         }
     }
 
-    public JsonObject toJSON() {
+    public String toJSON() {
         JsonObject bucket = new JsonObject();
-        bucket.add("amountOfEvents", GSON.toJsonTree(amountOfEvents));
-        bucket.add("timestamp-min", GSON.toJsonTree(minTime));
-        bucket.add("timestamp-max", GSON.toJsonTree(maxTime));
+        bucket.addProperty("amountOfEvents", amountOfEvents);
+        bucket.addProperty("eventDataID", eventDataID);
+        bucket.addProperty("timestamp-min", minTime);
+        bucket.addProperty("timestamp-max", maxTime);
         JsonObject metadata = new JsonObject();
         data.forEach((key, value) -> metadata.add(key, value.toJSON()));
         bucket.add("metadata", metadata);
-        return bucket;
+        return bucket.toString();
     }
 
 }

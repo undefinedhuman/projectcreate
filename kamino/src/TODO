@@ -1,22 +1,17 @@
 TLS Encryption
 Couchbase Custom Logger
 
-# Metadata Container
+!!! Config Validation !!!
 
-{
-    serverID/IP: 168.0.1.67,
-    time_frame: 4.4.2022:16.17.23, 4.4.2022:16:22:23, // MAXIMUM OF 5 MINUTES? OR 5000 EVENTS
-    metadata: {
-        eventClasses: [ BlockBreakEvent, PlayerJoinEvent, PlayerQuitEvent ]     // UUID1 BlockBreakEvent
-        playerIDs: [ "UUID1", "UUID2", "UUID3" ]
-        blockIDs: [ 1, 2, 67, 34, 90 ]
-        area: { min: { 0, 10 }, max: { 10, 90 } }
-        worldNames: [ "main" ]
-    },
-    dataID: "UUID of Data Collection, which contains all the events in one huge JSON"
-}
+TODO REACT IF DATABASE FAILS TO SAVE DATA -> AND IMPLEMENT DELAY WHEN RETRYING TO SAVE THE DATA
 
+TODO ADD COUCHBASE TEST INSERTION AND REMOVAL OF FOR EXAMPLE ACCESS_INTEGER TO TEST PERMISSIONS OF COUCHBASE USER
 
+ADD Metadata Container which saves locations of e.g. blockbreakevent not in a global area container but in a world name specific container
+
+Check permissions of user like creating scopes and if scope already exists if user still needs permission to create scope etc.
+
+SUB INDEXING FOR DIFFERENT Metadata variables
 
 # NAMING CONVENTIONS
 name every new variable you want as new metadata pluginname-variablename // For plugins only so no event naming collisions occur

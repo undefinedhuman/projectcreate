@@ -137,6 +137,9 @@ project(":kamino") {
         compileOnly 'com.playprojectcreate:server:0.0.5'
         compileOnly "com.badlogicgames.gdx:gdx:$gdxVersion"
 
+        testImplementation 'com.playprojectcreate:server:0.0.5'
+        testImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+
         implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.30'
         implementation 'org.lz4:lz4-pure-java:1.8.0'
         implementation 'com.google.code.gson:gson:2.9.0'
