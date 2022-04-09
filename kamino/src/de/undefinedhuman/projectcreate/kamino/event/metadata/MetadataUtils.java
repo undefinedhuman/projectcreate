@@ -42,7 +42,7 @@ public class MetadataUtils {
         return METADATA_FIELD_WRAPPERS.computeIfAbsent(eventType, aClass -> {
             Array<MetadataFieldWrapper> fieldData = new Array<>();
             Arrays.stream(eventType.getFields())
-                    .peek(field -> Log.info(field.getName(), field.isAnnotationPresent(Metadata.class)))
+                    .peek(field -> Log.info(field.getName(), Arrays.toString(field.getAnnotations())))
                     .filter(field -> field.isAnnotationPresent(Metadata.class))
                     .filter(field -> {
                         Metadata metadata = field.getAnnotation(Metadata.class);
