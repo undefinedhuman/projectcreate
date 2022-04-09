@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import de.undefinedhuman.projectcreate.engine.event.Event;
+import de.undefinedhuman.projectcreate.engine.log.Log;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +33,7 @@ public class MetadataBucket {
             MetadataContainer metadataContainer = data.computeIfAbsent(wrapper.getKey(), s -> MetadataUtils.createMetadataContainerInstance(wrapper));
             if(metadataContainer == null)
                 continue;
+            Log.info(wrapper.getKey());
             Object value = wrapper.parseValue(event);
             if(value == null) continue;
             metadataContainer.addValue(value);

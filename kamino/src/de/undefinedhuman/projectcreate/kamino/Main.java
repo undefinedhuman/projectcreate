@@ -4,10 +4,13 @@ import de.undefinedhuman.projectcreate.engine.config.ConfigManager;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.kamino.config.KaminoConfig;
 import de.undefinedhuman.projectcreate.kamino.database.Couchbase;
+import de.undefinedhuman.projectcreate.kamino.event.events.PlayerJoinEvent;
 import de.undefinedhuman.projectcreate.kamino.event.manager.EventBucketManager;
 import de.undefinedhuman.projectcreate.server.plugin.Plugin;
 import net.jpountz.lz4.LZ4Compressor;
 import net.jpountz.lz4.LZ4Factory;
+
+import java.util.Random;
 
 public class Main implements Plugin {
 
@@ -42,6 +45,7 @@ public class Main implements Plugin {
 //            eventBucketManager.addEvent(new PlayerJoinEvent("UUID" + new Random().nextInt(100)));
 //            eventBucketManager.addEvent(new PlayerQuitEvent("UUID" + new Random().nextInt(100)));
 //        }
+        eventBucketManager.addEvent(new PlayerJoinEvent("UUID" + new Random().nextInt(100)));
 
     }
 
