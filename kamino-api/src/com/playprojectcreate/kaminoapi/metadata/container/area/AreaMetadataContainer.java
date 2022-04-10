@@ -1,8 +1,8 @@
-package de.undefinedhuman.projectcreate.kamino.event.metadata.container.area;
+package com.playprojectcreate.kaminoapi.metadata.container.area;
 
 import com.badlogic.gdx.math.Vector2;
 import com.google.gson.JsonElement;
-import de.undefinedhuman.projectcreate.kamino.event.metadata.MetadataContainer;
+import com.playprojectcreate.kaminoapi.metadata.MetadataContainer;
 
 public class AreaMetadataContainer extends MetadataContainer<Vector2> {
 

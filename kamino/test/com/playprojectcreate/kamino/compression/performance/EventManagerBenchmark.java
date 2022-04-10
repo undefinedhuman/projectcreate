@@ -28,14 +28,14 @@ public class EventManagerBenchmark {
             public void init() {}
 
             @Override
-            public boolean saveMetadata(String json) {
-                return true;
+            public boolean saveMetadata(String id, String json) {
+                return false;
             }
 
             @Override
-            public boolean saveEventData(byte[] data) {
+            public boolean saveEventData(String id, byte[] data) {
                 BUCKET_SIZE = data.length;
-                return true;
+                return false;
             }
 
             @Override

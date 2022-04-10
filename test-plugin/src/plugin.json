@@ -1,0 +1,7 @@
+{
+  "name": "testplugin",
+  "main": "com.playprojectcreate.testplugin.Main",
+  "author": "Alexander Padberg",
+  "version": "1.0.0",
+  "dependencies": [ "kamino" ]
+}

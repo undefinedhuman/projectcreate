@@ -1,7 +1,7 @@
-package de.undefinedhuman.projectcreate.kamino.event.metadata.container;
+package com.playprojectcreate.kaminoapi.metadata.container;
 
 import com.google.gson.JsonElement;
-import de.undefinedhuman.projectcreate.kamino.event.metadata.MetadataContainer;
+import com.playprojectcreate.kaminoapi.metadata.MetadataContainer;
 
 import java.util.HashSet;
 
@@ -14,8 +14,12 @@ public class BasicMetadataContainer<T> extends MetadataContainer<T> {
     }
 
     public void addValue(T value) {
-        if(data.contains(value)) return;
+        if (data.contains(value)) return;
         this.data.add(value);
+    }
+
+    public String query(String tableName, String... parameterNames) {
+        return "ANY id IN " + tableName + " SATISFIES ARRAY_CONTAINS($" + parameterNames[0] + ", id) END";
     }
 
     public JsonElement toJSON() {

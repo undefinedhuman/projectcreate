@@ -4,13 +4,10 @@ import de.undefinedhuman.projectcreate.engine.config.ConfigManager;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.kamino.config.KaminoConfig;
 import de.undefinedhuman.projectcreate.kamino.database.Couchbase;
-import de.undefinedhuman.projectcreate.kamino.event.events.PlayerJoinEvent;
 import de.undefinedhuman.projectcreate.kamino.event.manager.EventBucketManager;
 import de.undefinedhuman.projectcreate.server.plugin.Plugin;
 import net.jpountz.lz4.LZ4Compressor;
 import net.jpountz.lz4.LZ4Factory;
-
-import java.util.Random;
 
 public class Main implements Plugin {
 
@@ -19,6 +16,10 @@ public class Main implements Plugin {
     private EventBucketManager eventBucketManager;
 
     private static final LZ4Compressor HIGH_COMPRESSOR = LZ4Factory.fastestInstance().highCompressor();
+
+    public Main() {
+        Log.info("HELLO");
+    }
 
     @Override
     public void init() {
@@ -40,12 +41,16 @@ public class Main implements Plugin {
                 .withTimeUntilBucketIsSaved(10)
                 .build();
 
+//        Reflections reflections = new Reflections("com.mycompany");
+//        Set<Class<? extends MyInterface>> classes = reflections.getSubTypesOf(MyInterface.class);
+
+        // Rest.run();
+
 //        for(int i = 0; i < 1500; i++) {
 //            eventBucketManager.addEvent(new BlockBreakEvent(new Random().nextInt(1000), "Main", new Vector2(i, i)));
 //            eventBucketManager.addEvent(new PlayerJoinEvent("UUID" + new Random().nextInt(100)));
 //            eventBucketManager.addEvent(new PlayerQuitEvent("UUID" + new Random().nextInt(100)));
 //        }
-        eventBucketManager.addEvent(new PlayerJoinEvent("UUID" + new Random().nextInt(100)));
 
     }
 

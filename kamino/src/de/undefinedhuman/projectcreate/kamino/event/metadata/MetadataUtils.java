@@ -1,12 +1,14 @@
 package de.undefinedhuman.projectcreate.kamino.event.metadata;
 
 import com.badlogic.gdx.utils.Array;
+import com.playprojectcreate.kaminoapi.metadata.ContainerUtils;
+import com.playprojectcreate.kaminoapi.metadata.MetadataContainer;
 import de.undefinedhuman.projectcreate.engine.event.Event;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.utils.ds.ImmutableArray;
 import de.undefinedhuman.projectcreate.engine.utils.ds.Tuple;
-import de.undefinedhuman.projectcreate.kamino.annotations.Metadata;
-import de.undefinedhuman.projectcreate.kamino.event.metadata.container.BasicMetadataContainer;
+import com.playprojectcreate.kaminoapi.annotations.Metadata;
+import com.playprojectcreate.kaminoapi.metadata.container.BasicMetadataContainer;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -16,24 +18,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MetadataUtils {
-
-    public static final String METADATA_DEFAULT_NAME = "NOT_DEFINED";
-
-    private static final Map<Class<?>, Class<?>> PRIMITIVE_WRAPPER = Map.of(
-            boolean.class, Boolean.class,
-            byte.class, Byte.class,
-            char.class, Character.class,
-            double.class, Double.class,
-            float.class, Float.class,
-            int.class, Integer.class,
-            long.class, Long.class,
-            short.class, Short.class
-    );
-
-    public static Class<?> wrapPrimitive(Class<?> primitiveClass) {
-        if(!primitiveClass.isPrimitive()) return primitiveClass;
-        return PRIMITIVE_WRAPPER.get(primitiveClass);
-    }
 
     private static final Map<Class<? extends Event>, ImmutableArray<MetadataFieldWrapper>> METADATA_FIELD_WRAPPERS = Collections.synchronizedMap(new HashMap<>());
     private static final HashMap<String, Tuple<Class<? extends Event>, Class<?>>> FIELD_TYPES = new HashMap<>();
@@ -78,7 +62,7 @@ public class MetadataUtils {
         MetadataContainer<?> metadataContainer;
         try {
             if(metadata.containerType() == MetadataContainer.class || metadata.containerType() == null)
-                metadataContainer = new BasicMetadataContainer<>(MetadataUtils.wrapPrimitive(field.getType()));
+                metadataContainer = new BasicMetadataContainer<>(ContainerUtils.wrapPrimitive(field.getType()));
             else metadataContainer = metadata.containerType().getDeclaredConstructor().newInstance();
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             Log.warn("Error while creating metadata container for " + parseMetadataFieldKey(field, metadata) + "! Metadata wont be collected for this field! Should probably be reported to the maintainer! Proceed with caution!");
@@ -95,7 +79,7 @@ public class MetadataUtils {
     }
 
     private static String parseMetadataFieldKey(Field field, Metadata metadata) {
-        return metadata.name().equalsIgnoreCase(METADATA_DEFAULT_NAME) ? field.getName() : metadata.name();
+        return metadata.name().equalsIgnoreCase(ContainerUtils.METADATA_DEFAULT_NAME) ? field.getName() : metadata.name();
     }
 
     static class MetadataFieldWrapper {

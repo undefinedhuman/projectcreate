@@ -1,4 +1,4 @@
-package de.undefinedhuman.projectcreate.kamino.event.metadata;
+package com.playprojectcreate.kaminoapi.metadata;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -17,7 +17,7 @@ public abstract class MetadataContainer<T> {
     }
 
     public boolean verifyField(Field field) {
-        return MetadataUtils.wrapPrimitive(field.getType()) == type;
+        return ContainerUtils.wrapPrimitive(field.getType()) == type;
     }
 
     public abstract void addValue(T t);

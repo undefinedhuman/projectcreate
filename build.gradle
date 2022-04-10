@@ -2,6 +2,7 @@ plugins {
     id 'jacoco'
     id "org.sonarqube" version "3.0"
     id "org.hidetake.ssh" version "2.9.0"
+    id 'org.jetbrains.kotlin.jvm' version '1.6.20'
 }
 
 sonarqube {
@@ -10,6 +11,11 @@ sonarqube {
     }
 }
 
+repositories {
+    mavenCentral()
+}
+
+group = 'com.playprojectcreate'
 version = '0.0.0'
 
 task setVersion {
@@ -76,13 +82,13 @@ subprojects {
 
 project(":engine") {
     dependencies {
-        compileOnly project(":kamino")
-
         implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
         implementation group: 'com.esotericsoftware', name: 'kryonet', version: "$kryoVersion"
         implementation group: 'com.github.kerner1000', name: 'javapng', version: '2.1.2'
+
+        implementation project(":kamino-api")
 
         implementation "com.formdev:flatlaf:$flatLafVersion"
 
@@ -123,7 +129,8 @@ project(":server") {
     dependencies {
         implementation project(":engine")
         implementation project(":core")
-        compileOnly project(":kamino")
+
+        implementation project(":kamino-api")
 
         implementation 'com.github.Marcono1234:gson-record-type-adapter-factory:0.2.0'
         implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
@@ -133,17 +140,41 @@ project(":server") {
 }
 
 project(":kamino") {
+    apply plugin: "org.jetbrains.kotlin.jvm"
+
     dependencies {
-        compileOnly 'com.playprojectcreate:server:0.0.5'
+        compileOnly project(":engine")
+        compileOnly project(":server")
         compileOnly "com.badlogicgames.gdx:gdx:$gdxVersion"
 
-        testImplementation 'com.playprojectcreate:server:0.0.5'
-        testImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+        implementation "io.ktor:ktor-server-core:2.0.0"
+        implementation "io.ktor:ktor-server-netty:2.0.0"
 
-        implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.30'
+        implementation project(":kamino-api")
+
+//        implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.30'
         implementation 'org.lz4:lz4-pure-java:1.8.0'
         implementation 'com.google.code.gson:gson:2.9.0'
         implementation 'com.couchbase.client:java-client:3.2.5'
+
+        testImplementation project(':server')
+        testImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+    }
+}
+
+project(":kamino-api") {
+    dependencies {
+        compileOnly "com.badlogicgames.gdx:gdx:$gdxVersion"
+        compileOnly 'com.google.code.gson:gson:2.9.0'
+    }
+}
+
+project(":test-plugin") {
+    dependencies {
+        compileOnly project(":engine")
+        compileOnly project(":server")
+        compileOnly project(":kamino")
+        compileOnly project(":kamino-api")
     }
 }
 

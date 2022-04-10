@@ -2,8 +2,8 @@ package de.undefinedhuman.projectcreate.kamino.event.events;
 
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.event.Event;
-import de.undefinedhuman.projectcreate.kamino.annotations.Metadata;
-import de.undefinedhuman.projectcreate.kamino.event.metadata.container.area.AreaMetadataContainer;
+import com.playprojectcreate.kaminoapi.annotations.Metadata;
+import com.playprojectcreate.kaminoapi.metadata.container.area.AreaMetadataContainer;
 
 public class BlockBreakEvent extends Event {
 

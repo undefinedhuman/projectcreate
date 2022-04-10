@@ -118,15 +118,15 @@ public class Couchbase implements Database {
 
     public void search() {
         if(cluster == null) return;
-        // Log.info(cluster.searchQuery("projectcreate.kamino.meta", SearchQuery.prefix("UUID1"), searchOptions().fields("metadata.playerID")));
 
         JsonObject parameters = JsonObject.create()
-                .put("ids", JsonArray.create().add("UUID1"));
+                .put("blockIDs", JsonArray.create().add(1))
+                .put("playerIDs", JsonArray.create().add("UUID1"));
 
-        QueryResult result = cluster.query("select eventDataID, metadata.playerID " +
+        QueryResult result = cluster.query("select eventDataID " +
                 "from projectcreate.kamino.meta as kamino " +
-                "WHERE ANY id IN kamino.metadata.playerID SATISFIES ARRAY_CONTAINS($ids, id) END", QueryOptions.queryOptions().readonly(true).parameters(parameters));
-        Log.info("Result: " + result);
+                "WHERE ANY id IN kamino.metadata.blockID SATISFIES ARRAY_CONTAINS($blockIDs, id) END " +
+                "OR ANY id IN kamino.metadata.playerID SATISFIES ARRAY_CONTAINS($playerIDs, id) END", QueryOptions.queryOptions().readonly(true).parameters(parameters));
         for(JsonObject row : result.rowsAsObject())
             Log.info(row);
     }

@@ -1,4 +1,4 @@
-package de.undefinedhuman.projectcreate.kamino.event.metadata.container.area;
+package com.playprojectcreate.kaminoapi.metadata.container.area;
 
 import com.badlogic.gdx.math.Vector2;
 

@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.kamino.event.events;
 
 import de.undefinedhuman.projectcreate.engine.event.Event;
-import de.undefinedhuman.projectcreate.kamino.annotations.Metadata;
+import com.playprojectcreate.kaminoapi.annotations.Metadata;
 
 public class PlayerJoinEvent extends Event {
 
