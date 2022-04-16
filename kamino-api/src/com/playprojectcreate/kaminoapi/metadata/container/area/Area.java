@@ -14,4 +14,24 @@ public class Area {
         if(value.y > max.y) max.y = value.y;
     }
 
+    public float getMinX() {
+        return min.x;
+    }
+
+    public float getMinY() {
+        return min.y;
+    }
+
+    public float getMaxX() {
+        return max.x;
+    }
+
+    public float getMaxY() {
+        return max.y;
+    }
+
+    @Override
+    public String toString() {
+        return "{ min " + min + ", max " + max + " }";
+    }
 }

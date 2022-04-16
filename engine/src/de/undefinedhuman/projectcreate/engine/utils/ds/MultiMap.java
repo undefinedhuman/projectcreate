@@ -16,29 +16,34 @@ public class MultiMap<K, V> {
         return currentList;
     }
 
+    public final void set(K key, ArrayList<V> values) {
+        data.put(key, values);
+        immutableData.put(key, Collections.unmodifiableList(values));
+    }
+
     public List<V> getDataForKey(K key) {
-        if(!hasKey(key)) add(key);
+        if(!containsKey(key)) add(key);
         return data.get(key);
     }
 
     public void removeKey(K key) {
-        if(!hasKey(key)) return;
+        if(!containsKey(key)) return;
         data.get(key).clear();
         immutableData.remove(key);
         data.remove(key);
     }
 
     public void removeValue(K key, V value) {
-        if(!hasKey(key)) return;
+        if(!containsKey(key)) return;
         data.get(key).remove(value);
     }
 
     public boolean hasValue(K key, V value) {
-        if(!hasKey(key)) return false;
+        if(!containsKey(key)) return false;
         return data.get(key).contains(value);
     }
 
-    public boolean hasKey(K key) {
+    public boolean containsKey(K key) {
         return data.containsKey(key);
     }
 
@@ -47,7 +52,7 @@ public class MultiMap<K, V> {
     }
 
     public void clearKey(K key) {
-        if(!hasKey(key)) return;
+        if(!containsKey(key)) return;
         data.get(key).clear();
     }
 

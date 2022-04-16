@@ -5,6 +5,10 @@ import de.undefinedhuman.projectcreate.server.plugin.Plugin;
 
 public class Main implements Plugin {
 
+    public Main() {
+        Log.info("TEST-PLUGIN CONSTRUCTOR");
+    }
+
     @Override
     public void init() {
         Log.info("[TestPlugin] Initialized successfully!");

@@ -149,6 +149,10 @@ project(":kamino") {
 
         implementation "io.ktor:ktor-server-core:2.0.0"
         implementation "io.ktor:ktor-server-netty:2.0.0"
+        implementation "io.ktor:ktor-server-content-negotiation:2.0.0"
+        implementation "io.ktor:ktor-serialization-gson:2.0.0"
+
+        implementation group: 'org.reflections', name: 'reflections', version: '0.10.2'
 
         implementation project(":kamino-api")
 

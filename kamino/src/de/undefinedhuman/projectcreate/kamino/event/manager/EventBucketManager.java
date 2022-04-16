@@ -6,6 +6,7 @@ import de.undefinedhuman.projectcreate.kamino.database.Database;
 import de.undefinedhuman.projectcreate.kamino.event.EventBucket;
 import de.undefinedhuman.projectcreate.kamino.event.metadata.MetadataBucket;
 import de.undefinedhuman.projectcreate.kamino.utils.AsyncQueue;
+import de.undefinedhuman.projectcreate.kamino.utils.Compressor;
 
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -54,12 +55,13 @@ public class EventBucketManager {
         public void execute() {
             long startTime = System.currentTimeMillis();
             Log.info("Start saving bucket...");
-            byte[] compressedData = compressor.compress(bucket.serialize());
+            byte[] decompressedData = bucket.serialize();
+            byte[] compressedData = compressor.compress(decompressedData);
             UUID eventDataID = UUID.randomUUID();
             database.saveEventData(eventDataID.toString(), compressedData);
 
             UUID metadataID = UUID.randomUUID();
-            MetadataBucket metadata = new MetadataBucket(eventDataID.toString(), bucket.getEvents());
+            MetadataBucket metadata = new MetadataBucket(eventDataID.toString(), decompressedData.length, bucket.getEvents());
             database.saveMetadata(metadataID.toString(), metadata.toJSON());
             Log.info("Saved bucket with " + bucket.size() + " events to database! Time: " + (System.currentTimeMillis() - startTime) + "ms, Compressed size: " + compressedData.length);
         }
@@ -72,11 +74,6 @@ public class EventBucketManager {
     public interface SaveProcessor {
         void process(SaveBucketTask task);
         void delete();
-    }
-
-    @FunctionalInterface
-    public interface Compressor {
-        byte[] compress(byte[] input);
     }
 
     public static class Builder {
@@ -100,7 +97,7 @@ public class EventBucketManager {
             return this;
         }
 
-        public Builder withCompressor(Compressor compressor) {
+        public Builder withCompression(Compressor compressor) {
             this.compressor = compressor;
             return this;
         }

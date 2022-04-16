@@ -131,6 +131,10 @@ public class ServerManager {
         System.exit(0);
     }
 
+    public PluginManager getPluginManager() {
+        return pluginManager;
+    }
+
     public void sendToAllUDP(Packet packet) {
         this.server.sendToAllUDP(packet);
     }

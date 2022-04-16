@@ -4,8 +4,6 @@ import java.util.Map;
 
 public class ContainerUtils {
 
-    public static final String METADATA_DEFAULT_NAME = "NOT_DEFINED";
-
     private static final Map<Class<?>, Class<?>> PRIMITIVE_WRAPPER = Map.of(
             boolean.class, Boolean.class,
             byte.class, Byte.class,

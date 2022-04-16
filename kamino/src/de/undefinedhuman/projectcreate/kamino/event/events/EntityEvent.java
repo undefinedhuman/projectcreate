@@ -1,9 +1,11 @@
 package de.undefinedhuman.projectcreate.kamino.event.events;
 
+import com.playprojectcreate.kaminoapi.annotations.KaminoEvent;
+import com.playprojectcreate.kaminoapi.annotations.Metadata;
 import de.undefinedhuman.projectcreate.engine.ecs.Entity;
 import de.undefinedhuman.projectcreate.engine.event.Event;
-import com.playprojectcreate.kaminoapi.annotations.Metadata;
 
+@KaminoEvent
 public class EntityEvent extends Event {
 
     @Metadata()

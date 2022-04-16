@@ -7,8 +7,8 @@ import com.couchbase.client.java.*;
 import com.couchbase.client.java.codec.RawBinaryTranscoder;
 import com.couchbase.client.java.codec.RawJsonTranscoder;
 import com.couchbase.client.java.env.ClusterEnvironment;
-import com.couchbase.client.java.json.JsonArray;
 import com.couchbase.client.java.json.JsonObject;
+import com.couchbase.client.java.kv.GetOptions;
 import com.couchbase.client.java.kv.UpsertOptions;
 import com.couchbase.client.java.manager.bucket.BucketSettings;
 import com.couchbase.client.java.manager.collection.CollectionSpec;
@@ -16,16 +16,19 @@ import com.couchbase.client.java.manager.query.CreatePrimaryQueryIndexOptions;
 import com.couchbase.client.java.query.QueryOptions;
 import com.couchbase.client.java.query.QueryResult;
 import de.undefinedhuman.projectcreate.engine.log.Log;
+import de.undefinedhuman.projectcreate.engine.utils.ds.Tuple;
 import de.undefinedhuman.projectcreate.server.ServerManager;
 
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.Map;
+import java.util.Objects;
 
 public class Couchbase implements Database {
 
     private static final String SCOPE_NAME = "kamino";
     private static final String METADATA_COLLECTION_NAME = "meta";
-    private static final String DATA_COLLECTION_NAME = "data";
+    private static final String EVENT_DATA_COLLECTION_NAME = "data";
 
     private final String connectionString;
     private final String bucketName;
@@ -54,11 +57,11 @@ public class Couchbase implements Database {
             bucket = cluster.bucket(bucketName);
             bucket.waitUntilReady(Duration.ofSeconds(30));
             createScopes(bucket, SCOPE_NAME);
-            createCollections(bucket, SCOPE_NAME, collectionTtlInDays, METADATA_COLLECTION_NAME, DATA_COLLECTION_NAME);
-            createPrimaryIndexForCollections(cluster, bucketName, SCOPE_NAME, METADATA_COLLECTION_NAME);
+            createCollections(bucket, SCOPE_NAME, collectionTtlInDays, METADATA_COLLECTION_NAME, EVENT_DATA_COLLECTION_NAME);
+            createPrimaryIndexForCollections(cluster, bucketName, SCOPE_NAME, METADATA_COLLECTION_NAME, EVENT_DATA_COLLECTION_NAME);
             Scope scope = bucket.scope(SCOPE_NAME);
             metaCollection = scope.collection(METADATA_COLLECTION_NAME);
-            dataCollection = scope.collection(DATA_COLLECTION_NAME);
+            dataCollection = scope.collection(EVENT_DATA_COLLECTION_NAME);
             Log.info("Successfully established connection to couchbase cluster!");
         } catch(Exception ex) {
             Log.error("Couchbase connection failed. Shutting down server!", ex);
@@ -103,32 +106,53 @@ public class Couchbase implements Database {
 
     private void createPrimaryIndexForCollections(Cluster cluster, String bucketName, String scopeName, String... collectionNames) throws CouchbaseException {
         for(String collectionName : collectionNames)
-        try {
-            CreatePrimaryQueryIndexOptions options = CreatePrimaryQueryIndexOptions
-                    .createPrimaryQueryIndexOptions()
-                    .scopeName(scopeName)
-                    .collectionName(collectionName);
-            cluster.queryIndexes().createPrimaryIndex(bucketName, options);
-        } catch (IndexExistsException ex) {
-            Log.debug("Primary index for collection " + collectionName + " in scope " + scopeName + " already exist!");
-        } catch (IndexFailureException ex) {
-            Log.error("Failed to create primary index for collection " + collectionName + " in scope " + scopeName + "!", ex);
-        }
+            try {
+                CreatePrimaryQueryIndexOptions options = CreatePrimaryQueryIndexOptions
+                        .createPrimaryQueryIndexOptions()
+                        .scopeName(scopeName)
+                        .collectionName(collectionName);
+                cluster.queryIndexes().createPrimaryIndex(bucketName, options);
+            } catch (IndexExistsException ex) {
+                Log.debug("Primary index for collection " + collectionName + " in scope " + scopeName + " already exist!");
+            } catch (IndexFailureException ex) {
+                Log.error("Failed to create primary index for collection " + collectionName + " in scope " + scopeName + "!", ex);
+            }
     }
 
-    public void search() {
-        if(cluster == null) return;
+    @Override
+    public Tuple<String, Integer>[] searchMetadata(String whereQuery, Map<String, ?> parameters) {
+        if(cluster == null || whereQuery == null || whereQuery.isEmpty() || parameters == null)
+            return new Tuple[0];
+        String selectQuery = "SELECT eventDataID, decompressedSize FROM " + bucketName + "." + SCOPE_NAME + "." + METADATA_COLLECTION_NAME + " AS kamino WHERE " + whereQuery;
+        QueryResult result = cluster.query(selectQuery, QueryOptions.queryOptions().readonly(true).parameters(JsonObject.from(parameters)));
+        return result.rowsAsObject()
+                .stream()
+                .filter(jsonObject -> jsonObject.containsKey("eventDataID") && jsonObject.containsKey("decompressedSize"))
+                .map(jsonObject -> {
+                    String id = jsonObject.getString("eventDataID");
+                    Integer size = jsonObject.getInt("decompressedSize");
+                    if(id == null || size == null || id.isBlank() || size < 0) return null;
+                    return new Tuple<>(id, size);
+                })
+                .filter(Objects::nonNull)
+                .toArray(Tuple[]::new);
+    }
 
-        JsonObject parameters = JsonObject.create()
-                .put("blockIDs", JsonArray.create().add(1))
-                .put("playerIDs", JsonArray.create().add("UUID1"));
+    @Override
+    public byte[] searchEvent(String eventBucketID) {
+        try {
+            return dataCollection.get(eventBucketID, GetOptions.getOptions().transcoder(RawBinaryTranscoder.INSTANCE)).contentAsBytes();
+        } catch (DocumentNotFoundException notFound) {
+            Log.info("Event bucket with id " + eventBucketID + " does not exist!");
+        } catch (CouchbaseException ex) {
+            Log.error("Couchbase exception!");
+        }
+        return null;
+    }
 
-        QueryResult result = cluster.query("select eventDataID " +
-                "from projectcreate.kamino.meta as kamino " +
-                "WHERE ANY id IN kamino.metadata.blockID SATISFIES ARRAY_CONTAINS($blockIDs, id) END " +
-                "OR ANY id IN kamino.metadata.playerID SATISFIES ARRAY_CONTAINS($playerIDs, id) END", QueryOptions.queryOptions().readonly(true).parameters(parameters));
-        for(JsonObject row : result.rowsAsObject())
-            Log.info(row);
+    @Override
+    public String getTableName() {
+        return "kamino.metadata";
     }
 
     @Override

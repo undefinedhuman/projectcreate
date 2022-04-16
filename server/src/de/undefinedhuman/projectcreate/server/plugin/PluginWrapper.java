@@ -20,6 +20,10 @@ public class PluginWrapper {
         return plugin;
     }
 
+    public PluginConfig getPluginConfig() {
+        return pluginConfig;
+    }
+
     public String getName() {
         return pluginConfig.name();
     }
