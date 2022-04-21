@@ -1,9 +1,6 @@
 package de.undefinedhuman.projectcreate.kamino.query;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import com.google.gson.*;
 import com.playprojectcreate.kaminoapi.query.Query;
 import com.playprojectcreate.kaminoapi.query.QueryParameterWrapper;
 import de.undefinedhuman.projectcreate.engine.event.Event;
@@ -16,6 +13,7 @@ import de.undefinedhuman.projectcreate.kamino.event.metadata.MetadataField;
 import de.undefinedhuman.projectcreate.kamino.event.metadata.MetadataUtils;
 import de.undefinedhuman.projectcreate.kamino.utils.Decompressor;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -24,6 +22,15 @@ public class QueryEndpoint {
     private static final String ALPHA_NUMERIC_REGEX = "[^A-Za-z]";
 
     // TODO CACHING
+
+    public static String parseRequest(Database database, String request, Decompressor decompressor, boolean includeAllEvents) {
+        try {
+            JsonArray array = new Gson().fromJson(request, JsonArray.class);
+            return parseRequest(database, array, decompressor, includeAllEvents).toString();
+        } catch (JsonSyntaxException ex) {
+            return null;
+        }
+    }
 
     public static JsonArray parseRequest(Database database, JsonArray request, Decompressor decompressor, boolean includeAllEvents) {
         StringBuilder query = new StringBuilder();
@@ -58,8 +65,18 @@ public class QueryEndpoint {
                         .map(QueryParameterWrapper::key)
                         .map(queryParameterKey -> (metadataField.getEventTypeName() + queryParameterKey).replaceAll(ALPHA_NUMERIC_REGEX, ""))
                         .toArray(String[]::new);
-                for(int j = 0; j < queryParameters.length; j++)
-                    parameters.put(parameterKeys[j], queryParameters[j].value());
+                for(int j = 0; j < queryParameters.length; j++) {
+                    Object parameter = queryParameters[j].value();
+                    if(parameter instanceof Float value)
+                        parameter = BigDecimal.valueOf(value);
+                    if(parameter instanceof Short value)
+                        parameter = Integer.valueOf(value);
+                    if(parameter instanceof Byte value)
+                        parameter = Integer.valueOf(value);
+                    if(parameter instanceof Character value)
+                        parameter = String.valueOf(value);
+                    parameters.put(parameterKeys[j], parameter);
+                }
                 query.append(" AND ").append(metadataField.createMetadataContainer().getQuery().createQuery(database.getTableName() + "." + metadataField.getKey(), parameterKeys));
             });
             query.append(")");

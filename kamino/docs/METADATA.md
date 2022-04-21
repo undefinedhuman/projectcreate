@@ -31,12 +31,15 @@ Metadata (StringMetadataContainer): UUID1, UUID2, UUID4, UUID65
 
 ### Custom Container 
 
-Required: No Args Constructor, extend MetadataContainer
+Required: No Args Constructor, extend MetadataContainer \
+QueryParameter (TODO: Documentation) \
+Query (TODO: Documentation)
 
-# Bucket
+# Data Container
 
-# Metadata Container
+## Metadata
 
+```
 {
     "serverIP": "168.0.1.67",
     "amountOfEvents":4500,
@@ -46,8 +49,15 @@ Required: No Args Constructor, extend MetadataContainer
         eventClasses: [ BlockBreakEvent, PlayerJoinEvent, PlayerQuitEvent ]
         playerIDs: [ "UUID1", "UUID2", "UUID3" ]
         blockIDs: [ 1, 2, 67, 34, 90 ]
-        area: { min: { 0, 10 }, max: { 10, 90 } }
+        area: { min: { x: 0, y: 10 }, max: { x: 10, y: 90 } }
         worldNames: [ "main" ]
     },
-    dataID: "UUID of Data Collection, which contains all the events in one huge JSON"
+    "eventBucketID": UUIDv4
 }
+```
+
+## Event
+
+```
+TODO Insert event Bucket json
+```

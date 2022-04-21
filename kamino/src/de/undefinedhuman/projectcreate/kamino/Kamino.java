@@ -9,4 +9,8 @@ public class Kamino {
         QueryUtils.addEventTypes(events);
     }
 
+    public static void parseRequest() {
+
+    }
+
 }

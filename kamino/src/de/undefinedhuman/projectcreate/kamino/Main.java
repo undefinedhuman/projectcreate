@@ -15,7 +15,7 @@ import de.undefinedhuman.projectcreate.kamino.event.events.PlayerJoinEvent;
 import de.undefinedhuman.projectcreate.kamino.event.events.PlayerQuitEvent;
 import de.undefinedhuman.projectcreate.kamino.event.manager.EventBucketManager;
 import de.undefinedhuman.projectcreate.kamino.query.QueryEndpoint;
-import de.undefinedhuman.projectcreate.kamino.rest.APIKt;
+import de.undefinedhuman.projectcreate.kamino.rest.API;
 import de.undefinedhuman.projectcreate.server.plugin.Plugin;
 import net.jpountz.lz4.LZ4Compressor;
 import net.jpountz.lz4.LZ4Factory;
@@ -34,6 +34,8 @@ public class Main implements Plugin {
     private static final LZ4Compressor HIGH_COMPRESSOR = LZ4Factory.fastestInstance().highCompressor();
     private static final LZ4SafeDecompressor HIGH_DECOMPRESSOR = LZ4Factory.fastestInstance().safeDecompressor();
 
+    private API api;
+
     @Override
     public void init() {
         ConfigManager.getInstance().addConfigs(KaminoConfig.getInstance());
@@ -45,7 +47,8 @@ public class Main implements Plugin {
                 .build();
         couchbase.init();
 
-        APIKt.start();
+        api = new API(couchbase, HIGH_DECOMPRESSOR::decompress);
+        api.start();
 
         eventBucketManager = EventBucketManager.newInstance(couchbase)
                 .withSaveProcessor(new EventBucketManager.AsyncSaveProcessor(KaminoConfig.getInstance().numberOfThreads.getValue()))
@@ -62,20 +65,20 @@ public class Main implements Plugin {
         JsonObject blockBreakEvent = new JsonObject();
         blockBreakEvent.addProperty("eventTypes", BlockBreakEvent.class.getCanonicalName());
         JsonObject blockBreakEventFields = new JsonObject();
-        blockBreakEventFields.addProperty("worldNames", "Main");
+        blockBreakEventFields.addProperty("blockIDs", "992");
         JsonObject area = new JsonObject();
-        area.add("min", new Gson().toJsonTree(new Vector2(1, 1)));
-        area.add("max", new Gson().toJsonTree(new Vector2(10, 10)));
-        // blockBreakEventFields.add("area", area);
+        area.add("min", new Gson().toJsonTree(new Vector2(0, 0)));
+        area.add("max", new Gson().toJsonTree(new Vector2(1500, 1500)));
+        blockBreakEventFields.add("area", area);
         blockBreakEvent.add("fields", blockBreakEventFields);
-        // array.add(blockBreakEvent);
+        array.add(blockBreakEvent);
 
         JsonObject blockBreakEvent2 = new JsonObject();
         blockBreakEvent2.addProperty("eventTypes", BlockBreakEvent.class.getCanonicalName());
         JsonObject blockBreakEventFields2 = new JsonObject();
-        blockBreakEventFields2.addProperty("blockIDs", 992);
+        //blockBreakEventFields2.addProperty("worldNames", "Main");
         blockBreakEvent2.add("fields", blockBreakEventFields2);
-        array.add(blockBreakEvent2);
+        //array.add(blockBreakEvent2);
 
         JsonObject playerJoinEvent = new JsonObject();
         playerJoinEvent.addProperty("eventTypes", PlayerJoinEvent.class.getCanonicalName());
@@ -128,7 +131,7 @@ public class Main implements Plugin {
 
     @Override
     public void delete() {
-        APIKt.stop();
+        api.stop();
         couchbase.close();
         Log.info("[kamino] Deleted successfully!");
     }
