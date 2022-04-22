@@ -1,9 +1,6 @@
 package de.undefinedhuman.projectcreate.kamino;
 
 import com.badlogic.gdx.math.Vector2;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.playprojectcreate.kaminoapi.annotations.KaminoEvent;
 import de.undefinedhuman.projectcreate.engine.config.ConfigManager;
 import de.undefinedhuman.projectcreate.engine.event.Event;
@@ -14,7 +11,6 @@ import de.undefinedhuman.projectcreate.kamino.event.events.BlockBreakEvent;
 import de.undefinedhuman.projectcreate.kamino.event.events.PlayerJoinEvent;
 import de.undefinedhuman.projectcreate.kamino.event.events.PlayerQuitEvent;
 import de.undefinedhuman.projectcreate.kamino.event.manager.EventBucketManager;
-import de.undefinedhuman.projectcreate.kamino.query.QueryEndpoint;
 import de.undefinedhuman.projectcreate.kamino.rest.API;
 import de.undefinedhuman.projectcreate.server.plugin.Plugin;
 import net.jpountz.lz4.LZ4Compressor;
@@ -61,32 +57,34 @@ public class Main implements Plugin {
 
         Kamino.registerEvents(classes);
 
-        JsonArray array = new JsonArray();
-        JsonObject blockBreakEvent = new JsonObject();
-        blockBreakEvent.addProperty("eventTypes", BlockBreakEvent.class.getCanonicalName());
-        JsonObject blockBreakEventFields = new JsonObject();
-        blockBreakEventFields.addProperty("blockIDs", "992");
-        JsonObject area = new JsonObject();
-        area.add("min", new Gson().toJsonTree(new Vector2(0, 0)));
-        area.add("max", new Gson().toJsonTree(new Vector2(1500, 1500)));
-        blockBreakEventFields.add("area", area);
-        blockBreakEvent.add("fields", blockBreakEventFields);
-        array.add(blockBreakEvent);
+        insertFakeData();
 
-        JsonObject blockBreakEvent2 = new JsonObject();
-        blockBreakEvent2.addProperty("eventTypes", BlockBreakEvent.class.getCanonicalName());
-        JsonObject blockBreakEventFields2 = new JsonObject();
-        //blockBreakEventFields2.addProperty("worldNames", "Main");
-        blockBreakEvent2.add("fields", blockBreakEventFields2);
-        //array.add(blockBreakEvent2);
-
-        JsonObject playerJoinEvent = new JsonObject();
-        playerJoinEvent.addProperty("eventTypes", PlayerJoinEvent.class.getCanonicalName());
-        // array.add(playerJoinEvent);
-
-        Log.info(array);
-
-        Log.info(QueryEndpoint.parseRequest(couchbase, array, HIGH_DECOMPRESSOR::decompress, false).size());
+//        JsonArray array = new JsonArray();
+//        JsonObject blockBreakEvent = new JsonObject();
+//        blockBreakEvent.addProperty("eventTypes", BlockBreakEvent.class.getCanonicalName());
+//        JsonObject blockBreakEventFields = new JsonObject();
+//        blockBreakEventFields.addProperty("blockIDs", "992");
+//        JsonObject area = new JsonObject();
+//        area.add("min", new Gson().toJsonTree(new Vector2(0, 0)));
+//        area.add("max", new Gson().toJsonTree(new Vector2(1500, 1500)));
+//        blockBreakEventFields.add("area", area);
+//        blockBreakEvent.add("fields", blockBreakEventFields);
+//        array.add(blockBreakEvent);
+//
+//        JsonObject blockBreakEvent2 = new JsonObject();
+//        blockBreakEvent2.addProperty("eventTypes", BlockBreakEvent.class.getCanonicalName());
+//        JsonObject blockBreakEventFields2 = new JsonObject();
+//        //blockBreakEventFields2.addProperty("worldNames", "Main");
+//        blockBreakEvent2.add("fields", blockBreakEventFields2);
+//        //array.add(blockBreakEvent2);
+//
+//        JsonObject playerJoinEvent = new JsonObject();
+//        playerJoinEvent.addProperty("eventTypes", PlayerJoinEvent.class.getCanonicalName());
+//        // array.add(playerJoinEvent);
+//
+//        Log.info(array);
+//
+//        Log.info(QueryEndpoint.parseRequest(couchbase, array, HIGH_DECOMPRESSOR::decompress, false).size());
 
         Log.info("[kamino] Initialized successfully!");
     }

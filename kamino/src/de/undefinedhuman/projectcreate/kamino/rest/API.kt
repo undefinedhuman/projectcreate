@@ -15,7 +15,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-class API(val database: Database, val decompressor: Decompressor) {
+class API(private val database: Database, private val decompressor: Decompressor) {
 
     private val server: ApplicationEngine;
 

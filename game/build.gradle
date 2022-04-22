@@ -52,3 +52,33 @@ jar {
 }
 
 task dist(dependsOn: [jar]) {}
+
+publishing {
+    publications {
+        library(MavenPublication) {
+            artifact(tasks["jar"])
+        }
+        mavenJava(MavenPublication) {
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url "https://gitlab.playprojectcreate.com/api/v4/projects/2/packages/maven"
+            credentials(HttpHeaderCredentials) {
+                name = 'Job-Token'
+                value = System.getenv("CI_JOB_TOKEN")
+            }
+            authentication {
+                header(HttpHeaderAuthentication)
+            }
+        }
+    }
+}

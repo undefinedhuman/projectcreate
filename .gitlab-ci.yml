@@ -9,11 +9,23 @@ stages:
 variables:
   DOCKER_DRIVER: overlay2
 
-deploy:
+server deploy:
   stage: deploy
   image: gradle:7.4-jdk17
   script:
     - 'gradle :server:publish'
+
+game deploy:
+  stage: deploy
+  image: gradle:7.4-jdk17
+  script:
+    - 'gradle :game:publish'
+
+kamino deploy:
+  stage: deploy
+  image: gradle:7.4-jdk17
+  script:
+    - 'gradle :kamino:publish'
 
 pages:
   stage: documentation

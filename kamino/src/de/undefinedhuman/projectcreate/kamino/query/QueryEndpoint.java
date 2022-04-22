@@ -23,15 +23,6 @@ public class QueryEndpoint {
 
     // TODO CACHING
 
-    public static String parseRequest(Database database, String request, Decompressor decompressor, boolean includeAllEvents) {
-        try {
-            JsonArray array = new Gson().fromJson(request, JsonArray.class);
-            return parseRequest(database, array, decompressor, includeAllEvents).toString();
-        } catch (JsonSyntaxException ex) {
-            return null;
-        }
-    }
-
     public static JsonArray parseRequest(Database database, JsonArray request, Decompressor decompressor, boolean includeAllEvents) {
         StringBuilder query = new StringBuilder();
         HashMap<String, Object> parameters = new HashMap<>();
