@@ -14,18 +14,24 @@ server deploy:
   image: gradle:7.4-jdk17
   script:
     - 'gradle :server:publish'
+  only:
+    - main
 
 game deploy:
   stage: deploy
   image: gradle:7.4-jdk17
   script:
     - 'gradle :game:publish'
+  only:
+    - main
 
 kamino deploy:
   stage: deploy
   image: gradle:7.4-jdk17
   script:
     - 'gradle :kamino:publish'
+  only:
+    - main
 
 pages:
   stage: documentation
@@ -38,6 +44,8 @@ pages:
     - $CARGO_HOME/mdbook --version || curl -SSL https://api.github.com/repos/rust-lang/mdbook/releases | grep "browser_download_url" | grep 'x86_64-unknown-linux-gnu[.]tar.gz' | head -n 1 | grep -Eo 'https://[^\"]*' | xargs wget -O - | tar -xz --directory=$CARGO_HOME
   script:
     - $CARGO_HOME/mdbook build -d public
+  only:
+    - main
   artifacts:
     paths:
       - public
