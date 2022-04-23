@@ -20,7 +20,7 @@ class API(private val database: Database, private val decompressor: Decompressor
     private val server: ApplicationEngine;
 
     init {
-        server = embeddedServer(Netty, port = 8080) {
+        server = embeddedServer(Netty, port = 15080) {
             install(ContentNegotiation) {
                 gson()
             }
