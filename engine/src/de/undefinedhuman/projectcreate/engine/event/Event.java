@@ -7,9 +7,11 @@ import java.util.Date;
 
 public class Event {
 
+    public static Date DATE = new Date();
+
     @Metadata
     @QueryExcluded
     public final String eventType = this.getClass().getCanonicalName();
 
-    public final long timestamp = new Date().getTime();
+    public final long timestamp = DATE.getTime();
 }

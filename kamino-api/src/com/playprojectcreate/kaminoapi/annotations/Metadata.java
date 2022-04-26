@@ -13,6 +13,7 @@ import java.lang.reflect.Field;
 public @interface Metadata {
     String databaseName() default Utils.METADATA_DEFAULT_NAME;
     Class<? extends MetadataContainer> containerType() default MetadataContainer.class;
+    String index() default "";
 
     class Utils {
 

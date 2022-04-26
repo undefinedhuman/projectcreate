@@ -44,7 +44,8 @@ public class MetadataBucket {
         bucket.addProperty("timestamp-min", minTime);
         bucket.addProperty("timestamp-max", maxTime);
         JsonObject metadata = new JsonObject();
-        data.forEach((key, value) -> metadata.add(key, value.toJSON()));
+        for(String key : data.keySet())
+            metadata.add(key, data.get(key).toJSON());
         bucket.add("metadata", metadata);
         return bucket.toString();
     }

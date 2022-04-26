@@ -54,16 +54,26 @@ public class EventBucketManager {
     public record SaveBucketTask(Compressor compressor, Database database, EventBucket bucket) {
         public void execute() {
             long startTime = System.currentTimeMillis();
-            Log.info("Start saving bucket...");
-            byte[] decompressedData = bucket.serialize();
-            byte[] compressedData = compressor.compress(decompressedData);
+            byte[] decompressedData = new byte[0];
+            byte[] compressedData = new byte[0];
             UUID eventDataID = UUID.randomUUID();
-            database.saveEventData(eventDataID.toString(), compressedData);
+            try {
+                Log.info("Start saving bucket...");
+                decompressedData = bucket.serialize();
+                compressedData = compressor.compress(decompressedData);
+                database.saveEventData(eventDataID.toString(), compressedData);
+            } catch (Exception ex)  {
+                Log.error("Error while saving event bucket: ", ex);
+            }
 
-            UUID metadataID = UUID.randomUUID();
-            MetadataBucket metadata = new MetadataBucket(eventDataID.toString(), decompressedData.length, bucket.getEvents());
-            database.saveMetadata(metadataID.toString(), metadata.toJSON());
-            Log.info("Saved bucket with " + bucket.size() + " events to database! Time: " + (System.currentTimeMillis() - startTime) + "ms, Compressed size: " + compressedData.length);
+            try {
+                UUID metadataID = UUID.randomUUID();
+                MetadataBucket metadata = new MetadataBucket(eventDataID.toString(), decompressedData.length, bucket.getEvents());
+                database.saveMetadata(metadataID.toString(), metadata.toJSON());
+                Log.info("Saved bucket with " + bucket.size() + " events to database! Time: " + (System.currentTimeMillis() - startTime) + "ms, Compressed size: " + compressedData.length);
+            } catch (Exception ex)  {
+                Log.error("Error while saving metadata bucket: ", ex);
+            }
         }
     }
 

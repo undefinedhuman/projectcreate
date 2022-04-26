@@ -14,6 +14,7 @@ import de.undefinedhuman.projectcreate.kamino.event.metadata.MetadataUtils;
 import de.undefinedhuman.projectcreate.kamino.utils.Decompressor;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -25,6 +26,7 @@ public class QueryEndpoint {
 
     public static JsonArray parseRequest(Database database, JsonArray request, Decompressor decompressor, boolean includeAllEvents) {
         StringBuilder query = new StringBuilder();
+        ArrayList<String> indexNames = new ArrayList<>();
         HashMap<String, Object> parameters = new HashMap<>();
         MultiMap<String, JsonObject> requestEventDataFields = new MultiMap<>();
         for(int i = 0; i < request.size(); i++) {
@@ -45,7 +47,7 @@ public class QueryEndpoint {
             if(!(jsonObject.get("fields") instanceof JsonObject fields)) continue;
             ImmutableArray<MetadataField> metadataFields = MetadataUtils.getMetadataFieldsForEvent(eventType);
             requestEventDataFields.add(eventType.getCanonicalName(), fields);
-            query.append(i != 0 ? " OR " : "").append("(ARRAY_CONTAINS(").append(database.getTableName()).append(".eventTypes, ").append("\"").append(eventType.getCanonicalName()).append("\")");
+            query.append(i != 0 ? " OR " : "").append("((ANY id IN ").append(database.getTableName()).append(".eventTypes SATISFIES id == ").append("\"").append(eventType.getCanonicalName()).append("\" END)");
             metadataFields.forEach(metadataField -> {
                 if(!fields.has(metadataField.getKey())) return;
                 // TODO CATCH JSON SYNTAX EXCEPTION
@@ -69,11 +71,12 @@ public class QueryEndpoint {
                     parameters.put(parameterKeys[j], parameter);
                 }
                 query.append(" AND ").append(metadataField.createMetadataContainer().getQuery().createQuery(database.getTableName() + "." + metadataField.getKey(), parameterKeys));
+                if(metadataField.hasIndex()) indexNames.add(metadataField.getKey());
             });
             query.append(")");
         }
         JsonArray output = new JsonArray();
-        for(Tuple<String, Integer> eventBucketID : database.searchMetadata(query.toString(), parameters)) {
+        for(Tuple<String, Integer> eventBucketID : database.searchMetadata(indexNames.toArray(String[]::new), query.toString(), parameters)) {
             byte[] compressedData = database.searchEvent(eventBucketID.getT());
             byte[] uncompressedData = decompressor.decompress(compressedData, eventBucketID.getU());
             String data = new String(uncompressedData);

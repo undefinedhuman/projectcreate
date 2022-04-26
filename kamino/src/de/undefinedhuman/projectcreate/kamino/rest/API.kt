@@ -15,7 +15,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-class API(private val database: Database, private val decompressor: Decompressor) {
+class API(private val database: Database, private val decompressor: Decompressor, queryUtils: QueryUtils) {
 
     private val server: ApplicationEngine;
 
@@ -27,7 +27,7 @@ class API(private val database: Database, private val decompressor: Decompressor
 
             routing {
                 get("/v1/eventTypes") {
-                    call.respond(QueryUtils.getQueryTypesJson())
+                    call.respond(queryUtils.queryTypes)
                 }
                 post("/v1/events") {
                     val array = call.receive<JsonArray>()

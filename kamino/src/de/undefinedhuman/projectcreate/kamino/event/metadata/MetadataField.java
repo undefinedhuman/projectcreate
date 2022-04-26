@@ -62,6 +62,10 @@ public class MetadataField {
         return excludedFromQueries;
     }
 
+    public boolean hasIndex() {
+        return !metadata.index().equalsIgnoreCase("");
+    }
+
     public Object parseValue(Event event) {
         try {
             return field.get(event);

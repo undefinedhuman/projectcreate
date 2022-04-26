@@ -2,11 +2,13 @@ package de.undefinedhuman.projectcreate.kamino.query;
 
 import com.badlogic.gdx.math.Vector2;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.playprojectcreate.kaminoapi.metadata.ContainerUtils;
 import de.undefinedhuman.projectcreate.engine.event.Event;
 import de.undefinedhuman.projectcreate.engine.utils.ds.ImmutableArray;
 import de.undefinedhuman.projectcreate.engine.utils.ds.MultiMap;
+import de.undefinedhuman.projectcreate.kamino.database.Database;
 import de.undefinedhuman.projectcreate.kamino.event.metadata.MetadataField;
 import de.undefinedhuman.projectcreate.kamino.event.metadata.MetadataUtils;
 
@@ -16,9 +18,6 @@ import java.util.Arrays;
 import java.util.Set;
 
 public class QueryUtils {
-
-    private static final MultiMap<Class<? extends Event>, QueryField> EVENT_QUERY_TYPES = new MultiMap<>();
-    private static final JsonArray CACHED_QUERY_TYPES = new JsonArray();
 
     private static final Set<Class<?>> IMPLEMENTED_CLASSES = Set.of(
             Boolean.class,
@@ -33,12 +32,21 @@ public class QueryUtils {
             Vector2.class
     );
 
-    public static JsonArray getQueryTypesJson() {
+    private final MultiMap<Class<? extends Event>, QueryField> EVENT_QUERY_TYPES = new MultiMap<>();
+    private final JsonArray CACHED_QUERY_TYPES = new JsonArray();
+
+    private final Database database;
+
+    public QueryUtils(Database database) {
+        this.database = database;
+    }
+
+    public JsonElement getQueryTypes() {
         return CACHED_QUERY_TYPES;
     }
 
     @SafeVarargs
-    public static void addEventTypes(Class<? extends Event>... eventTypes) {
+    public final void addEventTypes(Class<? extends Event>... eventTypes) {
         for(Class<? extends Event> eventType : eventTypes) {
             if(EVENT_QUERY_TYPES.containsKey(eventType)) continue;
             EVENT_QUERY_TYPES.set(eventType, parseEventQueryTypes(eventType));
@@ -46,7 +54,7 @@ public class QueryUtils {
         }
     }
 
-    private static JsonObject getJsonOfEventType(Class<? extends Event> eventType) {
+    private JsonObject getJsonOfEventType(Class<? extends Event> eventType) {
         JsonObject eventQueryType = new JsonObject();
         if(!EVENT_QUERY_TYPES.containsKey(eventType))
             return eventQueryType;
@@ -58,23 +66,25 @@ public class QueryUtils {
         return eventQueryType;
     }
 
-    private static ArrayList<QueryField> parseEventQueryTypes(Class<? extends Event> eventType) {
+    private ArrayList<QueryField> parseEventQueryTypes(Class<? extends Event> eventType) {
         ArrayList<QueryField> wrappers = new ArrayList<>();
         ImmutableArray<MetadataField> metadataFieldsOfEvent = MetadataUtils.getMetadataFieldsForEvent(eventType);
         for(MetadataField metadataField : metadataFieldsOfEvent) {
             if(metadataField.isExcludedFromQueries()) continue;
             wrappers.add(parseClass(metadataField.getKey(), metadataField.getQueryType()));
+            if(metadataField.hasIndex())
+                database.createIndex(metadataField.getKey(), "metadata." + metadataField.getKey());
         }
         return wrappers;
     }
 
-    private static QueryField parseClass(String key, Class<?> type) {
+    private QueryField parseClass(String key, Class<?> type) {
         type = ContainerUtils.wrapPrimitive(type);
         if(IMPLEMENTED_CLASSES.contains(type)) return new QueryField(key, type);
         else return new QueryField(key, parseFields(type.getDeclaredFields()));
     }
 
-    private static QueryField[] parseFields(Field[] fields) {
+    private QueryField[] parseFields(Field[] fields) {
         return Arrays.stream(fields)
                 .map(field -> parseClass(field.getName(), field.getType()))
                 .toArray(QueryField[]::new);

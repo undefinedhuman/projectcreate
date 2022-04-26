@@ -13,6 +13,7 @@ import com.couchbase.client.java.kv.UpsertOptions;
 import com.couchbase.client.java.manager.bucket.BucketSettings;
 import com.couchbase.client.java.manager.collection.CollectionSpec;
 import com.couchbase.client.java.manager.query.CreatePrimaryQueryIndexOptions;
+import com.couchbase.client.java.manager.query.CreateQueryIndexOptions;
 import com.couchbase.client.java.query.QueryOptions;
 import com.couchbase.client.java.query.QueryResult;
 import de.undefinedhuman.projectcreate.engine.log.Log;
@@ -21,6 +22,8 @@ import de.undefinedhuman.projectcreate.server.ServerManager;
 
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -62,6 +65,7 @@ public class Couchbase implements Database {
             Scope scope = bucket.scope(SCOPE_NAME);
             metaCollection = scope.collection(METADATA_COLLECTION_NAME);
             dataCollection = scope.collection(EVENT_DATA_COLLECTION_NAME);
+            createIndex("eventTypes", "DISTINCT ARRAY id FOR id IN metadata.eventTypes END");
             Log.info("Successfully established connection to couchbase cluster!");
         } catch(Exception ex) {
             Log.error("Couchbase connection failed. Shutting down server!", ex);
@@ -110,7 +114,8 @@ public class Couchbase implements Database {
                 CreatePrimaryQueryIndexOptions options = CreatePrimaryQueryIndexOptions
                         .createPrimaryQueryIndexOptions()
                         .scopeName(scopeName)
-                        .collectionName(collectionName);
+                        .collectionName(collectionName)
+                        .indexName(collectionName + "_primary");
                 cluster.queryIndexes().createPrimaryIndex(bucketName, options);
             } catch (IndexExistsException ex) {
                 Log.debug("Primary index for collection " + collectionName + " in scope " + scopeName + " already exist!");
@@ -120,10 +125,15 @@ public class Couchbase implements Database {
     }
 
     @Override
-    public Tuple<String, Integer>[] searchMetadata(String whereQuery, Map<String, ?> parameters) {
+    public Tuple<String, Integer>[] searchMetadata(String[] indexNames, String whereQuery, Map<String, ?> parameters) {
         if(cluster == null || whereQuery == null || whereQuery.isEmpty() || parameters == null)
             return new Tuple[0];
-        String selectQuery = "SELECT eventDataID, decompressedSize FROM " + bucketName + "." + SCOPE_NAME + "." + METADATA_COLLECTION_NAME + " AS kamino WHERE " + whereQuery;
+        String[] indexNamesWithPrimary = new String[indexNames.length + 2];
+        indexNamesWithPrimary[0] = METADATA_COLLECTION_NAME + "_primary";
+        indexNamesWithPrimary[1] = "eventTypes";
+        System.arraycopy(indexNames, 0, indexNamesWithPrimary, 2, indexNames.length);
+        String selectQuery = "SELECT eventDataID, decompressedSize FROM " + bucketName + "." + SCOPE_NAME + "." + METADATA_COLLECTION_NAME + " AS kamino USE INDEX (" + String.join(", ", indexNamesWithPrimary) + ")  WHERE " + whereQuery;
+        Log.info(selectQuery);
         QueryResult result = cluster.query(selectQuery, QueryOptions.queryOptions().readonly(true).parameters(JsonObject.from(parameters)));
         return result.rowsAsObject()
                 .stream()
@@ -167,6 +177,26 @@ public class Couchbase implements Database {
         if(cluster.diagnostics().state() != ClusterState.ONLINE || dataCollection == null) return false;
         dataCollection.upsert(id, data, UpsertOptions.upsertOptions().transcoder(RawBinaryTranscoder.INSTANCE));
         return true;
+    }
+
+    @Override
+    public void createIndex(String indexName, String... fields) {
+        if(fields.length == 0) return;
+        if(Arrays.stream(fields).anyMatch(fieldName -> fieldName.equalsIgnoreCase(METADATA_COLLECTION_NAME + "_primary"))) {
+            Log.warn("Dont create a metadata field that uses a index with name " + METADATA_COLLECTION_NAME + "_primary");
+            return;
+        }
+        try {
+            CreateQueryIndexOptions options = CreateQueryIndexOptions
+                    .createQueryIndexOptions()
+                    .scopeName(SCOPE_NAME)
+                    .collectionName(METADATA_COLLECTION_NAME);
+            cluster.queryIndexes().createIndex(bucketName, indexName, List.of(fields), options);
+        } catch (IndexExistsException ex) {
+            Log.debug("Index for fields " + Arrays.toString(fields) + " in collection " + METADATA_COLLECTION_NAME + " in scope " + SCOPE_NAME + " already exist!");
+        } catch (IndexFailureException ex) {
+            Log.error("Failed to create index for fields " + Arrays.toString(fields) + " in collection " + METADATA_COLLECTION_NAME + " in scope " + SCOPE_NAME + "!", ex);
+        }
     }
 
     @Override

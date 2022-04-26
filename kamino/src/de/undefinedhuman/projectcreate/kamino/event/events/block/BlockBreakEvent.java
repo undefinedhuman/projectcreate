@@ -1,25 +1,23 @@
-package de.undefinedhuman.projectcreate.kamino.event.events;
+package de.undefinedhuman.projectcreate.kamino.event.events.block;
 
 import com.badlogic.gdx.math.Vector2;
 import com.playprojectcreate.kaminoapi.annotations.KaminoEvent;
 import com.playprojectcreate.kaminoapi.annotations.Metadata;
 import com.playprojectcreate.kaminoapi.metadata.container.area.AreaMetadataContainer;
-import de.undefinedhuman.projectcreate.engine.event.Event;
+import de.undefinedhuman.projectcreate.kamino.event.events.base.WorldItemEvent;
 
 @KaminoEvent
-public class BlockBreakEvent extends Event {
+public class BlockBreakEvent extends WorldItemEvent {
 
-    @Metadata
-    public final int blockID;
-    @Metadata
-    public final String worldName;
     @Metadata(databaseName = "area", containerType = AreaMetadataContainer.class)
     public final Vector2 position;
+    @Metadata
+    public final String playerUUID;
 
-    public BlockBreakEvent(int blockID, String worldName, Vector2 position) {
-        this.blockID = blockID;
-        this.worldName = worldName;
+    public BlockBreakEvent(int itemID, String worldName, Vector2 position, String playerUUID) {
+        super(itemID, worldName);
         this.position = position;
+        this.playerUUID = playerUUID;
     }
 
 }

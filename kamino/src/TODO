@@ -10,6 +10,8 @@ TODO ADD COUCHBASE TEST INSERTION AND REMOVAL OF FOR EXAMPLE ACCESS_INTEGER TO T
 TODO CREATE COMPLEX QUERY BUILDER IN THE FRONTEND
     -> User should also be able to query just events or just block data without specifiying event class = filter only area not BlockBreakEvent + area
 
+Filter not only by metadata, well obviously at first but later when recieved all the events also filter by all none metadatafields
+
 Metadata Container which saves locations of e.g. blockbreakevent not in a global area container but in a world name specific container
 
 Check permissions of user like creating scopes and if scope already exists if user still needs permission to create scope etc.

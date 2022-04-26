@@ -16,12 +16,11 @@ public class KaminoConfig extends Config {
     public final StringSetting databaseUser = new StringSetting("DATABASE_USER", "couchbaseUser");
     public final StringSetting databasePassword = new StringSetting("DATABASE_PASSWORD", "V3ryS3cur3P4ssw0rd");
     public final StringSetting bucketName = new StringSetting("DATABASE_BUCKET_NAME", "projectcreate");
-    public final StringSetting scopeName = new StringSetting("DATABASE_SCOPE_NAME", "kamino");
     public final IntSetting numberOfThreads = new IntSetting("NUMBER_OF_THREADS", DEFAULT_NUMBER_OF_THREADS);
 
     private KaminoConfig() {
         super("kamino/kamino");
-        addSettings(databaseUrl, databaseUser, databasePassword, bucketName, scopeName, numberOfThreads);
+        addSettings(databaseUrl, databaseUser, databasePassword, bucketName, numberOfThreads);
     }
 
     @Override
