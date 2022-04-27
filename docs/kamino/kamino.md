@@ -32,16 +32,16 @@ Start the server as usual, when setting it up for the first time, stop it again 
 
 ## Configuration
 
-* DATABASE_URL=127.0.0.1
-* DATABASE_USER=undefinedhuman      
+* `DATABASE_URL=127.0.0.1`
+* `DATABASE_USER=undefinedhuman`      
  -> Must be able to insert and read documents in the specified collection; if not configured manually, must be able to create the bucket, scope and collection.
 
-* DATABASE_PASSWORD=V3RY_S3CUR3_P4SSW0RD
+* `DATABASE_PASSWORD=V3RY_S3CUR3_P4SSW0RD`
 
-* DATABASE_BUCKET_NAME=projectcreate   
+* `DATABASE_BUCKET_NAME=projectcreate`   
  -> If not manually created, the plugin does it.
 
-* NUMBER_OF_THREADS=1  
+* `NUMBER_OF_THREADS=1`  
   -> Specifies the amount of threads used for processing the buckets of event which will be saved to the database.  
   -> >= 1
 
