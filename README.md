@@ -13,6 +13,8 @@
 5. [Author](#author)
 6. [License](#license)
 
+> SE_06 All relevant code is in the kamino & kamino-api directories, most of the database code is in kamino/src/de/undefinedhuman/projectcreate/kamino/database/Couchbase.java
+
 ## Technologies
 Project is created with:
 * Java JDK Version 17
