@@ -1,7 +1,7 @@
 # Summary
 
 - [Introduction](./README.md)
-- [Documentation](./docs/documentation.md)
+- [Modules](./docs/documentation.md)
 
 - [Server](./docs/server.md)
   - [Plugins](./docs/server/plugin.md)
