@@ -81,6 +81,7 @@ public class QueryEndpoint {
             byte[] uncompressedData = decompressor.decompress(compressedData, eventBucketID.getU());
             String data = new String(uncompressedData);
             JsonArray array = new Gson().fromJson(data, JsonArray.class);
+            Log.info(array);
             if(includeAllEvents) {
                 output.addAll(array);
                 continue;

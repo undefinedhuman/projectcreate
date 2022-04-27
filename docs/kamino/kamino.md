@@ -1,6 +1,6 @@
 # Kamino
 
-> SE_06 
+> SE_06 [Metadata](#metadata)
 
 Imagine running a commercial server; your players are doing all sorts of things and encountering or pretending to encounter all kinds of issues. Suppose the server has some precious items, or actually any item; a player (undefinedplayer1) puts one of them in a chest
 and then is offline for a few days. His friend (undefinedplayer2) takes the item, then after a couple of days, undefinedplayer1 reconnects but does not communicate with undefinedplayer2 and looks for his item. After freaking out, he contacts an admin:
@@ -56,35 +56,94 @@ Even though the plugin can create the required buckets, scopes and collections i
 It is recommended to set up a bucket with the name "projectcreate" per standard (configurable via kamino.config) and to specify the appropriate amount of available memory.
 
 ## Compression
-Kamino saves a fixed maximum amount of events in one bucket, which is either saved after a fixed amount of time (default: 5 minutes) or when the bucket reached full capacity.
-For each event in the bucket metadata is extracted; which is then saved in an extra metadata bucket; afterwards the event bucket gets
-compressed and saved, currently the compression ratio is on average 2.
-Compression ratio can however be greatly impacted by different factors, and configurations need to be done for specific use cases.
-Some factors that I found highly impact the compression rate, and that will be tweak able in the future:
+Kamino stores a fixed maximum number of events in a bucket, which is saved either after a certain time (default: 5 minutes) or when the bucket is full.
+For each event in the bucket, metadata is extracted -> the metadata bucket is stored separately -> the event bucket is compressed and stored, with an average compression rate of currently 2.
+
+However, the compression ratio can be greatly influenced by various factors, and configurations for specific use cases will be possible in the future.
+I have found that some factors have a great influence on the compression ratio:
 
 Maximum amount of events per buckets - higher chance of repetitive events \
 Amount of player/Amount of Events per 5 Minutes - Increase/Decrease time after which bucket will be saved based on expected server usage \
 Compression Algorithm - Currently the only option is lz4, later: Multiple selectable algorithms
 
 ### Example 
-Generated event data (currently not accurate real data, will be possible when the server supports a wider range of event types) \
+Generated event data (estimated events, not accurate real data, will be possible when the server supports a wider range of event types) \
 Max events per bucket: 10000 \
 Amount of players: 1000
 
 #### Compressed
 
-| Player | Hours | Amount of Buckets generated | Disk utilization |
-|--------|-------|-----------------------------|------------------|
-| 1000   | 1     | 722                         | 182.998MiB       |
-| 1000   | 2     | 1354                        | 366.05MiB        |
-| 1000   | 3     | 2290                        | 548.706MiB       |
+| Player | Hours | Buckets generated | Events generated | Disk utilization |
+|--------|-------|-------------------|------------------|------------------|
+| 1000   | 1     | 722               | 7220645          | 182.998MiB       |
+| 1000   | 2     | 1354              | 13541893         | 366.05MiB        |
+| 1000   | 3     | 2290              | 22905431         | 548.706MiB       |
 
 #### Uncompressed
 
-| Player | Hours | Amount of Buckets generated | Disk utilization |
-|--------|-------|-----------------------------|------------------|
-| 1000   | 1     | 722                         | 328.33MiB        |
-| 1000   | 2     | 1354                        | 656.084MiB       |
-| 1000   | 3     | 2290                        | 984.6MiB         |
+| Player | Hours | Buckets generated | Events generated | Disk utilization |
+|--------|-------|-------------------|------------------|------------------|
+| 1000   | 1     | 722               | 7220645          | 328.33MiB        |
+| 1000   | 2     | 1354              | 13541893         | 656.084MiB       |
+| 1000   | 3     | 2290              | 22905431         | 984.6MiB         |
+
+## Event structure
+Kamino logs all events that extend the engine's [event](https://gitlab.playprojectcreate.com/undefinedhuman/project-create/-/blob/dev/engine/src/de/undefinedhuman/projectcreate/engine/event/Event.java) class and are registered with Kamino during server runtime. While Kamino itself records all-important game/server events, external plugins can also create and report their own events. As a result, Kamino needs a dynamic system to register, parse, store and search events that are unknown at compile time of the plugin.
+
+#### Example (BlockBreakEvent):
+
+```java
+public class BlockBreakEvent extends WorldItemEvent {
+
+    @Metadata(databaseName = "area", containerType = AreaMetadataContainer.class)
+    public final Vector2 position;
+    @Metadata
+    public final String playerUUID;
+
+    public BlockBreakEvent(int itemID, String worldName, Vector2 position, String playerUUID) {
+        super(itemID, worldName);
+        this.position = position;
+        this.playerUUID = playerUUID;
+    }
+
+}
+```
 
 ## Metadata
+Each non-static field in the event class and its parent classes is stored in the JSON object of the event. If a field has a metadata annotation, it is parsed and stored in the metadata area associated with the event bucket. How it is parsed is defined by the metadata annotation. Currently, there are two options (containerType). However, this will be extended in the future, and again any external plugin can implement its own systems.
+
+Fields should be provided as metadata if you want to query them efficiently. (It will also be possible to query fields without metadata in later versions of the plugin). However, the data should be highly repetitive to avoid bloating the metadata bucket. Player IDs are perfect as metadata. There are a fixed number of them. Each player usually produces a number much larger than 1 event per metadata bucket, making them highly repetitive.
+
+### Annotation
+```java
+@Metadata(databaseName = (optional, String), containerType = (optional, Class which extends MetadataContainer), index = (optional, String))
+```
+* databaseName = Field name used in the database, optional, default: FIELD_NAME + "s"
+* containerType = Class which extends MetadataContainer, defines the way the field value is stored in the metadata bucket, optional, default: BasicMetadataContainer
+* index = Define a secondary database index, optimize performance for this specific field, optional 
+
+#### BasicMetadataContainer:
+The container saves the value of each field in a HashSet, which removes all duplicates.
+
+#### AreaMetadataContainer: 
+Positions tend not to repeat that often, so the area container analyses each position in the events and creates an area that merges all of them.
+
+Since this is relatively inefficient and the world is later divided into chunks, all chunks in which an event has occurred will be stored instead.
+
+#### Example
+```
+{
+    "serverIP": "168.0.1.67",
+    "amountOfEvents":4500,
+    "timestamp-min":1649359692802,
+    "timestamp-max":1649359692802, // MAXIMUM OF 5 MINUTES OR 5000 EVENTS ?
+    metadata: {
+        eventClasses: [ BlockBreakEvent, PlayerJoinEvent, PlayerQuitEvent ]
+        playerIDs: [ "UUID1", "UUID2", "UUID3" ]
+        blockIDs: [ 1, 2, 67, 34, 90 ]
+        area: { min: { x: 0, y: 10 }, max: { x: 10, y: 90 } }
+        worldNames: [ "main" ]
+    },
+    "eventBucketID": UUIDv4
+}
+```

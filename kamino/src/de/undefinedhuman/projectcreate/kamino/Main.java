@@ -77,21 +77,7 @@ public class Main implements Plugin {
 
         Kamino.registerEvents(classes);
 
-//         Event generation estimated (not accurate real data)
-//
-//         Compressed Metadata + Events (10000 max events in one event bucket)
-//         Player | Hours | Amount of Buckets | Disk utilization
-//         1000 | 1 | 722 | 182.998MiB
-//         1000 | 2 | 1354 | 366.05MiB
-//         1000 | 3 | 2290 | 548.706MiB
-//
-//         Uncompressed Metadata + Events (10000 max events in one event bucket)
-//         Player | Hours | Amount of Buckets | Disk utilization
-//         1000 | 1 | 722 | 328.33MiB
-//         1000 | 2 | 1354 | 656.084MiB
-//         1000 | 3 | 2290 | 984.6MiB
-
-        generateFakeData(3, 1000);
+        generateFakeData(1, 100);
 
         Log.info("[kamino] Initialized successfully!");
     }
