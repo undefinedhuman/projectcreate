@@ -66,8 +66,8 @@ public class Main implements Plugin {
 
         eventBucketManager = EventBucketManager.newInstance(couchbase)
                 .withSaveProcessor(new EventBucketManager.AsyncSaveProcessor(KaminoConfig.getInstance().numberOfThreads.getValue()))
-                .withMaxEventsInBucket(10000)
-                .withCompression(input -> input)
+                .withMaxEventsInBucket(5000)
+                .withCompression(HIGH_COMPRESSOR::compress)
                 .withSaveProcessor(new EventBucketManager.AsyncSaveProcessor(1))
                 .build();
 
@@ -77,7 +77,7 @@ public class Main implements Plugin {
 
         Kamino.registerEvents(classes);
 
-        generateFakeData(1, 100);
+        generateFakeData(1, 10);
 
         Log.info("[kamino] Initialized successfully!");
     }

@@ -1,6 +1,6 @@
 # Kamino
 
-> SE_06 [Metadata](#metadata)
+> SE_06 First paragraphs explain the project and the installation; compression is partly relevant for the module, the description of the collections and indices starts with metadata.
 
 Imagine running a commercial server; your players are doing all sorts of things and encountering or pretending to encounter all kinds of issues. Suppose the server has some precious items, or actually any item; a player (undefinedplayer1) puts one of them in a chest
 and then is offline for a few days. His friend (undefinedplayer2) takes the item, then after a couple of days, undefinedplayer1 reconnects but does not communicate with undefinedplayer2 and looks for his item. After freaking out, he contacts an admin:
@@ -18,6 +18,7 @@ Kamino attempts to solve this problem by collecting all in-game events, such as 
 3. [Couchbase](#couchbase-setup)
 4. [Compression](#compression)
 5. [Metadata](#metadata)
+6. [Indexation](#indexation)
 
 ## Installation
 
@@ -114,9 +115,11 @@ Each non-static field in the event class and its parent classes is stored in the
 
 Fields should be provided as metadata if you want to query them efficiently. (It will also be possible to query fields without metadata in later versions of the plugin). However, the data should be highly repetitive to avoid bloating the metadata bucket. Player IDs are perfect as metadata. There are a fixed number of them. Each player usually produces a number much larger than 1 event per metadata bucket, making them highly repetitive.
 
+> SE_06 Specific information: Each Metadata bucket contains a dynamic amount of metadata container data.  
+
 ### Annotation
 ```java
-@Metadata(databaseName = (optional, String), containerType = (optional, Class which extends MetadataContainer), index = (optional, String))
+@Metadata(databaseName = (String), containerType = (Class extends MetadataContainer), index = (String))
 ```
 * databaseName = Field name used in the database, optional, default: FIELD_NAME + "s"
 * containerType = Class which extends MetadataContainer, defines the way the field value is stored in the metadata bucket, optional, default: BasicMetadataContainer
@@ -131,19 +134,109 @@ Positions tend not to repeat that often, so the area container analyses each pos
 Since this is relatively inefficient and the world is later divided into chunks, all chunks in which an event has occurred will be stored instead.
 
 #### Example
-```
+
+Metadata Document
+
+```json
 {
     "serverIP": "168.0.1.67",
     "amountOfEvents":4500,
     "timestamp-min":1649359692802,
-    "timestamp-max":1649359692802, // MAXIMUM OF 5 MINUTES OR 5000 EVENTS ?
-    metadata: {
-        eventClasses: [ BlockBreakEvent, PlayerJoinEvent, PlayerQuitEvent ]
-        playerIDs: [ "UUID1", "UUID2", "UUID3" ]
-        blockIDs: [ 1, 2, 67, 34, 90 ]
-        area: { min: { x: 0, y: 10 }, max: { x: 10, y: 90 } }
-        worldNames: [ "main" ]
+    "timestamp-max":1649359692802,
+    "metadata": {
+        "eventClasses": [ 
+          "de.undefinedhuman.projectcreate.kamino.event.events.entity.EntitySpawnEvent", 
+          "de.undefinedhuman.projectcreate.kamino.event.events.player.PlayerJoinEvent", 
+          "de.undefinedhuman.projectcreate.kamino.event.events.block.BlockBreakEvent",
+          ...
+        ],
+        "playerIDs": [ 
+          "3f2041d5-62b5-4859-892c-535ab5bfa04a", 
+          "81d37e88-fa1e-495a-99b1-cd3ca8d29f2f", 
+          "9773cc7c-ea19-46ce-b2b6-96adba6e79a2",
+          ...
+        ],
+        "blockIDs": [ 
+          1, 2, 67, 34, 90, ... 
+        ],
+        "area": { 
+          "min": { 
+            "x": 0, 
+            "y": 10
+          }, 
+          "max": { 
+            "x": 10, 
+            "y": 90
+          }
+        },
+        "worldNames": [ 
+          "Main", 
+          ... 
+        ]
     },
-    "eventBucketID": UUIDv4
+    "eventBucketID": "65a41e88-fa1e-432a-99b1-cd4fa8d29f2f"
 }
 ```
+
+Event Document
+
+```json
+[
+  {
+    "playerUUID": "81d37e88-fa1e-495a-99b1-cd3ca8d29f2f",
+    "blueprintID": 0,
+    "eventType": "de.undefinedhuman.projectcreate.kamino.event.events.player.PlayerJoinEvent",
+    "timestamp": 1651087830042
+  },
+  {
+    "worldName": "Main",
+    "blueprintID": 9,
+    "eventType": "de.undefinedhuman.projectcreate.kamino.event.events.entity.EntitySpawnEvent",
+    "timestamp": 61609183200000
+  },
+  {
+    "position": {
+      "x": 1000.0,
+      "y": 1125.0
+    },
+    "playerUUID": "3f2041d5-62b5-4859-892c-535ab5bfa04a",
+    "worldName": "Main",
+    "itemID": 46,
+    "eventType": "de.undefinedhuman.projectcreate.kamino.event.events.block.BlockBreakEvent",
+    "timestamp": 61609183200000
+  },
+  {
+    "position": {
+      "x": 2036.0,
+      "y": 1170.0
+    },
+    "playerUUID": "9773cc7c-ea19-46ce-b2b6-96adba6e79a2",
+    "worldName": "Main",
+    "itemID": 21,
+    "eventType": "de.undefinedhuman.projectcreate.kamino.event.events.block.BlockBreakEvent",
+    "timestamp": 61609183200000
+  },
+  ...
+]
+```
+
+## Indexation
+Both collections (bucket types) contain a primary index that allows queries with all available fields. A secondary index can be created by any metadata field, which will be used automatically when queries are made against that field.
+
+> Again: Each external plugin can specify their own indicies for their metadata fields.
+
+### Example
+As an example showcase, the secondary index used for the eventType field in the metadata bucket:
+
+Indexing of buckets/documents is done separately according to the event types used in the bucket, which enables much faster retrieval of less frequently used event types.
+
+```N1QL
+CREATE INDEX eventTypes ON projectcreate.kamino.meta((distinct (array id for id in (metadata.eventTypes) end)))
+```
+
+> Parameters: 10 Hours, 1000 Players, 7154 Buckets generated, 1.8GB Disk utilization, 100 MB Secondary Index size
+
+| EventType       | Primary Index only | Primary + Secondary Index |
+|-----------------|--------------------|---------------------------|
+| BlockBreakEvent | average 1s         | average 1s                |
+| PlayerJoinEvent | average 1s         | average 3.5ms             |

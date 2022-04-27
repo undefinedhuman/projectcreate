@@ -35,7 +35,7 @@ git clone https://gitlab.playprojectcreate.com/undefinedhuman/project-create.git
 cd project-create/
 ```
 
-## Usage
+### Usage
 ```sh
 # Run either part of the project except the server by replacing "SUB_PROJECT_NAME" with either "game", "editor", "updater" or "launcher" to launch the specific sub project
 ./gradlew :SUB_PROJECT_NAME:run
@@ -49,7 +49,7 @@ It is recommended for running a local development server to use arguments that p
 ./gradlew :SUB_PROJECT_NAME:run --args='".projectcreate/server" "External" "debug"'
 ```
 
-## Plugin Installation (Kamino)
+### Plugin Installation (Kamino)
 Plugin installation can be done by placing the plugin jar file in the plugin folder of the server.
 
 Example: 
