@@ -3,11 +3,13 @@ package de.undefinedhuman.projectcreate.engine.base;
 import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.LineWriter;
-import de.undefinedhuman.projectcreate.engine.network.NetworkSerialization;
+import de.undefinedhuman.projectcreate.engine.log.Log;
+import de.undefinedhuman.projectcreate.engine.network.NetworkSerializable;
 
-public class Transform implements NetworkSerialization {
+public class Transform implements NetworkSerializable {
 
-    protected Vector2 position = new Vector2(), size = new Vector2();
+    protected Vector2 position = new Vector2();
+    protected Vector2 size = new Vector2();
 
     public Transform() {}
 
@@ -15,8 +17,13 @@ public class Transform implements NetworkSerialization {
         this.size.set(size);
     }
 
+    public Transform(Transform transform) {
+        this.position.set(transform.position);
+        this.size.set(transform.size);
+    }
+
     public Vector2 getPosition() {
-        return position;
+        return new Vector2(position);
     }
     public void setPosition(Vector2 position) {
         setPosition(position.x, position.y);
@@ -26,11 +33,14 @@ public class Transform implements NetworkSerialization {
         this.position.add(x, y);
     }
     public void addPosition(Vector2 position) {
-        this.position.add(position);
+        this.addPosition(position.x, position.y);
     }
     public Vector2 getSize() { return size; }
     public void setSize(Vector2 size) {
         this.size = size;
+    }
+    public void setSize(float width, float height) {
+        this.size.set(width, height);
     }
     public Vector2 getCenter() {
         return new Vector2().mulAdd(size, 0.5f);
@@ -42,13 +52,18 @@ public class Transform implements NetworkSerialization {
     public float getY() { return position.y; }
 
     @Override
-    public void send(LineWriter writer) {
+    public void serialize(LineWriter writer) {
         writer.writeVector2(position);
     }
 
     @Override
-    public void receive(LineSplitter splitter) {
+    public void parse(LineSplitter splitter) {
         position = splitter.getNextVector2();
+    }
+
+    @Override
+    public String toString() {
+        return "(X: " + position.x + ", Y: " + position.y + "), (WIDTH: " + size.x + ", HEIGHT: " + size.y + ")";
     }
 
 }

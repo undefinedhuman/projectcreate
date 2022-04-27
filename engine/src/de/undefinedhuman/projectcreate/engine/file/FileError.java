@@ -2,7 +2,7 @@ package de.undefinedhuman.projectcreate.engine.file;
 
 import com.badlogic.gdx.files.FileHandle;
 import de.undefinedhuman.projectcreate.engine.log.Log;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -19,7 +19,7 @@ public enum FileError implements Predicate<FsFile> {
     private final Predicate<FsFile> condition;
     private final int errorCode;
     private final String errorMessage;
-    private boolean canContinueWithCheck;
+    private final boolean canContinueWithCheck;
 
     FileError(int errorCode, Predicate<FsFile> condition, String errorMessage, boolean canContinueWithCheck) {
         this.condition = condition;
@@ -46,7 +46,7 @@ public enum FileError implements Predicate<FsFile> {
         return "(" + errorCode + ") " + errorMessage;
     }
 
-    public static boolean checkFileForErrors(String errorFileName, FsFile file, FileError... errors) {
+    public static boolean checkFileForErrors(String errorMessage, FsFile file, FileError... errors) {
         ArrayList<String> errorMessages = new ArrayList<>();
         for (FileError error : errors) {
             if (!error.test(file))
@@ -57,7 +57,7 @@ public enum FileError implements Predicate<FsFile> {
         }
         boolean hasErrors = errorMessages.size() > 0;
         if(hasErrors)
-            Log.error("Error" + Tools.appendSToString(errorMessages.size()) + " while " + errorFileName + " file: " + errorMessages);
+            Log.warn("Error" + Utils.appendSToString(errorMessages.size()) + " while " + errorMessage + " file: " + errorMessages);
         errorMessages.clear();
         return hasErrors;
     }

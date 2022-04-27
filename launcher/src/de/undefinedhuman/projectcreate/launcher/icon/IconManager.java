@@ -1,20 +1,20 @@
 package de.undefinedhuman.projectcreate.launcher.icon;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-import de.undefinedhuman.projectcreate.engine.utils.Manager;
-import de.undefinedhuman.projectcreate.engine.utils.ds.Key;
+import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
+import de.undefinedhuman.projectcreate.engine.utils.ds.Tuple;
 import de.undefinedhuman.projectcreate.engine.utils.math.Vector2i;
 
 import java.util.HashMap;
 
-public class IconManager extends Manager {
+public class IconManager implements Manager {
 
     private static IconManager instance;
 
-    private static final Key<String, Vector2i> TEMP_KEY = new Key<>("", new Vector2i());
+    private static final Tuple<String, Vector2i> TEMP_KEY = new Tuple<>("", new Vector2i());
     private static final String ICON_PATH = "icon/NAME.svg";
 
-    private HashMap<Key<String, Vector2i>, FlatSVGIcon> icons = new HashMap<>();
+    private HashMap<Tuple<String, Vector2i>, FlatSVGIcon> icons = new HashMap<>();
 
     private IconManager() { }
 
@@ -25,7 +25,7 @@ public class IconManager extends Manager {
 
     public FlatSVGIcon addIcon(String name, int width, int height) {
         FlatSVGIcon icon = new FlatSVGIcon(ICON_PATH.replace("NAME", name), width, height);
-        icons.put(new Key<>(name, new Vector2i(width, height)), icon);
+        icons.put(new Tuple<>(name, new Vector2i(width, height)), icon);
         return icon;
     }
 
@@ -38,8 +38,8 @@ public class IconManager extends Manager {
     }
 
     private void updateKey(String name, int width, int height) {
-        TEMP_KEY.setKey1(name);
-        TEMP_KEY.getKey2().set(width, height);
+        TEMP_KEY.setT(name);
+        TEMP_KEY.getU().set(width, height);
     }
 
     public static IconManager getInstance() {

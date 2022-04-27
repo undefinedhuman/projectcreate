@@ -2,18 +2,21 @@ package de.undefinedhuman.projectcreate.engine.log;
 
 public enum Level {
     NONE(""),
-    INFO("Info"),
     ERROR("Error"),
+    WARN("Warn"),
+    INFO("Info"),
     DEBUG("Debug"),
-    CRASH("Crash");
+    TRACE("Trace");
 
-    private String prefix;
+    private final String prefix;
 
     Level(String prefix) {
         this.prefix = prefix;
     }
 
     public String getPrefix() {
-        return prefix;
+        if(prefix.equals(""))
+            return "";
+        return "[" + prefix + "] ";
     }
 }

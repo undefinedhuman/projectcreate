@@ -1,0 +1,155 @@
+TLS Encryption
+Couchbase Custom Logger
+
+!!! Config Validation Refactor !!!
+
+TODO REACT IF DATABASE FAILS TO SAVE DATA -> AND IMPLEMENT DELAY WHEN RETRYING TO SAVE THE DATA
+
+TODO ADD COUCHBASE TEST INSERTION AND REMOVAL OF FOR EXAMPLE ACCESS_INTEGER TO TEST PERMISSIONS OF COUCHBASE USER
+
+TODO CREATE COMPLEX QUERY BUILDER IN THE FRONTEND
+    -> User should also be able to query just events or just block data without specifiying event class = filter only area not BlockBreakEvent + area
+
+Filter not only by metadata, well obviously at first but later when recieved all the events also filter by all none metadatafields
+
+Metadata Container which saves locations of e.g. blockbreakevent not in a global area container but in a world name specific container
+
+Check permissions of user like creating scopes and if scope already exists if user still needs permission to create scope etc.
+
+SUB INDEXING FOR DIFFERENT Metadata variables
+
+# NAMING CONVENTIONS
+name every new variable you want as new metadata pluginname-variablename // For plugins only so no event naming collisions occur
+basic metadata that can be used with other events?
+ -> entityIDs
+ -> playerIDs
+ -> itemIDs
+ -> etc.
+
+Reserved Names:
+ -> entityIDs
+ -> playerIDs
+ -> itemIDs
+ --> Maybe add restrictions in the plugin for those names so they only can be strings etc.
+
+Store available user ids in different table?
+GET ALL WORLD NAMES?
+GET ALL PLAYER NAMES?
+
+THE METADATA SHOULD CONTAIN THE SERVER ID/IP? LATER ON
+
+SAVING TO TEXT FILE IF THERE ARE EVENT BUCKETS IN THE QUEUE
+
+Maybe refactor metadata bucket the static things are kinda ugly ngl
+
+maybe thing about doing for everything else then the reserved metadata keys (entityI, playerID) a PLUGIN_NAME.KEY so e.g. kamino: KAMINO.position or e.g. projectcreate PROJECTCREATE.position
+
+Response of Event with possible metadata queries:
+DEFAULT TYPES: SELECTION (When Possibilities are given),
+{
+    BlockBreakEvent {
+        blockID: {
+            type: Integer
+            possibilties: [ 0, 1, 2, 3, 4, 5, 6, 7 ] // All possible blockIDs?
+        },
+        worldName: {
+            type: String
+        },
+        position: {
+            type: {
+                min: Vector2
+                OR
+                min: {
+                    x: Integer
+                    y: Integer
+                }
+                max: Vector2
+            }
+        }
+    },
+    PlayerJoinEvent {
+        playerID: {
+            type: String
+            possibilities: [ "UUID1", "UUID2", "UUID3" ] // ALL PLAYER NAMES SAVED ON THE SERVER? WITH ONLINE/OFFLINE?
+        }
+    }
+}
+
+ADD POSSIBILITIES MAYBE THROUGH EXTRA LIST
+ADD FOR EXAMPLE:
+BLOCKBREAKEVENT:
+    FIELDS:
+        WORLDNAME(Type: String): SUPPLIER(Type: String[]) -> WorldManager.getAllWorldNames();
+        BLOCKID(Type: Integer): SUPPLIER(Type: Integer[]) -> ItemManager.getAllBlockIDs();
+
+        {
+            BlockBreakEvent {
+                blockID: {
+                    type: Integer
+                    possibilties: [ 0, 1, 2, 3, 4, 5, 6, 7 ] // All possible blockIDs?
+                },
+                worldName: {
+                    type: String
+                },
+                position: {
+                    type: {
+                        min: Vector2
+                        OR
+                        min: {
+                            x: Integer
+                            y: Integer
+                        }
+                        max: Vector2
+                    }
+                }
+            },
+            PlayerJoinEvent {
+                playerID: {
+                    type: String
+                    possibilities: [ "UUID1", "UUID2", "UUID3" ] // ALL PLAYER NAMES SAVED ON THE SERVER? WITH ONLINE/OFFLINE?
+                }
+            }
+        }
+
+Request 1
+{
+    allEventsOfBuckets = false,
+    eventQueries: [
+        {
+            eventType: BlockBreakEvent
+            worldName: "Main"
+        },
+        {
+            eventType: PlayerJoinEvent
+        }
+    ]
+}
+
+SELECT * FROM meta as kamino
+WHERE
+(
+ANY eventType IN kamino.eventTypes SATISFIES eventType = $eventType
+AND
+ANY blockID IN kamino.blockIDs SATISFIES ARRAY_CONTAINS($blockIDs, blockID)
+AND
+ANY worldName IN kamino.worldNames SATISFIES ARRAY_CONTAINS($worldNames, worldName)
+)
+OR
+(
+ANY eventType IN kamino.eventTypes SATISFIES eventType = $eventType
+)
+
+Request 2
+{
+    allEventsOfBuckets = true
+    {
+        eventType: BlockBreakEvent
+        position: [
+            min: (0, 2),
+            max: (4, 5)
+        ]
+    },
+    {
+        eventType: PlayerJoinEvent
+    }
+}

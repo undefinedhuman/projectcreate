@@ -1,10 +1,13 @@
-sourceCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_17
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 sourceSets.main.java.srcDirs = ["src/"]
 
 project.ext.mainClassName = "de.undefinedhuman.projectcreate.server.Main"
 project.ext.assetsDir = new File("../assets/");
+
+group = 'com.playprojectcreate'
+version = '0.0.6'
 
 task run(dependsOn: classes, type: JavaExec) {
     main = project.mainClassName
@@ -23,17 +26,56 @@ task debug(dependsOn: classes, type: JavaExec) {
     debug = true
 }
 
-task dist(type: Jar) {
-    archiveFileName = "server.jar"
+jar {
+    archiveName("server.jar")
 
-    from files(sourceSets.main.output.classesDirs)
-    from files(sourceSets.main.output.resourcesDir)
-    from { configurations.compile.collect { zipTree(it) } }
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+    dependsOn configurations.runtimeClasspath
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     from files(project.assetsDir)
+
+    exclude('META-INF/INDEX.LIST', 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA')
+    dependencies {
+        exclude('META-INF/INDEX.LIST', 'META-INF/maven/**')
+    }
 
     manifest {
         attributes 'Main-Class': project.mainClassName
     }
+
+    doLast {
+        file(archiveFile).setExecutable(true, false)
+    }
 }
 
-dist.dependsOn classes
+task dist(dependsOn: [jar]) {}
+
+publishing {
+    publications {
+        library(MavenPublication) {
+            artifact(tasks["jar"])
+        }
+        mavenJava(MavenPublication) {
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url "https://gitlab.playprojectcreate.com/api/v4/projects/2/packages/maven"
+            credentials(HttpHeaderCredentials) {
+                name = 'Job-Token'
+                value = System.getenv("CI_JOB_TOKEN")
+            }
+            authentication {
+                header(HttpHeaderAuthentication)
+            }
+        }
+    }
+}

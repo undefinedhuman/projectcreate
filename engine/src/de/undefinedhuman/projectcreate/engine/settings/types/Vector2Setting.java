@@ -5,59 +5,47 @@ import com.badlogic.gdx.math.Vector2;
 import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
-import de.undefinedhuman.projectcreate.engine.settings.SettingType;
-import de.undefinedhuman.projectcreate.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
+import de.undefinedhuman.projectcreate.engine.settings.ui.layout.RelativeLayout;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
 import javax.swing.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
-public class Vector2Setting extends Setting {
+public class Vector2Setting extends Setting<Vector2> {
 
     private JTextField xTextField, yTextField;
 
-    public Vector2Setting(String key, Vector2 value) {
-        super(SettingType.Vector2, key, value);
+    public Vector2Setting(String key, Vector2 defaultValue) {
+        super(key, defaultValue);
     }
 
     @Override
-    public void loadValue(FileHandle parentDir, Object value) {
-        if(!(value instanceof LineSplitter)) return;
-        setValue(((LineSplitter) value).getNextVector2());
+    protected void saveValue(FileWriter writer) {
+        writer.writeVector2(getValue());
     }
 
     @Override
-    public void save(FileWriter writer) {
-        writer.writeString(key).writeVector2(getVector2());
+    public void createSettingUI(Accordion accordion) {
+        JPanel panel = new JPanel(new RelativeLayout(RelativeLayout.X_AXIS).setFill(true));
+        panel.add(xTextField = Utils.createTextField(getKey(), String.valueOf(getValue().x), s -> setValue(new Vector2(Float.parseFloat(s), getValue().y)), false, "0"), 0.5f);
+        panel.add(yTextField = Utils.createTextField(getKey(), String.valueOf(getValue().y), s -> setValue(new Vector2(getValue().x, Float.parseFloat(s))), false, "0"), 0.5f);
+        accordion.addInlinePanel(key, panel);
     }
 
     @Override
-    protected void addValueMenuComponents(JPanel panel, int width) {
-        int textFieldWidth = (int) (width/2f - Variables.OFFSET/2f);
-        xTextField = createTextField(getVector2().x, new Vector2(0, 0), new Vector2(textFieldWidth, Variables.DEFAULT_CONTENT_HEIGHT), new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                if(xTextField.getText() == null || xTextField.getText().equalsIgnoreCase("")) return;
-                setValue(new Vector2(Float.parseFloat(xTextField.getText()), getVector2().y));
-            }
-        });
-
-        yTextField = createTextField(getVector2().y, new Vector2(width/2f + Variables.OFFSET/2f, 0), new Vector2(textFieldWidth, Variables.DEFAULT_CONTENT_HEIGHT), new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                if(yTextField.getText() == null || yTextField.getText().equalsIgnoreCase("")) return;
-                setValue(new Vector2(getVector2().x, Float.parseFloat(yTextField.getText())));
-            }
-        });
-
-        panel.add(xTextField);
-        panel.add(yTextField);
+    protected void loadValue(FileHandle parentDir, Object value) {
+        if(!(value instanceof LineSplitter))
+            return;
+        LineSplitter splitter = (LineSplitter) value;
+        setValue(splitter.getNextVector2());
     }
 
     @Override
-    protected void setValueInMenu(Object value) {
-        if(xTextField != null) xTextField.setText(String.valueOf(getVector2().x));
-        if(yTextField != null) yTextField.setText(String.valueOf(getVector2().y));
+    protected void updateMenu(Vector2 value) {
+        if(xTextField == null || yTextField == null)
+            return;
+        xTextField.setText(String.valueOf(getValue().x));
+        yTextField.setText(String.valueOf(getValue().y));
     }
 
 }

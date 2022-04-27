@@ -1,6 +1,8 @@
 plugins {
     id 'jacoco'
     id "org.sonarqube" version "3.0"
+    id "org.hidetake.ssh" version "2.9.0"
+    id 'org.jetbrains.kotlin.jvm' version '1.6.20'
 }
 
 sonarqube {
@@ -9,7 +11,12 @@ sonarqube {
     }
 }
 
-version = '5.1.1'
+repositories {
+    mavenCentral()
+}
+
+group = 'com.playprojectcreate'
+version = '0.0.0'
 
 task setVersion {
     group = 'Versioning'
@@ -25,114 +32,189 @@ task setVersion {
 
 allprojects {
     apply plugin: 'jacoco'
-    apply plugin: "org.sonarqube"
-    apply plugin: "idea"
+    apply plugin: 'org.sonarqube'
+    apply plugin: 'idea'
+    apply plugin: 'maven-publish'
 
     ext {
         appName = "Project Create"
-        gdxVersion = '1.9.14'
-        roboVMVersion = '2.3.5'
-        box2DLightsVersion = '1.4'
-        ashleyVersion = '1.7.0'
-        aiVersion = '1.8.0'
+        gdxVersion = '1.10.0'
+        kryoVersion = '2.22.0-RC1'
+        flatLafVersion = '0.36'
     }
 
     repositories {
         mavenLocal()
         mavenCentral()
         google()
+        gradlePluginPortal()
+        maven {
+            name "GitLab ProjectCreate"
+            url "https://gitlab.playprojectcreate.com/api/v4/projects/2/packages/maven"
+            if (System.getenv("CI_JOB_TOKEN")) {
+                credentials(HttpHeaderCredentials) {
+                    name = 'Job-Token'
+                    value = System.getenv("CI_JOB_TOKEN")
+                }
+            } else {
+                credentials(HttpHeaderCredentials) {
+                    name = 'Private-Token'
+                    value = gitLabPrivateToken
+                }
+            }
+            authentication {
+                header(HttpHeaderAuthentication)
+            }
+        }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        exclusiveContent {
+            forRepository { maven { url = uri("https://jitpack.io") } }
+            filter { includeModule("com.github.Marcono1234", "gson-record-type-adapter-factory") }
+        }
     }
+
 }
 
 subprojects {
     apply plugin: "java"
 }
 
-project(":game") {
+project(":engine") {
     dependencies {
-        compile project(":core")
+        implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+        implementation group: 'com.esotericsoftware', name: 'kryonet', version: "$kryoVersion"
+        implementation group: 'com.github.kerner1000', name: 'javapng', version: '2.1.2'
 
-        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-        compile group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
+        implementation project(":kamino-api")
+
+        implementation "com.formdev:flatlaf:$flatLafVersion"
+
+        testImplementation("org.assertj:assertj-core:3.19.0")
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
     }
 }
 
 project(":core") {
     dependencies {
-        compile project(":engine")
+        implementation project(":engine")
 
-        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
+        implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+        implementation group: 'com.esotericsoftware', name: 'kryonet', version: "$kryoVersion"
 
         testImplementation("org.assertj:assertj-core:3.19.0")
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
         testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+    }
+}
+
+project(":game") {
+    dependencies {
+        implementation project(":engine")
+        implementation project(":core")
+
+        implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+        implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+        implementation group: 'com.esotericsoftware', name: 'kryonet', version: "$kryoVersion"
     }
 }
 
 project(":server") {
     dependencies {
-        compile project(":engine")
+        implementation project(":engine")
+        implementation project(":core")
 
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
+        implementation project(":kamino-api")
+
+        implementation 'com.github.Marcono1234:gson-record-type-adapter-factory:0.2.0'
+        implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        implementation group: 'com.esotericsoftware', name: 'kryonet', version: "$kryoVersion"
     }
 }
 
-project(":engine") {
-    dependencies {
-        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-        compile group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
-        compile group: 'com.github.kerner1000', name: 'javapng', version: '2.1.2'
+project(":kamino") {
+    apply plugin: "org.jetbrains.kotlin.jvm"
 
-        testImplementation("org.assertj:assertj-core:3.19.0")
-        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
-        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+    dependencies {
+        compileOnly project(":engine")
+        compileOnly project(":server")
+        compileOnly "com.badlogicgames.gdx:gdx:$gdxVersion"
+
+        implementation "io.ktor:ktor-server-core:2.0.0"
+        implementation "io.ktor:ktor-server-netty:2.0.0"
+        implementation "io.ktor:ktor-server-content-negotiation:2.0.0"
+        implementation "io.ktor:ktor-serialization-gson:2.0.0"
+
+        implementation group: 'org.reflections', name: 'reflections', version: '0.10.2'
+
+        implementation project(":kamino-api")
+
+//        implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.30'
+        implementation 'org.lz4:lz4-pure-java:1.8.0'
+        implementation 'com.google.code.gson:gson:2.9.0'
+        implementation 'com.couchbase.client:java-client:3.2.5'
+
+        testImplementation project(':server')
+        testImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+    }
+}
+
+project(":kamino-api") {
+    dependencies {
+        compileOnly "com.badlogicgames.gdx:gdx:$gdxVersion"
+        compileOnly 'com.google.code.gson:gson:2.9.0'
+    }
+}
+
+project(":test-plugin") {
+    dependencies {
+        compileOnly project(":engine")
+        compileOnly project(":server")
+        compileOnly project(":kamino")
+        compileOnly project(":kamino-api")
     }
 }
 
 project(":editor") {
     dependencies {
-        compile project(":engine")
+        implementation project(":engine")
+        implementation project(":core")
 
-        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile 'com.formdev:flatlaf:0.36'
+        implementation "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        implementation "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+        implementation "com.formdev:flatlaf:$flatLafVersion"
+        implementation 'com.formdev:flatlaf-intellij-themes:1.2'
     }
 }
 
 project(":updater") {
     dependencies {
-        compile project(":engine")
+        implementation project(":engine")
 
-        compile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
-        compile 'org.jsoup:jsoup:1.13.1'
-        compile 'com.formdev:flatlaf:0.36'
+        implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        implementation 'org.jsoup:jsoup:1.13.1'
+        implementation "com.formdev:flatlaf:$flatLafVersion"
     }
 }
 
 project(":launcher") {
     dependencies {
-        compile project(":engine")
-        compile project(":updater")
+        implementation project(":engine")
+        implementation project(":updater")
 
-        compile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
-        compile 'com.formdev:flatlaf:0.36'
-        compile 'com.formdev:svgSalamander:1.1.2.4'
-        compile 'com.formdev:flatlaf-extras:1.1.1'
-        compile 'com.github.oshi:oshi-core:5.7.1'
+        implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        implementation "com.formdev:flatlaf:$flatLafVersion"
+        implementation 'com.formdev:flatlaf-extras:1.1.1'
+        implementation 'com.formdev:svgSalamander:1.1.2.4'
+        implementation 'com.github.oshi:oshi-core:5.7.1'
     }
 }

@@ -7,17 +7,16 @@ import com.formdev.flatlaf.FlatDarculaLaf;
 import de.undefinedhuman.projectcreate.engine.config.ConfigManager;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
+import de.undefinedhuman.projectcreate.engine.gl.HeadlessApplicationAdapter;
 import de.undefinedhuman.projectcreate.engine.log.Log;
-import de.undefinedhuman.projectcreate.engine.resources.ResourceManager;
-import de.undefinedhuman.projectcreate.engine.utils.ManagerList;
+import de.undefinedhuman.projectcreate.engine.resources.RessourceUtils;
+import de.undefinedhuman.projectcreate.engine.utils.manager.ManagerList;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 import de.undefinedhuman.projectcreate.launcher.config.LauncherConfig;
 import de.undefinedhuman.projectcreate.launcher.icon.IconManager;
 import de.undefinedhuman.projectcreate.launcher.ui.GameManagerUI;
-import de.undefinedhuman.projectcreate.launcher.ui.SettingsUI;
 import de.undefinedhuman.projectcreate.updater.utils.DownloadUtils;
 import de.undefinedhuman.projectcreate.updater.utils.InstallationUtils;
-import de.undefinedhuman.projectcreate.updater.window.HeadlessApplicationListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,6 +25,8 @@ import java.awt.event.WindowEvent;
 
 public class Launcher extends JFrame {
 
+    public static final int WINDOW_WIDTH = 1280;
+    public static final int WINDOW_HEIGHT = 720;
     public static final String DOWNLOAD_GAME_URL = DownloadUtils.SERVER_URL + "game/";
     public static final FsFile DEFAULT_INSTALLATION_DIRECTORY = new FsFile(Paths.GAME_PATH, "game/", Files.FileType.External);
 
@@ -34,18 +35,29 @@ public class Launcher extends JFrame {
     private ManagerList managerList = new ManagerList();
 
     private Launcher() {
-        new HeadlessApplication(new HeadlessApplicationListener());
+        new HeadlessApplication(new HeadlessApplicationAdapter());
         FlatDarculaLaf.install();
         setUIComponentProperties();
         managerList.addManager(Log.getInstance(), ConfigManager.getInstance().setConfigs(LauncherConfig.getInstance()), IconManager.getInstance());
+    }
 
+    private void init() {
+        Variables.NAME = "Launcher";
+        InstallationUtils.checkProjectDotDirectory();
+        managerList.init();
+        setGDXLog();
+        createWindow();
+        GameManagerUI.getInstance().init();
+    }
+
+    private void createWindow() {
         setResizable(false);
         setUndecorated(false);
-        setSize(1280, 720);
+        setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setLocationRelativeTo(null);
 
         Container container = getContentPane();
-        container.setBackground(new Color(60, 63, 65));
+        container.setBackground(Variables.BACKGROUND_COLOR);
         container.setLayout(null);
 
         container.add(GameManagerUI.getInstance());
@@ -58,11 +70,11 @@ public class Launcher extends JFrame {
         tabbedPane.addTab("About", new JPanel());
         container.add(tabbedPane);
 
-        JLabel icon = new JLabel(new ImageIcon(ResourceManager.loadImage("logo/288x96.png")));
-        icon.setBounds(1280/4/2 - 144, 32, 288, 96);
+        JLabel icon = new JLabel(new ImageIcon(RessourceUtils.loadImage("logo/288x96.png")));
+        icon.setBounds(WINDOW_WIDTH/4/2 - 144, 32, 288, 96);
         container.add(icon);
 
-        container.setPreferredSize(new Dimension(1280, 720));
+        container.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
         pack();
 
         setVisible(true);
@@ -77,15 +89,6 @@ public class Launcher extends JFrame {
         });
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-    }
-
-    private void init() {
-        Variables.NAME = "Launcher";
-        InstallationUtils.checkProjectDotDirectory();
-        managerList.init();
-        setGDXLog();
-        new SettingsUI();
-        GameManagerUI.getInstance().init();
     }
 
     private void setGDXLog() {

@@ -7,6 +7,8 @@ import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 public class LineWriter {
 
+    // TODO WRITE FUNCTIONS THAT CAN SEND ONE AND TWO DIMENSIONAL ARRAYS
+
     private StringBuilder data;
 
     private boolean base;
@@ -22,47 +24,55 @@ public class LineWriter {
         this.separator = separator;
     }
 
-    public void writeString(String s) {
-        writeData(s);
-    }
-
-    private void writeData(Object o) {
+    private LineWriter writeData(Object o) {
         data.append(base ? Base64Coder.encodeString(String.valueOf(o)) : o).append(separator);
+        return this;
     }
 
-    public void writeInt(int i) {
-        writeData(i);
+    public LineWriter writeString(String s) {
+        return writeData(s);
     }
 
-    public void writeFloat(float f) {
-        writeData(f);
+    public LineWriter writeInt(int i) {
+        return writeData(i);
     }
 
-    public void writeLong(long l) {
-        writeData(l);
+    public LineWriter writeFloat(float f) {
+        return writeData(f);
     }
 
-    public void writeString(double d) {
-        writeData(d);
+    public LineWriter writeLong(long l) {
+        return writeData(l);
     }
 
-    public void writeBoolean(boolean b) {
-        writeData(b ? 1 : 0);
+    public LineWriter writeString(double d) {
+        return writeData(d);
     }
 
-    public void writeVector2(Vector2 vector) {
+    public LineWriter writeBoolean(boolean b) {
+        return writeData(b ? 1 : 0);
+    }
+
+    public LineWriter writeVector2(Vector2 vector) {
         writeData(vector.x);
         writeData(vector.y);
+        return this;
     }
 
-    public void writeVector3(Vector3 vector) {
+    public LineWriter writeVector3(Vector3 vector) {
         writeData(vector.x);
         writeData(vector.y);
         writeData(vector.z);
+        return this;
     }
 
     public String getData() {
         return data.toString();
+    }
+
+    public LineWriter clear() {
+        data.setLength(0);
+        return this;
     }
 
 }

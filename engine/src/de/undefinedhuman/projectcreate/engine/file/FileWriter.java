@@ -3,7 +3,6 @@ package de.undefinedhuman.projectcreate.engine.file;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Base64Coder;
-import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
@@ -12,10 +11,11 @@ import java.io.IOException;
 
 public class FileWriter {
 
-    private FsFile file;
-    private String separator;
-    private BufferedWriter writer;
-    private boolean base;
+    private final FsFile file;
+    private final String separator;
+    private final BufferedWriter writer;
+    private final boolean base;
+    private boolean startOfLine = true;
 
     public FileWriter(FsFile file, boolean base) {
         this(file, base, Variables.SEPARATOR);
@@ -37,6 +37,9 @@ public class FileWriter {
     public FileWriter writeFloat(float f) {
         return writeValue(f);
     }
+    public FileWriter writeShort(short s) {
+        return writeValue(s);
+    }
     public FileWriter writeLong(long l) {
         return writeValue(l);
     }
@@ -55,14 +58,16 @@ public class FileWriter {
     }
 
     public FileWriter writeValue(Object v) {
-        try { writer.write(base ? Base64Coder.encodeString(String.valueOf(v)) + this.separator : v + this.separator);
-        } catch (IOException ex) { Log.getInstance().showErrorDialog(Level.CRASH, "Can't write new value: \n" + ex.getMessage(), true); }
+        try {writer.write((startOfLine ? "" : this.separator) + (base ? Base64Coder.encodeString(String.valueOf(v)) : v));
+        } catch (IOException ex) { Log.showErrorDialog("Can't write new value: \n" + ex.getMessage(), true); }
+        startOfLine = false;
         return this;
     }
 
     public FileWriter nextLine() {
+        startOfLine = true;
         try { writer.newLine();
-        } catch (IOException ex) { Log.getInstance().showErrorDialog(Level.CRASH, "Can't write new line: \n" + ex.getMessage(), true); }
+        } catch (IOException ex) { Log.showErrorDialog("Can't write new line: \n" + ex.getMessage(), true); }
         return this;
     }
 

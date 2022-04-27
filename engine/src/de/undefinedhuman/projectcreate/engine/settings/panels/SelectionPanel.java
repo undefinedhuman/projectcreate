@@ -1,62 +1,83 @@
 package de.undefinedhuman.projectcreate.engine.settings.panels;
 
-import com.badlogic.gdx.Files;
-import com.badlogic.gdx.files.FileHandle;
-import de.undefinedhuman.projectcreate.engine.file.FileReader;
-import de.undefinedhuman.projectcreate.engine.file.FsFile;
-import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
-import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.log.Log;
-import de.undefinedhuman.projectcreate.engine.resources.ResourceManager;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.settings.Setting;
+import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
 import javax.swing.*;
-import java.util.ArrayList;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+import java.awt.*;
 import java.util.Arrays;
-import java.util.Comparator;
 
-public class SelectionPanel<T extends PanelObject> extends Panel<T> {
+public abstract class SelectionPanel<K extends Comparable<K>, T extends PanelObject<K>> extends Panel<K, T> {
 
-    private JComboBox<String> selection;
+    private DefaultComboBoxModel<K> comboBoxModel = new DefaultComboBoxModel<>();
+    private JComboBox<K> selection;
 
-    public SelectionPanel(String name, T panelObject) {
-        super(name, panelObject);
+    public SelectionPanel(String name, Class<T> panelObjectClass) {
+        super(name, panelObjectClass);
     }
 
     @Override
-    protected void createPanelObjectNameComponent(JPanel panel, int width) {
-        FileHandle[] itemDirs = ResourceManager.loadDir(Paths.ITEM_PATH).list();
-        ArrayList<String> ids = new ArrayList<>();
+    protected void createPanelObjectNameComponent(JPanel panel) {
+        setSelectionData();
+        selection = new JComboBox<>(comboBoxModel);
+        selection.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if(c instanceof JLabel && value != null) {
+                    renderJLabel((JLabel) c, (K) value);
+                }
+                return c;
+            }
+        });
+        selection.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                K selectedItem = (K) selection.getSelectedItem();
+                K[] values = setSelectionData();
+                selection.setSelectedItem(Utils.hasValue(values, selectedItem) ? selectedItem : values[0]);
+            }
 
-        for (FileHandle itemDir : itemDirs) {
-            if (!itemDir.isDirectory()) continue;
-            FileReader reader = new FileReader(new FsFile(Paths.ITEM_PATH, itemDir.name() + "/settings.item", Files.FileType.Internal), true);
-            ids.add(itemDir.name() + "-" + ((LineSplitter) Tools.loadSettings(reader).get("Name")).getNextString());
-            reader.close();
-        }
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {}
 
-        String[] idArray = ids.toArray(new String[0]);
-        Arrays.sort(idArray, Comparator.comparing(c -> Integer.valueOf(c.split("-")[0])));
-
-        selection = new JComboBox<>(idArray);
-        selection.setBounds(0, 0, width, Panel.INPUT_HEIGHT);
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {}
+        });
+        selection.setFont(selection.getFont().deriveFont(16f).deriveFont(Font.BOLD));
+        selection.setPreferredSize(new Dimension(0, Panel.INPUT_HEIGHT));
         panel.add(selection);
     }
 
     @Override
-    protected String getSelectedObjectName() {
+    protected K getSelectedKey() {
         if(selection.getSelectedItem() == null) {
-            Log.error("Please select a object from the panel!");
-            return "";
+            Log.error("Please select a object from the combo box!");
+            return null;
         }
-        return (String) selection.getSelectedItem();
+        return (K) selection.getSelectedItem();
     }
 
     @Override
-    public void selectObject(T object, JPanel objectPanel, int containerWidth) {
+    public void selectObject(T object, Accordion panel) {
         selection.setSelectedItem(object.getKey());
-        Tools.removeSettings(objectPanel);
-        Tools.addSettings(objectPanel, object.getSettings(), containerWidth);
+        for(Setting<?> setting : object.getSettings())
+            setting.createSettingUI(panel);
+    }
+
+    public abstract void renderJLabel(JLabel label, K k);
+
+    public abstract K[] getSelectionData();
+
+    private K[] setSelectionData() {
+        comboBoxModel.removeAllElements();
+        K[] data = getSelectionData();
+        Arrays.stream(data).forEach(key -> comboBoxModel.addElement(key));
+        return data;
     }
 
 }

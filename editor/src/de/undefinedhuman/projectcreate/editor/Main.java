@@ -13,7 +13,8 @@ public class Main extends Game {
 
     @Override
     public void create() {
-        if(instance == null) instance = this;
+        if(instance == null)
+            instance = this;
     }
 
     @Override
@@ -52,7 +53,5 @@ public class Main extends Game {
     public static void main(String[] args) {
         EventQueue.invokeLater(Window::getInstance);
     }
-
-
 
 }

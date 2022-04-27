@@ -1,58 +1,70 @@
 package de.undefinedhuman.projectcreate.engine.utils.ds;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class MultiMap<K, V> {
 
-    private HashMap<K, ArrayList<V>> map = new HashMap<>();
+    private final HashMap<K, ArrayList<V>> data = new HashMap<>();
+    private final HashMap<K, List<V>> immutableData = new HashMap<>();
 
     @SafeVarargs
-    public final void add(K key, V... values) {
-        if(map.containsKey(key)) map.get(key).addAll(Arrays.asList(values));
-        else map.put(key, new ArrayList<>(Arrays.asList(values)));
+    public final ArrayList<V> add(K key, V... values) {
+        ArrayList<V> currentList = data.computeIfAbsent(key, k -> new ArrayList<>());
+        immutableData.computeIfAbsent(key, k -> Collections.unmodifiableList(currentList));
+        Collections.addAll(currentList, values);
+        return currentList;
     }
 
-    public ArrayList<V> getValuesWithKey(K key) {
-        if(!hasKey(key)) return new ArrayList<>();
-        return map.get(key);
+    public final void set(K key, ArrayList<V> values) {
+        data.put(key, values);
+        immutableData.put(key, Collections.unmodifiableList(values));
+    }
+
+    public List<V> getDataForKey(K key) {
+        if(!containsKey(key)) add(key);
+        return data.get(key);
     }
 
     public void removeKey(K key) {
-        if(!hasKey(key)) return;
-        map.get(key).clear();
-        map.remove(key);
+        if(!containsKey(key)) return;
+        data.get(key).clear();
+        immutableData.remove(key);
+        data.remove(key);
     }
 
-    public boolean removeValue(K key, V value) {
-        if(!hasKey(key)) return false;
-        return map.get(key).remove(value);
+    public void removeValue(K key, V value) {
+        if(!containsKey(key)) return;
+        data.get(key).remove(value);
     }
 
     public boolean hasValue(K key, V value) {
-        if(!hasKey(key)) return false;
-        return map.get(key).contains(value);
+        if(!containsKey(key)) return false;
+        return data.get(key).contains(value);
     }
 
-    public boolean hasKey(K key) {
-        return map.containsKey(key);
-    }
-
-    public ArrayList<V> getAllValues() {
-        ArrayList<V> values = new ArrayList<>();
-        for(ArrayList<V> valueArray : map.values()) values.addAll(valueArray);
-        return values;
+    public boolean containsKey(K key) {
+        return data.containsKey(key);
     }
 
     public Set<K> keySet() {
-        return map.keySet();
+        return data.keySet();
+    }
+
+    public void clearKey(K key) {
+        if(!containsKey(key)) return;
+        data.get(key).clear();
     }
 
     public void clear() {
-        for(ArrayList<V> list : map.values()) list.clear();
-        map.clear();
+        for(ArrayList<V> list : data.values())
+            list.clear();
+        immutableData.clear();
+        data.clear();
     }
 
+    @Override
+    public String toString() {
+        return super.toString() + data.keySet().stream().map(key -> key.toString() + ": " + data.get(key).toString()).collect(Collectors.joining("\n"));
+    }
 }

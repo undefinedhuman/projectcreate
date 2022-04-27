@@ -1,24 +1,49 @@
 package de.undefinedhuman.projectcreate.engine.settings;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 public class SettingsList {
 
-    private ArrayList<Setting> settings = new ArrayList<>();
+    private ArrayList<Setting<?>> settings = new ArrayList<>();
 
-    public void addSettings(Setting... settings) {
-        this.settings.addAll(Arrays.asList(settings));
+    public void addSettings(Setting<?>... settings) {
+        for(Setting setting : settings)
+            addSetting(setting);
+    }
+
+    public void removeSettings(Setting<?>... settings) {
+        for(Setting setting : settings)
+            removeSetting(setting);
     }
 
     public void delete() {
-        for(Setting setting : settings)
-            setting.delete();
-        settings.clear();
+        removeSettings(settings.toArray(new Setting[0]));
     }
 
-    public ArrayList<Setting> getSettings() {
+    protected void addSetting(Setting<?> setting) {
+        if(hasSetting(setting))
+            return;
+        this.settings.add(setting);
+    }
+
+    protected void removeSetting(Setting<?> setting) {
+        if(!hasSetting(setting))
+            return;
+        this.settings.remove(setting);
+        setting.delete();
+    }
+
+    public boolean hasSetting(Setting<?> setting) {
+        return settings.contains(setting);
+    }
+
+    public List<Setting<?>> getSettings() {
         return settings;
+    }
+
+    public boolean isEmpty() {
+        return settings.size() == 0;
     }
 
 }

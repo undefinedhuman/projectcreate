@@ -2,12 +2,12 @@ package de.undefinedhuman.projectcreate.updater.config;
 
 import de.undefinedhuman.projectcreate.engine.config.Config;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
-import de.undefinedhuman.projectcreate.engine.settings.Setting;
-import de.undefinedhuman.projectcreate.engine.settings.SettingType;
-import de.undefinedhuman.projectcreate.engine.settings.types.BooleanSetting;
+import de.undefinedhuman.projectcreate.engine.settings.types.BaseSetting;
 import de.undefinedhuman.projectcreate.engine.settings.types.FilePathSetting;
-import de.undefinedhuman.projectcreate.engine.utils.Stage;
-import de.undefinedhuman.projectcreate.engine.utils.Version;
+import de.undefinedhuman.projectcreate.engine.settings.types.primitive.BooleanSetting;
+import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
+import de.undefinedhuman.projectcreate.engine.utils.version.Stage;
+import de.undefinedhuman.projectcreate.engine.utils.version.Version;
 import de.undefinedhuman.projectcreate.updater.Updater;
 import de.undefinedhuman.projectcreate.updater.utils.InstallationUtils;
 
@@ -15,21 +15,28 @@ public class UpdaterConfig extends Config {
 
     private static volatile UpdaterConfig instance;
 
-    public Setting
-            firstRun = new BooleanSetting("firstRun", true),
+    public BooleanSetting
+            firstRun = new BooleanSetting("firstRun", true);
+    public FilePathSetting
             installationPath = new FilePathSetting("installationPath", Updater.DEFAULT_INSTALLATION_DIRECTORY) {
                 @Override
-                public String chooseFilePath(FsFile defaultFile) {
+                public FsFile chooseFilePath(FsFile defaultFile) {
                     return InstallationUtils.chooseInstallationDirectory(defaultFile);
                 }
-            },
-            version = new Setting(SettingType.Version, "version", new Version(Stage.INDEV, 0, 0, 0, 0).toString());
+            };
+    public BaseSetting<Version> version = new BaseSetting<Version>("version", new Version(Stage.INDEV, 0, 0, 0, 0), value -> Version.parse(String.valueOf(value)), Version::toString) {
+        @Override
+        public void createSettingUI(Accordion accordion) {}
+
+        @Override
+        protected void updateMenu(Version value) {}
+    };
 
     private UpdaterConfig() {
-        super("updater");
+        super("updater", true);
         if(instance == null)
             instance = this;
-        addSettings(installationPath, version, firstRun);
+        addSettings(installationPath, firstRun);
     }
 
     @Override

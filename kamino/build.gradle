@@ -1,0 +1,66 @@
+sourceCompatibility = JavaVersion.VERSION_17
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+project.ext.mainClassName = "de.undefinedhuman.projectcreate.kamino.Main"
+
+sourceSets.main.java.srcDirs = ["src/"]
+sourceSets.test.java.srcDirs = ["test/"]
+
+group = 'com.playprojectcreate'
+version = '0.0.1'
+
+jar {
+    archiveBaseName.set("kamino")
+
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+    dependsOn configurations.runtimeClasspath
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    from 'src/plugin.json'
+
+    exclude('META-INF/INDEX.LIST', 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA')
+    dependencies {
+        exclude('META-INF/INDEX.LIST', 'META-INF/maven/**')
+    }
+
+    manifest {
+        attributes 'Main-Class': project.mainClassName
+    }
+
+    doLast {
+        file(archiveFile).setExecutable(true, false)
+    }
+}
+
+task dist(dependsOn: [jar]) {}
+
+publishing {
+    publications {
+        library(MavenPublication) {
+            artifact(tasks["jar"])
+        }
+        mavenJava(MavenPublication) {
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url "https://gitlab.playprojectcreate.com/api/v4/projects/2/packages/maven"
+            credentials(HttpHeaderCredentials) {
+                name = 'Job-Token'
+                value = System.getenv("CI_JOB_TOKEN")
+            }
+            authentication {
+                header(HttpHeaderAuthentication)
+            }
+        }
+    }
+}
+
+dist.dependsOn classes

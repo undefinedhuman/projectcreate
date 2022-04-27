@@ -5,25 +5,23 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.log.Log;
-import de.undefinedhuman.projectcreate.engine.utils.Manager;
+import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import java.util.HashMap;
 
-public class LanguageManager extends Manager {
+public class LanguageManager implements Manager {
 
-    public static LanguageManager instance;
+    private static volatile LanguageManager instance;
 
     private final HashMap<String, String> languageList = new HashMap<>();
     private String languageName;
 
-    public LanguageManager() {
+    private LanguageManager() {
         this(Variables.DEFAULT_LANGUAGE);
     }
 
-    public LanguageManager(String languageName) {
-        if (instance == null)
-            instance = this;
+    private LanguageManager(String languageName) {
         this.languageName = languageName;
     }
 
@@ -73,6 +71,16 @@ public class LanguageManager extends Manager {
         if (s == null) return key + " not found!";
         for (Replacement replacement : replacements) s = s.replaceAll(replacement.getName(), replacement.getValue());
         return s;
+    }
+
+    public static LanguageManager getInstance() {
+        if (instance == null) {
+            synchronized (LanguageManager.class) {
+                if (instance == null)
+                    instance = new LanguageManager();
+            }
+        }
+        return instance;
     }
 
 }

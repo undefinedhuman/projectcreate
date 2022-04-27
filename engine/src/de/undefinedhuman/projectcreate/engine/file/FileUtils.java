@@ -1,7 +1,7 @@
 package de.undefinedhuman.projectcreate.engine.file;
 
 import de.undefinedhuman.projectcreate.engine.log.Log;
-import de.undefinedhuman.projectcreate.engine.utils.Tools;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -54,7 +54,7 @@ public class FileUtils {
             if (files.length != 0) for (File file1 : files) deleteFile(deletedFileNames, file1);
         }
         if(fileToDelete.delete())
-            deletedFileNames.add(fileToDelete.getName());
+            deletedFileNames.add(fileToDelete.getName() + (fileToDelete.isDirectory() ? " (Dir)" : ""));
     }
 
     public static void deleteFile(FsFile... filesToDelete) {
@@ -63,13 +63,14 @@ public class FileUtils {
             deleteFile(deletedFileNames, file.file());
         Collections.reverse(deletedFileNames);
         if(deletedFileNames.size() > 0)
-            Log.info("File" + Tools.appendSToString(deletedFileNames.size()) + " deleted successfully: " + Arrays.toString(deletedFileNames.toArray()));
+            Log.info("File" + Utils.appendSToString(deletedFileNames.size()) + " deleted successfully: " + Arrays.toString(deletedFileNames.toArray()));
         deletedFileNames.clear();
     }
 
     public static boolean readBoolean(String value) {
+        Integer parsedInteger;
         if (value.equalsIgnoreCase("false") || value.equalsIgnoreCase("true")) return Boolean.parseBoolean(value);
-        else if(Tools.isInteger(value)) return Integer.parseInt(value) == 1;
+        else if((parsedInteger = Utils.isInteger(value)) != null) return parsedInteger == 1;
         else return false;
     }
 

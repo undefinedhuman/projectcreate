@@ -1,66 +1,92 @@
 package de.undefinedhuman.projectcreate.editor;
 
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglAWTCanvas;
 import com.formdev.flatlaf.FlatDarculaLaf;
-import de.undefinedhuman.projectcreate.editor.editor.Editor;
-import de.undefinedhuman.projectcreate.editor.editor.EditorType;
-import de.undefinedhuman.projectcreate.editor.editor.entity.EntityEditor;
-import de.undefinedhuman.projectcreate.editor.editor.item.ItemEditor;
+import de.undefinedhuman.projectcreate.editor.types.Editor;
+import de.undefinedhuman.projectcreate.editor.types.EditorType;
+import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
+import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessage;
+import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessageDecorators;
+import de.undefinedhuman.projectcreate.engine.settings.ui.utils.SettingsUtils;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
+import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class Window extends JFrame {
 
     private static Window instance;
-    public Editor editor;
 
-    public JMenuBar menuBar;
-    public float errorTime = 0;
+    private static final ArrayList<Editor> EDITOR_INSTANCES = new ArrayList<>();
+    private static final int WINDOW_WIDTH = 1280;
+    private static final int WINDOW_HEIGHT = 720;
+    public static final int MENU_HEIGHT = 40;
+
     public JLabel errorMessage;
-    public JMenu fileMenu, editorMenu;
 
-    private Container container;
+    private float errorTime = 0;
     private boolean hasError = false;
 
     private Window() {
         FlatDarculaLaf.install();
-        setUIComponentProperties();
+        SettingsUtils.setCustomUIComponentProperties();
+        Variables.DONT_LOAD_TEXTURES = true;
+
         LwjglAWTCanvas canvas = new LwjglAWTCanvas(new Main());
         canvas.getCanvas().setBounds(25, 300, 480, 345);
 
-        errorMessage = new JLabel();
-        errorMessage.setBounds(22, 1002, 1880, 25);
+        initLogger();
+
+        errorMessage = new JLabel("");
         errorMessage.setForeground(new Color(255, 85, 85));
 
-        Log.getInstance().addLogEvent((level, message) -> {
-            if(level != Level.ERROR)
-                return;
-            errorMessage.setText(message);
-            hasError = true;
-        });
-        Log.getInstance().init();
-        Log.getInstance().load();
-        setResizable(false);
-        setSize(1920, 1080);
-        container = getContentPane();
-        container.setBackground(new Color(60, 63, 65));
-        addMenu();
+        setMinimumSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
 
-        setEditor(EditorType.ENTITY);
+        Container container;
+        setContentPane(container = new JPanel(new BorderLayout()));
+        container.setMinimumSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
+        container.setPreferredSize(new Dimension(1980, 1080));
 
+        JPanel menuButtons = new JPanel(new GridLayout(1, 3, 5, 0));
+        menuButtons.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+        JTabbedPane editorMenu = new JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
+        editorMenu.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT - MENU_HEIGHT));
+        editorMenu.setFont(editorMenu.getFont().deriveFont(Font.BOLD));
+        createEditorMenuTabs(editorMenu);
+        editorMenu.addChangeListener(e -> createEditorMenuButtons(editorMenu.getSelectedIndex(), menuButtons));
+
+        JPanel menuPanel = new JPanel(new BorderLayout());
+        menuPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, MENU_HEIGHT));
+        menuPanel.setPreferredSize(new Dimension(Integer.MAX_VALUE, MENU_HEIGHT));
+        createEditorMenuButtons(0, menuButtons);
+
+        menuPanel.add(errorMessage, BorderLayout.CENTER);
+        menuPanel.add(menuButtons, BorderLayout.EAST);
+
+        container.add(editorMenu, BorderLayout.CENTER);
+        container.add(menuPanel, BorderLayout.SOUTH);
+
+        pack();
+        setIcon();
         setLocationRelativeTo(null);
         setVisible(true);
 
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
+                EDITOR_INSTANCES.forEach(Editor::delete);
                 Log.getInstance().save();
                 Gdx.app.exit();
                 System.exit(0);
@@ -68,49 +94,43 @@ public class Window extends JFrame {
         });
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-
     }
 
-    private void addMenu() {
-        menuBar = new JMenuBar();
-
-        fileMenu = addMenu("File");
-        addMenuItem(fileMenu, "Load", e -> editor.load());
-        addMenuItem(fileMenu, "Save", e -> editor.save());
-
-        editorMenu = addMenu("Editor");
-        addMenuItem(editorMenu, "Item", e -> setEditor(EditorType.ITEM));
-        addMenuItem(editorMenu, "Entity", e -> setEditor(EditorType.ENTITY));
-
-        setJMenuBar(menuBar);
+    private void initLogger() {
+        Log.getInstance()
+                .setLogMessageDecorator(
+                        new LogMessage().andThen(value -> LogMessageDecorators.withDate(value, Variables.LOG_DATE_FORMAT)).andThen(value -> LogMessageDecorators.withModuleName(value, "Editor"))
+                )
+                .addLogEvent((level, decoratedMessage, message) -> {
+                    if(level != Level.ERROR && level != Level.WARN)
+                        return;
+                    errorMessage.setText("  " + message);
+                    hasError = true;
+                });
+        Log.getInstance().init();
+        Log.getInstance().load();
     }
 
-    private JMenu addMenu(String name) {
-        JMenu menu = new JMenu(name);
-        menuBar.add(menu);
-        return menu;
+    private void createEditorMenuButtons(int index, JPanel menuButtonPanel) {
+        if(Utils.isInRange(index, 0, EDITOR_INSTANCES.size()-1))
+        menuButtonPanel.removeAll();
+        EDITOR_INSTANCES.get(index).createMenuButtonsPanel(menuButtonPanel);
+        menuButtonPanel.revalidate();
+        menuButtonPanel.repaint();
     }
 
-    private void addMenuItem(JMenu menu, String name, ActionListener listener) {
-        JMenuItem item = new JMenuItem(name);
-        item.addActionListener(listener);
-        menu.add(item);
-    }
-
-    public void setEditor(EditorType type) {
-        container.removeAll();
-        container.add(errorMessage);
-        container.setLayout(null);
-        switch (type) {
-            case ITEM:
-                editor = new ItemEditor(container);
-                break;
-            case ENTITY:
-                editor = new EntityEditor(container);
-                break;
+    private void createEditorMenuTabs(JTabbedPane editorTabMenu) {
+        for(EditorType type : EditorType.values()) {
+            String name = type.name().charAt(0) + type.name().substring(1);
+            Editor editor = type.newInstance();
+            if(editor == null) {
+                Log.showErrorDialog("Error while creating " + name + " editor class instance!", false);
+                continue;
+            }
+            editor.init();
+            EDITOR_INSTANCES.add(editor);
+            editorTabMenu.addTab(name, editor);
         }
-        revalidate();
-        repaint();
     }
 
     public void updateErrorTime(float delta) {
@@ -123,14 +143,12 @@ public class Window extends JFrame {
         }
     }
 
-    private void setUIComponentProperties() {
-        UIManager.put("Button.arc", 0);
-        UIManager.put("Component.arc", 0);
-        UIManager.put("CheckBox.arc", 0);
-        UIManager.put("ProgressBar.arc", 0);
-
-        UIManager.put("Component.arrowType", "chevron");
-        UIManager.put("Component.focusWidth", 1);
+    private void setIcon() {
+        try {
+            setIconImage(ImageIO.read(new FsFile("logo/96x96.png", Files.FileType.Internal).file()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static Window getInstance() {

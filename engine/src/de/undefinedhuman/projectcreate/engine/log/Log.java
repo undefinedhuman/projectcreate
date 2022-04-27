@@ -1,6 +1,5 @@
 package de.undefinedhuman.projectcreate.engine.log;
 
-import com.badlogic.gdx.ApplicationLogger;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -8,8 +7,10 @@ import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
 import de.undefinedhuman.projectcreate.engine.file.Serializable;
-import de.undefinedhuman.projectcreate.engine.utils.Manager;
+import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessage;
+import de.undefinedhuman.projectcreate.engine.utils.Utils;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
+import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 
 import javax.swing.*;
 import java.io.PrintStream;
@@ -17,10 +18,11 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-public class Log extends Manager implements ApplicationLogger, Serializable {
+public class Log implements Manager, Serializable {
 
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat(Variables.LOG_DATE_FORMAT);
 
@@ -30,10 +32,10 @@ public class Log extends Manager implements ApplicationLogger, Serializable {
     private String fileName;
     private FsFile file;
 
-    private List<String> logMessages;
-    private List<LogEvent> logEvents;
+    private final List<String> logMessages;
+    private final List<LogEvent> logEvents;
 
-    public Files.FileType fileLocation = Files.FileType.External;
+    private Function<String, String> logMessage = new LogMessage();
 
     private Log() {
         logMessages = new ArrayList<>();
@@ -54,7 +56,7 @@ public class Log extends Manager implements ApplicationLogger, Serializable {
     @Override
     public void load() {
         checkLogs();
-        file = new FsFile(Paths.LOG_PATH, fileName, fileLocation);
+        file = new FsFile(Paths.getInstance().getDirectory(), Paths.LOG_PATH + fileName);
         if (file.exists())
             info("Log file successfully created!");
     }
@@ -70,16 +72,22 @@ public class Log extends Manager implements ApplicationLogger, Serializable {
         writer.close();
     }
 
-    public void setLogLevel(Level logLevel) {
+    public Log setLogMessageDecorator(Function<String, String> logMessageDecorator) {
+        this.logMessage = logMessageDecorator;
+        return getInstance();
+    }
+
+    public boolean isLevelEnabled(Level logLevel) {
+        return this.logLevel.ordinal() >= logLevel.ordinal();
+    }
+
+    public Log setLogLevel(Level logLevel) {
         this.logLevel = logLevel;
+        return getInstance();
     }
 
     public Level getLogLevel() {
         return logLevel;
-    }
-
-    public void setFileLocation(Files.FileType fileLocation) {
-        this.fileLocation = fileLocation;
     }
 
     public void addLogEvent(LogEvent logEvent) {
@@ -88,53 +96,97 @@ public class Log extends Manager implements ApplicationLogger, Serializable {
         this.logEvents.add(logEvent);
     }
 
-    public static void showErrorDialog(Level logLevel, String message, boolean exit) {
-        error(message);
-        JOptionPane.showMessageDialog(null, message, logLevel.getPrefix(), JOptionPane.ERROR_MESSAGE);
-        if(!exit)
+    public static void showErrorDialog(String message, boolean crash) {
+        if(!crash) error(message);
+        JOptionPane.showMessageDialog(null, message, Level.ERROR.getPrefix(), JOptionPane.ERROR_MESSAGE);
+        if(!crash)
             return;
+        crash(message);
+    }
+
+    public static void crash() {
+        crash(null);
+    }
+
+    public static void crash(String message) {
+        if(message != null)
+            Log.getInstance().createMessage(System.out, Level.ERROR, message);
         Log.getInstance().save();
         Gdx.app.exit();
         System.exit(0);
     }
 
     public static void error(Object... messages) {
-        Log.getInstance().createMessage(System.err, Level.ERROR, messages);
+        Log.getInstance().createMessage(System.out, Level.ERROR, messages);
+    }
+
+    public static void warn(Object... messages) {
+        Log.getInstance().createMessage(System.out, Level.WARN, messages);
     }
 
     public static void error(Object message, Exception ex) {
-        error(message, "\n", ex.getMessage());
+        StringBuilder builder = new StringBuilder(message.toString());
+        if(ex == null) {
+            error(builder.toString());
+            return;
+        }
+        builder.append(" Exception:").append("\n").append(ex);
+        if(getInstance().getLogLevel() == Level.DEBUG)
+            builder.append("\n").append("Value: ").append(ex.getCause()).append("\n").append("Stacktrace:").append("\n").append(Utils.getStackTrace(ex));
+        error(builder.toString());
     }
 
     public static void info(Object... messages) {
         Log.getInstance().createMessage(System.out, Level.INFO, messages);
     }
 
+    public static void trace(Object... messages) {
+        Log.getInstance().createMessage(System.out, Level.TRACE, messages);
+    }
+
     public static void debug(Object... messages) {
         Log.getInstance().createMessage(System.out, Level.DEBUG, messages);
     }
 
+    public static <T> T debug(String errorMessage, Supplier<T> returnValue) {
+        Log.getInstance().createMessage(System.out, Level.DEBUG, errorMessage);
+        return returnValue.get();
+    }
+
     public static void debug(Supplier<String> createMessages) {
-        if(Log.getInstance().getLogLevel() == Level.DEBUG)
-            Log.getInstance().createMessage(System.out, Level.DEBUG, createMessages.get());
+        if(Log.getInstance().getLogLevel() != Level.DEBUG)
+            return;
+        String message = createMessages.get();
+        if(message.equals(""))
+            return;
+        Log.getInstance().createMessage(System.out, Level.DEBUG, message);
+    }
+
+    public static void log(Level level, Object... messages) {
+        Log.getInstance().createMessage(System.out, level, messages);
+    }
+
+    public static void log(Level level, String category, Object... messages) {
+        Log.getInstance().createMessage(System.out, level, category, messages);
     }
 
     private void createMessage(PrintStream console, Level logLevel, Object... messages) {
-        if(logLevel.ordinal() > this.logLevel.ordinal())
-            return;
+        this.createMessage(console, logLevel, "", messages);
+    }
+
+    private void createMessage(PrintStream console, Level logLevel, String category, Object... messages) {
+        if(logLevel.ordinal() > this.logLevel.ordinal()) return;
         StringBuilder logMessage = new StringBuilder();
+        if(category!= null && !category.equals(""))
+            logMessage.append("[").append(category).append("]").append(" ");
         for (int i = 0; i < messages.length; i++) logMessage.append(messages[i]).append(i < messages.length - 1 ? ", " : "");
 
-        String fullMessage = Variables.LOG_MESSAGE_FORMAT
-                .replace("%prefix%", logLevel.getPrefix())
-                .replace("%time%", getTime())
-                .replace("%message%", logMessage.toString())
-                .replace("%name%", Variables.NAME)
-                .replace("%version%", Variables.VERSION.toString());
+        String fullMessage = logLevel.getPrefix() + this.logMessage.apply(logMessage.toString());
 
         console.println(fullMessage);
+        console.flush();
         logMessages.add(fullMessage);
-        logEvents.forEach(logEvent -> logEvent.log(logLevel, fullMessage));
+        logEvents.forEach(logEvent -> logEvent.log(logLevel, fullMessage, logMessage.toString()));
     }
 
     private void checkLogs() {
@@ -155,42 +207,12 @@ public class Log extends Manager implements ApplicationLogger, Serializable {
     }
 
     public static Log getInstance() {
-        if (instance == null) {
-            synchronized (Log.class) {
-                if (instance == null)
-                    instance = new Log();
-            }
+        if(instance != null)
+            return instance;
+        synchronized (Log.class) {
+            if (instance == null)
+                instance = new Log();
         }
         return instance;
-    }
-
-    @Override
-    public void log(String tag, String message) {
-        info(message);
-    }
-
-    @Override
-    public void log(String tag, String message, Throwable exception) {
-        error(message, exception);
-    }
-
-    @Override
-    public void error(String tag, String message) {
-        error(message);
-    }
-
-    @Override
-    public void error(String tag, String message, Throwable exception) {
-        error(message, exception);
-    }
-
-    @Override
-    public void debug(String tag, String message) {
-        debug(message);
-    }
-
-    @Override
-    public void debug(String tag, String message, Throwable exception) {
-        error(message, exception);
     }
 }

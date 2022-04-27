@@ -1,0 +1,9 @@
+[book]
+title = "ProjectCreate Documentation"
+author = "Alexander Padberg"
+description = "ProjectCreate Documentation containing everything from university essays to module documentation and other random stuff."
+src="./"
+language = "en"
+
+[output.html.search]
+limit-results = 15

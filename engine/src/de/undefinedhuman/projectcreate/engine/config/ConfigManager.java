@@ -1,43 +1,46 @@
 package de.undefinedhuman.projectcreate.engine.config;
 
 import de.undefinedhuman.projectcreate.engine.file.Serializable;
-import de.undefinedhuman.projectcreate.engine.utils.Manager;
+import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-public class ConfigManager extends Manager implements Serializable {
+public class ConfigManager implements Manager, Serializable {
 
     private static volatile ConfigManager instance;
 
-    private List<Config> configs = new ArrayList<>();
+    private final HashMap<Class<? extends Config>, Config> configs = new HashMap<>();
+    private final Collection<Config> unmodifiableConfigs = Collections.unmodifiableCollection(configs.values());
 
     private ConfigManager() {}
 
     @Override
-    public void init() {
-        configs.forEach(Config::init);
-    }
-
-    @Override
     public void delete() {
-        configs.forEach(Config::delete);
+        unmodifiableConfigs.forEach(Config::delete);
     }
 
     @Override
     public void save() {
-        configs.forEach(Config::save);
+        unmodifiableConfigs.forEach(Config::save);
     }
 
     @Override
     public void load() {
-        configs.forEach(Config::load);
+        unmodifiableConfigs.forEach(config -> {
+            config.load();
+            config.validate();
+        });
     }
 
-    public ConfigManager setConfigs(Config... configs) {
-        this.configs.clear();
-        Collections.addAll(this.configs, configs);
+    public <T extends Config> T getConfig(Class<T> configClass) {
+        return (T) this.configs.get(configClass);
+    }
+
+    public ConfigManager addConfigs(Config... configs) {
+        for(Config config : configs) {
+            config.init();
+            this.configs.put(config.getClass(), config);
+        }
         return this;
     }
 

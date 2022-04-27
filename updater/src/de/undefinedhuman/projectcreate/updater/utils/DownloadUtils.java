@@ -10,7 +10,7 @@ import java.net.*;
 
 public class DownloadUtils {
 
-    public static String SERVER_URL = "http://playprojectcreate.com/";
+    public static String SERVER_URL = "https://playprojectcreate.com/";
     public static String DOWNLOAD_FILE_EXTENSION = ".jar";
 
     public static long downloadFile(String downloadUrl, FsFile destination) throws IOException, URISyntaxException {

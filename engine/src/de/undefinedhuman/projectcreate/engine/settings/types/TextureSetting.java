@@ -7,11 +7,10 @@ import de.undefinedhuman.projectcreate.engine.file.FileWriter;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.LineSplitter;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
-import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
 import de.undefinedhuman.projectcreate.engine.resources.texture.TextureManager;
 import de.undefinedhuman.projectcreate.engine.settings.Setting;
-import de.undefinedhuman.projectcreate.engine.settings.SettingType;
+import de.undefinedhuman.projectcreate.engine.settings.ui.accordion.Accordion;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
 
 import javax.imageio.ImageIO;
@@ -24,24 +23,44 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class TextureSetting extends Setting {
+public class TextureSetting extends Setting<String> {
 
-    private static final int PREVIEW_TEXTURE_LABEL_SIZE = 200;
+    private static final int PREVIEW_TEXTURE_LABEL_SIZE = 128;
 
     private BufferedImage texture;
     private JLabel textureLabel;
+    private float zoom = 1f;
 
-    public TextureSetting(String key, Object value) {
-        super(SettingType.Texture, key, value);
-        loadTexture("Unknown.png");
-        setContentHeight(PREVIEW_TEXTURE_LABEL_SIZE);
+    public TextureSetting(String key, String defaultValue) {
+        super(key, defaultValue);
+        loadTexture(defaultValue);
     }
 
     @Override
-    protected void addValueMenuComponents(JPanel panel, int width) {
+    protected void saveValue(FileWriter writer) {
+        writer.writeString(getValue());
+        FsFile file = new FsFile(writer.parent(), getValue());
+        try { ImageIO.write(texture, "png", file.file());
+        } catch (IOException ex) { Log.showErrorDialog("Can not save texture (" + this + "): \n" + ex.getMessage(), true); }
+    }
+
+    @Override
+    public void createSettingUI(Accordion accordion) {
         textureLabel = new JLabel();
+        textureLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, PREVIEW_TEXTURE_LABEL_SIZE));
+        textureLabel.setPreferredSize(new Dimension(Integer.MIN_VALUE, PREVIEW_TEXTURE_LABEL_SIZE));
+        textureLabel.setMinimumSize(new Dimension(Integer.MIN_VALUE, PREVIEW_TEXTURE_LABEL_SIZE));
+        textureLabel.setLayout(new BorderLayout());
         textureLabel.setHorizontalAlignment(JLabel.CENTER);
-        textureLabel.setBounds(width/2 - PREVIEW_TEXTURE_LABEL_SIZE/2, 0, PREVIEW_TEXTURE_LABEL_SIZE, PREVIEW_TEXTURE_LABEL_SIZE);
+        textureLabel.addMouseWheelListener(e -> {
+            int notches = e.getWheelRotation();
+            float temp = zoom - (notches * 0.2f);
+            temp = Math.max(temp, 0.1f);
+            if (temp != zoom) {
+                zoom = temp;
+                setTextureIcon();
+            }
+        });
         setTextureIcon();
         textureLabel.addMouseListener(new MouseAdapter() {
             @Override
@@ -58,15 +77,7 @@ public class TextureSetting extends Setting {
                 setTexture(textureFile.getPath(), Files.FileType.Internal);
             }
         });
-        panel.add(textureLabel);
-    }
-
-    @Override
-    public void save(FileWriter writer) {
-        writer.writeString(key).writeString(value.toString());
-        FsFile file = new FsFile(writer.parent(), getString(),  Files.FileType.Local);
-        try { ImageIO.write(texture, "png", file.file());
-        } catch (IOException ex) { Log.showErrorDialog(Level.CRASH, "Can not save texture (" + this + "): \n" + ex.getMessage(), true); }
+        accordion.addContentPanel(key, textureLabel);
     }
 
     @Override
@@ -74,23 +85,26 @@ public class TextureSetting extends Setting {
         if(!(value instanceof LineSplitter))
             return;
         setValue(((LineSplitter) value).getNextString());
-        String path = parentDir.path() + Variables.FILE_SEPARATOR + getString();
+        String path = parentDir.path() + Variables.FILE_SEPARATOR + getValue();
         loadTexture(path);
         if(texture == null)
-            loadTexture("Unknown.png");
-        if(TextureManager.instance == null)
+            loadTexture(path = "Unknown.png");
+        if(Variables.DONT_LOAD_TEXTURES)
             return;
-        TextureManager.instance.addTexture(path);
+        setValue(path);
+        TextureManager.getInstance().loadTextures(getValue());
     }
 
     @Override
-    protected void setValueInMenu(Object value) {
+    protected void updateMenu(String value) {
         setTextureIcon();
     }
 
     @Override
     protected void delete() {
-        if(TextureManager.instance != null) TextureManager.instance.removeTexture(getString());
+        if(TextureManager.getInstance() == null)
+            return;
+        TextureManager.getInstance().removeTextures(getValue());
     }
 
     public void setTexture(String path, Files.FileType type) {
@@ -105,17 +119,20 @@ public class TextureSetting extends Setting {
     private void loadTexture(String path, Files.FileType type) {
         FsFile textureFile = new FsFile(path, type);
         try { texture = new PngImage().read(textureFile.read(), true);
-        } catch (IOException ex) { Log.showErrorDialog(Level.CRASH, "Can not load texture (" + this + "): \n" + ex.getMessage(), true); }
+        } catch (IOException ex) { Log.showErrorDialog("Can not load texture (" + this + "): \n" + ex.getMessage(), true); }
         if(texture == null && !path.equals("Unknown.png"))
             loadTexture("Unknown.png");
-        setValue(textureFile.path());
+        setValue(textureFile.name());
     }
 
     private void setTextureIcon() {
         if(textureLabel == null)
             return;
-        float scaleFactor = (float) textureLabel.getHeight() / texture.getHeight();
+        float scaleFactor = (float) PREVIEW_TEXTURE_LABEL_SIZE / texture.getHeight() * zoom;
         textureLabel.setIcon(new ImageIcon(texture.getScaledInstance((int) (texture.getWidth() * scaleFactor), (int) (texture.getHeight() * scaleFactor), Image.SCALE_SMOOTH)));
     }
 
+    public BufferedImage getBufferedImage() {
+        return texture;
+    }
 }

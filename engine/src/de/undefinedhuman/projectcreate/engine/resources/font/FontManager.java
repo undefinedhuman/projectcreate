@@ -4,18 +4,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import de.undefinedhuman.projectcreate.engine.utils.Manager;
+import de.undefinedhuman.projectcreate.engine.utils.manager.Manager;
 
 import java.util.HashMap;
 
-public class FontManager extends Manager {
+public class FontManager implements Manager {
 
-    public static FontManager instance;
+    private static volatile FontManager instance;
 
     private final HashMap<Font, HashMap<Integer, BitmapFont>> fonts;
 
-    public FontManager() {
-        if (instance == null) instance = this;
+    private FontManager() {
         this.fonts = new HashMap<>();
     }
 
@@ -53,6 +52,16 @@ public class FontManager extends Manager {
         BitmapFont font = generator.generateFont(parameter);
         generator.dispose();
         return font;
+    }
+
+    public static FontManager getInstance() {
+        if (instance == null) {
+            synchronized (FontManager.class) {
+                if (instance == null)
+                    instance = new FontManager();
+            }
+        }
+        return instance;
     }
 
 }

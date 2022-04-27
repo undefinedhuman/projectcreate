@@ -8,16 +8,17 @@ import de.undefinedhuman.projectcreate.engine.config.ConfigManager;
 import de.undefinedhuman.projectcreate.engine.file.FileUtils;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
-import de.undefinedhuman.projectcreate.engine.log.Level;
+import de.undefinedhuman.projectcreate.engine.gl.HeadlessApplicationAdapter;
 import de.undefinedhuman.projectcreate.engine.log.Log;
-import de.undefinedhuman.projectcreate.engine.utils.ManagerList;
+import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessage;
+import de.undefinedhuman.projectcreate.engine.log.decorator.LogMessageDecorators;
+import de.undefinedhuman.projectcreate.engine.utils.manager.ManagerList;
 import de.undefinedhuman.projectcreate.engine.utils.Variables;
-import de.undefinedhuman.projectcreate.engine.utils.Version;
+import de.undefinedhuman.projectcreate.engine.utils.version.Version;
 import de.undefinedhuman.projectcreate.updater.config.UpdaterConfig;
 import de.undefinedhuman.projectcreate.updater.ui.UpdaterUI;
 import de.undefinedhuman.projectcreate.updater.utils.DownloadUtils;
 import de.undefinedhuman.projectcreate.updater.utils.InstallationUtils;
-import de.undefinedhuman.projectcreate.updater.window.HeadlessApplicationListener;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
@@ -38,7 +39,7 @@ public class Updater extends JFrame {
     private UpdaterUI updaterUI;
 
     private Updater() {
-        new HeadlessApplication(new HeadlessApplicationListener());
+        new HeadlessApplication(new HeadlessApplicationAdapter());
         FlatDarkLaf.install();
         managerList.addManager(Log.getInstance(), ConfigManager.getInstance().setConfigs(UpdaterConfig.getInstance()));
 
@@ -68,35 +69,38 @@ public class Updater extends JFrame {
         InstallationUtils.checkProjectDotDirectory();
         managerList.init();
         Gdx.app.setApplicationLogger(Log.getInstance());
+        Log.getInstance().setLogMessageDecorator(
+                new LogMessage().andThen(value -> LogMessageDecorators.withDate(value, Variables.LOG_DATE_FORMAT)).andThen(value -> LogMessageDecorators.withModuleName(value, "Game"))
+        );
         Gdx.app.setLogLevel(Variables.LOG_LEVEL.ordinal());
     }
 
     public void updateLauncher() {
         updaterUI.updateProgressText("Checking the installation directory...");
         sleep();
-        InstallationUtils.loadInstallationDirectory(UpdaterConfig.getInstance().firstRun.getBoolean(), UpdaterConfig.getInstance().installationPath, DEFAULT_INSTALLATION_DIRECTORY);
+        InstallationUtils.loadInstallationDirectory(UpdaterConfig.getInstance().firstRun.getValue(), UpdaterConfig.getInstance().installationPath, DEFAULT_INSTALLATION_DIRECTORY);
         updaterUI.updateProgressText("Checking for installed version...");
         sleep();
-        FsFile currentlyInstalledVersion = new FsFile(UpdaterConfig.getInstance().installationPath.getFile(), UpdaterConfig.getInstance().version.getString() + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
-        List<Version> versions = InstallationUtils.fetchAvailableVersions(DOWNLOAD_LAUNCHER_URL);
+        FsFile currentlyInstalledVersion = new FsFile(UpdaterConfig.getInstance().installationPath.getValue().path(), UpdaterConfig.getInstance().version.getValue() + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
+        List<Version> versions = InstallationUtils.fetchAvailableVersions(DOWNLOAD_LAUNCHER_URL, null);
         if(versions.isEmpty())
-            Log.getInstance().showErrorDialog(Level.CRASH, "Error while fetching available launcher versions. \nPlease restart, if the error persists, please contact the author.", true);
+            Log.showErrorDialog("Error while fetching available launcher versions. \nPlease restart, if the error persists, please contact the author.", true);
         Version maxVersion = Collections.max(versions);
         String downloadUrl = DOWNLOAD_LAUNCHER_URL + maxVersion + DownloadUtils.DOWNLOAD_FILE_EXTENSION;
-        if(!currentlyInstalledVersion.exists() || !UpdaterConfig.getInstance().version.getVersion().equals(maxVersion) || DownloadUtils.fetchFileSize(downloadUrl) != currentlyInstalledVersion.length()) {
+        if(!currentlyInstalledVersion.exists() || !UpdaterConfig.getInstance().version.getValue().equals(maxVersion) || DownloadUtils.fetchFileSize(downloadUrl) != currentlyInstalledVersion.length()) {
             updaterUI.updateProgressText("Download launcher version " + maxVersion + "...");
             sleep();
             FileUtils.deleteFile(currentlyInstalledVersion);
             Log.info(maxVersion);
-            currentlyInstalledVersion = new FsFile(UpdaterConfig.getInstance().installationPath.getFile(), maxVersion + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
+            currentlyInstalledVersion = new FsFile(UpdaterConfig.getInstance().installationPath.getValue().path(), maxVersion + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
             try {
                 DownloadUtils.downloadFile(downloadUrl, currentlyInstalledVersion);
             } catch (IOException | URISyntaxException e) {
-                Log.getInstance().showErrorDialog(Level.CRASH, "Error while downloading launcher version " + maxVersion + "\nPlease restart, if the error persists, please contact the author.", true);
+                Log.showErrorDialog("Error while downloading launcher version " + maxVersion + "\nPlease restart, if the error persists, please contact the author.", true);
             }
         } else Log.info("Launcher already up to date. Version: " + maxVersion);
 
-        UpdaterConfig.getInstance().version.setValue(maxVersion.toString());
+        UpdaterConfig.getInstance().version.setValue(maxVersion);
 
         updaterUI.updateProgressText("Start launcher...");
         sleep();

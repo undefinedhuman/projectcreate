@@ -4,11 +4,10 @@ import com.badlogic.gdx.Files;
 import de.undefinedhuman.projectcreate.engine.file.FileError;
 import de.undefinedhuman.projectcreate.engine.file.FsFile;
 import de.undefinedhuman.projectcreate.engine.file.Paths;
-import de.undefinedhuman.projectcreate.engine.log.Level;
 import de.undefinedhuman.projectcreate.engine.log.Log;
-import de.undefinedhuman.projectcreate.engine.settings.Setting;
-import de.undefinedhuman.projectcreate.engine.utils.Stage;
-import de.undefinedhuman.projectcreate.engine.utils.Version;
+import de.undefinedhuman.projectcreate.engine.settings.types.FilePathSetting;
+import de.undefinedhuman.projectcreate.engine.utils.version.Stage;
+import de.undefinedhuman.projectcreate.engine.utils.version.Version;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -17,38 +16,37 @@ import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class InstallationUtils {
 
-    public static void loadInstallationDirectory(boolean firstRun, Setting installationPath, FsFile defaultInstallationDirectory) {
-        ArrayList<String> errorMessages = FileError.checkFileForErrors(installationPath.getFile(), FileError.NULL, FileError.NON_EXISTENT, FileError.NO_DIRECTORY, FileError.NOT_WRITEABLE);
+    public static void loadInstallationDirectory(boolean firstRun, FilePathSetting installationPath, FsFile defaultInstallationDirectory) {
+        ArrayList<String> errorMessages = FileError.checkFileForErrors(installationPath.getValue(), FileError.NULL, FileError.NON_EXISTENT, FileError.NO_DIRECTORY, FileError.NOT_WRITEABLE);
         if(firstRun || !errorMessages.isEmpty())
             installationPath.setValue(chooseInstallationDirectory(defaultInstallationDirectory));
     }
 
-    public static String chooseInstallationDirectory(FsFile defaultInstallationDirectory) {
+    public static FsFile chooseInstallationDirectory(FsFile defaultInstallationDirectory) {
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Choose a installation directory...");
         defaultInstallationDirectory.mkdirs();
         ArrayList<String> errorMessages = FileError.checkFileForErrors(defaultInstallationDirectory, FileError.NON_EXISTENT, FileError.NO_DIRECTORY, FileError.NOT_WRITEABLE);
         if(!errorMessages.isEmpty())
-            Log.getInstance().showErrorDialog(Level.ERROR, "An error occurred while creating the default installation directory! \nPlease choose another writable installation directory!", false);
+            Log.showErrorDialog("An error occurred while creating the default installation directory! \nPlease choose another writable installation directory!", false);
         else chooser.setCurrentDirectory(defaultInstallationDirectory.file());
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
         if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION)
-            Log.getInstance().showErrorDialog(Level.CRASH, "Please choose a writable installation directory!\nPlease restart!", true);
+            Log.showErrorDialog("Please choose a writable installation directory!\nPlease restart!", true);
         FsFile selectedFile = new FsFile(chooser.getSelectedFile().getAbsolutePath(), Files.FileType.Absolute);
         if(!selectedFile.file().equals(defaultInstallationDirectory.file()) && defaultInstallationDirectory.delete())
             Log.info("Deleted default installation directory!");
         if(FileError.checkFileForErrors("checking installation directory", selectedFile, FileError.NULL, FileError.NON_EXISTENT, FileError.NO_DIRECTORY, FileError.NOT_WRITEABLE))
-            Log.getInstance().showErrorDialog(Level.CRASH, "Please choose a writable installation directory!\nPlease restart!", true);
-        return selectedFile.file().getAbsolutePath();
+            Log.showErrorDialog("Please choose a writable installation directory!\nPlease restart!", true);
+        return selectedFile;
     }
 
-    public static List<Version> fetchAvailableVersions(String url) {
+    public static List<Version> fetchAvailableVersions(String url, Stage excludedStages) {
         ArrayList<Version> availableVersions = new ArrayList<>();
         Document doc = null;
         try {
@@ -65,14 +63,12 @@ public class InstallationUtils {
             regex.deleteCharAt(regex.length()-1).append(").*");
             if(!fileName.matches(regex.toString()))
                 continue;
-            availableVersions.add(Version.parse(fileName.split(DownloadUtils.DOWNLOAD_FILE_EXTENSION)[0]));
+            Version version = Version.parse(fileName.split(DownloadUtils.DOWNLOAD_FILE_EXTENSION)[0]);
+            if(version.getStage().equals(excludedStages))
+                continue;
+            availableVersions.add(version);
         }
         return availableVersions;
-    }
-
-    public static boolean hasSufficientSpace(String downloadURL, FsFile installationDirectory) {
-        Version newestVersion = Collections.max(fetchAvailableVersions(downloadURL));
-        return hasSufficientSpace(downloadURL, installationDirectory, newestVersion);
     }
 
     public static boolean hasSufficientSpace(String downloadURL, FsFile installationDirectory, Version version) {
@@ -84,7 +80,7 @@ public class InstallationUtils {
     }
 
     public static boolean isVersionDownloaded(String downloadURL, FsFile installationDirectory, Version version) {
-        FsFile installedVersion = new FsFile(installationDirectory, version + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
+        FsFile installedVersion = new FsFile(installationDirectory.path(), version + DownloadUtils.DOWNLOAD_FILE_EXTENSION, Files.FileType.Absolute);
         return installedVersion.nameWithoutExtension().equalsIgnoreCase(version.toString())
                 && !installedVersion.isDirectory()
                 && installedVersion.name().substring(installedVersion.name().lastIndexOf(".")).equalsIgnoreCase(DownloadUtils.DOWNLOAD_FILE_EXTENSION)
@@ -96,7 +92,7 @@ public class InstallationUtils {
         projectDotDirectory.mkdirs();
         ArrayList<String> errorMessages = FileError.checkFileForErrors(projectDotDirectory, FileError.NON_EXISTENT, FileError.NO_DIRECTORY, FileError.NOT_WRITEABLE);
         if(!errorMessages.isEmpty())
-            Log.getInstance().showErrorDialog(Level.CRASH, "An error occurred while creating the root directory of the project. \nPlease contact the author.\n" + errorMessages, true);
+            Log.showErrorDialog("An error occurred while creating the root directory of the project. \nPlease contact the author.\n" + errorMessages, true);
     }
 
 }

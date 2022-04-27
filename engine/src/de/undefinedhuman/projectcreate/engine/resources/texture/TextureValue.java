@@ -45,7 +45,6 @@ public class TextureValue {
     public void remove() {
         usages--;
         if (usages > 0) return;
-        delete();
         remove = true;
     }
 
